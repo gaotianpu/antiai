@@ -1,0 +1,83 @@
+en|wrong|correct
+---|---| ---
+|（|(
+|）|)
+|；|;
+|等人，| et al., 
+ablation | 烧蚀 | 消融
+Alignment|对准|对齐
+architectures | 体系结构 | 架构
+architectures | 建筑学 | 架构
+agents|代理|智能体 
+affinity | 亲和力 | 亲和力
+bounding boxes | 边界框 | 边框
+cells | 细胞 | 单元
+classes|阶级|类别
+deep|深层|深度
+distillation|提炼|蒸馏
+examples|示例|样本
+patches | 补丁 | 分块
+function|功能|函数
+demonstrated|展示|演示
+Distilling|提取|蒸馏
+properties|财产|属性
+mask | 掩模 | 掩码
+mask | 遮罩 | 掩码
+mask|口罩|掩码
+mask|屏蔽|掩码
+mask|掩蔽|掩码
+|蒙版|掩码
+model|模式|模型
+vanilla | 香草 | 普通
+recipe | 配方 | 配置
+epochs | 时期 | 周期
+agnostic | 不可知 | 未知
+augmentation | 扩充 | 增广
+sampling | 取样 | 采样
+ et al., |等人| et al.,
+inferences|推断|推理
+recurrent | 递归 | 循环
+pretext tasks | 借口任务 | 前置?任务
+Siamese | 连体 | 孪生
+sigmoid|S形|sigmoid
+transfer | 转移 | 迁移
+transfer | 传输 | 迁移
+global | 全球 | 全局
+ground truth | 地面实况 | 基准实况
+generalize | 概括 | 泛化
+works | 作品 | 工作
+inductive biases | 归纳偏见 | 归纳偏差
+inductive biases | 感应偏见 | 归纳偏差
+inductive biases | 感应偏置 | 归纳偏差
+wall-clock | 墙上的时钟 | 挂钟
+robustness | 鲁棒 | 稳健
+evaluation | 评价 | 评估
+augmentations | 增强 | 增广
+ |对象检测|目标检测
+ |人体研究|人类学习
+ |人体|人类
+ |培训|训练
+ |规范化|归一化
+token|标记|令牌
+token|代币|令牌
+labeler|标注器|标注人员
+ |标签员|标注人员
+ |贴标机|标注人员
+ |贴标员|标注人员
+ |贴标者|标注人员
+ |标签者|标注人员
+shot|镜头|样本
+annotation|注释|标注
+Ensemble|合奏|集成
+one-shot |一次拍摄|单样本
+zeroshot|零炮|零样本
+|零射|零样本
+examples |例子|样本
+normalized|标准化|归一化
+models|型号|模型
+policy|政策|策略
+that is | 也就是说|即
+tuning|调谐|微调
+parallel|平行|并行
+transformer|变压器|转换器
+Pre-training|训练前|预训练

@@ -1,0 +1,8 @@
+# StructBERT: Incorporating Language Structures into Pre-training for Deep Language Understanding
+StructBERT：将语言结构纳入深度语言理解的预训练 https://arxiv.org/abs/1908.04577
+
+## A
+Recently, the pre-trained language model, BERT (and its robustly optimized version RoBERTa), has attracted a lot of attention in natural language understanding (NLU), and achieved state-of-the-art accuracy in various NLU tasks, such as sentiment classification, natural language inference, semantic textual similarity and question answering. Inspired by the linearization exploration work of Elman [8], we extend BERT to a new model, StructBERT, by incorporating language structures into pre-training. Specifically, we pre-train StructBERT with two auxiliary tasks to make the most of the sequential order of words and sentences, which leverage language structures at the word and sentence levels, respectively. As a result, the new model is adapted to different levels of language understanding required by downstream tasks. The StructBERT with structural pre-training gives surprisingly good empirical results on a variety of downstream tasks, including pushing the state-of-the-art on the GLUE benchmark to 89.0 (outperforming all published models), the F1 score on SQuAD v1.1 question answering to 93.0, the accuracy on SNLI to 91.7.
+
+最近，预训练语言模型BERT(及其稳健优化版本RoBERTa)在自然语言理解(NLU)中引起了大量关注，并在各种NLU任务中实现了最先进的准确性，如情感分类、自然语言推理、语义文本相似性和问答。受Elman[8]的线性化探索工作的启发，我们将BERT扩展到一个新模型StructBERT，将语言结构纳入预训练。具体来说，我们用两个辅助任务对StructBERT进行预训练，以充分利用单词和句子的顺序，这分别在单词和句子层面上利用语言结构。因此，新模型适用于下游任务所需的不同级别的语言理解。带结构预训练的StructBERT在各种下游任务中给出了令人惊讶的良好经验结果，包括将GLUE基准的最新技术提高到89.0(优于所有已发布的模型)，将SQuAD v1.1问题答案的F1得分提高到93.0，将SNLI的准确度提高到91.7。
+

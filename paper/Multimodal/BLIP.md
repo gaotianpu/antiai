@@ -1,0 +1,8 @@
+# BLIP: Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation
+
+https://arxiv.org/abs/2201.12086  https://github.com/salesforce/BLIP
+
+Vision-Language Pre-training (VLP) has advanced the performance for many vision-language tasks. However, most existing pre-trained models only excel in either understanding-based tasks or generation-based tasks. Furthermore, performance improvement has been largely achieved by scaling up the dataset with noisy image-text pairs collected from the web, which is a suboptimal source of supervision. In this paper, we propose BLIP, a new VLP framework which transfers flexibly to both vision-language understanding and generation tasks. BLIP effectively utilizes the noisy web data by bootstrapping the captions, where a captioner generates synthetic captions and a filter removes the noisy ones. We achieve state-of-the-art results on a wide range of vision-language tasks, such as image-text retrieval (+2.7% in average recall@1), image captioning (+2.8% in CIDEr), and VQA (+1.6% in VQA score). BLIP also demonstrates strong generalization ability when directly transferred to video-language tasks in a zero-shot manner. Code, models, and datasets are released at this https URL.
+
+视觉语言预训练（VLP）提高了许多视觉语言任务的性能。然而，大多数现有的预训练模型只擅长基于理解的任务或基于生成的任务。此外，通过使用从网络收集的有噪声的图像-文本对放大数据集，在很大程度上提高了性能，这是一个次优的监督来源。在本文中，我们提出了BLIP，这是一种新的VLP框架，它可以灵活地转移到视觉语言理解和生成任务。BLIP通过引导字幕有效地利用了有噪声的网络数据，其中字幕生成器生成合成字幕，滤波器去除有噪声的字幕。我们在各种视觉语言任务上取得了最先进的成果，如图像文本检索（平均+2.7%recall@1)、图像字幕（CIDEr中+2.8%）和VQA（VQA得分中+1.6%）。当以零样本方式直接转移到视频语言任务时，BLIP也表现出很强的泛化能力。代码、模型和数据集在此https URL上发布。
+

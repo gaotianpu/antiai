@@ -1,0 +1,265 @@
+# Sample Efficient Actor-Critic with Experience Replay
+https://arxiv.org/abs/1611.01224
+
+## Abstract
+This paper presents an actor-critic deep reinforcement learning agent with experience replay that is stable, sample efficient, and performs remarkably well on challenging environments, including the discrete 57-game Atari domain and several continuous control problems. To achieve this, the paper introduces several innovations, including truncated importance sampling with bias correction, stochastic dueling network architectures, and a new trust region policy optimization method.
+
+## 1 Introduction
+Realistic simulated environments, where agents can be trained to learn a large repertoire of cognitive skills, are a_t the core of recent breakthroughs in AI (Bellemare et al., 2013; Mnih et al., 2015;Schulman et al., 2015a; Narasimhan et al., 2015; Mnih et al., 2016; Brockman et al., 2016; Oh et al., 2016). With richer realistic environments, the capabilities of our agents have increased and improved. Unfortunately, these advances have been accompanied by a substantial increase in the cost of simulation. In particular, every time an agent acts upon the environment, an expensive simulation step is conducted. Thus to reduce the cost of simulation, we need to reduce the number of simulation steps (i.e. samples of the environment). This need for sample efficiency is even more compelling when agents are deployed in the real world.
+
+Experience replay (Lin, 1992) has gained popularity in deep Q-learning (Mnih et al., 2015; Schaul et al., 2016; Wang et al., 2016; Narasimhan et al., 2015), where it is often motivated as a technique for reducing sample correlation. Replay is actually a valuable tool for improving sample efficiency and, as we will see in our experiments, state-of-the-art deep Q-learning methods (Schaul et al., 2016;Wang et al., 2016) have been up to this point the most sample efficient techniques on Atari by a significant margin. However, we need to do better than deep Q-learning, because it has two important limitations. First, the deterministic nature of the optimal policy limits its use in adversarial domains. Second, finding the greedy action with respect to the Q function is costly for large action spaces.
+
+Policy gradient methods have been a_t the heart of significant advances in AI and robotics (Silver et al., 2014; Lillicrap et al., 2015; Silver et al., 2016; Levine et al., 2015; Mnih et al., 2016; Schulman et al., 2015a; Heess et al., 2015). Many of these methods are restricted to continuous domains or to very specific tasks such as playing Go. The existing variants applicable to both continuous and discrete domains, such as the on-policy asynchronous advantage actor critic (A3C) of Mnih et al. (2016), are sample inefficient.
+
+The design of stable, sample efficient actor critic methods that apply to both continuous and discrete action spaces has been a long-standing hurdle of reinforcement learning (RL). We believe this paper is the first to address this challenge successfully a_t scale. More specifically, we introduce an actor critic with experience replay (ACER) that nearly matches the state-of-the-art performance of deep Q-networks with prioritized replay on Atari, and substantially outperforms A3C in terms of sample efficiency on both Atari and continuous control domains.
+
+ACER capitalizes on recent advances in deep neural networks, variance reduction techniques, the off-policy Retrace algorithm (Munos et al., 2016) and parallel training of RL agents (Mnih et al., 2016). Yet, crucially, its success hinges on innovations advanced in this paper: truncated importance sampling with bias correction, stochastic dueling network architectures, and efficient trust region policy optimization.
+
+On the theoretical front, the paper proves that the Retrace operator can be rewritten from our proposed truncated importance sampling with bias correction technique. 
+
+## 2 BACKGROUND AND PROBLEM SETUP
+Consider an agent interacting with its environment over discrete time steps. At time step t, the agent observes the $n_x$-dimensional state vector $x_t ∈ X ⊆ R^{n_x}$ , chooses an action $a_t$ according to a policy $π(a|x_t)$ and observes a reward signal $r_t ∈ R$ produced by the environment. We will consider discrete actions $a_t$ ∈ {1, 2, . . . , $N_a$} in Sections 3 and 4, and continuous actions $a_t ∈ A ⊆ R^{n_a}$ in Section 5.
+
+The goal of the agent is to maximize the discounted return $R_t = \sum_{i≥0} γ^i r_{t+i}$ in expectation. The discount factor γ ∈ [0, 1) trades-off the importance of immediate and future rewards. For an agent following policy π, we use the standard definitions of the state-action and state only value functions:
+
+$Q^π (x_t, a_t) = E_{x_{t+1}:∞,at+1:∞ }[R_t| x_t, a_t]$  and $V^π (x_t) = E_{a_t} [Q^π (x_t, a_t)|x_t] $.
+
+Here, the expectations are with respect to the observed environment states $x_t$ and the actions generated by the policy π, where $x_{t+1:∞}$ denotes a state trajectory starting at time t + 1.
+
+We also need to define the advantage function $A^π (x_t, a_t) = Q^π (x_t, a_t) − V^π (x_t)$, which provides a relative measure of value of each action since $E_{at} [A^π (x_t, a_t)] = 0$.
+
+The parameters θ of the differentiable policy $π_θ(a_t|x_t)$ can be updated using the discounted approximation to the policy gradient (Sutton et al., 2000), which borrowing notation from Schulman et al. (2015b), is defined as: 
+
+$g = E_{x_{0:∞},a_{0:∞}} \bigg[ \sum_{t≥0} A^π (x_t, a_t)∇_θ log π_θ(a_t|x_t) \bigg] $. (1)
+
+Following Proposition 1 of Schulman et al. (2015b), we can replace $A^π (x_t, a_t)$ in the above expression with the state-action value $Q^π (x_t, a_t)$, the discounted return $R_t$, or the temporal difference residual $r_t + γV^π (x_{t+1}) − V^π (x_t)$, without introducing bias. These choices will however have different variance. Moreover, in practice we will approximate these quantities with neural networks thus introducing additional approximation errors and biases. Typically, the policy gradient estimator using $R_t$ will have higher variance and lower bias whereas the estimators using function approximation will have higher bias and lower variance. Combining $R_t$ with the current value function approximation to minimize bias while maintaining bounded variance is one of the central design principles behind ACER.
+
+To trade-off bias and variance, the asynchronous advantage actor critic (A3C) of Mnih et al. (2016) uses a single trajectory sample to obtain the following gradient approximation: 
+
+$\hat{g}^{a3c} = \sum_{t≥0} \bigg( (\sum_{i=0}^{k−1} γ^i r_{t+i} ) + γ^k V^π_{θ_v} (x_{t+k}) − V^π_{θ_v} (x_t) \bigg ) ∇_θ log π_θ(a_t|x_t)$. (2)
+
+A3C combines both k-step returns and function approximation to trade-off variance and bias. We may think of $V^π_{θ_v} (x_t)$ as a policy gradient baseline used to reduce variance.
+
+In the following section, we will introduce the discrete-action version of ACER. ACER may be understood as the off-policy counterpart of the A3C method of Mnih et al. (2016). As such, ACER builds on all the engineering innovations of A3C, including efficient parallel CPU computation. ACER uses a single deep neural network to estimate the policy $π_θ(a_t|x_t)$ and the value function $V^π_{θ_v} (x_t)$. (For clarity and generality, we are using two different symbols to denote the parameters of the policy and value function, θ and $θ_v$, but most of these parameters are shared in the single neural network.) Our neural networks, though building on the networks used in A3C, will introduce several modifications and new modules. 
+
+## 3 DISCRETE ACTOR CRITIC WITH EXPERIENCE REPLAY
+Off-policy learning with experience replay may appear to be an obvious strategy for improving the sample efficiency of actor-critics. However, controlling the variance and stability of off-policy estimators is notoriously hard. Importance sampling is one of the most popular approaches for offpolicy learning (Meuleau et al., 2000; Jie & Abbeel, 2010; Levine & Koltun, 2013). In our context, it proceeds as follows. Suppose we retrieve a trajectory {$x_0, a_0, r_0, µ(·|x_0), · · · , x_k, a_k, r_k, µ(·|x_k)$}, where the actions have been sampled according to the behavior policy µ, from our memory of experiences. Then, the importance weighted policy gradient is given by: 
+
+$\hat{g}^{imp} =  ( \prod^k_{t=0} ρ_t ) \sum_{t=0}^k (\sum_{i=0}^k γ^i r_{t+i} ) ∇_θ log π_θ(a_t|x_t)$, (3) 
+
+where $ρ_t = \frac{π(a_t|x_t)}{µ(a_t|x_t)}$ denotes the importance weight. This estimator is unbiased, but it suffers from very high variance as it involves a product of many potentially unbounded importance weights. To prevent the product of importance weights from exploding, Wawrzy´nski (2009) truncates this product. Truncated importance sampling over entire trajectories, although bounded in variance, could suffer from significant bias.
+
+Recently, Degris et al. (2012) attacked this problem by using^{marg}inal value functions over the limiting distribution of the process to yield the following approximation of the gradient: 
+
+$g^{marg} = E_{x_t∼β,a_t∼µ} [ρ_t∇_θ log π_θ(a_t|x_t)Q^π (x_t, a_t)]$ , (4) 
+
+where $E_{x_t∼β,at∼µ[·]}$ is the expectation with respect to the limiting distribution $β(x) = lim_{t→∞} P(x_t = x|x_0, µ)$ with behavior policy µ. To keep the notation succinct, we will replace $E{x_t∼β,at∼µ[·]}$ with $E_{x_ta_t [·]}$ and ensure we remind readers of this when necessary.
+
+Two important facts about equation (4) must be highlighted. First, note that it depends on $Q^π$ and not on $Q^µ$, consequently we must be able to estimate $Q^π$ . Second, we no longer have a product of importance weights, but instead only need to estimate the marginal importance weight $ρ_t$. Importance sampling in this lower dimensional space (over marginals as opposed to trajectories) is expected to exhibit lower variance.
+
+Degris et al. (2012) estimate $Q^π$ in equation (4) using lambda returns: $R_t^λ = r_t + (1−λ)γV (x_{t+1})+ λγρ_{t+1}R^λ_{t+1}$. This estimator requires that we know how to choose λ ahead of time to trade off bias and variance. Moreover, when using small values of λ to reduce variance, occasional large importance weights can still cause instability.
+
+In the following subsection, we adopt the Retrace algorithm of Munos et al. (2016) to estimate $Q^π$. Subsequently, we propose an importance weight truncation technique to improve the stability of the off-policy actor critic of Degris et al. (2012), and introduce a computationally efficient trust region scheme for policy optimization. The formulation of ACER for continuous action spaces will require further innovations that are advanced in Section 5.
+
+### 3.1 MULTI-STEP ESTIMATION OF THE STATE-ACTION VALUE FUNCTION
+In this paper, we estimate $Q^π (x_t, a_t)$ using Retrace (Munos et al., 2016). (We also experimented with the related tree backup method of Precup et al. (2000) but found Retrace to perform better in practice.) Given a trajectory generated under the behavior policy µ, the Retrace estimator can be expressed recursively as follows(1 For ease of presentation, we consider only λ = 1 for Retrace):
+
+$Q^{ret}(x_t, a_t) = r_t + γ\hat{ρ}_{t+1}[Q^{ret}(x_{t+1}, a_{t+1}) − Q(x_{t+1}, a_{t+1})] + γV (x_{t+1})$, (5) 
+
+where $\hat{ρ}_t$ is the truncated importance weight, $\hat{ρ}t $= min {c, $ρ_t$} with $ρ_t = \frac{π(a_t|x_t)}{µ(a_t|x_t)}$ , Q is the current value estimate of $Q^π$ , and $V (x) = E_{a∼π}Q(x, a)$. Retrace is an off-policy, return-based algorithm which has low variance and is proven to converge (in the tabular case) to the value function of the target policy for any behavior policy, see Munos et al. (2016).
+
+The recursive Retrace equation depends on the estimate Q. To compute it, in discrete action spaces, we adopt a convolutional neural network with “two heads” that outputs the estimate $Q_{θ_v} (x_t, a_t)$, as well as the policy $π_θ(a_t|x_t)$. This neural representation is the same as in (Mnih et al., 2016), with the exception that we output the vector $Q_{θ_v} (x_t, a_t)$ instead of the scalar $Vθ_v (x_t)$. The estimate $Vθ_v (x_t)$ can be easily derived by taking the expectation of $Q_{θ_v}$ under $π_θ$.
+
+To approximate the policy gradient g^{marg}, ACER uses $Q^{ret}$ to estimate $Q^π$ . As Retrace uses multistep returns, it can significantly reduce bias in the estimation of the policy gradient(2 An alternative to Retrace here is Q(λ) with off-policy corrections (Harutyunyan et al., 2016) which we discuss in more detail in Appendix B ) .
+
+To learn the critic $Q_{θ_v} (x_t, a_t)$, we again use $Q^{ret}(x_t, a_t)$ as a target in a mean squared error loss and update its parameters $θ_v$ with the following standard gradient: 
+
+$(Q^{ret}(x_t, a_t) − Q_{θ_v} (x_t, a_t)) ∇_{θ_v}Q_{θ_v} (x_t, a_t)$. (6)
+
+Because Retrace is return-based, it also enables faster learning of the critic. Thus the purpose of the multi-step estimator $Q^{ret}$ in our setting is twofold: to reduce bias in the policy gradient, and to enable faster learning of the critic, hence further reducing bias.
+
+### 3.2 IMPORTANCE WEIGHT TRUNCATION WITH BIAS CORRECTION
+The marginal importance weights in Equation (4) can become large, thus causing instability. To safe-guard against high variance, we propose to truncate the importance weights and introduce a correction term via the following decomposition of $g^{marg}$: 
+
+$g^{marg} = E{x_ta_t} [ρ_t∇_θlog π_θ(a_t|x_t)Q^π (x_t, a_t)] $
+
+$= E_{x_t} \bigg[ E_{at} [\hat{ρ}_t∇_θlog π_θ(a_t|x_t)Q^π (x_t, a_t)]+E_{a∼π} \bigg( [\frac{ρ_t(a) − c}{ρ_t(a)}] + ∇_θlog π_θ(a|x_t)Q^π (x_t, a) \bigg) \bigg] $,(7) 
+
+where $\hat{ρ}_t$ = min {c, $ρ_t$} with $ρ_t = \frac{π(a_t|x_t)}{µ(a_t|x_t)}$ as before. We have also introduced the notation $ρ_t(a) = \frac{π(a|x_t)}{µ(a|x_t)}$ , and $[x]_+$ = x if x > 0 and it is zero otherwise. We remind readers that the above expectations are with respect to the limiting state distribution under the behavior policy: $x_t$ ∼ β and $a_t$ ∼ µ.
+
+The clipping of the importance weight in the first term of equation (7) ensures that the variance of the gradient estimate is bounded. The correction term (second term in equation (7)) ensures that our estimate is unbiased. Note that the correction term is only active for actions such that $ρ_t(a) > c$. In particular, if we choose a large value for c, the correction term only comes into effect when the variance of the original off-policy estimator of equation (4) is very high. When this happens, our decomposition has the nice property that the truncated weight in the first term is a_t most c while the correction weight $[\frac{ρ_t(a)−c}{ρ_t(a)} ]_+$ in the second term is at most 1.
+
+We model $Q^π (x_t, a)$ in the correction term with our neural network approximation $Q_{θ_v} (x_t, a_t)$. This modification results in what we call the truncation with bias correction trick, in this case applied to the function $∇_θ log π_θ(a_t|x_t)Q^π (x_t, a_t)$: 
+
+$\hat{g}^{marg} =E_{x_t} \bigg[ E_{at} [ \hat{ρ}t∇_θlog π_θ(a_t|x_t)Q^{ret}(x_t, a_t) ] + E_{a∼π}  ( \frac{ρ_t(a) − c}{ρ_t(a)} ) _+ ∇_θlog π_θ(a|x_t)Q_{θ_v} (x_t, a) ) \bigg] $.(8)
+
+Equation (8) involves an expectation over the stationary distribution of the Markov process. We can however approximate it by sampling trajectories {$x_0, a_0, r_0, µ(·|x_0), · · · , x_k, a_k, r_k, µ(·|x_k)$} generated from the behavior policy µ. Here the terms $µ(·|x_k)$ trajectories, we can compute the off-policy ACER gradient: 
+
+$\hat{g}_t^{acer} = ¯ρ_t∇_θ log π_θ(a_t|x_t)[Q^{ret}(x_t, a_t) − V_{θ_v}(x_t)] + E_{a∼π} ([ \frac{ρt(a) − c}{ρt(a)}]_+ ∇_θ log π_θ(a|x_t)[Q_{θ_v} (x_t, a) − V_{θ_v} (x_t)])$ .(9)
+
+In the above expression, we have subtracted the classical baseline $Vθ_v (x_t)$ to reduce variance.
+
+It is interesting to note that, when c = ∞, (9) recovers (off-policy) policy gradient up to the use of Retrace. When c = 0, (9) recovers an actor critic update that depends entirely on Q estimates. In the continuous control domain, (9) also generalizes Stochastic Value Gradients if c = 0 and the reparametrization trick is used to estimate its second term (Heess et al., 2015).
+
+### 3.3 EFFICIENT TRUST REGION POLICY OPTIMIZATION
+The policy updates of actor-critic methods do often exhibit high variance. Hence, to ensure stability, we must limit the per-step changes to the policy. Simply using smaller learning rates is insufficient as they cannot guard against the occasional large updates while maintaining a desired learning speed. Trust Region Policy Optimization (TRPO) (Schulman et al., 2015a) provides a more adequate solution.
+
+Schulman et al. (2015a) approximately limit the difference between the updated policy and the current policy to ensure safety. Despite the effectiveness of their TRPO method, it requires repeated computation of Fisher-vector products for each update. This can prove to be prohibitively expensive in large domains.
+
+In this section we introduce a new trust region policy optimization method that scales well to large problems. Instead of constraining the updated policy to be close to the current policy (as in TRPO), we propose to maintain an average policy network that represents a running average of past policies and forces the updated policy to not deviate far from this average.
+
+We decompose our policy network in two parts: a distribution f, and a deep neural network that generates the statistics $φ_θ(x)$ of this distribution. That is, given f, the policy is completely characterized by the network $φ_θ: π(·|x) = f(·|φ_θ(x))$. For example, in the discrete domain, we choose f to be the categorical distribution with a probability vector $φ_θ(x)$ as its statistics. The probability vector is of course parameterised by θ.
+
+We denote the average policy network as $φ_{θ_a}$ and update its parameters $θ_a$ “softly” after each update to the policy parameter θ: $θ_a ← αθ_a + (1 − α)θ$.
+
+Consider, for example, the ACER policy gradient as defined in Equation (9), but with respect to φ: 
+
+$\hat{g}t^{acer} = \hat{ρ}_t∇φ_θ(x_t) log f(a_t|φ_θ(x))[Q^{ret}(x_t, a_t) − Vθ_v (x_t)] + E_{a∼π}\bigg([\frac{ρ_t(a) − c}{ρ_t(a)}] + ∇φ_θ(x_t) log f(a_t|φ_θ(x))[Q_{θ_v} (x_t, a) − Vθ_v (x_t)]\bigg) $. (10)
+
+Given the averaged policy networ_k, our proposed trust region update involves two stages. In the first stage, we solve the following optimization problem with a linearized KL divergence constraint: 
+
+$minimize z 1 2 k gˆt^{acer} − zk 2 2 subject to ∇φ_θ(x_t)DKL [f(·|φ_{θ_a} (x_t))k f(·|φ_θ(x_t))]T z ≤ δ$ (11)
+
+Since the constraint is linear, the overall optimization problem reduces to a simple quadratic programming problem, the solution of which can be easily derived in closed form using the KKT conditions.
+
+Letting $k = ∇φ_θ(x_t)DKL [f(·|φ_{θ_a} (x_t)k f(·|φ_θ(x_t)]$, the solution is: 
+
+$z ∗ = ˆgt^{acer} − max \{ 0, k T gˆ^{acer} t − δ k kk 2 2 \} k$ (12)
+
+This transformation of the gradient has a very natural form. If the constraint is satisfied, there is no change to the gradient with respect to φ_θ(x_t). Otherwise, the update is scaled down in the direction of k, thus effectively lowering rate of change between the activations of the current policy and the average policy network.
+
+Figure 1: ACER improvements in sample (LEFT) and computation (RIGHT) complexity on Atari. On each plot, the median of the human-normalized score across all 57 Atari games is presented for 4 ratios of replay with 0 replay corresponding to on-policy A3C. The colored solid and dashed lines represent ACER with and without trust region updating respectively. The environment steps are counted over all threads. The gray curve is the original DQN agent (Mnih et al., 2015) and the black curve is one of the Prioritized Double DQN agents from Schaul et al. (2016). 
+
+
+In the second stage, we take advantage of back-propagation. Specifically, the updated gradient with respect to φ_θ, that is z ∗ , is back-propagated through the network to compute the derivatives with respect to the parameters. The parameter updates for the policy network follow from the chain rule: ∂φ_θ(x) ∂θ z ∗ .
+
+The trust region step is carried out in the space of the statistics of the distribution f, and not in the space of the policy parameters. This is done deliberately so as to avoid an additional back-propagation step through the policy network.
+
+We would like to remark that the algorithm advanced in this section can be thought of as a general strategy for modifying the backward messages in back-propagation so as to stabilize the activations.
+
+Instead of a trust region update, one could alternatively add an appropriately scaled KL cost to the objective function as proposed by Heess et al. (2015). This approach, however, is less robust to the choice of hyper-parameters in our experience.
+
+The ACER algorithm results from a combination of the above ideas, with the precise pseudo-code appearing in Appendix A. A master algorithm (Algorithm 1) calls ACER on-policy to perform updates and propose trajectories. It then calls ACER off-policy component to conduct several replay steps. When on-policy, ACER effectively becomes a modified version of A3C where Q instead of V baselines are employed and trust region optimization is used. 
+
+## 4 RESULTS ON ATARI
+We use the Arcade Learning Environment of Bellemare et al. (2013) to conduct an ex_tensive evaluation. We deploy one single algorithm and network architecture, with fixed hyper-parameters, to learn to play 57 Atari games given only raw pixel observations and game rewards. This task is highly demanding because of the diversity of games, and high-dimensional pixel-level observations.
+
+Our experimental setup uses 16 actor-learner threads running on a single machine with no GPUs. We adopt the same input pre-processing and network architecture as Mnih et al. (2015). Specifically, the network consists of a convolutional layer with 32 8 × 8 filters with stride 4 followed by another convolutional layer with 64 4 × 4 filters with stride 2, followed by a final convolutional layer with 64 3 × 3 filters with stride 1, followed by a fully-connected layer of size 512. Each of the hidden layers is followed by a rectifier nonlinearity. The network outputs a softmax policy and Q values. 
+
+When using replay, we add to each thread a replay memory that is up to 50 000 frames in size. The total amount of memory used across all threads is thus similar in size to that of DQN (Mnih et al., 2015). For all Atari experiments, we use a single learning rate adopted from an earlier implementation of A3C without further tuning. We do not anneal the learning rates over the course of training as in Mnih et al. (2016). We otherwise adopt the same optimization procedure as in Mnih et al. (2016).
+
+Specifically, we adopt entropy regularization with weight 0.001, discount the rewards with γ = 0.99, and perform updates every 20 steps (k = 20 in the notation of Section 2). In all our experiments with experience replay, we use importance weight truncation with c = 10. We consider training ACER both with and without trust region updating as described in Section 3.3. When trust region updating is used, we use δ = 1 and α = 0.99 for all experiments.
+
+To compare different agents, we adopt as our metric the median of the human normalized score over all 57 games. The normalization is calculated such that, for each game, human scores and random scores are evaluated to 1, and 0 respectively. The normalized score for a given game a_t time t is computed as the average normalized score over the past 1 million consecutive frames encountered until time t. For each agent, we plot its cumulative maximum median score over time. The result is summarized in Figure 1.
+
+The four colors in Figure 1 correspond to four replay ratios (0, 1, 4 and 8) with a ratio of 4 meaning that we use the off-policy component of ACER 4 times after using the on-policy component (A3C). That is, a replay ratio of 0 means that we are using A3C. The solid and dashed lines represent ACER with and without trust region updating respectively. The gray and black curves are the original DQN (Mnih et al., 2015) and Prioritized Replay agent of Schaul et al. (2016) agents respectively.
+
+As shown on the left panel of Figure 1, replay significantly increases data efficiency. We observe that when using the trust region optimizer, the average reward as a function of the number of environmental steps increases with the ratio of replay. This increase has diminishing returns, but with enough replay, ACER can match the performance of the best DQN agents. Moreover, it is clear that the off-policy actor critics (ACER) are much more sample efficient than their on-policy counterpart (A3C).
+
+The right panel of Figure 1 shows that ACER agents perform similarly to A3C when measured by wall clock time. Thus, in this case, it is possible to achieve better data-efficiency without necessarily compromising on computation time. In particular, ACER with a replay ratio of 4 is an appealing alternative to either the prioritized DQN agent or A3C. 
+
+## 5 CONTINUOUS ACTOR CRITIC WITH EXPERIENCE REPLAY
+Retrace requires estimates of both Q and V , but we cannot easily integrate over Q to derive V in continuous action spaces. In this section, we propose a solution to this problem in the form of a novel representation for RL, as well as modifications necessary for trust region updating.
+
+### 5.1 POLICY EVALUATION
+Retrace provides a target for learning Q_{θ_v} , but not for learning Vθ_v . We could use importance sampling to compute Vθ_v given Q_{θ_v} , but this estimator has high variance.
+
+We propose a new architecture which we call Stochastic Dueling Networks (SDNs), inspired by the
+
+Dueling networks of Wang et al. (2016), which is designed to estimate both V^π and Q^π off-policy while maintaining consistency between the two estimates. At each time step, an SDN outputs a stochastic estimate e Q_{θ_v} of Q^π and a deterministic estimate Vθ_v of V^π , such that 
+
+$Q_{θ_v} (x_t, a_t) ∼ Vθ_v (x_t) + Aθ_v (x_t, a_t) − 1 n nX i=1 Aθ_v (x_t, ui), and ui ∼ π_θ(·|x_t)$ (13) 
+
+where n is a parameter, see Figure 2. The two estimates are consistent in the sense that
+
+$Ea∼π(·|x_t) h Eu1:n∼π(·|x_t)  e Q_{θ_v} (x_t, a) i = Vθ_v (x_t)$. Furthermore, we can learn about V^π by learning e Q_{θ_v} . To see this, assume we have learned Q^π perfectly such that Eu1:n∼π(·|x_t)  e Q_{θ_v} (x_t, a_t)  = Q^π (x_t, a_t), then Vθ_v (x_t) = Ea∼π(·|x_t) h Eu1:n∼π(·|x_t)  e Q_{θ_v} (x_t, a) i = Ea∼π(·|x_t) [Q^π (x_t, a)] = V^π (x_t). Therefore, a target on e Q_{θ_v} (x_t, a_t) also provides an error signal for updating Vθ_v . 
+
+
+Figure 2: A schematic of the Stochastic Dueling Network. In the drawing, [u1, · · · , un] are assumed to be samples from π_θ(·|x_t). This schematic illustrates the concept of SDNs but does not reflect the real sizes of the networks used.
+
+In addition to SDNs, however, we also construct the following novel target for estimating V^π :
+
+$V target(x_t) = min  1, \frac{π(a_t|x_t)}{µ(a_t|x_t)}   Q^{ret}(x_t, a_t) − Q_{θ_v} (x_t, a_t)  + Vθ_v (x_t)$. (14)
+
+The above target is also derived via the truncation and bias correction trick; for more details, see Appendix D.
+
+Finally, when estimating Q^{ret} in continuous domains, we implement a slightly different formulation of the truncated importance weights \hat{ρ}t = min  1,  \frac{π(a_t|x_t)}{µ(a_t|x_t)}  1 d  , where d is the dimensionality of the action space. Although not essential, we have found this formulation to lead to faster learning.
+
+### 5.2 TRUST REGION UPDATING
+To adopt the trust region updating scheme (Section 3.3) in the continuous control domain, one simply has to choose a distribution f and a gradient specification gˆt^{acer} suitable for continuous action spaces.
+
+For the distribution f, we choose Gaussian distributions with fixed diagonal covariance and mean φ_θ(x).
+
+To derive gˆt^{acer} in continuous action spaces, consider the ACER policy gradient for the stochastic dueling networ_k, but with respect to φ: 
+
+$gt^{acer} = E_{x_t}  E_{at}  \hat{ρ}t∇φ_θ(x_t) log f(a_t|φ_θ(x_t))(Q opc(x_t, a_t) − Vθ_v (x_t)) + E_{a∼π}   \frac{ρ_t(a) − c}{ρ_t(a)}  + ( eQ_{θ_v} (x_t, a) − Vθ_v (x_t))∇φ_θ(x_t) log f(a|φ_θ(x_t))!# $. (15)
+
+In the above definition, we are using Qopc instead of Q^{ret}. Here, Qopc(x_t, a_t) is the same as Retrace with the exception that the truncated importance ratio is replaced with 1 (Harutyunyan et al., 2016). Please refer to Appendix B an expanded discussion on this design choice. Given an observation x_t, we can sample a 0t ∼ π_θ(·|x_t) to obtain the following Monte Carlo approximation 
+
+$gˆt^{acer} = \hat{ρ}_t∇φ_θ(x_t) log f(a_t|φ_θ(x_t))(Q opc(x_t, a_t) − Vθ_v (x_t)) +  ρ_t(a 0t ) − c ρ_t(a 0t )  + ( eQ_{θ_v} (x_t, a_0t ) − Vθ_v (x_t))∇φ_θ(x_t) log f(a 0t |φ_θ(x_t))$. (16)
+
+Given f and gˆt^{acer}, we apply the same steps as detailed in Section 3.3 to complete the update.
+
+The precise pseudo-code of ACER algorithm for continuous spaces results is presented in Appendix A. 
+
+Figure 3: [TOP] Screen shots of the continuous control tasks. [BOTTOM] Performance of different methods on these tasks. ACER outperforms all other methods and shows clear gains for the higherdimensionality tasks (humanoid, cheetah, walker and fish). The proposed trust region method by itself improves the two baselines (truncated importance sampling and A3C) significantly. 
+
+## 6 RESULTS ON MUJOCO
+We evaluate our algorithms on 6 continuous control tasks, all of which are simulated using the MuJoCo physics engine (Todorov et al., 2012). For descriptions of the tasks, please refer to Appendix E.1. Briefly, the tasks with action dimensionality in brackets are: cartpole (1D), reacher (3D), cheetah (6D), fish (5D), walker (6D) and humanoid (21D). These tasks are illustrated in Figure 3.
+
+To benchmark ACER for continuous control, we compare it to its on-policy counterpart both with and without trust region updating. We refer to these two baselines as A3C and Trust-A3C. Additionally, we also compare to a baseline with replay where we truncate the importance weights over trajectories as in (Wawrzy´nski, 2009). For a detailed description of this baseline, please refer to Appendix E. Again, we run this baseline both with and without trust region updating, and refer to these choices as Trust-TIS and TIS respectively. Last but not least, we refer to our proposed approach with SDN and trust region updating as simply ACER. All five setups are implemented in the asynchronous A3C framework.
+
+All the aforementioned setups share the same network architecture that computes the policy and state values. We maintain an additional small network that computes the stochastic A values in the case of ACER. We use n = 5 (using the notation in Equation (13)) in all SDNs. Instead of mixing on-policy and replay learning as done in the Atari domain, ACER for continuous actions is entirely off-policy, with experiences generated from the simulator (4 times on average). When using replay, we add to each thread a replay memory that is 5, 000 frames in size and perform updates every 50 steps (k = 50 in the notation of Section 2). The rate of the soft updating (α as in Section 3.3) is set to 0.995 in all setups involving trust region updating. The truncation threshold c is set to 5 for ACER. 
+
+We use diagonal Gaussian policies with fixed diagonal covariances where the diagonal standard deviation is set to 0.3. For all setups, we sample the learning rates log-uniformly in the range [10−4 , 10−3.3 ]. For setups involving trust region updating, we also sample δ uniformly in the range [0.1, 2]. With all setups, we use 30 sampled hyper-parameter settings.
+
+The empirical results for all continuous control tasks are shown Figure 3, where we show the mean and standard deviation of the best 5 out of 30 hyper-parameter settings over which we searched(3 For videos of the policies learned with ACER, please see: https://www.youtube.com/watch?v=NmbeQYoVv5g&list=PLkmHIkhlFjiTlvwxEnsJMs3v7seR5HSP-.). For sensitivity analyses with respect to the hyper-parameters, please refer to Figures 5 and 6 in the Appendix.
+
+In continuous control, ACER outperforms the A3C and truncated importance sampling baselines by a very significant margin.
+
+Here, we also find that the proposed trust region optimization method can result in huge improvements over the baselines. The high-dimensional continuous action policies are much harder to optimize than the small discrete action policies in Atari, and hence we observe much higher gains for trust region optimization in the continuous control domains. In spite of the improvements brought in by trust region optimization, ACER still outperforms all other methods, specially in higher dimensions.
+
+### 6.1 ABLATIONS
+To further tease apart the contributions of the different components of ACER, we conduct an ablation analysis where we individually remove Retrace / Q(λ) off-policy correction, SDNs, trust region, and truncation with bias correction from the algorithm. As shown in Figure 4, Retrace and offpolicy correction, SDNs, and trust region are critical: removing any one of them leads to a clear deterioration of the performance. Truncation with bias correction did not alter the results in the Fish and Walker2d tasks. However, in Humanoid, where the dimensionality of the action space is much higher, including truncation and bias correction brings a significant boost which makes the originally kneeling humanoid stand. Presumably, the high dimensionality of the action space increases the variance of the importance weights which makes truncation with bias correction important. For more details on the experimental setup please see Appendix E.4. 
+
+## 7 THEORETICAL ANALYSIS
+Retrace is a very recent development in reinforcement learning. In fact, this work is the first to consider Retrace in the policy gradients setting. For this reason, and given the core role that Retrace plays in ACER, it is valuable to shed more light on this technique. In this section, we will prove that Retrace can be interpreted as an application of the importance weight truncation and bias correction trick advanced in this paper.
+
+Consider the following equation:
+
+$Q^π (x_t, a_t) = Ex_{t+1}at+1 [rt + γρ_{t+1}Q^π (x_{t+1}, a_{t+1})]$ . (17)
+
+If we apply the weight truncation and bias correction trick to the above equation we obtain
+
+$Q^π (x_t, a_t) = Ex_{t+1}at+1 " r_t + γ\hat{ρ}t+1Q^π (x_{t+1}, a_{t+1}) + γ E_{a∼π}   ρ_{t+1}(a) − c ρ_{t+1}(a)  + Q^π (x_{t+1}, a) !#$ . (18)
+
+By recursively expanding Q^π as in Equation (18), we can represent Q^π (x, a) as:
+
+$Q^π (x, a) = Eµ  \sum_{t≥0 γ t  t i Y=1 \hat{ρ}i ! r_t + γ E b∼π   ρ_{t+1}(b) − c ρ_{t+1}(b)  + Q^π (x_{t+1}, b) !!   $. (19)
+
+The expectation Eµ is taken over trajectories starting from x with actions generated with respect to µ. When Q^π is not available, we can replace it with our current estimate Q to get a return-based 
+
+Figure 4: Ablation analysis evaluating the effect of different components of ACER. Each row compares ACER with and without one component. The columns represents three control tasks. Red lines, in all plots, represent ACER whereas green lines ACER with missing components. This study indicates that all 4 components studied improve performance where 3 are critical to success. Note that the ACER curve is of course the same in all rows. 
+
+esitmate of Q^π . This operation also defines an operator:
+
+$BQ(x, a) = Eµ  \sum_{t≥0 γ t  t i Y=1 \hat{ρ}i ! r_t + γ E b∼π   ρ_{t+1}(b) − c ρ_{t+1}(b)  + Q(x_{t+1}, b) !!   $. (20)
+
+In the following proposition, we show that B is a contraction operator with a unique fixed point Q^π and that it is equivalent to the Retrace operator.
+
+Proposition 1. The operator B is a contraction operator such that kBQ − Q^πk ∞ ≤ γk Q − Q^πk ∞ and B is equivalent to Retrace.
+
+The above proposition not only shows an alternative way of arriving a_t the same operator, but also provides a different proof of contraction for Retrace. Please refer to Appendix C for the regularization conditions and proof of the above proposition.
+
+Finally, B, and therefore Retrace, generalizes both the Bellman operator T π and importance sampling. Specifically, when c = 0, B = T π and when c = ∞, B recovers importance sampling; see Appendix C. 
+
+## 8 CONCLUDING REMARKS
+We have introduced a stable off-policy actor critic that scales to both continuous and discrete action spaces. This approach integrates several recent advances in RL in a principle manner. In addition, it integrates three innovations advanced in this paper: truncated importance sampling with bias correction, stochastic dueling networks and an efficient trust region policy optimization method.
+
+We showed that the method not only matches the performance of the best known methods on Atari, but that it also outperforms popular techniques on several continuous control problems.
+
+The efficient trust region optimization method advanced in this paper performs remarkably well in continuous domains. It could prove very useful in other deep learning domains, where it is hard to stabilize the training process.
+
+## Acknowledgments
+We are very thankful to Marc Bellemare, Jascha Sohl-Dickstein, and S´ebastien Racaniere for proofreading and valuable suggestions.
+

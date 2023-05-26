@@ -1,0 +1,7 @@
+# SpanBERT: Improving Pre-training by Representing and Predicting Spans
+SpanBERT：通过表示和预测跨度来改进预训练 https://arxiv.org/abs/1907.10529
+
+## Abstract
+We present SpanBERT, a pre-training method that is designed to better represent and predict spans of text. Our approach extends BERT by (1) masking contiguous random spans, rather than random tokens, and (2) training the span boundary representations to predict the entire content of the masked span, without relying on the individual token representations within it. SpanBERT consistently outperforms BERT and our better-tuned baselines, with substantial gains on span selection tasks such as question answering and coreference resolution. In particular, with the same training data and model size as BERT-large, our single model obtains 94.6% and 88.7% F1 on SQuAD 1.1 and 2.0, respectively. We also achieve a new state of the art on the OntoNotes coreference resolution task (79.6\% F1), strong performance on the TACRED relation extraction benchmark, and even show gains on GLUE.
+
+我们提出了SpanBERT，一种预训练方法，旨在更好地表示和预测文本的跨度。我们的方法通过(1)掩盖连续的随机跨度，而不是随机令牌，以及(2)训练跨度边界表示来预测掩盖跨度的整个内容，而不依赖其中的单个令牌表示来扩展BERT。SpanBERT始终优于BERT和我们更好地调整的基线，在回答问题和共指解决等跨度选择任务上有了显著的进步。特别是，在与BERT大的训练数据和模型大小相同的情况下，我们的单个模型在SQuAD 1.1和2.0上分别获得94.6%和88.7%的F1。我们还实现了OntoNotes共指解析任务(79.6\%F1)的最新水平，在TACRED关系提取基准测试中表现出色，甚至在GLUE上也取得了进步。

@@ -1,0 +1,10 @@
+# TinyBERT: Distilling BERT for Natural Language Understanding
+https://arxiv.org/abs/1909.10351
+
+Language model pre-training, such as BERT, has significantly improved the performances of many natural language processing tasks. However, pre-trained language models are usually computationally expensive, so it is difficult to efficiently execute them on resource-restricted devices. To accelerate inference and reduce model size while maintaining accuracy, we first propose a novel Transformer distillation method that is specially designed for knowledge distillation (KD) of the Transformer-based models. By leveraging this new KD method, the plenty of knowledge encoded in a large teacher BERT can be effectively transferred to a small student Tiny-BERT. Then, we introduce a new two-stage learning framework for TinyBERT, which performs Transformer distillation at both the pretraining and task-specific learning stages. This framework ensures that TinyBERT can capture he general-domain as well as the task-specific knowledge in BERT.
+
+TinyBERT with 4 layers is empirically effective and achieves more than 96.8% the performance of its teacher BERTBASE on GLUE benchmark, while being 7.5x smaller and 9.4x faster on inference. TinyBERT with 4 layers is also significantly better than 4-layer state-of-the-art baselines on BERT distillation, with only about 28% parameters and about 31% inference time of them. Moreover, TinyBERT with 6 layers performs on-par with its teacher BERTBASE.
+
+语言模型预训练，如BERT，显著提高了许多自然语言处理任务的性能。然而，预先训练的语言模型通常在计算上很昂贵，因此很难在资源受限的设备上有效地执行它们。为了在保持准确性的同时加快推理并减小模型大小，我们首先提出了一种新的Transformer蒸馏方法，该方法专门为基于Transformer的模型的知识蒸馏(KD)而设计。通过利用这种新的KD方法，大型教师BERT中编码的大量知识可以有效地传递给小型学生Tiny BERT。然后，我们为TinyBERT引入了一个新的两阶段学习框架，该框架在预训练和任务特定学习阶段都执行Transformer蒸馏。该框架确保TinyBERT能够捕获BERT中的一般领域以及任务特定知识。
+
+具有4层的TinyBERT在经验上是有效的，在GLUE基准测试中达到了其教师BERTBASE的96.8%以上的性能，而在推理方面则小了7.5倍，快了9.4倍。4层的TinyBERT在BERT蒸馏方面也明显优于4层最先进的基线，只有大约28%的参数和大约31%的推断时间。此外，具有6层的TinyBERT表现与教师BERTBASE不相上下。
