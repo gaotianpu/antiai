@@ -1,7 +1,7 @@
 # AI论文和代码实现
 
 ## * 最近进展
-* [chatGPT](./paper/thinking_chatGPT.md)
+* [chatGPT](./thinking/chatGPT.md)
     * Google 的 [我们没有护城河，OpenAI也没有](https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9807727802367385070%22%7D&n_type=-1&p_from=-1), 总结了时下大语言模型的开源进展~
 * 视觉领域
     * Meta的 [Segment Anything](./paper/Multimodal/Segment_Anything.md)，分割一切，GUI形式的人机对齐，chat形式之外的另一种GUI对齐形式，应用场景应该也会比chat形式更广泛？
@@ -29,13 +29,16 @@
 
 
 ## 二、基础组件
-1. [线性回归 Linear regression](./basic/linear_regression.md)
+1. [标量、向量、矩阵、张量](./basic/vector.md)
+    * 具体事物、现象，文本，图片，音频等的数学表述
+
+2. [线性回归 Linear regression](./basic/linear_regression.md)
     * 回归问题，预测连续值，线性函数，随机初始化，均方误差损失，梯度下降/上升，优化方法：随机/小批量随机
 
-2. [逻辑回归 logistic regression](./basic/logistic_regression.md)
+3. [逻辑回归 logistic regression](./basic/logistic_regression.md)
     * 分类问题，预测离散分类标签(也可输出连续的概率值)，线性+sigmod/softmax，交叉熵损失/负对数似然，分类的评估指标
 
-3. [多层感知机 MLP(Multilayer Perceptron)](./basic/mlp.md)
+4. [多层感知机 MLP(Multilayer Perceptron)](./basic/mlp.md)
     * 也叫：前馈神经网络 FFN（feedforward neural network）
     * 线性+非线性的深度堆叠可以模拟各种多项式 [Polynomial Regression As an Alternative to Neural Nets](https://arxiv.org/abs/1806.06850)。像欧几里得能够只用直尺(线性)和圆规(非线性)就能推导出200多个几何定律一样的奇妙。
     * 深度网络训练过程中的梯度消失/爆炸问题会导致训练的崩塌、不收敛： [激活函数](./basic/Activation.md)，[归一化策略](./basic/Normalization.md)
@@ -43,15 +46,15 @@
     * 过拟合 -> [正则化策略](./basic/regularization.md)：复杂度惩罚, dropout, 早停等
     * 隐藏层的研究： 梯度变化情况; 梯度消失侦测; 可视化等 
 
-4. [激活函数 Activation functions](./basic/Activation.md)
-5. [归一化 Normalization](./basic/Normalization.md) 
-6. [损失函数和评估指标 Loss & Metric](./basic/Loss_metric.md)
-7. [优化器和学习率 Optimizer & learning rate](./basic/Optimizer.md)
-8. [正则化 Regularization](./basic/regularization.md) 
+5. [激活函数 Activation functions](./basic/Activation.md)
+6. [归一化 Normalization](./basic/Normalization.md) 
+7. [损失函数和评估指标 Loss & Metric](./basic/Loss_metric.md)
+8. [优化器和学习率 Optimizer & learning rate](./basic/Optimizer.md)
+9. [正则化 Regularization](./basic/regularization.md) 
     * 防止过拟合，在超大数据集面前，过拟合似乎不是个事儿
 
 
-## 三、机器学习模型架构的发展
+## 三、架构演化
 1. SVM/GBDT/[MLP](./basic/mlp.md)
 2. 用于序列处理的 [RNN](./paper/nlp/rnn.md): [LSTM](./paper/nlp/lstm.md),[GRU](./paper/nlp/gru.md)
 3. 用于图像处理的 [CNN](./paper/cnn/README.md): [LeNet](./paper/cnn/LeNet.md),[AlexNet](./paper/cnn/alexnet.md),[VGG](./paper/cnn/vgg.md),[ResNet](./paper/cnn/resnet.md),[CSPnet](./paper/cnn/cspnet.md),[ConvNeXt](./paper/cnn/ConvNeXt.md)
@@ -59,7 +62,7 @@
 5. 极简架构的尝试：[MLP-mixer](./paper/mlp-mixer.md), 未来是否还有更好的，能够替代Transformers的架构？
 
 
-## 四、Transformers 基础
+## 四、Transformers
 1. 自然语言 [Attention Is All You Need](./paper/nlp/transformer.md) 
 2. 视觉 ViT [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](./paper/vit/ViT.md)
 3. 多模态的改进：[MAGNETO:post/pre/sub-LN](./paper/Multimodal/MAGNETO.md), [BEiT-3,不同模态，不同的FFN](./paper/Multimodal/BEiT_v3.md)
@@ -68,12 +71,12 @@
 6. [MegaByte](./paper/MegaByte.md)
     * 多模输入更统一：文本、图像、视频，都当成一串连续字节输入；
     * 可以处理超长字节串；
-    * 并行生成，多快好省
+    * 并行生成，多快好省。 并行分块(多token)生成，是不是意味着RLHF就没用了？
 6. 稀疏专家模型：[调研](./paper/Sparse_Expert_review.md), [X-MoE](./paper/X-MoE.md), [SwitchT](./paper/Switch_Transformers.md)
 7. 开源的基础架构：[TorchScale](./paper/Multimodal/TorchScale.md) 
 
 
-## 五、 预训练的几种范式
+## 五、 预训练范式
 | | 掩码自动编码 | 生成式自回归 | 编码-解码 | [对比学习](./paper/contrastive_learning.md) | 掩码+对比
 | --- | --- | --- | --- | --- | ---
 | 自然语言 | [BERT](./paper/nlp/bert.md) | [GPT-1](./paper/nlp/gpt.md),[2](./paper/nlp/gpt_2.md),[3](./paper/nlp/gpt_3.md) | [BART](./paper/nlp/BART.md), [T5](./paper/nlp/T5.md), [Marian](./paper/nlp/Marian.md) | [cpt-txt/code](./paper/nlp/cpt-txt.md) | ---

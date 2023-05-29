@@ -11,6 +11,14 @@ A good activation function can make the gradient more efficiently propagated, an
 
 一个好的激活函数可以使梯度更有效地传播，同时不会造成太多额外的计算成本。 2010年，Nair和Hinton [56] 提出 ReLU 来大幅解决传统 tanh 和 sigmoid 激活函数中经常遇到的梯度消失问题。随后，LReLU [54]、PReLU [24]、ReLU6 [28]、Scaled Exponential Linear Unit (SELU) [35]、Swish [59]、hard-Swish [27]和Mish [55]等已经被提出用于解决梯度消失问题。 LReLU和PReLU的主要目的是解决输出小于零时ReLU的梯度为零的问题。至于 ReLU6 和 hard-Swish，它们是专门为量化网络设计的。对于神经网络的自归一化，提出了 SELU 激活函数来满足目标。需要注意的一点是 Swish 和 Mish 都是连续可微的激活函数。
 
+整个表格更好些？
+
+激活函数|提出时间|公式|最大值|最小值|图示
+---|---|---|---|---|---
+Sigmod|？| $σ(x)=\frac{1}{1+exp(-ex)}$| 1 | 0 | |
+
+
+
 * Sigmod
     * https://pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html
     * LogSigmoid
@@ -20,7 +28,7 @@ A good activation function can make the gradient more efficiently propagated, an
 * Tanh
     * https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html
     * Tanhshrink
-* ReLU  2010.4 [Rectified linear units improve restricted boltzmann machines](#56)
+* ReLU  2010.4 [Rectified linear units improve restricted boltzmann machines](https://icml.cc/Conferences/2010/papers/432.pdf) #56
     * https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html
     * rectified linear unit, 整流线性单元 $ReLU(x)=max(0,x)$
 * LReLU 2013.4 [Rectifier nonlinearities improve neural network acoustic models.](#54)
