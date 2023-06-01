@@ -115,7 +115,7 @@ class BinClassModel(nn.Module):
 #### 1.3.1 均方差
 原来的 $MSE_{loss} = (y_{predict} - Label)^2$ 可以表示为：
 
-$ MSE_{loss} =  \begin{cases}  (y_{predict} - 1)^2 , if \ Label = 1, \\ (y_{predict}-0)^2, \ if Label=0 \end{cases}$ 
+$MSE_{loss} =  \begin{cases}  (y_{predict} - 1)^2 , if \ Label = 1, \\ (y_{predict}-0)^2, \ if Label=0 \end{cases}$ 
 
 图中蓝色曲线表示均方差损失函数。
 
@@ -126,7 +126,7 @@ $BCE_{loss} = - [label * log(p) + (1-label) * log(1-p)]$
 
 同样，可以按照实际的Label值将上述式子拆成两部分：
 
-$ BCE_{loss} =  \begin{cases}  - log(p)  , if \ Label = 1, \\ - log(1-p), \ if \ Label=0 \end{cases}$ 
+$BCE_{loss} =  \begin{cases}  - log(p)  , if \ Label = 1, \\ - log(1-p), \ if \ Label=0 \end{cases}$ 
 
 图中绿色曲线表示交叉熵损失函数(BCE).
 
@@ -231,7 +231,7 @@ class MultiClassModel(nn.Module):
 
 NLL(negative log likelihood)， 负对数似然： 
 
-NLL_loss = $ - \sum_1^{class-cnt} Label_i * log(p_i) $
+NLL_loss = $- \sum_1^{class-cnt} Label_i * log(p_i)$
 
 https://pytorch.org/docs/stable/generated/torch.nn.NLLLoss.html 
 
