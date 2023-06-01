@@ -1,5 +1,6 @@
 import pandas as pd
 import torch
+import torch.nn as nn
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 
@@ -26,10 +27,51 @@ class IrisDataSet(Dataset):
 dataset = IrisDataSet('./Iris.data')
     
 # 单条记录
-features, label = next(iter(dataset))
-print(features, label)
+# features, label = next(iter(dataset))
+# print(features, label)
 
 #小批量加载
-dataloader = DataLoader(dataset, batch_size=4, shuffle=True)
-features, label = next(iter(dataloader))
-print(features, label)
+dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
+
+# features, label = next(iter(dataloader))
+# print(features, label)
+
+
+class MultiClassModel(nn.Module):
+    def __init__(self, input_dim, class_count):
+        super(MultiClassModel, self).__init__()
+        self.linear = nn.Linear(input_dim, class_count,bias=True)  
+        self.softmax = torch.nn.LogSoftmax(dim=1)
+
+    def forward(self, x):
+        out = self.linear(x)
+        # out = self.softmax(out)
+        return out
+
+def train_loop(dataloader, model, loss_fn, optimizer):
+    size = len(dataloader.dataset)
+    for batch, (X, y) in enumerate(dataloader):
+        # Compute prediction and loss
+        pred = model(X)
+        loss = loss_fn(pred, y)
+
+        # Backpropagation
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
+
+        if batch % 2 == 0:
+            loss, current = loss.item(), (batch + 1) * len(X)
+            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+
+learning_rate = 0.01
+model = MultiClassModel(4,3)
+# loss_fn = nn.NLLLoss() 
+loss_fn = nn.CrossEntropyLoss() 
+optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+
+epochs = 100
+for t in range(epochs):
+    print(f"Epoch {t+1}\n-------------------------------")
+    train_loop(dataloader, model, loss_fn, optimizer) 
+print("Done!")

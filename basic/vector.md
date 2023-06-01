@@ -1,4 +1,4 @@
-# 标量 scalar、向量 vector、矩阵 matrix、张量 tensor
+# 事物的向量化表示
 
 合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下 - 老子。
 
@@ -222,3 +222,6 @@ JPEG格式：[vit_jpeg](../paper/vit/vit_jpeg.md)
 ## 5. 音频
 
 待续！
+
+## 6. 多模统一输入
+文本、图像、音频最底层都是字节编码，在这个级别上多模输入的统一。[megabyte](../paper/MegaByte.md)
