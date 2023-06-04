@@ -40,12 +40,15 @@ dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
 class MultiClassModel(nn.Module):
     def __init__(self, input_dim, class_count):
         super(MultiClassModel, self).__init__()
-        self.linear = nn.Linear(input_dim, class_count,bias=True)  
+        hidden_dim = 2
+        self.fc1 = nn.Linear(input_dim, hidden_dim,bias=True)  
+        self.fc2 = nn.Linear(hidden_dim, class_count,bias=True)  
         self.softmax = torch.nn.LogSoftmax(dim=1)
 
     def forward(self, x):
-        out = self.linear(x)
-        # out = self.softmax(out)
+        out = torch.sigmoid(self.fc1(x))  
+        out = self.fc2(out) 
+        # out = torch.sigmoid(out)
         return out
 
 def train_loop(dataloader, model, loss_fn, optimizer):
@@ -64,7 +67,7 @@ def train_loop(dataloader, model, loss_fn, optimizer):
             loss, current = loss.item(), (batch + 1) * len(X)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
-learning_rate = 0.01
+learning_rate = 0.1
 model = MultiClassModel(4,3)
 # loss_fn = nn.NLLLoss() 
 loss_fn = nn.CrossEntropyLoss() 
@@ -75,3 +78,5 @@ for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train_loop(dataloader, model, loss_fn, optimizer) 
 print("Done!")
+
+# 0.353390

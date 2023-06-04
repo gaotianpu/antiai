@@ -6,7 +6,7 @@
 
 ## 1. 函数的概念
 ![函数示意图](./images/function.png)<br/>
-函数(function)本来的意思是作用、功能。我们可以先把它它理解成一个黑盒子：接收输入x，内部转换后f(x)，再输出y。例如，爆米花机接收大米作为输入，内部高温处理后，输出爆米花。工厂接收各种原材料，内部加工后，输出对应的工业制成品。 
+图 1: 函数(function)本来的意思是作用、功能。我们可以先把它它理解成一个黑盒子：接收输入x，内部转换后f(x)，再输出y。例如，爆米花机接收大米作为输入，内部高温处理后，输出爆米花。工厂接收各种原材料，内部加工后，输出对应的工业制成品。 
 
 函数的内部机制，可以很简单，例如：f(x)=x, 输入是啥，输出也是啥。也可以很复杂，可以是f(x) = a*x+b, $f(x) = a*x^2+b*x + c$, 也可以是个复合函数，即，多个函数的嵌套。$f(x) = f_3(f_2(f_1(x)))$。
 
@@ -16,7 +16,7 @@
 
 关于函数的更多概念：
 * 当函数的输入为1D时，f(x) = w*x + b, f(x)表示为2D空间中的一条直线。w为直线的斜率，b为直线的偏移量。 当输入为2D时，$f([x_0,x_1]) = w_0*x_0+w_1*x_1+b$, $f([x_0,x_1])表示为3D(立体)空间一个平面。当输入为2D+时，$f([x_0,x_1,x_2]) = w_0*x_0+w_1*x_1+w_2*x_2+b$, $f([x_0,x_1])表示为超空间上的一个超平面。
-* 可以将上述函数形式简写为向量形式：$f(X) = W*X + b, 大写的X表示输入向量，W表示系数向量。还可以进一步简化，省去b，X在原来维度基础上增加最后一维，值=1。 
+* 可以将上述函数形式简写为向量形式：$f(X) = W*X + b, 大写的X表示输入向量，W表示系数向量。还可以进一步简化，省去b，X在原来维度基础上增加最后一维，值=1。 (详细展开)
 * 一组输入，可以经过几个不同的函数分别产生对应的不同输出，为了便于表示，可以将W看做一个矩阵，行数等于函数的个数，列数等于每一个函数内部的参数数量，f(x)将不再是一个标量值，而是一个向量值。
 * 线性方程与非线性方程。x的幂次=1的，叫n元一次方程，表现为直线、平面、超平面，因此被叫做线性(Linear)函数；当x的幂次大于1时，例如 $f(x)=w_0*x^2 + w_1*x + b$ ，则表现为曲线、曲面，超曲面， 因此，叫做非线性函数。
 * 示意图
@@ -26,7 +26,7 @@
 从数据中找寻规律叫做回归(regression), 也称拟合(fit)。而线性回归，则是指用线性函数拟合数据。我们先从寻找简单规律搞起。
 
 ![Linear](./images/line_regression.png)<br/>
-如图所示，平面上分布着若干点，我们可以把这些点想象成一个匀速移动的物体轨迹，x轴表示时间，y轴表示移动的距离。如何寻找这些点的分布规律？
+图 2: 如图所示，平面上分布着若干点，我们可以把这些点想象成一个匀速移动的物体轨迹，x轴表示时间，y轴表示移动的距离。如何寻找这些点的分布规律？
 
 ``` python
 # 生成图中所示的数据
@@ -74,7 +74,7 @@ def model(x):
 我们在这里看看2种损失函数的性质： 我们将f(x) = w*x + b 代入到 $y_{predict}， 相当于 $ w*x + b - y_{true}$, 这个式子中，x , $y_{true}$, 实际上是已知变量了，未知变量为w 和 b 。为了更直观些，我们将已知变量x,y找个真实的数值代入，例如x=2,y=13, 这个式子就变成了 $ Loss = 2*w + b - 13 $ 。包含w,b两个未知变量的函数，需要3D坐标系中直观展示，还有点麻烦，我们再把式子中的b先干掉，只观察w对loss的影响，就得到一个可在2D平面坐标上展示的函数：
 
 ![Loss](./images/mse.png) <br/>
-x轴代表模型中w的不同值，y轴代表损失函数的大小。
+图 3: x轴代表模型中w的不同值，y轴代表损失函数的大小。
 
 绝对值误差函数会有一个尖锐的拐点，而平方差是一个平滑的曲线，因此选择平方差，有利于每次调整w,b时，更平滑。
 
@@ -101,6 +101,8 @@ print("mse_loss:",mse_loss(y_predict,y))
 
 #### 2.3.2. 最小二乘
 损失函数$(wx+b-y)^2=0$时损失函数最小。
+
+理论可行，实际中参数量巨大情况，不可行。
 
 #### 2.3.3. 梯度下降
 MSE损失函数： $Loss = (y_{predict} - y_{true})^2$, 根据微积分知识，对这个函数求导：$gradient = y_{predict} - y_{true} $ 。 将f(x)=w*x+b 替换 $y_{predict}$, 得到式子: $gradient = w*x + b - y_{true} $ , 这个式子中，x, $y_{true}$是已知量，w,b才是那个未知数。 w,b方向的偏导数分别是 gradient*x，gradient*1。
@@ -131,13 +133,7 @@ for i in range(100):
 
 ## 3. pytorch 实现
 * https://pytorch.org/docs/stable/generated/torch.nn.Linear.html
-    * 初始化策略 $U(-\sqrt{k},\sqrt{k})$, $k=\frac{1}{in_feathers}$ 
-* https://pytorch.org/docs/stable/generated/torch.ao.nn.quantized.Linear.html?highlight=linear
-    * 量化用，dtype=torch.qint8
-* https://pytorch.org/docs/stable/generated/torch.ao.nn.quantized.dynamic.Linear.html
-    * 动态量化
-* https://pytorch.org/docs/stable/generated/torch.ao.nn.qat.Linear.html
-    * FakeQuantize 
+    * 初始化策略 $U(-\sqrt{k},\sqrt{k})$, $k=\frac{1}{in_feathers}$  
 * https://pytorch.org/docs/stable/generated/torch.nn.MSELoss.html
     * 均方误差损失函数
 
