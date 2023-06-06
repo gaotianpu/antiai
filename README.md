@@ -1,8 +1,10 @@
 # AI论文和代码实现
 
+创新常常在边缘，请给探索以空间。
+
 ## * 最近进展
 * [chatGPT](./thinking/chatGPT.md)
-    * Google 的 [我们没有护城河，OpenAI也没有](https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9807727802367385070%22%7D&n_type=-1&p_from=-1), 总结了时下大语言模型的开源进展~
+    * Google 的 《我们没有护城河，OpenAI也没有》, 总结了时下大语言模型的开源进展~
 * 视觉领域
     * Meta的 [Segment Anything](./paper/Multimodal/Segment_Anything.md)，分割一切，GUI形式的人机对齐，chat形式之外的另一种GUI对齐形式，应用场景应该也会比chat形式更广泛？
 * 图像生成
@@ -85,9 +87,9 @@
 
 ### 说明
 * 三种范式的直观理解：
-    * 掩码自动编码，老师:锄禾x当午，x=？ 学生：日，老师：很好！再来一句
-    * 生成式自回归，老师：锄禾日当...,下一个？ 学生：午, 老师：很好，再下一个？ 学生：汗， 老师：很好,就像这样，继续！ 学生: 滴 禾 下 土 ...
-    * 对比学习，拿出香蕉的图片，但配的文字却是苹果，再拿出香蕉地点图片，配文也是香蕉，问学生那组图像-文字配对正确。
+    * 掩码自动编码，完形填空
+    * 生成式自回归，预测下一个token
+    * 对比学习
 * 三种范式与模型架构的发展是正交的，既，可以使用RNN/CNN/Transfomers实现这三种范式的训练, 只不过Transformers的优点太多了，近几年这三种范式都基于Transformers实现了。
 * 词嵌入是早期的预训练尝试，取得很好的成果，代表论文[word2vec](./paper/nlp/word2vec.md)，训练方式：
     * n-gram，根据前几个tokens预测下一个token，有点生成式的意思，和后来的GPT思路相似；
@@ -120,11 +122,9 @@
 1. 大规模训练技巧，GPU集群的运维、使用； 
     * [ColossalAI:分布式深度学习模型](https://github.com/hpcaitech/ColossalAI) 
 2. 模型轻量化：剪枝、量化、蒸馏
-    https://zhuanlan.zhihu.com/p/623744798, https://lilianweng.github.io/posts/2023-01-10-inference-optimization/
     * MLC LLM https://github.com/mlc-ai/mlc-llm
     * [Distilling Step-by-Step](./paper/Distilling_ss.md) 
     * [Quant-Noise:Training with Quantization Noise for Extreme Model Compression](https://arxiv.org/abs/2004.07320)
-    * https://zhuanlan.zhihu.com/p/613598877
     * [MiniViT: Compressing Vision Transformers with Weight Multiplexing](https://arxiv.org/abs/2204.07154)
     * 剪枝：是把连接直接干掉，还是权重为0？
     * 量化：训练后PTQ、训练中QAT；线性量化影响不大，激活函数量化影响较大

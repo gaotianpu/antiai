@@ -1,6 +1,6 @@
 # 逻辑回归 logistic regression
 
-上一节讲到的[线性回归 Linear regression](./linear_regression.md), 用来预测连续值。我们经常会遇到一些分类问题，例如：商品评论内容是正面的，还是负面的；新闻内容属于什么分类；图片是哪种动物等等。 这一节我们介绍分类问题，同样，我们先从简单的二分类问题入手。
+上一节讲到的[线性回归 Linear regression](./linear_regression.md), 模型用来预测输出连续值。这一节我们介绍分类问题，例如：商品评论内容是正面的，还是负面的；新闻内容属于什么分类；图片是哪种动物等等。 同样，我们先从简单的二分类问题入手。
 
 ## 1. 二分类问题
 ![二分类问题](../paper/images/bin_class.png)<br/>
@@ -52,18 +52,18 @@ print(labels.shape,features.shape)
 
 如何确定这个分割线(面)呢？
 
-### 1.2 模型假设
-我们仍然可以先使用线性回归的方式，分割线 y = w*x + b, 调整w,b值，让分割线两侧的点尽可能属于同一个类别。
+### 1.2 定义模型
+我们先按线性回归的思路考虑下是否可行：
 
-* y > (w*x+b) , 表示实际的y值比 分割线上x
-点对应的y值要大， 当label = 1 时分类正确，当label = 0 时分类错误，
-* y < (w*x+b) , 当label = 0 时分类正确，当label = 1 时分类错误
+和上一节演示的输入是一个x(标量值)的线性回归不同，我们将这里的输入是有两个维度的向量(x,y), 而分类标签可以看成另外有维度z。每个数据就是一个3维的向量，这样就构成了一个3D空间，在这个空间中有2个垂直与z轴的平面，z=1的平面上分布着label=1的点，z=0的平面上分布着label=0的点。 需要在这个3D空间里寻找一个平面用于拟合两种不同分类的点。即：
 
-这种方式只能统计分类正确/错误的数量，衡量结果是离散的，不平滑的。无法指导更新模型参数a,b。那么，什么样的损失函数能够指导参数更新呢？
+$z = w_0*x + w_1*y + b $
 
-换个思路，我们把二分类问题当成一个概率问题，分别预测某个样本所属的概率，正样本概率为p，则对应的负样本为1-p。为了得到样本对应的概率值，我们需要找到一个函数将线性函数(ax+b)的输出映射到一个(0,1)之间的值。假设分割线的位置的概率=0.5, 该函数应该让分割线(0.5)附近的值应该更有区分度，而远离分割线的正样本应该趋近于1，远离分割线的负样本应该趋近于0，并且，这种映射关系应该是平滑渐变的。
+但是，这种模型假设存在一个严重问题：z的真实值，也就是实际的Label值，只有0或1两种可能，而这个模型的输出值则是任意区间的，分布在拟合面上的(x,y,$z_{predict}$ 向量，大多数可能并不会在z=0,或 z=1的平面上。这样存在的问题是，z的预测值和真实的label值之间存在的误差将无法收敛到较小的范围内。
 
-我们介绍下sigmod函数，$σ(x) = \frac{1}{1+e^{-x}} $，(复合函数 composite function的概念) 
+我们需要一个机制(函数)，能够将z的值映射到(0,1]区间内。z>0.5的情况都映射到1,z<0.5的情况下，都映射到0。这样就能将大多数样本的预测值和真实值的误差降低为0. 数学中，有个sigmoid函数刚好就能干这件事：
+
+sigmod函数： $σ(x) = \frac{1}{1+e^{-x}} $
 
 ```python
 # 生成sigmod示意图
@@ -82,9 +82,19 @@ plt.show()
 ![sigmoid](../paper/images/sigmoid.png) <br/>
 图 2：sigmod函数。能将任意一个x转换成(0,1]之间的值，当x值很大时，都无限接近1，当x值很小时，都无限趋近与0。满足了将任意数值转换为概率区间的要求。而中间数值输出0.5左右的值，区分度很大。就可以解决样本距离分隔面远近问题。很好满足了上面提到的从普通数值映射到概率值的需求。
 
-到此，分类问题的模型函数就变成先过一个线性函数得到一个预测的数值，再将该数值通过sigmoid函数映射成为一个(0,1]的概率值:
 
-$f(x) = \frac{1}{ 1 + e^{-(w*x+b)}} $
+到此，分类问题的模型函数就变成了一个复合函数：先过一个线性函数得到一个预测的数值，再将该数值通过sigmoid函数映射成为一个(0,1]的概率值:
+
+$linear(x_0,x_1) = w_0*x_0 + w_1*x_1 +b$
+
+$sigmoid(x) = \frac{1}{ 1 + e^{-linear(x_0,x_1)}}$
+
+合起来：
+
+$f(x) = \frac{1}{ 1 + e^{-(w_0*x_0 + w_1*x_1 +b)}} $
+
+![sigmoid+linear](./images/logistic_reg.png)<br/>
+图3：sigmoid + linear。来源：https://www.geogebra.org/3d/exsyfuhz
 
 ```python
 # 模型的pytorch实现
@@ -103,38 +113,37 @@ class BinClassModel(nn.Module):
 ```
 
 ### 1.3 定义损失函数
-有了模型之后，用什么样的损失函数来指导模型参数更新呢？
+定义完模型之后，用什么样的损失函数来指导模型参数更新呢？
 
 第一种，还使用线性回归的均方差(MSE)函数。第二种，使用交叉熵损失函数。我们先通过这两个函数的示意图看它们之间的区别。
 
-![MSE and BinCrossEntroy](../paper/images/mse_bce.png)<br/>
-图3：方差和交叉熵函数的对比。 (制作工具：https://www.geogebra.org/graphing?lang=zh_CN)
-
-
 上一节中，模型经过线性+sigmod后对外输出一个(0,1]之间的概率值。而对应的分类标签(Label)只有2个离散值，0或1。
 
-#### 1.3.1 均方差
+#### 1.3.1 方差
 原来的 $MSE_{loss} = (y_{predict} - Label)^2$ 可以表示为：
 
-$MSE_{loss} =  \begin{cases}  (y_{predict} - 1)^2 , if \ Label = 1, \\ (y_{predict}-0)^2, \ if Label=0 \end{cases}$ 
+$MSE_{loss} =  \begin{cases}  (y_{predict} - 1)^2 ，  if \ Label = 1, \\ (y_{predict}-0)^2 ， \ if \ Label=0 \end{cases}$ 
 
-图中蓝色曲线表示均方差损失函数。
+图4中蓝色曲线表示方差损失函数。
 
 #### 1.3.2 交叉熵
-接下来，再引入一个二分类的交叉熵损失函数, 假设模型的输出就是Label=1的概率值p，那么属于Label=0的概率值就是 1-p。交叉熵损失函数的公式如下：
+接下来，再引入一个针对二分类问题的交叉熵损失函数。模型内部经过sigmoid函数后，输出(0,1]这样的区间值，因此可以将二分类问题看成一个概率问题。假设模型的输出的值表示的是Label=1的概率值，那么属于Label=0的概率值就是 1-p。交叉熵损失函数的公式如下：
 
 $BCE_{loss} = - [label * log(p) + (1-label) * log(1-p)]$
 
 同样，可以按照实际的Label值将上述式子拆成两部分：
 
-$BCE_{loss} =  \begin{cases}  - log(p)  , if \ Label = 1, \\ - log(1-p), \ if \ Label=0 \end{cases}$ 
+$BCE_{loss} =  \begin{cases}  - log(p)  ， if \ Label = 1, \\ - log(1-p) ， \ if \ Label=0 \end{cases}$ 
 
-图中绿色曲线表示交叉熵损失函数(BCE).
+图4中绿色曲线表示交叉熵损失函数(BCE).
+
+![MSE and BinCrossEntroy](../paper/images/mse_bce.png)<br/>
+图4：方差和交叉熵函数的对比。 (制作工具：https://www.geogebra.org/graphing?lang=zh_CN)
 
 #### 1.3.3 均方差 vs. 交叉熵
-观察对比图中的均方差和交叉熵损失函数曲线，我们可以发现：
+观察对比图4中的均方差和交叉熵损失函数曲线，我们可以发现：
 * 输入值 x(对应模型输出的概率值p) 在(0,1]之间，这个是由模型中sigmod函数输出决定的；y轴则是损失函数输出误差值。
-* 当预测的概率值接近正确标签时，例如：当Label=0时，x值越接近0, 两个损失函数的值都越小；反之，当Label=1时，x值越接近1，损失函数值越小。这种情况下，两个函数差别不大。
+* 当预测的概率值接近正确标签时，例如：当Label=0时，p值越接近0, 两个损失函数的值都越小；反之，当Label=1时，p值越接近1，损失函数值越小。这种情况下，两个函数差别不大。
 * 当预测的概率值远离正确标签时，差别比较明显：均方差对于远离值的惩罚力度有上限，能输出的最大误差值=1。而交叉熵损失函数则明显没有最大值限制，因此可以对预测不正确的情况给予较大的惩罚。
 * 当预测的概率值为中间值0.5附近时，交叉熵能给出的区分区间更大些，这种能力有助于更好的分类中间派的困难样本。
 
@@ -144,7 +153,7 @@ $BCE_{loss} =  \begin{cases}  - log(p)  , if \ Label = 1, \\ - log(1-p), \ if \ 
 ### 1.4 模型参数调优
 同线性回归问题一样，确定损失函数后，需要知道损失函数的梯度，有了梯度后，就可以指导模型参数调优了。
 
-交叉熵损失函数的梯度：
+交叉熵损失函数，再结合sigmoid函数，最终的梯度：
 
 $Label - y_{predict}$
 
@@ -198,17 +207,18 @@ run_BinClass()
 因为二分类的结果只有两种可能，因此只需要求某一类的概率p值，另一类的概率就是1-p。因此线性函数只需输出一个值给sigmod函数就可以了。
 
 ### 2.1 定义模型
-而多分类问题需要为每一个分类算出一个概率值p，因此，如果总计有n个分类，就需要有n个不同的线性函数，用于将输入映射对应到n个不同类的值。
+多分类问题需要为每一个分类算出一个概率值p，因此，如果总计有k个分类，就需要有k个不同的线性函数，用于将输入映射对应到k个不同类的值。
 
-模型结构示意图
+![多分类模型结构](./images/multi-class.png)<br/>
+图5：多分类模型结构示意图。输入X与k组向量参数(k=class count)相乘得到k个输出，再经过softmax得到每个分类的概率值$p_i$, softmax能保证所有这些$p_i$值的和为1.
 
-每个分类都有一个(0,1]之间的概率值，所有分类的概率值加起来应该等于1。为了保证这个约束条件，需要引入softmax函数，对线性函数的n个对应的分类值做处理：
+$softmax(p_i) = \frac{e^{p_i}}{\sum_{i=1}^k e^{p_i}} $
 
-$softmax(x_i) = \frac{e^{s_i}}{\sum_{i=1}^{class-cnt} e^{s_i}} $
+pytorch实现：https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html 
 
-https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html 
+实际上，当$p_i$过大或过下时，执行在计算$e^{p_i}$时容易出现数值溢出的情况，另外softmax的输出区间[0,1],区分度较小，如果加上log后输出值的区分度变大，更有利于做梯度更新。因此pytorch提供了一个LogSoftmax实现：
 
-$LogSoftmax(x_i) = log(\frac{e^{s_i}}{\sum_{i=1}^{class-cnt} e^{s_i}}) $
+$LogSoftmax(p_i) = log(softmax(p_i)) = log(\frac{e^{p_i}}{\sum_{i=1}^k e^{p_i}}) $
 
 https://pytorch.org/docs/stable/generated/torch.nn.LogSoftmax.html 
 
@@ -232,7 +242,7 @@ class MultiClassModel(nn.Module):
 
 NLL(negative log likelihood)， 负对数似然： 
 
-NLL_loss = $- \sum_1^{class-cnt} Label_i * log(p_i)$
+NLL_loss = $- \sum_1^{k} Label_i * log(p_i)$
 
 https://pytorch.org/docs/stable/generated/torch.nn.NLLLoss.html 
 

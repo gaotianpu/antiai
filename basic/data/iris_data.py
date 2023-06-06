@@ -25,16 +25,16 @@ class IrisDataSet(Dataset):
         return features, label
 
 dataset = IrisDataSet('./Iris.data')
-    
+dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
+   
 # 单条记录
 # features, label = next(iter(dataset))
 # print(features, label)
+# print(features.shape, label.shape)
 
-#小批量加载
-dataloader = DataLoader(dataset, batch_size=50, shuffle=True)
-
+# batch
 # features, label = next(iter(dataloader))
-# print(features, label)
+# print(features.shape, label.shape)
 
 
 class MultiClassModel(nn.Module):
@@ -48,7 +48,7 @@ class MultiClassModel(nn.Module):
     def forward(self, x):
         out = torch.sigmoid(self.fc1(x))  
         out = self.fc2(out) 
-        # out = torch.sigmoid(out)
+        # out = self.softmax(out)
         return out
 
 def train_loop(dataloader, model, loss_fn, optimizer):
@@ -69,8 +69,8 @@ def train_loop(dataloader, model, loss_fn, optimizer):
 
 learning_rate = 0.1
 model = MultiClassModel(4,3)
-# loss_fn = nn.NLLLoss() 
-loss_fn = nn.CrossEntropyLoss() 
+# loss_fn = nn.NLLLoss()  #模型最后一层带 softmax
+loss_fn = nn.CrossEntropyLoss() # 不带softmax
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
 epochs = 100

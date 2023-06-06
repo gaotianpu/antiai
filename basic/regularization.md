@@ -1,6 +1,5 @@
 # 正则化 regularization
-解决过拟合问题~
-https://zhuanlan.zhihu.com/p/64549066
+
 
 1. 数据增广
 2. L1 和 L2 正则化
