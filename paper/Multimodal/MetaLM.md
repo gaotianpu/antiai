@@ -247,7 +247,7 @@ We conduct single-task finetuning on the natural language inference dataset MNLI
 #### 3.4.2 Results
 Table 3 reports single-task finetuning accuracy. MNLI-m and -mm represent the matched and the mismatched validation sets respectively. Each score is the average of three runs with different random seeds. Compared with GPT, MetaLM improves the accuracy of MNLI by 3.4 absolute points, despite updating much fewer parameters. In addition to Section 3.3, the results show that bidirectional encoders benefit finetuning performance (Wang et al., 2022b; Tay et al., 2022; Artetxe et al., 2022). Furthermore, we also present three strong baselines derived from finetuning bidirectional language encoders, including BERT (Devlin et al., 2019), RoBERTa (Liu et al., 2019b) and ELECTRA (Clark et al., 2020). All these three models are in large size. Results show that MetaLM achieves comparable or better performance than the bidirectional encoders.
 
-表 3 报告了单任务微调精度。 MNLI-m和-mm分别代表匹配和不匹配的验证集。 每个分数是使用不同随机种子的三个运行的平均值。 与 GPT 相比，MetaLM 将 MNLI 的准确率提高了 3.4 个绝对点，尽管更新的参数少得多。 除了第 3.3 节之外，结果还表明双向编码器有利于微调性能(Wang et al., 2022b; Tay et al., 2022; Artetxe et al., 2022)。 此外，我们还提出了三个源自微调双向语言编码器的强大基线，包括 BERT (Devlin et al., 2019)、RoBERTa (Liu et al., 2019b) 和 ELECTRA (Clark et al., 2020)。 这三个模型都是大尺寸。 结果表明，MetaLM 实现了与双向编码器相当或更好的性能。
+表 3 报告了单任务微调精度。 MNLI-m和-mm分别代表匹配和不匹配的验证集。 每个分数是使用不同随机种子的三个运行的平均值。 与 GPT 相比，MetaLM 将 MNLI 的精度提高了 3.4 个绝对点，尽管更新的参数少得多。 除了第 3.3 节之外，结果还表明双向编码器有利于微调性能(Wang et al., 2022b; Tay et al., 2022; Artetxe et al., 2022)。 此外，我们还提出了三个源自微调双向语言编码器的强大基线，包括 BERT (Devlin et al., 2019)、RoBERTa (Liu et al., 2019b) 和 ELECTRA (Clark et al., 2020)。 这三个模型都是大尺寸。 结果表明，MetaLM 实现了与双向编码器相当或更好的性能。
 
 
 Model | MNLI -m | (acc)  -mm

@@ -150,7 +150,7 @@ Our MAE pre-training configuration mostly follows [31]. We use the AdamW optimiz
 ##　5 Experiments
 In Sec. 5.1 and Sec. 5.2 we perform ablation experiments on Kinetics-400 (K400) [35]. We do MAE self-supervised pre-training and then fine-tune the encoder with supervision for evaluation. We report top-1 classification accuracy (%) on the K400 validation set. In Sec. 5.3 we study more pre-training datasets and downstream tasks. 
 
-在第5.1节和第5.2节中，我们对Kinetics-400(K400)进行了消融实验[35]。我们进行MAE自监督预训练，然后在监督下微调编码器进行评估。我们报告了K400验证集的top-1分类准确率(%)。在第5.3节中，我们研究了更多的预训练数据集和下游任务。
+在第5.1节和第5.2节中，我们对Kinetics-400(K400)进行了消融实验[35]。我们进行MAE自监督预训练，然后在监督下微调编码器进行评估。我们报告了K400验证集的top-1分类精度(%)。在第5.3节中，我们研究了更多的预训练数据集和下游任务。
 
 With a masking ratio of 90%, the sparse variant reduces FLOPs by 7.7×. This reduces computation time by 5.8×. In our infra, computation is so fast that data loading becomes a bottleneck, which leads to an actual speedup of 4.1×. Profiling is with synchronized SGD over 16 nodes, each with 8 A100 GPUs and 80 CPU cores. The training length is 800 epochs.
 
@@ -159,7 +159,7 @@ With a masking ratio of 90%, the sparse variant reduces FLOPs by 7.7×. This red
 ### 5.1 Performance
 Fig. 5 compares MAE pre-training vs. no pre-training (i.e., training from scratch), using vanilla ViT-L [18]. The from-scratch recipe follows [77] and has 71.4% accuracy(2The ViT-B result is 68.5% [77] trained from scratch using this recipe). As a comparison, using MAE pre-training for 800 epochs, the same vanilla ViT-L achieves 84.4% accuracy, which has a large increase of 13.0% absolute vs. training from scratch. This gap is much larger than that on image recognition tasks (∼3% [31]), suggesting that MAE pre-training is more helpful for video recognition.
 
-图5比较了MAE预训练与无预训练(即，从头开始训练)，使用普通ViT-L[18]。从头开始的配方遵循[77]，准确率为71.4%(使用该配方从头开始训练的ViT-B结果为68.5%[77])。相比之下，使用MAE预训练800个时期，相同的普通ViT-L获得了84.4%的准确率，与从头开始的训练相比，绝对值提高了13.0%。这一差距远大于图像识别任务(~3%[31])，表明MAE预训练对视频识别更有帮助。
+图5比较了MAE预训练与无预训练(即，从头开始训练)，使用普通ViT-L[18]。从头开始的配方遵循[77]，精度为71.4%(使用该配方从头开始训练的ViT-B结果为68.5%[77])。相比之下，使用MAE预训练800个时期，相同的普通ViT-L获得了84.4%的精度，与从头开始的训练相比，绝对值提高了13.0%。这一差距远大于图像识别任务(~3%[31])，表明MAE预训练对视频识别更有帮助。
 
 Figure 5: MAE pre-training plus fine-tuning is much more accurate and faster than training from scratch. Here the x-axis is the wall-clock training time (128 A100 GPUs), and the y-axis is the 1-view accuracy on Kinetics-400 validation. The table shows the final accuracy. The model is ViT-L.
 图5:MAE预训练加上微调比从头开始训练更准确、更快。这里，x轴是挂钟训练时间(128 A100 GPU)，y轴是Kinetics-400验证的1-视图精度。下表显示了最终精度。模型为ViT-L。
@@ -198,7 +198,7 @@ Our method follows the structure-agnostic random sampling methodology in BERT [1
 
 We compare with other strategies as illustrated in Fig. 4. Space-only sampling, which samples on the 2D spatial axes and broadcasts along the temporal axis, works reasonably well (83.5%). Time-only sampling, with a masking ratio of 75% (i.e., keep 2 time steps out of 8), performs poorly (79.1%); if we increase its masking ratio to 87.5% (keep 1 out of 8), the accuracy drops further to 75.4%. Time-only sampling is related to future/past frame prediction, which can be an overly difficult task in our scenario. Block-wise sampling [3], in its spacetime variant [77], has 83.2% accuracy with 75% masking ratio (a higher ratio is worse).
 
-我们与图4所示的其他策略进行了比较。仅空间采样(在2D空间轴上采样并沿时间轴广播)工作得相当好(83.5%)。仅时间采样(掩码率为75%，即保持8个时间步长中的2个)表现不佳(79.1%); 如果我们将其掩码率提高到87.5%(保持8分之一)，精度将进一步下降到75.4%。仅时间采样与未来/过去帧预测相关，这在我们的场景中可能是一项过于困难的任务。分块采样[3]在其时空变体[77]中具有83.2%的准确率和75%的掩码率(较高的掩码率更差)。
+我们与图4所示的其他策略进行了比较。仅空间采样(在2D空间轴上采样并沿时间轴广播)工作得相当好(83.5%)。仅时间采样(掩码率为75%，即保持8个时间步长中的2个)表现不佳(79.1%); 如果我们将其掩码率提高到87.5%(保持8分之一)，精度将进一步下降到75.4%。仅时间采样与未来/过去帧预测相关，这在我们的场景中可能是一项过于困难的任务。分块采样[3]在其时空变体[77]中具有83.2%的精度和75%的掩码率(较高的掩码率更差)。
 
 #### Reconstruction target. 
 Our method performs decently by reconstructing the original, unmodified pixels (83.8%, Table 2b). Using per-patch normalized pixels [31] improves by 0.6%. This observation is similar to that of its image counterpart [31]. Using HOG [13] as the target [77] works strongly too.
@@ -280,7 +280,7 @@ We provide system-level comparisons with the leading results on K400, AVA, and S
 ### 5.5 Video Pre-training for Image Recognition
 Finally, we report preliminary results on video pre-training for image recognition. The usage of vanilla ViT allows to convert to 2D easily: we only “deflate” patch embeddings by summing in time. Using ViT-L pre-trained by MAE on K400 / IG-uncurated, we obtain 83.7% / 84.1% accuracy on IN1K image classification. This is better than training ViT-L from scratch on IN1K (82.6% [31]), though lower than MAE pre-training on IN1K (85.9% [31]). Considering the large domain gap, we believe this result is decent and its improvement over training from scratch is encouraging. We hope it will motivate the community to explore video pre-training for general visual representation learning. 
 
-最后，我们报告了用于图像识别的视频预训练的初步结果。使用普通ViT可以很容易地转换为2D：我们只通过时间求和来“压缩”补丁嵌入。使用MAE在K400/IG未固化上预训练的ViT-L，我们在IN1K图像分类上获得了83.7%/84.1%的准确率。这优于在IN1K上从头开始训练ViT-L(82.6%[31])，但低于IN1K的MAE预训练(85.9%[31])。考虑到巨大的领域差距，我们认为这一结果是不错的，它比从头开始的训练的进步令人鼓舞。我们希望这将激励社区探索视频预训练，用于一般视觉表征学习。
+最后，我们报告了用于图像识别的视频预训练的初步结果。使用普通ViT可以很容易地转换为2D：我们只通过时间求和来“压缩”补丁嵌入。使用MAE在K400/IG未固化上预训练的ViT-L，我们在IN1K图像分类上获得了83.7%/84.1%的精度。这优于在IN1K上从头开始训练ViT-L(82.6%[31])，但低于IN1K的MAE预训练(85.9%[31])。考虑到巨大的领域差距，我们认为这一结果是不错的，它比从头开始的训练的进步令人鼓舞。我们希望这将激励社区探索视频预训练，用于一般视觉表征学习。
 
 ## 6 Conclusion
 We have explored a simple extension of MAE [31] to video data. We have drawn several interesting observations. (i) We find that it is possible to learn strong representations with minimal domain knowledge or inductive biases. This follows the spirit of the ViT paper [18]. Similar to BERT [15] and MAE [31], we show that self-supervised learning on videos can be tackled in a conceptually unified framework. (ii) We empirically show that the masking ratio is an important factor for general masked autoencoding methods [69], and its optimal values may depend on the nature of the data (language, images, videos, etc.). (iii) We report encouraging results of pre-training on real-world, uncurated data. It achieves strong performance, close to pre-training on controlled, curated data (e.g., Kinetics). To the best of our knowledge, promising results on uncurated data are rare in the literature.

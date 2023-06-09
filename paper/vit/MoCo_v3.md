@@ -225,7 +225,7 @@ Figure 3. Training curves of LAMB optimizer (MoCo v3, ViTB/16, 100-epoch ImageNe
 
 Given an appropriate learning rate (lr=5e-4, Fig. 3), LAMB achieves slightly better accuracy (72.5%) than AdamW. But the accuracy drops rapidly when lr is larger than the optimal value. LAMB with lr=6e-4 and 8e-4 has 1.6% and 6.0% lower accuracy. Interestingly, the training curves are still smooth, but they degrade gradually in the middle. We hypothesize that although LAMB can avoid sudden change in the gradients, the negative impact of unreliable gradients is accumulated.
 
-给定适当的学习率（lr=5e-4，图 3），LAMB 的准确率 (72.5%) 略高于 AdamW。 但是当 lr 大于最优值时，精度会迅速下降。 lr=6e-4 和 8e-4 的 LAMB 精度分别降低了 1.6% 和 6.0%。 有趣的是，训练曲线依然平滑，但在中间逐渐退化。 我们假设虽然 LAMB 可以避免梯度的突然变化，但不可靠梯度的负面影响会累积。
+给定适当的学习率（lr=5e-4，图 3），LAMB 的精度 (72.5%) 略高于 AdamW。 但是当 lr 大于最优值时，精度会迅速下降。 lr=6e-4 和 8e-4 的 LAMB 精度分别降低了 1.6% 和 6.0%。 有趣的是，训练曲线依然平滑，但在中间逐渐退化。 我们假设虽然 LAMB 可以避免梯度的突然变化，但不可靠梯度的负面影响会累积。
 
 During our exploration, we find that LAMB can achieve comparable accuracy with AdamW, if lr is appropriately chosen. But the sensitivity to lr makes it difficult to ablate different architecture designs without extra lr search. As a result, we opt to use AdamW in other parts of this paper.
 
@@ -412,7 +412,7 @@ linear acc. | 74.3 | 75.6 | 76.5 | 75.0
 
 The optimal value is m=0.99 (our default). The case of m=0 is analogous to SimCLR (plus the prediction head and stop-gradient on the keys), and its accuracy of 74.3% is similar to SimCLR’s (73.9%, Table 4). The usage of the momentum encoder leads to 2.2% increase.
 
-最佳值为 m=0.99（我们的默认值）。 m=0 的情况类似于 SimCLR（加上键上的预测头和停止梯度），其 74.3% 的准确率与 SimCLR 的（73.9%，表 4）相似。 动量编码器的使用导致 2.2% 的增长。
+最佳值为 m=0.99（我们的默认值）。 m=0 的情况类似于 SimCLR（加上键上的预测头和停止梯度），其 74.3% 的精度与 SimCLR 的（73.9%，表 4）相似。 动量编码器的使用导致 2.2% 的增长。
 
 Training length. In the following table we report ViT-S/B + MoCo v3 vs. training length: 
 

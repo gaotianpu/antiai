@@ -9,7 +9,7 @@
 ## Abstract
 Inspired by progress in unsupervised representation learning for natural language, we examine whether similar models can learn useful representations for images. We train a sequence Transformer to auto-regressively predict pixels, without incorporating knowledge of the 2D input structure. Despite training on low-resolution ImageNet without labels, we find that a GPT-2 scale model learns strong image representations as measured by linear probing, fine-tuning, and low-data classification. On CIFAR-10, we achieve 96.3% accuracy with a linear probe, outperforming a supervised Wide ResNet, and 99.0% accuracy with full finetuning, matching the top supervised pre-trained models. An even larger model trained on a mixture of ImageNet and web images is competitive with self-supervised benchmarks on ImageNet, achieving 72.0% top-1 accuracy on a linear probe of our features.
 
-受自然语言无监督表示学习进展的启发，我们研究了类似模型是否可以学习有用的图像表示。 我们训练一个 序列Transformer 来自动回归预测像素，而无需结合 2D 输入结构的知识。 在没有标签的低分辨率 ImageNet 上进行了训练，我们发现 GPT-2 缩放模型学习了通过线性探测、微调和低数据分类测量的强大图像表示。 在 CIFAR-10 上，我们使用线性探测实现了 96.3% 的准确率，优于受监督的 Wide ResNet，并通过完全微调实现了 99.0% 的准确率，与顶级受监督的预训练模型相匹配。 在 ImageNet 和网络图像的混合体上训练的更大模型与 ImageNet 上的自监督基准相比具有竞争力，在我们的特征的线性探测上实现了 72.0% 的 top-1 准确率。
+受自然语言无监督表示学习进展的启发，我们研究了类似模型是否可以学习有用的图像表示。 我们训练一个 序列Transformer 来自动回归预测像素，而无需结合 2D 输入结构的知识。 在没有标签的低分辨率 ImageNet 上进行了训练，我们发现 GPT-2 缩放模型学习了通过线性探测、微调和低数据分类测量的强大图像表示。 在 CIFAR-10 上，我们使用线性探测实现了 96.3% 的精度，优于受监督的 Wide ResNet，并通过完全微调实现了 99.0% 的精度，与顶级受监督的预训练模型相匹配。 在 ImageNet 和网络图像的混合体上训练的更大模型与 ImageNet 上的自监督基准相比具有竞争力，在我们的特征的线性探测上实现了 72.0% 的 top-1 精度。
 
 ## 1. Introduction
 Unsupervised pre-training played a central role in the resurgence of deep learning. Starting in the mid 2000’s, approaches such as the Deep Belief Network (Hinton et al., 2006) and Denoising Autoencoder (Vincent et al., 2008) were commonly used in neural networks for computer vision (Lee et al., 2009) and speech recognition (Mohamed et al., 2009). It was believed that a model which learned the data distribution P(X) would also learn beneficial features for the subsequent supervised modeling of P(Y |X) (Lasserre et al., 2006; Erhan et al., 2010). However, advancements such as piecewise linear activation functions (Nair & Hinton, 2010), improved initializations (Glorot & Bengio, 2010), and normalization strategies (Ioffe & Szegedy, 2015; Ba et al., 2016) removed the need for pre-training in order to achieve strong results. Other research cast doubt on the benefits of deep unsupervised representations and reported strong results using a single layer of learned features (Coates et al., 2011), or even random features (Huang et al., 2014; May et al., 2017). The approach fell out of favor as the state of the art increasingly relied on directly encoding prior structure into the model and utilizing abundant supervised data to directly learn representations (Krizhevsky et al., 2012; Graves & Jaitly, 2014). Retrospective study of unsupervised pre-training demonstrated that it could even hurt performance in modern settings (Paine et al., 2014).
@@ -271,7 +271,7 @@ The first obvious optimization is to increase MR while staying within accelerato
 
 Since contrastive methods report their best results on 8192 features, we would ideally evaluate iGPT with an embedding dimension 8192 for comparison. Training such a model is prohibitively expensive, so we instead concatenate features from multiple layers as an approximation. However, our features tend to be correlated across layers, so we need more of them to be competitive. If we concatenate features from 5 layers centered at the best single layer of iGPT-XL, we achieve an accuracy of 72.0% using 15360 features, which is competitive with recent contrastive learning approaches (Table 2). Note that we require more parameters and compute to achieve this accuracy, but we work at low resolution and without utilizing knowledge of the 2D input structure.
 
-由于对比方法报告了它们在 8192 个特征上的最佳结果，因此我们理想地评估嵌入维度为 8192 的 iGPT 以进行比较。 训练这样的模型非常昂贵，因此我们将来自多个层的特征连接起来作为近似值。 然而，我们的特征往往是跨层相关的，所以我们需要更多的特征来保持竞争力。 如果我们连接以 iGPT-XL 最佳单层为中心的 5 层特征，我们使用 15360 个特征实现了 72.0% 的准确率，这与最近的对比学习方法相比具有竞争力(表 2)。 请注意，我们需要更多的参数和计算来达到这种精度，但我们在低分辨率下工作并且没有利用 2D 输入结构的知识。
+由于对比方法报告了它们在 8192 个特征上的最佳结果，因此我们理想地评估嵌入维度为 8192 的 iGPT 以进行比较。 训练这样的模型非常昂贵，因此我们将来自多个层的特征连接起来作为近似值。 然而，我们的特征往往是跨层相关的，所以我们需要更多的特征来保持竞争力。 如果我们连接以 iGPT-XL 最佳单层为中心的 5 层特征，我们使用 15360 个特征实现了 72.0% 的精度，这与最近的对比学习方法相比具有竞争力(表 2)。 请注意，我们需要更多的参数和计算来达到这种精度，但我们在低分辨率下工作并且没有利用 2D 输入结构的知识。
 
 ### 4.5. Full Fine-tuning
 To achieve even higher accuracy on downstream tasks, we adapt the entire model for classification through fine-tuning. Building off of the previous analysis, we tried attaching the classification head to the layer with the best representations. Though this setup trains faster than one with the head attached at the end, the latter is able to leverage greater model depth and eventually outperforms.
@@ -280,7 +280,7 @@ To achieve even higher accuracy on downstream tasks, we adapt the entire model f
 
 On CIFAR-10, iGPT-L achieves 99.0% accuracy and on CIFAR-100, it achieves 88.5% accuracy after fine-tuning. We outperform AutoAugment, the best supervised model on these datasets, though we do not use sophisticated data augmentation techniques. In fact, 99.0% ties GPipe, the best model which pre-trains using ImageNet labels.
 
-在 CIFAR-10 上，iGPT-L 达到 99.0% 的准确率，在 CIFAR-100 上，经过微调后达到 88.5% 的准确率。 尽管我们没有使用复杂的数据增强技术，但我们的表现优于 AutoAugment，这是这些数据集上最好的监督模型。 事实上，99.0% 与 GPipe 相关，GPipe 是使用 ImageNet 标签进行预训练的最佳模型。
+在 CIFAR-10 上，iGPT-L 达到 99.0% 的精度，在 CIFAR-100 上，经过微调后达到 88.5% 的精度。 尽管我们没有使用复杂的数据增强技术，但我们的表现优于 AutoAugment，这是这些数据集上最好的监督模型。 事实上，99.0% 与 GPipe 相关，GPipe 是使用 ImageNet 标签进行预训练的最佳模型。
 
 ![Table 3](../images/image_gpt/tab_3.png)<br/>
 Table 3. Comparing fine-tuning performance between our models and state-of-the-art models utilizing supervised ImageNet transfer. We also include AutoAugment, the best performing model trained end-to-end on CIFAR. Table results: AutoAugment (Cubuk et al., 2019), SimCLR (Chen et al., 2020), GPipe (Huang et al., 2019), EfficentNet (Tan & Le, 2019)
@@ -305,7 +305,7 @@ Given the success of BERT in language, we train iGPT-L at an input resolution of
 
 However, during fine-tuning, BERT makes up much of this gap. A fully fine-tuned CIFAR-10 model achieves 98.6% accuracy, only 0.4% behind its auto-regressive counterpart, while a fully fine-tuned ImageNet model achieves 66.5%, slightly surpassing auto-regressive performance.
 
-然而，在微调期间，BERT 弥补了这一差距。 完全微调的 CIFAR-10 模型达到 98.6% 的准确率，仅比其自回归模型低 0.4%，而完全微调的 ImageNet 模型达到 66.5%，略高于自回归性能。
+然而，在微调期间，BERT 弥补了这一差距。 完全微调的 CIFAR-10 模型达到 98.6% 的精度，仅比其自回归模型低 0.4%，而完全微调的 ImageNet 模型达到 66.5%，略高于自回归性能。
 
 ![Figure 4](../images/image_gpt/fig_4.png)<br/>
 Figure 4. Comparison of auto-regressive pre-training with BERT pre-training using iGPT-L at an input resolution of $32^2 × 3$. Blue bars display linear probe accuracy and orange bars display finetune accuracy. Bold colors show the performance boost from ensembling BERT masks. We see that auto-regressive models produce much better features than BERT models after pre-training, but BERT models catch up after fine-tuning. 
@@ -330,11 +330,11 @@ Table 4. Comparing performance on low-data CIFAR-10. By leveraging many unlabele
 
 As is standard in the low-data setting, we sample 5 random subsets and report mean and standard deviation accuracies (Table 4). On CIFAR-10, we find that with 4 labels per class, we achieve 73.2% accuracy outperforming MixMatch with much lower variance between runs and with 25 labels per class, we achieve 87.6% accuracy, though still significantly lower than the state of the art, FixMatch.
 
-作为低数据设置中的标准，我们抽取 5 个随机子集并报告平均和标准差精度(表 4)。 在 CIFAR-10 上，我们发现每个类有 4 个标签，我们获得了 73.2% 的准确率，优于 MixMatch，运行之间的方差低得多，每个类有 25 个标签，我们获得了 87.6% 的准确率，但仍然明显低于现有技术水平 , 修复匹配。
+作为低数据设置中的标准，我们抽取 5 个随机子集并报告平均和标准差精度(表 4)。 在 CIFAR-10 上，我们发现每个类有 4 个标签，我们获得了 73.2% 的精度，优于 MixMatch，运行之间的方差低得多，每个类有 25 个标签，我们获得了 87.6% 的精度，但仍然明显低于现有技术水平 , 修复匹配。
 
 Although we have established that large models are necessary for producing good representations, large models are also difficult to fine-tune in the ultra-low data regime. Indeed, we find that iGPT-L quickly memorizes a 40-example training set and fails to generalize well, achieving only 42.1% accuracy. We expect adapting recent approaches to semi-supervised learning will help in this setting.
 
-虽然我们已经确定大型模型对于产生良好的表示是必要的，但大型模型也难以在超低数据范围内进行微调。 事实上，我们发现 iGPT-L 可以快速记住 40 个样本的训练集，但不能很好地泛化，准确率仅为 42.1%。 我们期望将最近的方法应用于半监督学习将有助于这种情况。
+虽然我们已经确定大型模型对于产生良好的表示是必要的，但大型模型也难以在超低数据范围内进行微调。 事实上，我们发现 iGPT-L 可以快速记住 40 个样本的训练集，但不能很好地泛化，精度仅为 42.1%。 我们期望将最近的方法应用于半监督学习将有助于这种情况。
 
 ## 5. Related Work
 Many generative models have been developed and evaluated for their representation learning capabilities. Notably, GANs (Goodfellow et al., 2014; Radford et al., 2015; Donahue et al., 2016) and VAEs (Kingma & Welling, 2013; Kingma et al., 2014; Higgins et al., 2017) have been wellstudied.

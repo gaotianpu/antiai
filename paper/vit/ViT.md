@@ -1,5 +1,5 @@
 # An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale
-一幅图像等价于16X16个字：用于大规模图像识别的Transformer   2020-10-22  原文:https://arxiv.org/abs/2010.11929
+一幅图像等价于16*16个单词：用于大规模图像识别的Transformers   2020-10-22  Google  原文:https://arxiv.org/abs/2010.11929
 
 ## 阅读笔记
 * 具体做法
@@ -21,28 +21,28 @@
 ## ABSTRACT
 While the Transformer architecture has become the de-facto standard for natural language processing tasks, its applications to computer vision remain limited. In vision, attention is either applied in conjunction with convolutional networks, or used to replace certain components of convolutional networks while keeping their overall structure in place. We show that this reliance on CNNs is not necessary and a pure transformer applied directly to sequences of image patches can perform very well on image classification tasks. When pre-trained on large amounts of data and transferred to multiple mid-sized or small image recognition benchmarks (ImageNet, CIFAR-100, VTAB, etc.), Vision Transformer (ViT) attains excellent results compared to state-of-the-art convolutional networks while requiring substantially fewer computational resources to train. (Fine-tuning code and pre-trained models are available at https://github.com/google-research/vision_transformer)
 
-尽管Transformer架构已经成为自然语言处理任务的事实标准，但它在计算机视觉中的应用仍然有限。在视觉中，注意力要么与卷积网络结合使用，要么用于替换卷积网络的某些组件，同时保持其整体结构不变。我们表明，这种对CNN的依赖是不必要的，直接应用于图像分块序列的纯Transformer可以很好地执行图像分类任务。当对大量数据进行预训练并转换到多个中小型图像识别基准(ImageNet、CIFAR-100、VTAB等)时，与最先进的卷积网络相比，ViT(ViT)获得了优异的结果，同时需要更少的计算资源进行训练。(微调代码和预训练模型可在https://github.com/google-research/vision_transformer)
+尽管Transformer架构已经成为NLP任务的事实标准，但它在计算机视觉领域的应用仍然有限。在视觉领域，注意力要么与卷积网络组合使用，要么用于替换卷积网络的某些组件，同时保持其整体结构不变。我们表明，这种对CNN的依赖是不必要的，直接应用于图像分块序列的纯Transformer可以很好地执行图像分类任务。当对大量数据进行预训练并迁移到多个中小型图像识别基准(ImageNet、CIFAR-100、VTAB等)时，与最先进的卷积网络相比，视觉转换器(ViT)获得了优异的结果，且只需更少的计算资源进行训练。(微调代码和预训练模型可在https://github.com/google-research/vision_transformer)
 
 ## 1 INTRODUCTION
 Self-attention-based architectures, in particular Transformers (Vaswani et al., 2017), have become the model of choice in natural language processing (NLP). The dominant approach is to pre-train on a large text corpus and then fine-tune on a smaller task-specific dataset (Devlin et al., 2019). Thanks to Transformers’ computational efficiency and scalability, it has become possible to train models of unprecedented size, with over 100B parameters (Brown et al., 2020; Lepikhin et al., 2020). With the models and datasets growing, there is still no sign of saturating performance.
 
-基于自注意的架构，特别是Transformers(Vaswaniet al., 2017)，已成为自然语言处理(NLP)的首选模型。主要方法是在大型文本语料库上进行预训练，然后在较小的特定任务数据集上进行微调(Devlinet al., 2019)。得益于Transformers的计算效率和可扩展性，它已经可以训练具有超过100B个参数的空前规模的模型(Brownet al., 2020; Lepikhinet al., 2020)。随着模型和数据集的增长，性能仍然没有饱和的迹象。
+基于自注意的架构，特别是Transformers(Vaswaniet al., 2017)，已成为自然语言处理(NLP)的首选模型。主要方法是在大型文本语料库上进行预训练，然后在较小的特定任务数据集上进行微调(Devlinet al., 2019)。得益于Transformers的计算效率和可扩展性，它已经可以训练具有超过100B参数的空前规模的模型(Brownet al., 2020; Lepikhinet al., 2020)。随着模型和数据集的增长，性能依然没有饱和的迹象。
 
 In computer vision, however, convolutional architectures remain dominant (LeCun et al., 1989; Krizhevsky et al., 2012; He et al., 2016). Inspired by NLP successes, multiple works try combining CNN-like architectures with self-attention (Wang et al., 2018; Carion et al., 2020), some replacing the convolutions entirely (Ramachandran et al., 2019; Wang et al., 2020a). The latter models, while theoretically efficient, have not yet been scaled effectively on modern hardware accelerators due to the use of specialized attention patterns. Therefore, in large-scale image recognition, classic ResNetlike architectures are still state of the art (Mahajan et al., 2018; Xie et al., 2020; Kolesnikov et al., 2020).
 
-然而，在计算机视觉中，卷积架构仍然占主导地位(LeCunet al., 1989; Krizhevskyet al., 2012; Heet al., 2016)。受NLP成功的启发，许多工作尝试将类似CNN的架构与自注意力相结合(Wanget al., 2018; Carionet al., 2020)，其中一些完全取代了卷积(Ramachandranet al., 2019; Wang et al., 2020a)。后一种模型虽然理论上有效，但由于使用了专门的注意力模式，尚未在现代硬件加速器上有效地扩展。因此，在大规模图像识别中，经典的类ResNet架构仍然是最先进的(Mahajanet al., 2018; Xieet al., 2020; Kolesnikovet al., 2020)。
+然而，在计算机视觉领域，卷积架构仍然占主导地位(LeCunet al., 1989; Krizhevskyet al., 2012; Heet al., 2016)。受NLP的成功启发，许多工作尝试将类似CNN的架构与自注意力相结合(Wanget al., 2018; Carionet al., 2020)，其中一些完全取代了卷积(Ramachandranet al., 2019; Wang et al., 2020a)。后一种模型虽然理论上有效，但由于使用了专门的，尚未在现代硬件加速器上有效地扩展的注意力模式。因此，在大规模图像识别中，经典的类ResNet架构仍然是最先进的(Mahajanet al., 2018; Xieet al., 2020; Kolesnikovet al., 2020)。
 
 Inspired by the Transformer scaling successes in NLP, we experiment with applying a standard Transformer directly to images, with the fewest possible modifications. To do so, we split an image into patches and provide the sequence of linear embeddings of these patches as an input to a Transformer. Image patches are treated the same way as tokens (words) in an NLP application. We train the model on image classification in supervised fashion.
 
-受NLP中Transformer缩放成功的启发，我们尝试将标准Transformer以最少修改方式直接应用于图像。为此，我们将图像分割为多个分块，并提供这些分块的线性嵌入序列作为Transformer的输入。图像分块的处理方式与在NLP应用程序中令牌(单词)相同。我们以监督的方式对模型进行图像分类训练。
+受NLP中Transformer缩放成功的启发，我们尝试将标准Transformer以最少修改的方式直接应用于图像。为此，我们将图像分割成多个分块，并提供这些分块的线性嵌入序列作为Transformer的输入。图像分块的处理方式与在NLP应用程序中令牌(单词)相同。我们以监督的方式对模型进行图像分类训练。<!--监督方式？-->
 
 When trained on mid-sized datasets such as ImageNet without strong regularization, these models yield modest accuracies of a few percentage points below ResNets of comparable size. This seemingly discouraging outcome may be expected: Transformers lack some of the inductive biases inherent to CNNs, such as translation equivariance and locality, and therefore do not generalize well when trained on insufficient amounts of data.
 
-当在中等大小的数据集(如ImageNet)上进行训练时，如果没有强大的正则化，这些模型的精度会比同等大小的ResNets低几个百分点。这一看似令人沮丧的结果可能是意料之中的：Transformers缺乏CNN固有的一些归纳偏差，如平移等变和局部性，因此在数据量不足的情况下无法很好地概括。
+当在中等规模的数据集(如ImageNet)上进行训练时，如果没有强大的正则化，这些模型的精度会比同等大小的ResNets低几个百分点。这一看似令人沮丧的结果可能是意料之中的：Transformers缺乏CNN固有的一些归纳偏差，如平移不变和局部性，因此在数据量不足的情况下无法很好地泛化。
 
 However, the picture changes if the models are trained on larger datasets (14M-300M images). We find that large scale training trumps inductive bias. Our Vision Transformer (ViT) attains excellent results when pre-trained at sufficient scale and transferred to tasks with fewer datapoints. When pre-trained on the public ImageNet-21k dataset or the in-house JFT-300M dataset, ViT approaches or beats state of the art on multiple image recognition benchmarks. In particular, the best model reaches the accuracy of 88.55% on ImageNet, 90.72% on ImageNet-ReaL, 94.55% on CIFAR-100, and 77.63% on the VTAB suite of 19 tasks. 
 
-然而，如果在更大的数据集(14M-300M图像)上训练模型，情况会发生变化。我们发现，大规模训练胜过归纳偏差。我们的Vision Transformer(ViT)在经过足够规模的预训练并迁移到数据较少的任务时，可以获得优异的结果。当在公共ImageNet-21k数据集或内部JFT-300M数据集上进行预训练时，ViT在多个图像识别基准上接近或优于最先进水平。特别是，在ImageNet上，最佳模型的准确率达到88.55%，在ImageNet-ReaL上达到90.72%，在CIFAR-100上达到94.55%，而在由19个任务组成的VTAB套件上达到77.63%。 
+然而，如果在更大的数据集(14M-300M图像)上训练模型，情况会发生变化。我们发现，大规模训练胜过归纳偏差。我们的视觉转换器(ViT)在经过足够规模的预训练并迁移到数据较少的任务时，可以获得优异的结果。当在公共ImageNet-21k数据集或内部JFT-300M数据集上进行预训练时，ViT在多个图像识别基准上接近或优于最先进水平。特别是，在ImageNet上，最佳模型的精度达到88.55%，在ImageNet-ReaL上达到90.72%，在CIFAR-100上达到94.55%，而在由19个任务组成的VTAB套件上达到77.63%。 
 
 ## 2 RELATED WORK
 Transformers were proposed by Vaswani et al. (2017) for machine translation, and have since become the state of the art method in many NLP tasks. Large Transformer-based models are often pre-trained on large corpora and then fine-tuned for the task at hand: BERT (Devlin et al., 2019) uses a denoising self-supervised pre-training task, while the GPT line of work uses language modeling as its pre-training task (Radford et al., 2018; 2019; Brown et al., 2020).
@@ -51,19 +51,19 @@ Transformers由Vaswaniet al (2017)提出，用于机器翻译，并已成为许�
 
 Naive application of self-attention to images would require that each pixel attends to every other pixel. With quadratic cost in the number of pixels, this does not scale to realistic input sizes. Thus, to apply Transformers in the context of image processing, several approximations have been tried in the past. Parmar et al. (2018) applied the self-attention only in local neighborhoods for each query pixel instead of globally. Such local multi-head dot-product self attention blocks can completely replace convolutions (Hu et al., 2019; Ramachandran et al., 2019; Zhao et al., 2020). In a different line of work, Sparse Transformers (Child et al., 2019) employ scalable approximations to global selfattention in order to be applicable to images. An alternative way to scale attention is to apply it in blocks of varying sizes (Weissenborn et al., 2019), in the extreme case only along individual axes (Ho et al., 2019; Wang et al., 2020a). Many of these specialized attention architectures demonstrate promising results on computer vision tasks, but require complex engineering to be implemented efficiently on hardware accelerators.
 
-对图像进行自注意力的简单应用将要求每个像素关注每一个其他像素。由于像素数量的二次成本，这无法缩放到实际的输入大小。因此，为了将Transformers应用于图像处理，过去曾尝试过几种近似方法。Parmaret al (2018)仅在每个查询像素的局部邻域而不是全局应用了自注意力。这样的局部多头点积自注意块可以完全取代卷积(Hu et al., 2019; Ramachandranet al., 2019;Zhaoet al., 2020)。在另一个工作领域，稀疏Transformers(Child et al., 2019)采用了可缩放的全局自注意力近似，以便适用于图像。衡量注意力的另一种方法是将其应用于不同大小的块(Weissenbornet al., 2019)，在极端情况下，仅沿单个轴(Hoet al., 2018; Wanget al., 2020a)。许多这些专门的注意力架构在计算机视觉任务上显示出有希望的结果，但需要在硬件加速器上高效地实现复杂的工程。
+对图像进行自注意力的简单应用将要求每个像素关注其他的每一个像素。由于像素数量的二次成本，这无法缩放到实际的输入大小。因此，为了将Transformers应用于图像处理，过去曾尝试过几种近似方法。Parmar et al. (2018)仅在每个查询像素的局部邻域而不是全局应用了自注意力。这样的局部多头点积自注意块可以完全取代卷积(Hu et al., 2019; Ramachandranet al., 2019;Zhaoet al., 2020)。在另一个工作领域，稀疏Transformers(Child et al., 2019)采用了可缩放的全局自注意力近似，以便适用于图像。缩放注意力的另一种方法是将其应用于不同大小的块(Weissenbornet al., 2019)，在极端情况下，仅沿单个轴(Hoet al., 2018; Wanget al., 2020a)。许多这些专门的注意力架构在计算机视觉任务上显示出有希望的结果，但需要复杂的工程才能在硬件加速器上高效地实现。
 
 Most related to ours is the model of Cordonnier et al. (2020), which extracts patches of size 2 × 2 from the input image and applies full self-attention on top. This model is very similar to ViT, but our work goes further to demonstrate that large scale pre-training makes vanilla transformers competitive with (or even better than) state-of-the-art CNNs. Moreover, Cordonnier et al. (2020) use a small patch size of 2 × 2 pixels, which makes the model applicable only to small-resolution images, while we handle medium-resolution images as well.
 
-与我们最相关的是Cordonnier et al. (2020)的模型，该模型从输入图像中提取大小为2×2的分块，并在顶部应用完全自注意力。该模型与ViT非常相似，但我们的工作进一步证明，大规模预训练使普通transformers与最先进的CNN竞争(甚至更好)。此外，Cordonnier et al. (2020)使用了2×2像素的分块大小，这使得模型仅适用于小分辨率图像，而我们也处理中分辨率图像。
+与我们最相关的是Cordonnier et al. (2020)的模型，该模型从输入图像中提取大小为2*2的分块，并在顶部应用完全自注意力。该模型与ViT非常相似，但我们的工作进一步证明，大规模预训练使普通transformers与最先进的CNN同样有竞争力(甚至更好)。此外，Cordonnier et al. (2020)使用了2×2像素的分块大小，这使得模型仅适用于小分辨率图像，而我们也处理中等大小的分辨率图像。
 
 There has also been a lot of interest in combining convolutional neural networks (CNNs) with forms of self-attention, e.g. by augmenting feature maps for image classification (Bello et al., 2019) or by further processing the output of a CNN using self-attention, e.g. for object detection (Hu et al., 2018; Carion et al., 2020), video processing (Wang et al., 2018; Sun et al., 2019), image classification (Wu et al., 2020), unsupervised object discovery (Locatello et al., 2020), or unified text-vision tasks (Chen et al., 2020c; Lu et al., 2019; Li et al., 2019).
 
-对于将卷积神经网络(CNN)与自注意力形式相结合，例如通过增强用于图像分类的特征图(Belloet al., 2019)或通过使用自注意力进一步处理CNN的输出，例如用于目标检测(Huet al., 2018; Carionet al., 2020)、视频处理(Wanget al., 2018;Sunet al., 201)，图像分类(Wuet al., 2020)、无监督目标发现(Locatelloet al., 2020)或统一文本视觉任务(Chenet al., 2020c; Luet al., 2019; Liet al., 2018)。
+还有一些有趣的尝试，是将卷积神经网络(CNNs)与自注意力形式相结合，例如通过增强用于图像分类的特征图(Belloet al., 2019)或通过使用自注意力进一步处理CNN的输出，例如用于目标检测(Huet al., 2018; Carionet al., 2020)、视频处理(Wanget al., 2018;Sunet al., 201)，图像分类(Wuet al., 2020)、无监督目标发现(Locatelloet al., 2020)或统一文本视觉任务(Chenet al., 2020c; Luet al., 2019; Liet al., 2018)。
 
 Another recent related model is image GPT (iGPT) (Chen et al., 2020a), which applies Transformers to image pixels after reducing image resolution and color space. The model is trained in an unsupervised fashion as a generative model, and the resulting representation can then be fine-tuned or probed linearly for classification performance, achieving a maximal accuracy of 72% on ImageNet.
 
-另一个最近的相关模型是图像GPT(iGPT)(Chen et al., 2020a)，其在降低图像分辨率和颜色空间后将Transformers应用于图像像素。该模型以无监督的方式训练为生成模型，然后可以对生成的表示进行微调或线性探测，以提高分类性能，在ImageNet上达到72%的最大准确率。
+另一个最近的相关模型是图像GPT(iGPT)(Chen et al., 2020a)，它在降低图像分辨率和颜色空间后将Transformers应用于图像像素。该模型以无监督的方式训练为生成模型，然后可以对生成的表征进行微调或线性探测，以提高分类性能，在ImageNet上达到72%的最大精度。
 
 Our work adds to the increasing collection of papers that explore image recognition at larger scales than the standard ImageNet dataset. The use of additional data sources allows to achieve state-ofthe-art results on standard benchmarks (Mahajan et al., 2018; Touvron et al., 2019; Xie et al., 2020). Moreover, Sun et al. (2017) study how CNN performance scales with dataset size, and Kolesnikov et al. (2020); Djolonga et al. (2020) perform an empirical exploration of CNN transfer learning from large scale datasets such as ImageNet-21k and JFT-300M. We focus on these two latter datasets as well, but train Transformers instead of ResNet-based models used in prior works. 
 
@@ -72,20 +72,24 @@ Our work adds to the increasing collection of papers that explore image recognit
 ## 3 METHOD
 In model design we follow the original Transformer (Vaswani et al., 2017) as closely as possible. An advantage of this intentionally simple setup is that scalable NLP Transformer architectures – and their efficient implementations – can be used almost out of the box.
 
-在模型设计中，我们尽可能遵循原始Transformers(Vaswaniet al., 2017)。这种有意简化的设置的一个优点是，可扩展的NLP Transformer架构及其高效实现几乎可以开箱即用。
+在模型设计中，我们尽可能遵循原始Transformer(Vaswaniet al., 2017)。这种特意的简化设置的优点是，可扩展的NLP Transformer架构及其高效实现几乎可以开箱即用。
 
 ![Figure 1: ViT Model overview](../images/vit/fig_1.png)<br/>
 Figure 1: Model overview. We split an image into fixed-size patches, linearly embed each of them, add position embeddings, and feed the resulting sequence of vectors to a standard Transformer encoder. In order to perform classification, we use the standard approach of adding an extra learnable “classification token” to the sequence. The illustration of the Transformer encoder was inspired by Vaswani et al. (2017). 
-图1：模型概述。我们将图像分割成固定大小的分块，线性嵌入每个分块，添加位置嵌入，并将生成的向量序列馈送到标准Transformer编码器。为了执行分类，我们使用标准方法，即向序列中添加额外的可学习“分类令牌”。Transformers编码器的插图灵感来自Vaswaniet al (2017)。
+图1：模型概述。我们将图像分割成固定大小的分块，线性嵌入每个分块，添加位置嵌入，并将生成的向量序列馈送到标准Transformer编码器。为了执行分类，我们使用标准方法，即向序列中添加额外的可学习“分类令牌”。Transformer编码器的插图灵感来自 Vaswaniet al (2017)。
+<!--
+分块大小是固定的，
+向序列中添加额外的可学习“分类令牌”-->
 
 ### 3.1 VISION TRANSFORMER (ViT)
 An overview of the model is depicted in Figure 1. The standard Transformer receives as input a 1D sequence of token embeddings. To handle 2D images, we reshape the image $x ∈ R^{H×W×C}$ into a sequence of flattened 2D patches $x_p ∈ R^{N×(P^2 ·C)}$ , where (H, W) is the resolution of the original image, C is the number of channels, (P, P) is the resolution of each image patch, and $N = HW/P^2$ is the resulting number of patches, which also serves as the effective input sequence length for the Transformer. The Transformer uses constant latent vector size D through all of its layers, so we flatten the patches and map to D dimensions with a trainable linear projection (Eq. 1). We refer to the output of this projection as the patch embeddings.
 
-该模型的概述如图1所示。标准Transformer接收1D令牌嵌入序列作为输入。为了处理2D图像，我们重新塑造图像 $x∈ R^{H×W×C}$ 转换为一系列打平了的2D分块 $x_p ∈ R^{N×(P^2·C)}$ ，其中(H，W)是原始图像的分辨率，C是通道数，(P，P)是每个图像分块的分辨率，$N=HW/P^2$是生成的分块数，它也用作Transformers的有效输入序列长度。Transformer在其所有层中使用恒定的潜在向量大小D，因此我们使用可训练的线性投影将分块展平并映射到D维(等式1)。我们将此投影的输出称为分块嵌入。
+该模型的概述如图1所示。标准Transformer接收1D令牌嵌入序列作为输入。为了处理2D图像，我们重新塑造图像 $x∈ R^{H×W×C}$ 转换为一系列打平了的2D分块 $x_p ∈ R^{N×(P^2·C)}$ ，其中(H，W)是原始图像的分辨率，C是通道数，(P，P)是每个图像分块的分辨率，$N=HW/P^2$是生成的分块数量，它也用作Transformers有效输入的序列长度。Transformer在其所有层中使用恒定的潜在向量维度D，因此我们使用可训练的线性投影将分块展平并映射到D维(等式1)。我们将此投影的输出称为分块嵌入。
+<!-- 一层的线性投影？ -->
 
 Similar to BERT’s [class] token, we prepend a learnable embedding to the sequence of embedded patches ($z^0_0 = x_{class}$), whose state at the output of the Transformer encoder ($z^0_L$ ) serves as the image representation y (Eq. 4). Both during pre-training and fine-tuning, a classification head is attached to $z^0_L$. The classification head is implemented by a MLP with one hidden layer at pre-training time and by a single linear layer at fine-tuning time.
 
-与BERT的[class]令牌类似，我们在嵌入的分块序列($z^0_0=x_{class}$)中预先添加了可学习的嵌入，其在Transformer编码器输出端的状态($z^0_L$)用作图像表示y(等式4)。在预训练和微调期间，将分类头附加到$z^0_L$。分类头由在预训练时具有一个隐藏层的MLP实现，而在微调时由单个线性层实现。
+与BERT的[class]令牌类似，我们在嵌入的分块序列($z^0_0=x_{class}$)中预先添加了可学习的嵌入，其在Transformer编码器输出端的状态($z^0_L$)用作图像表征y(等式4)。在预训练和微调期间，将分类头附加到$z^0_L$。分类头由在预训练时具有一个隐藏层的MLP实现，而在微调时由单个线性层实现。
 
 Position embeddings are added to the patch embeddings to retain positional information. We use standard learnable 1D position embeddings, since we have not observed significant performance gains from using more advanced 2D-aware position embeddings (Appendix D.4). The resulting sequence of embedding vectors serves as input to the encoder.
 
@@ -93,7 +97,7 @@ Position embeddings are added to the patch embeddings to retain positional infor
 
 The Transformer encoder (Vaswani et al., 2017) consists of alternating layers of multiheaded selfattention (MSA, see Appendix A) and MLP blocks (Eq. 2, 3). Layernorm (LN) is applied before every block, and residual connections after every block (Wang et al., 2019; Baevski & Auli, 2019). The MLP contains two layers with a GELU non-linearity. 
 
-Transformers编码器(Vaswani et al., 2017)由多头自注意(MSA，见附录A)和MLP块(等式2、3)的交替层组成。在每个块之前应用层归一化(LN)，在每个块之后应用残差连接(Wanget al., 2019; Baevski&Auli，2019)。MLP包含两个具有GELU非线性的层。
+Transformers编码器(Vaswani et al., 2017)由多头自注意力(MSA，见附录A)和MLP块(等式2、3)的交替层组成。在每个块之前应用层归一化(LN)，在每个块之后应用残差连接(Wanget al., 2019; Baevski&Auli，2019)。MLP包含两个具有GELU非线性的层。
 
 $z_0 = [x_{class}; x^1_pE; x^2_pE; · · · ; x^N_pE] + E_{pos}, E ∈ R^{(P^2 ·C)×D}, E_pos ∈ R^{(N+1)×D}$ (1) 
 
@@ -106,7 +110,8 @@ $y = LN(z^0_L) $ (4)
 #### Inductive bias. 归纳偏差。
 We note that Vision Transformer has much less image-specific inductive bias than CNNs. In CNNs, locality, two-dimensional neighborhood structure, and translation equivariance are baked into each layer throughout the whole model. In ViT, only MLP layers are local and translationally equivariant, while the self-attention layers are global. The two-dimensional neighborhood structure is used very sparingly: in the beginning of the model by cutting the image into patches and at fine-tuning time for adjusting the position embeddings for images of different resolution (as described below). Other than that, the position embeddings at initialization time carry no information about the 2D positions of the patches and all spatial relations between the patches have to be learned from scratch.
 
-我们注意到，与CNN相比，ViT具有更少的图像特定归纳偏差。在CNN中，局部性、二维邻域结构和平移不变性被嵌入到整个模型的每一层中。在ViT中，只有MLP层是局部的和平移不变的，而自注意力层是全局的。二维邻域结构使用得非常少：在模型开始时，通过将图像切割成分块，并在微调时调整不同分辨率图像的位置嵌入(如下所述)。除此之外，初始化时的位置嵌入不携带关于分块的2D位置的信息，并且必须从头学习分块之间的所有空间关系。
+我们注意到，与CNN相比，ViT具有更少的图像特定的归纳偏差。在CNN中，局部性、二维邻域结构和平移不变性被嵌入到整个模型的每一层中。在ViT中，只有MLP层是局部的和平移不变的，而自注意力层是全局的。二维邻域结构使用得非常少：在模型开始时，通过将图像切割成分块，并在微调时调整不同分辨率图像的位置嵌入(如下所述)。除此之外，初始化时的位置嵌入不携带关于分块的2D位置的信息，并且必须从头学习分块之间的所有空间关系。
+<!-- 只有MLP层是局部的和平移不变的?   -->
 
 #### Hybrid Architecture. 混合架构。
 As an alternative to raw image patches, the input sequence can be formed from feature maps of a CNN (LeCun et al., 1989). In this hybrid model, the patch embedding projection E (Eq. 1) is applied to patches extracted from a CNN feature map. As a special case, the patches can have spatial size 1x1, which means that the input sequence is obtained by simply flattening the spatial dimensions of the feature map and projecting to the Transformer dimension. The classification input embedding and position embeddings are added as described above.
@@ -117,44 +122,45 @@ As an alternative to raw image patches, the input sequence can be formed from fe
 ### 3.2 FINE-TUNING AND HIGHER RESOLUTION
 Typically, we pre-train ViT on large datasets, and fine-tune to (smaller) downstream tasks. For this, we remove the pre-trained prediction head and attach a zero-initialized D × K feedforward layer, where K is the number of downstream classes. It is often beneficial to fine-tune at higher resolution than pre-training (Touvron et al., 2019; Kolesnikov et al., 2020). When feeding images of higher resolution, we keep the patch size the same, which results in a larger effective sequence length. The Vision Transformer can handle arbitrary sequence lengths (up to memory constraints), however, the pre-trained position embeddings may no longer be meaningful. We therefore perform 2D interpolation of the pre-trained position embeddings, according to their location in the original image. Note that this resolution adjustment and patch extraction are the only points at which an inductive bias about the 2D structure of the images is manually injected into the Vision Transformer. 
 
-通常，我们在大型数据集上预训练ViT，并微调到(较小的)下游任务。为此，我们移除预先训练的预测头，并附加一个零初始化的D×K前馈层，其中K是下游类的数量。以比预训练更高的分辨率进行微调通常是有益的(Touvronet al., 2019; Kolesnikovet al., 2020)。当馈送更高分辨率的图像时，我们保持分块大小相同，这会导致更大的有效序列长度。ViT可以处理任意序列长度(直到内存限制)，但是，预先训练的位置嵌入可能不再有意义。因此，我们根据预训练位置嵌入在原始图像中的位置，对其进行2D插值。请注意，该分辨率调整和分块提取是关于图像2D结构的归纳偏差被手动注入ViT的唯一点。<!-- 微调时，对位置嵌入2D插值? -->
+通常，我们在大型数据集上预训练ViT，并在(较小的)下游任务微调。为此，我们移除预先训练的预测头，并附加一个零初始化的D×K前馈层，其中K是下游类的数量。以比预训练更高的分辨率进行微调通常是有益的(Touvronet al., 2019; Kolesnikovet al., 2020)。当馈送更高分辨率的图像时，我们保持分块大小相同，这会导致更大的有效序列长度。ViT可以处理任意序列长度(直到内存限制)，但是，预先训练的位置嵌入可能不再有意义。因此，我们根据预训练位置嵌入在原始图像中的位置，对其进行2D插值。请注意，该分辨率调整和分块提取是关于图像2D结构的归纳偏差被手动注入ViT的唯一点。<!-- 微调时，对位置嵌入2D插值? -->
 
 ## 4 EXPERIMENTS
 We evaluate the representation learning capabilities of ResNet, Vision Transformer (ViT), and the hybrid. To understand the data requirements of each model, we pre-train on datasets of varying size and evaluate many benchmark tasks. When considering the computational cost of pre-training the model, ViT performs very favourably, attaining state of the art on most recognition benchmarks at a lower pre-training cost. Lastly, we perform a small experiment using self-supervision, and show that self-supervised ViT holds promise for the future.
 
-我们评估了ResNet、Vision Transformer(ViT)和混合架构的表示学习能力。为了解每个模型的数据需求，我们对不同大小的数据集进行预训练，并评估许多基准任务。当考虑模型预训练的计算成本时，ViT表现非常好，以较低的预训练成本在大多数识别基准上达到了最先进水平。最后，我们使用自监督进行了一个小实验，并表明自监督ViT对未来具有前景。
+我们评估了ResNet、视觉转换器(ViT)和混合架构的表征学习能力。为了解每个模型的数据需求，我们对不同大小的数据集进行预训练，并评估许多基准任务。当考虑模型预训练的计算成本时，ViT表现非常好，它能以较低的预训练成本在大多数识别基准上达到了最先进水平。最后，我们使用自监督进行了一个小实验，并表明自监督ViT对未来具有前景。
 
 ### 4.1 SETUP
 #### Datasets. 数据集
 To explore model scalability, we use the ILSVRC-2012 ImageNet dataset with 1k classes and 1.3M images (we refer to it as ImageNet in what follows), its superset ImageNet-21k with 21k classes and 14M images (Deng et al., 2009), and JFT (Sun et al., 2017) with 18k classes and 303M high-resolution images. We de-duplicate the pre-training datasets w.r.t. the test sets of the downstream tasks following Kolesnikov et al. (2020). We transfer the models trained on these dataset to several benchmark tasks: ImageNet on the original validation labels and the cleaned-up ReaL labels (Beyer et al., 2020), CIFAR-10/100 (Krizhevsky, 2009), Oxford-IIIT Pets (Parkhi et al., 2012), and Oxford Flowers-102 (Nilsback & Zisserman, 2008). For these datasets, pre-processing follows Kolesnikov et al. (2020).
 
-为了探索模型的可扩展性，我们使用了ILSVRC-2012 ImageNet数据集，其中包含1k类和1.3M图像(我们在下文中将其称为ImageNet)，其超集ImageNet-21k包含21k类和14M图像(Denget al., 2009)，以及JFT(Sunet al., 2017)包含18k类和303M高分辨率图像。我们根据 Kolesnikov et al. (2020)的下游任务的测试集对预训练数据集进行了重复。我们将在这些数据集上训练的模型迁移到几个基准任务：原始验证标签上的ImageNet和清理后的ReaL标签(Beyer et al., 2020)、CIFAR-10/100(Krizhevsky，2009)、牛津IIIT宠物(Parkhi et al., 2012)和牛津Flowers-102(Nilsback&Zisserman，2008)。对于这些数据集，预处理遵循Kolesnikov et al. (2020)。
+为了探索模型的可扩展性，我们使用了ILSVRC-2012 ImageNet数据集，其中包含1k类和1.3M图像(我们在下文中将其称为ImageNet)，其超集ImageNet-21k包含21k个类别和14M图像(Denget al., 2009)，以及JFT(Sunet al., 2017)包含18k类和303M高分辨率图像。我们根据 Kolesnikov et al. (2020)的下游任务的测试集对预训练数据集进行了去重。我们将在这些数据集上训练的模型迁移到几个基准任务：原始验证标签上的ImageNet和清理后的ReaL标签(Beyer et al., 2020)、CIFAR-10/100(Krizhevsky，2009)、牛津IIIT宠物(Parkhi et al., 2012)和牛津Flowers-102(Nilsback&Zisserman，2008)。对于这些数据集，预处理遵循Kolesnikov et al. (2020)。
 
 We also evaluate on the 19-task VTAB classification suite (Zhai et al., 2019b). VTAB evaluates low-data transfer to diverse tasks, using 1 000 training examples per task. The tasks are divided into three groups: Natural – tasks like the above, Pets, CIFAR, etc. Specialized – medical and satellite imagery, and Structured – tasks that require geometric understanding like localization.
 
-我们还对19-任务VTAB分类套件进行了评估(Zhaiet al., 2019b)。VTAB使用每个任务1000个训练样本来评估不同任务的低数据迁移。这些任务分为三组：自然任务(如上述任务)、宠物、CIFAR等。专业任务(医学和卫星图像)和结构化任务(需要几何理解，如定位)。
+我们还对19-任务的VTAB分类套件进行了评估(Zhaiet al., 2019b)。VTAB使用每个任务1000个训练样本来评估不同任务的少量数据的迁移。这些任务分为三组：1-自然任务 ——— 如上述任务、宠物、CIFAR等，2-专业任务(医学和卫星图像) 和 33结构化任务(需要几何理解，如定位)。
 
 #### Model Variants. 模型变量
 We base ViT configurations on those used for BERT (Devlin et al., 2019), as summarized in Table 1. The “Base” and “Large” models are directly adopted from BERT and we add the larger “Huge” model. In what follows we use brief notation to indicate the model size and the input patch size: for instance, ViT-L/16 means the “Large” variant with 16×16 input patch size. Note that the Transformer’s sequence length is inversely proportional to the square of the patch size, thus models with smaller patch size are computationally more expensive.
 
-如表1所示，我们基于用于BERT的ViT配置(Devlin et al., 2019)。“基本”和“大型”模型直接采用BERT，我们添加了更大的“巨大”模型。在下文中，我们使用简短的符号表示模型大小和输入分块大小：例如，ViT-L/16表示具有16×16输入分块大小的“大”变体。请注意，Transformer的序列长度与分块大小的平方成反比，因此分块大小较小的模型在计算上更昂贵。
+如表1所示，我们基于用于BERT的ViT配置(Devlin et al., 2019)。“基础”和“大型”模型直接采用BERT，我们添加了更大的“巨大”模型。在下文中，我们使用简短的符号表示模型大小和输入分块大小：例如，ViT-L/16表示具有16×16输入分块大小的“大”变体。请注意，Transformer的序列长度与分块大小的平方成反比，因此分块大小较小的模型在计算上更昂贵。
 
 ![Table 1: Details of Vision Transformer model variants](../images/vit/tab_1.png)<br/>
 表1：Vision Transformer模型变体的详情。
 
 For the baseline CNNs, we use ResNet (He et al., 2016), but replace the Batch Normalization layers (Ioffe & Szegedy, 2015) with Group Normalization (Wu & He, 2018), and used standardized convolutions (Qiao et al., 2019). These modifications improve transfer (Kolesnikov et al., 2020), and we denote the modified model “ResNet (BiT)”. For the hybrids, we feed the intermediate feature maps into ViT with patch size of one “pixel”. To experiment with different sequence lengths, we either (i) take the output of stage 4 of a regular ResNet50 or (ii) remove stage 4, place the same number of layers in stage 3 (keeping the total number of layers), and take the output of this extended stage 3. Option (ii) results in a 4x longer sequence length, and a more expensive ViT model.
 
-对于基线CNN，我们使用ResNet(He et al., 2016)，但将批归一化(BN)层(Ioffe&Szegedy，2015)替换为组归一(GN)化(Wu&He，2018)，并使用标准化卷积(Qiaoet al., 2019)。这些修改改进了迁移(Kolesnikovet al., 2020)，我们将修改后的模型称为“ResNet(BiT)”。对于混合体，我们将中间特征图输入到一个“像素”大小的ViT中。为了使用不同的序列长度进行实验，我们要么(i)取常规ResNet50的第4阶段的输出，要么(ii)移除第4阶段，在第3阶段放置相同数量的层(保持总层数)，然后取这个扩展的第3阶段的输出。选项(ii)导致序列长度增加4倍，以及更昂贵的ViT模型。
+对于基线CNN，我们使用ResNet(He et al., 2016)，但将批归一化(BN)层(Ioffe&Szegedy，2015)替换为组归一化(GN)(Wu&He，2018)，并使用标准化卷积(Qiaoet al., 2019)。这些修改改进了迁移能力(Kolesnikovet al., 2020)，我们将修改后的模型称为“ResNet(BiT)”。对于混合体，我们将中间特征图输入到一个“像素”大小的ViT中。为了使用不同的序列长度进行实验，我们要么(i)取常规ResNet50的第4阶段的输出，要么(ii)移除第4阶段，在第3阶段放置相同数量的层(保持总层数)，然后取这个扩展的第3阶段的输出。选项(ii)导致序列长度增加4倍，以及更昂贵的ViT模型。<!--最后一段不太懂？-->
 
 #### Training & Fine-tuning. 训练和微调
 We train all models, including ResNets, using Adam (Kingma & Ba, 2015) with β1 = 0.9, β2 = 0.999, a batch size of 4096 and apply a high weight decay of 0.1, which we found to be useful for transfer of all models (Appendix D.1 shows that, in contrast to common practices, Adam works slightly better than SGD for ResNets in our setting). We use a linear learning rate warmup and decay, see Appendix B.1 for details. For fine-tuning we use SGD with momentum, batch size 512, for all models, see Appendix B.1.1. For ImageNet results in Table 2, we fine-tuned at higher resolution: 512 for ViT-L/16 and 518 for ViT-H/14, and also used Polyak & Juditsky (1992) averaging with a factor of 0.9999 (Ramachandran et al., 2019; Wang et al., 2020b).
 
-我们使用Adam(Kingma&Ba，2015)训练包括ResNets在内的所有模型，其中β1=0.9，β2=0.999，批量大小为4096，并应用0.1的高权重衰减，我们发现这对所有模型的迁移都很有用(附录D.1显示，与常见做法相比，Adam在我们的设置中比SGD对ResNets的效果略好)。我们使用线性学习速率预热和衰减，详见附录B.1。对于微调，我们使用具有动量的SGD，批次大小为512，用于所有模型，参见附录B.1.1。对于表2中的ImageNet结果，我们以更高的分辨率进行微调：ViT-L/16为512、ViT-H/14为518，还使用Polyak&Juditsky(1992)平均值，系数为0.9999(Ramachandranet al., 2019; Wanget al., 2020b)。
+我们使用Adam(Kingma&Ba，2015)训练包括ResNets在内的所有模型，其中β1=0.9，β2=0.999，批量大小为4096，并应用0.1的高权重衰减，我们发现这对所有模型的迁移都很有用(附录D.1显示，与常见做法相比，Adam在我们的设置中比SGD对ResNets的效果略好)。我们使用线性学习速率预热和衰减，详见附录B.1。对于微调，我们使用带动量的SGD，批次大小为512，用于所有模型，参见附录B.1.1。对于表2中的ImageNet结果，我们以更高的分辨率进行微调：ViT-L/16为512、ViT-H/14为518，还使用Polyak&Juditsky(1992)平均值，系数为0.9999(Ramachandranet al., 2019; Wanget al., 2020b)。
 
 #### Metrics. 度量
 We report results on downstream datasets either through few-shot or fine-tuning accuracy. Fine-tuning accuracies capture the performance of each model after fine-tuning it on the respective dataset. Few-shot accuracies are obtained by solving a regularized least-squares regression problem that maps the (frozen) representation of a subset of training images to {−1, 1}$^K$ target vectors. This formulation allows us to recover the exact solution in closed form. Though we mainly focus on fine-tuning performance, we sometimes use linear few-shot accuracies for fast on-the-fly evaluation where fine-tuning would be too costly.
 
 我们通过小样本或微调精度报告下游数据集的结果。 在对各自的数据集进行微调后，微调精度会捕获每个模型的性能。 通过解决正则化最小二乘回归问题获得小样本精度，该问题将训练图像子集的（冻结）表示映射到 {−1, 1}$^K$ 目标向量。 该公式使我们能够以封闭形式恢复精确解。 虽然我们主要关注微调性能，但有时我们会使用线性小样本精度进行快速即时评估，而微调成本太高。
+<!--正则化最小二乘回归问题?-->
 
 ### 4.2 COMPARISON TO STATE OF THE ART
 We first compare our largest models – ViT-H/14 and ViT-L/16 – to state-of-the-art CNNs from the literature. The first comparison point is Big Transfer (BiT) (Kolesnikov et al., 2020), which performs supervised transfer learning with large ResNets. The second is Noisy Student (Xie et al., 2020), which is a large EfficientNet trained using semi-supervised learning on ImageNet and JFT300M with the labels removed. Currently, Noisy Student is the state of the art on ImageNet and BiT-L on the other datasets reported here. All models were trained on TPUv3 hardware, and we report the number of TPUv3-core-days taken to pre-train each of them, that is, the number of TPU v3 cores (2 per chip) used for training multiplied by the training time in days.
@@ -167,8 +173,8 @@ Table 2 shows the results. The smaller ViT-L/16 model pre-trained on JFT-300M ou
 
 ![Table 2:Comparison with SOTA on popular image classification benchmarks](../images/vit/tab_2.png)<br/>
 Table 2: Comparison with state of the art on popular image classification benchmarks. We report mean and standard deviation of the accuracies, averaged over three fine-tuning runs. Vision Transformer models pre-trained on the JFT-300M dataset outperform ResNet-based baselines on all datasets, while taking substantially less computational resources to pre-train. ViT pre-trained on the smaller public ImageNet-21k dataset performs well too. ∗Slightly improved 88.5% result reported in Touvron et al. (2020).
-表2：与当前流行的图像分类基准的比较。我们报告了三次微调运行的平均精度和标准偏差。在JFT-300M数据集上预训练的Vision Transformer模型在所有数据集上都优于基于ResNet的基线，同时预训练所需的计算资源大大减少。在较小的公共ImageNet-21k数据集上预先训练的ViT也表现良好。∗Touvronet al (2020)报告的结果略微改善了88.5%。
-<!--14,16? -->
+表2：与当前流行的图像分类基准的比较。我们报告了三次微调运行的平均精度和标准偏差。在JFT-300M数据集上预训练的ViT模型在所有数据集上都优于基于ResNet的基线，同时预训练所需的计算资源大大减少。在较小的公共ImageNet-21k数据集上预先训练的ViT也表现良好。∗Touvronet al (2020)报告的结果略微改善了88.5%。
+<!--14,16? 为啥所需计算资源会减少？-->
 
 ![Figure 2](../images/vit/fig_2.png)<br/>
 Figure 2: Breakdown of VTAB performance in Natural, Specialized, and Structured task groups. 
@@ -181,11 +187,11 @@ Figure 2 decomposes the VTAB tasks into their respective groups, and compares to
 ### 4.3 PRE-TRAINING DATA REQUIREMENTS
 The Vision Transformer performs well when pre-trained on a large JFT-300M dataset. With fewer inductive biases for vision than ResNets, how crucial is the dataset size? We perform two series of experiments.
 
-当在大型JFT-300M数据集上进行预训练时，Vision Transformer表现良好。与ResNets相比，视觉的归纳偏差更少，数据集大小有多重要？我们进行了两系列实验。
+当在大型JFT-300M数据集上进行预训练时，ViT表现良好。与ResNets相比，视觉的归纳偏差更少，数据集大小有多重要？我们进行了两系列实验。
 
 First, we pre-train ViT models on datasets of increasing size: ImageNet, ImageNet-21k, and JFT300M. To boost the performance on the smaller datasets, we optimize three basic regularization parameters – weight decay, dropout, and label smoothing. Figure 3 shows the results after finetuning to ImageNet (results on other datasets are shown in Table 5)(Note that the ImageNet pre-trained models are also fine-tuned, but again on ImageNet. This is because the resolution increase during fine-tuning improves the performance.) . When pre-trained on the smallest dataset, ImageNet, ViT-Large models underperform compared to ViT-Base models, despite (moderate) regularization. With ImageNet-21k pre-training, their performances are similar. Only with JFT-300M, do we see the full benefit of larger models. Figure 3 also shows the performance region spanned by BiT models of different sizes. The BiT CNNs outperform ViT on ImageNet, but with the larger datasets, ViT overtakes.  
 
-首先，我们在不断增长的数据集上预训练ViT模型：ImageNet、ImageNet-21k和JFT300M。为了提高较小数据集的性能，我们优化了三个基本正则化参数——权重衰减、dropout和标签平滑。图3显示了对ImageNet进行微调后的结果(其他数据集的结果如表5所示)(请注意，ImageNet-预训练模型也进行了微调，但在ImageNet.这是因为微调期间分辨率的提高提高了性能。)，尽管(适度)正则化。通过 ImageNet-21k 预训练，它们的性能相似。只有JFT-300M，我们才能看到更大模型的全部好处。图3还显示了不同尺寸的BiT模型所跨越的性能区域。BiT CNN在ImageNet上的表现优于ViT，但随着更大的数据集，ViT超过了。
+首先，我们在不断增长的数据集上预训练ViT模型：ImageNet、ImageNet-21k和JFT300M。为了提高较小数据集的性能，我们优化了三个基础正则化参数——权重衰减、dropout和标签平滑。图3显示了对ImageNet进行微调后的结果(其他数据集的结果如表5所示)(请注意，ImageNet-预训练模型也进行了微调，但在ImageNet.这是因为微调期间分辨率的提高提高了性能。)，尽管(适度)正则化。通过 ImageNet-21k 预训练，它们的性能相似。只有JFT-300M，我们才能看到更大模型的全部好处。图3还显示了不同尺寸的BiT模型所跨越的性能区域。BiT CNN在ImageNet上的表现优于ViT，但随着更大的数据集，ViT超过了。
 
 ![Figure 3|4|5](../images/vit/fig_3_4_5.png)
 
@@ -244,16 +250,18 @@ Figure 6: Representative examples of attention from the output token to the inpu
 ### 4.6 SELF-SUPERVISION
 Transformers show impressive performance on NLP tasks. However, much of their success stems not only from their excellent scalability but also from large scale self-supervised pre-training (Devlin et al., 2019; Radford et al., 2018). We also perform a preliminary exploration on masked patch prediction for self-supervision, mimicking the masked language modeling task used in BERT. With self-supervised pre-training, our smaller ViT-B/16 model achieves 79.9% accuracy on ImageNet, a significant improvement of 2% to training from scratch, but still 4% behind supervised pre-training. Appendix B.1.2 contains further details. We leave exploration of contrastive pre-training (Chen et al., 2020b; He et al., 2020; Bachman et al., 2019; Henaff et al., 2020) to future work. 
 
-Transformers在NLP任务中表现出色。然而，他们的成功不仅源于其出色的可扩展性，还源于大规模的自监督预训练(Devlinet al., 2019; Radfordet al., 2018)。我们还对用于自监督的掩码分块预测进行了初步探索，模拟了BERT中使用的掩码语言建模任务。通过自监督预训练，我们较小的ViT-B/16模型在ImageNet上实现了79.9%的准确率，与从头开始的训练相比显著提高了2%，但仍落后于监督预训练4%。附录B.1.2包含更多详情。我们将对比预训练的探索留给未来的工作(Chenet al., 2020b; Heet al., 2020; Bachmanet al., 2019; Henaffet al., 2020)。
+Transformers在NLP任务中表现出色。然而，他们的成功不仅源于其出色的可扩展性，还源于大规模的自监督预训练(Devlinet al., 2019; Radfordet al., 2018)。我们还对用于自监督的掩码分块预测进行了初步探索，模拟了BERT中使用的掩码语言建模任务。通过自监督预训练，我们较小的ViT-B/16模型在ImageNet上实现了79.9%的精度，与从头开始的训练相比显著提高了2%，但仍落后于监督预训练4%。附录B.1.2包含更多详情。我们将对比预训练的探索留给未来的工作(Chenet al., 2020b; Heet al., 2020; Bachmanet al., 2019; Henaffet al., 2020)。
 
 ## 5 CONCLUSION
 We have explored the direct application of Transformers to image recognition. Unlike prior works using self-attention in computer vision, we do not introduce image-specific inductive biases into the architecture apart from the initial patch extraction step. Instead, we interpret an image as a sequence of patches and process it by a standard Transformer encoder as used in NLP. This simple, yet scalable, strategy works surprisingly well when coupled with pre-training on large datasets. Thus, Vision Transformer matches or exceeds the state of the art on many image classification datasets, whilst being relatively cheap to pre-train.
 
-我们探索了Transformers在图像识别中的直接应用。与以往在计算机视觉中使用自注意的工作不同，除了最初的分块提取步骤之外，我们没有将图像特定的归纳偏差引入到架构中。相反，我们将图像解释为一系列分块，并通过NLP中使用的标准Transformer编码器对其进行处理。这种简单但可扩展的策略与大型数据集上的预训练相结合，效果出人意料。因此，Vision Transformer在许多图像分类数据集上匹配或超过了现有技术，同时预训练相对便宜。
+我们探索了Transformers在图像识别中的直接应用。与以往在计算机视觉中使用自注意的工作不同，除了最初的分块提取步骤之外，我们没有将图像特定的归纳偏差引入到架构中。相反，我们将图像解释为一系列分块，并通过NLP中使用的标准Transformer编码器对其进行处理。这种简单但可扩展的策略与大型数据集上的预训练相结合，效果出人意料。因此，ViT在许多图像分类数据集上匹配或超过了现有技术，同时预训练相对便宜。
 
 While these initial results are encouraging, many challenges remain. One is to apply ViT to other computer vision tasks, such as detection and segmentation. Our results, coupled with those in Carion et al. (2020), indicate the promise of this approach. Another challenge is to continue exploring selfsupervised pre-training methods. Our initial experiments show improvement from self-supervised pre-training, but there is still large gap between self-supervised and large-scale supervised pretraining. Finally, further scaling of ViT would likely lead to improved performance.
 
-尽管这些初步成果令人鼓舞，但仍存在许多挑战。一种是将ViT应用于其他计算机视觉任务，如检测和分割。我们的结果以及Carionet al (2020)的结果表明了这种方法的前景。另一个挑战是继续探索自监督的预训练方法。我们的初步实验表明，自监督预训练有所改进，但自监督和大规模监督预训练之间仍有很大差距。最后，进一步扩展ViT可能会提高性能。
+尽管这些初步成果令人鼓舞，但仍存在许多挑战。一种是将ViT应用于其他计算机视觉任务，如检测和分割。我们的结果以及Carionet al (2020)的结果表明了这种方法的前景。另一个挑战是继续探索自监督的预训练方法。我们的初步实验表明，自监督预训练有所改进，但自监督和大规模监督预训练之间仍有很大差距。最后，进一步扩展ViT可能会提高性能。 
+
+<!-- MAE, ViTDet -->
 
 ## ACKNOWLEDGEMENTS
 The work was performed in Berlin, Zurich, and Amsterdam. We thank many colleagues at Google ¨ for their help, in particular Andreas Steiner for crucial help with the infrastructure and the opensource release of the code; Joan Puigcerver and Maxim Neumann for help with the large-scale training infrastructure; Dmitry Lepikhin, Aravindh Mahendran, Daniel Keysers, Mario Luciˇ c, Noam ´ Shazeer, Ashish Vaswani, and Colin Raffel for useful discussions.
@@ -261,7 +269,6 @@ The work was performed in Berlin, Zurich, and Amsterdam. We thank many colleague
 这项工作在柏林、苏黎世和阿姆斯特丹进行。我们感谢谷歌的许多同事的帮助，特别是Andreas Steiner，他在基础设施和代码的开源发布方面提供了至关重要的帮助; Joan Puigcerver和Maxim Neumann为大型训练基础设施提供帮助; Dmitry Lepikhin、Aravindh Mahendran、Daniel Keysers、Mario Luci c、Noam´Shazeer、Ashish Vaswani和Colin Raffel进行了有益的讨论。
 
 ## REFERENCES
-
 * Samira Abnar and Willem Zuidema. Quantifying attention flow in transformers. In ACL, 2020.
 * Philip Bachman, R Devon Hjelm, and William Buchwalter. Learning representations by maximizingmutual information across views. In NeurIPS, 2019.
 * Alexei Baevski and Michael Auli. Adaptive input representations for neural language modeling. InICLR, 2019.
@@ -345,7 +352,22 @@ $MSA(z) = [SA_1(z); SA_2(z); · · · ; SA_k(z)] U_{msa} ,  U_{msa} ∈ R^{k·D_
 
 ### B EXPERIMENT DETAILS
 #### B.1 TRAINING
-![Table 3](../images/vit/tab_3.png)<br/>
+Models|Dataset|Epochs|Base LR|LR decay|Weight decay|Dropout
+---|---|---|---|---|---|---
+ViT-B/{16,32}|JFT-300M|7|8·$10^{-4}$| linear|0.1|0.0
+ViT-L/32|JFT-300M|7|6·$10^{-4}$| linear|0.1|0.0
+ViT-L/16|JFT-300M|7/14|4·$10^{-4}$| linear|0.1|0.0
+ViT-H/14|JFT-300M|14|3·$10^{-4}$| linear|0.1|0.0
+R50x{1,2}|JFT-300M|7|$10^{-3}$| linear|0.1|0.0
+R101x1|JFT-300M|7|8·$10^{-4}$| linear|0.1|0.0
+R152x{1,2}|JFT-300M|7|6·$10^{-4}$| linear|0.1|0.0
+R50+ViT-B/{16,32}|JFT-300M|7|8·$10^{-4}$| linear|0.1|0.0
+R50+ViT-L/32|JFT-300M|7|2·$10^{-4}$| linear|0.1|0.0
+R50+ViT-L/16|JFT-300M|7/14|4·$10^{-4}$| linear|0.1|0.0
+ViT-B/{16,32}|ImageNet-21k|90|$10^{-3}$| linear|0.03|0.1
+ViT-L/{16,32}|ImageNet-21k|30/90|$10^{-3}$| linear|0.03|0.1
+ViT-∗|ImageNet|300|3·$10^{-3}$ | cosine|0.3|0.1
+
 Table 3: Hyperparameters for training. All models are trained with a batch size of 4096 and learning rate warmup of 10k steps. For ImageNet we found it beneficial to additionally apply gradient clipping at global norm 1. Training resolution is 224.
 表3：用于训练的超参数。所有模型的训练批量为4096，学习速率预热为10k步。对于ImageNet，我们发现在全局范数1下额外应用梯度裁剪是有益的。训练分辨率为224。
 
@@ -358,7 +380,17 @@ We fine-tune all ViT models using SGD with a momentum of 0.9. We run a small gri
 
 我们使用SGD以0.9的动量对所有ViT模型进行微调。我们对学习率进行了小网格搜索，见表4中的学习率范围。为此，我们使用训练集中的小细分(宠物和花卉为10%，CIFAR为2%，ImageNet为1%)作为开发集，并对剩余数据进行训练。对于最终结果，我们对整个训练集进行训练，并根据各自的测试数据进行评估。对于微调ResNets和混合模型，我们使用完全相同的设置，唯一的例外是ImageNet，我们将另一个值0.06添加到学习速率扫描。此外，对于ResNets，我们还运行了 Kolesnikov et al. (2020)的设置，并在这次运行和我们的扫描中选择最佳结果。最后，如果没有另外提及，所有微调实验都以384分辨率运行(以不同于训练的分辨率运行微调是常见做法(Kolesnikov et al., 2020))。
 
-![Table 4](../images/vit/tab_4.png)<br/>
+
+Dataset|Steps|Base LR
+---|---|---
+Dataset|Steps|Base LR
+ImageNet|20000|{0.003,0.01,0.03,0.06}
+CIFAR100|10000|{0.001,0.003,0.01,0.03}
+CIFAR10|10000|{0.001,0.003,0.01,0.03}
+Oxford-IIIT Pets|500|{0.001,0.003,0.01,0.03}
+Oxford Flowers-102|500|{0.001,0.003,0.01,0.03}
+VTAB (19 tasks)|2500|0.01
+
 Table 4: Hyperparameters for fine-tuning. All models are fine-tuned with cosine learning rate decay, a batch size of 512, no weight decay, and grad clipping at global norm 1. If not mentioned otherwise, fine-tuning resolution is 384. 
 表4：微调的超参数。所有模型都通过余弦学习率衰减、512的批量大小、无权重衰减和全局范数为1的梯度削波进行微调。如果未另行提及，微调分辨率为384。
 
@@ -373,11 +405,11 @@ For VTAB we follow the protocol in Kolesnikov et al. (2020), and use the same hy
 ##### B.1.2 SELF-SUPERVISION
 We employ the masked patch prediction objective for preliminary self-supervision experiments. To do so we corrupt 50% of patch embeddings by either replacing their embeddings with a learnable [mask] embedding (80%), a random other patch embedding (10%) or just keeping them as is (10%). This setup is very similar to the one used for language by Devlin et al. (2019). Finally, we predict the 3-bit, mean color (i.e., 512 colors in total) of every corrupted patch using their respective patch representations.
 
-我们使用掩码分块预测目标进行初步的自监督实验。为此，我们通过用可学习的[掩码]嵌入(80%)、随机的其他分块嵌入(10%)或保持原样(10%)来替换它们的嵌入，从而破坏了50%的分块嵌入。该设置与Devlinet al 用于语言的设置非常相似。(2019)。最后，我们使用其各自的分块表示来预测每个损坏分块的3位平均颜色(即总共512种颜色)。
+我们使用掩码分块预测目标进行初步的自监督实验。为此，我们通过用可学习的[mask]嵌入(80%)、随机的其他分块嵌入(10%)或保持原样(10%)来替换它们的嵌入，从而破坏了50%的分块嵌入。该设置与 Devlin et al. (2019) 用于语言的设置非常相似。最后，我们使用其各自的分块表示来预测每个损坏分块的3位平均颜色(即总共512种颜色)。
 
 We trained our self-supervised model for 1M steps (ca. 14 epochs) with batch size 4096 on JFT. We use Adam, with a base learning rate of 2 · 10−4 , warmup of 10k steps and cosine learning rate decay. As prediction targets for pretraining we tried the following settings: 1) predicting only the mean, 3bit color (i.e., 1 prediction of 512 colors), 2) predicting a 4 × 4 downsized version of the 16 × 16 patch with 3bit colors in parallel (i.e., 16 predictions of 512 colors), 3) regression on the full patch using L2 (i.e., 256 regressions on the 3 RGB channels). Surprisingly, we found that all worked quite well, though L2 was slightly worse. We report final results only for option 1) because it has shown best few-shot performance. We also experimented with 15% corruption rate as used by Devlin et al. (2019) but results were also slightly worse on our few-shot metrics.
 
-我们在JFT上训练了批量为4096的1M步(约14个周期)的自监督模型。我们使用Adam，基本学习率为2.10−4、10k步的预热和余弦学习速率衰减。作为预训练的预测目标，我们尝试了以下设置：
+我们在JFT上训练了批量为4096的1M步(约14个周期)的自监督模型。我们使用Adam，基础学习率为2.10−4、10k步的预热和余弦学习速率衰减。作为预训练的预测目标，我们尝试了以下设置：
 1. 仅预测平均值，3比特颜色(即，1预测512种颜色)，
 2. 预测具有3比特颜色的16×16分块的4×4缩小版本(即，16预测512颜色)，
 3. 使用L2对整个分块进行回归(即，3个RGB通道上的256次回归)。
@@ -397,7 +429,27 @@ We report detailed results corresponding to the figures presented in the paper. 
 Table 5: Top1 accuracy (in %) of Vision Transformer on various datasets when pre-trained on ImageNet, ImageNet-21k or JFT300M. These values correspond to Figure 3 in the main text. Models are fine-tuned at 384 resolution. Note that the ImageNet results are computed without additional techniques (Polyak averaging and 512 resolution images) used to achieve results in Table 2.
 表5：在ImageNet、ImageNet-21k或JFT300M上进行预训练时，各种数据集上的Vision Transformer的Top1精度(%)。这些值对应于正文中的图3。模型微调为384分辨率。请注意，计算ImageNet结果时没有使用其他技术(Polyak平均和512分辨率图像)来获得表2中的结果。
 
-![Table 6](../images/vit/tab_6.png)<br/>
+name|Epochs|ImageNet|ImageNet ReaL|CIFAR-10|CIFAR-100|Pets|Flowers|exaFLOPs
+---|---|---|---|---|---|---|---|---
+ViT-B/32|7|80.73|86.27|98.61|90.49|93.40|99.27|55
+ViT-B/16|7|84.15|88.85|99.00|91.87|95.80|99.56|224
+ViT-L/32|7|84.37|88.28|99.19|92.52|95.83|99.45|196
+ViT-L/16|7|86.30|89.43|99.38|93.46|96.81|99.66|783
+ViT-L/16|14|87.12|89.99|99.38|94.04|97.11|99.56|1567
+ViT-H/14|14|88.08|90.36|99.50|94.71|97.11|99.71|4262
+ResNet50x1|7|77.54|84.56|97.67|86.07|91.11|94.26|50
+ResNet50x2|7|82.12|87.94|98.29|89.20|93.43|97.02|199
+ResNet101x1|7|80.67|87.07|98.48|89.17|94.08|95.95|96
+ResNet152x1|7|81.88|87.96|98.82|90.22|94.17|96.94|141
+ResNet152x2|7|84.97|89.69|99.06|92.05|95.37|98.62|563
+ResNet152x2|14|85.56|89.89|99.24|91.92|95.75|98.75|1126
+ResNet200x3|14|87.22|90.15|99.34|93.53|96.32|99.04|3306
+R50x1+ViT-B/32|7|84.90|89.15|99.01|92.24|95.75|99.46|106
+R50x1+ViT-B/16|7|85.58|89.65|99.14|92.63|96.65|99.40|274
+R50x1+ViT-L/32|7|85.68|89.04|99.24|92.93|96.97|99.43|246
+R50x1+ViT-L/16|7|86.60|89.72|99.18|93.64|97.03|99.40|859
+R50x1+ViT-L/16|14|87.12|89.76|99.31|93.89|97.36|99.11|1668/>
+
 Table 6: Detailed results of model scaling experiments. These correspond to Figure 5 in the main paper. We show transfer accuracy on several datasets, as well as the pre-training compute (in exaFLOPs).
 表6：模型缩放实验的详细结果。这些对应于主论文中的图5。我们在几个数据集上显示了迁移精度，以及预训练计算(在exaFLOP中)。
 
@@ -405,7 +457,7 @@ Table 6: Detailed results of model scaling experiments. These correspond to Figu
 #### D.1 SGD VS. ADAM FOR RESNETS
 ResNets are typically trained with SGD and our use of Adam as optimizer is quite unconventional. Here we show the experiments that motivated this choice. Namely, we compare the fine-tuning performance of two ResNets – 50x1 and 152x2 – pre-trained on JFT with SGD and Adam. For SGD, we use the hyperparameters recommended by Kolesnikov et al. (2020). Results are presented in Table 7. Adam pre-training outperforms SGD pre-training on most datasets and on average. This justifies the choice of Adam as the optimizer used to pre-train ResNets on JFT. Note that the absolute numbers are lower than those reported by Kolesnikov et al. (2020), since we pre-train only for 7 epochs, not 30.
 
-ResNets通常使用SGD进行训练，我们使用Adam作为优化器是非常不同寻常的。这里我们展示了激发这一选择的实验。即,我们比较了在JFT上预先训练的两个ResNets(50x1和152x2)与SGD和Adam的微调性能。对于SGD，我们使用Kolesnikovet al 推荐的超参数。(2020)。结果如表7所示。Adam预训练在大多数数据集和平均值上都优于SGD预训练。这证明了选择Adam作为用于在JFT上预训练ResNets的优化器是合理的。请注意，绝对数字低于Kolesnikovet al (2020)报告的数字，因为我们只预训练了7个时期，而不是30个时期。
+ResNets通常使用SGD进行训练，我们使用Adam作为优化器是非常不同寻常的。这里我们展示了激发这一选择的实验。即,我们比较了在JFT上预先训练的两个ResNets(50x1和152x2)与SGD和Adam的微调性能。对于SGD，我们使用 Kolesnikov et al. (2020) 推荐的超参数。结果如表7所示。Adam预训练在大多数数据集和平均值上都优于SGD预训练。这证明了选择Adam作为用于在JFT上预训练ResNets的优化器是合理的。请注意，绝对数字低于Kolesnikov et al. (2020)报告的数字，因为我们只预训练了7个时期，而不是30个时期。
 
 ![Table 7](../images/vit/tab_7.png)<br/>
 Table 7: Fine-tuning ResNet models pre-trained with Adam and SGD. 
@@ -423,7 +475,7 @@ Figure 8: Scaling different model dimensions of the Vision Transformer.
 #### D.3 HEAD TYPE AND CLASS TOKEN
 In order to stay as close as possible to the original Transformer model, we made use of an additional [class] token, which is taken as image representation. The output of this token is then transformed into a class prediction via a small multi-layer perceptron (MLP) with tanh as non-linearity in the single hidden layer.
 
-为了尽可能接近原始Transformer模型，我们使用了一个额外的[class]令牌，它被用作图像表示。然后，该令牌的输出通过小型多层感知器(MLP)转换为类预测，其中tanh在单个隐藏层中为非线性。
+为了尽可能接近原始Transformer模型，我们使用了一个额外的[class]令牌，它被用作图像表示。然后，该令牌的输出通过小型多层感知器(MLP)转换为类预测，其中在单个隐藏层中非线性函数为tanh。
 
 This design is inherited from the Transformer model for text, and we use it throughout the main paper. An initial attempt at using only image-patch embeddings, globally average-pooling (GAP) them, followed by a linear classifier—just like ResNet’s final feature map—performed very poorly.
 
@@ -461,7 +513,14 @@ In addition to different ways of encoding spatial information, we also tried dif
 Figure 10: Position embeddings of models trained with different hyperparameters. 
 图10：用不同超参数训练的模型的位置嵌入。
 
-![Table 8](../images/vit/tab_8.png)<br/>
+
+Pos. Emb.|Default/Stem|Every Layer|Every Layer-Shared
+---|---|---|---
+No Pos. Emb.|0.61382|N/A|N/A
+1-D Pos. Emb.|0.64206|0.63964|0.64292
+2-D Pos. Emb.|0.64001|0.64046|0.64022
+Rel. Pos. Emb.|0.64032|N/A|N/A
+
 Table 8: Results of the ablation study on positional embeddings with ViT-B/16 model evaluated on ImageNet 5-shot linear. 
 表8：使用ViT-B/16模型在ImageNet 5-样本线性扫描中评估的位置嵌入消融研究结果。
 
@@ -489,7 +548,7 @@ Another quantity of interest is the largest batch-size each model can fit onto a
 #### D.6 AXIAL ATTENTION 轴向注意
 Axial Attention (Huang et al., 2020; Ho et al., 2019) is a simple, yet effective technique to run selfattention on large inputs that are organized as multidimensional tensors. The general idea of axial attention is to perform multiple attention operations, each along a single axis of the input tensor, instead of applying 1-dimensional attention to the flattened version of the input. In axial attention, each attention mixes information along a particular axis, while keeping information along the other axes independent. Along this line, Wang et al. (2020b) proposed the AxialResNet model in which all the convolutions with kernel size 3 × 3 in a ResNet50 are replaced by axial self-attention, i.e. a row and column attention, augmented by relative positional encoding. We have implemented AxialResNet as a baseline model.(Our implementation is based on the open-sourced PyTorch implementation in https://github.com/ csrhddlam/axial-deeplab. In our experiments, we reproduced the scores reported in (Wang et al., 2020b) in terms of accuracy, however, our implementation, similar to the open-source implementation, is very slow on TPUs. Therefore, we were not able to use it for extensive large-scale experiments. These may be unlocked by a carefully optimized implementation).
 
-轴向注意力(Huanget al., 2020; Hoet al., 2019)是一种简单而有效的技术，用于在被组织为多维张量的大输入上运行自注意力。轴向注意力的一般思想是执行多个注意力操作，每个操作沿着输入张量的一个轴进行，而不是将一维注意力应用于输入的平坦版本。在轴向注意力中，每个注意力沿特定轴混合信息，同时保持沿其他轴的信息独立。沿着这一思路，Wanget al (2020b)提出了AxialResNet模型，其中ResNet50中的所有核大小为3×3的卷积都被轴向自注意力所取代，即行和列关注，并通过相对位置编码来增强。我们已经将AxialResNet实现为基线模型。(我们的实现基于开源的PyTorch实现 https://github.com/csrhddlam/axial-deeplab。在我们的实验中，我们在准确性方面复制了(Wang et al., 2020b)中报告的分数，然而，我们的实现与开源实现类似，在TPU上非常慢。因此，我们无法将其用于大规模实验。这些可以通过仔细优化的实现来解锁)。
+轴向注意力(Huanget al., 2020; Hoet al., 2019)是一种简单而有效的技术，用于在被组织为多维张量的大输入上运行自注意力。轴向注意力的一般思想是执行多个注意力操作，每个操作沿着输入张量的一个轴进行，而不是将一维注意力应用于输入的平坦版本。在轴向注意力中，每个注意力沿特定轴混合信息，同时保持沿其他轴的信息独立。沿着这一思路，Wang et al. (2020b)提出了AxialResNet模型，其中ResNet50中的所有核大小为3×3的卷积都被轴向自注意力所取代，即行和列关注，并通过相对位置编码来增强。我们已经将AxialResNet实现为基线模型。(我们的实现基于开源的PyTorch实现 https://github.com/csrhddlam/axial-deeplab。在我们的实验中，我们在准确性方面复制了(Wang et al., 2020b)中报告的分数，然而，我们的实现与开源实现类似，在TPU上非常慢。因此，我们无法将其用于大规模实验。这些可以通过仔细优化的实现来解锁)。
 
 Moreover, we have modified ViT to process inputs in the 2-dimensional shape, instead of a 1- dimensional sequence of patches, and incorporate Axial Transformer blocks, in which instead of a self-attention followed by an MLP, we have a a row-self-attention plus an MLP followed by a column-self-attention plus an MLP.
 
@@ -512,7 +571,7 @@ Figure 11: Size of attended area by head and network depth. Attention distance w
 
 To understand how ViT uses self-attention to integrate information across the image, we analyzed the average distance spanned by attention weights at different layers (Figure 11). This “attention distance” is analogous to receptive field size in CNNs. Average attention distance is highly variable across heads in lower layers, with some heads attending to much of the image, while others attend to small regions at or near the query location. As depth increases, attention distance increases for all heads. In the second half of the network, most heads attend widely across tokens.
 
-为了理解ViT如何使用自注意力来整合图像中的信息，我们分析了不同层的注意力权重所跨越的平均距离(图11)。这种“注意距离”类似于CNN的感受野大小。在较低层中，头部的平均注意力距离是高度可变的，一些头部关注图像的大部分，而其他头部关注查询位置或查询位置附近的小区域。随着深度的增加，所有头部的注意力距离都会增加。在网络的后半部分，大多数负责人通过令牌广泛参与。
+为了理解ViT如何使用自注意力来整合图像中的信息，我们分析了不同层的注意力权重所跨越的平均距离(图11)。这种“注意距离”类似于CNN的感受野大小。在较低层中，头部的平均注意力距离是高度可变的，一些头部关注图像的大部分，而其他头部关注查询位置或查询位置附近的小区域。随着深度的增加，所有头部的注意力距离都会增加。在网络的后半部分，大多数的头(heads)通过令牌广泛参与。
 
 #### D.8 ATTENTION MAPS
 To compute maps of the attention from the output token to the input space (Figures 6 and 14), we used Attention Rollout (Abnar & Zuidema, 2020). Briefly, we averaged attention weights of ViTL/16 across all heads and then recursively multiplied the weight matrices of all layers. This accounts for the mixing of attention across tokens through all layers.
@@ -522,7 +581,7 @@ To compute maps of the attention from the output token to the input space (Figur
 #### D.9 OBJECTNET RESULTS
 We also evaluate our flagship ViT-H/14 model on the ObjectNet benchmark following the evaluation setup in Kolesnikov et al. (2020), resulting in 82.1% top-5 accuracy and 61.7% top-1 accuracy.
 
-我们还根据Kolesnikovet al (2020)的评估设置，在ObjectNet基准上评估了我们的旗舰ViT-H/14模型，得出82.1%的top 5准确率和61.7%的top 1准确率。
+我们还根据Kolesnikov et al. (2020)的评估设置，在ObjectNet基准上评估了我们的旗舰ViT-H/14模型，得出82.1%的top 5精度和61.7%的top 1精度。
 
 #### D.10 VTAB BREAKDOWN
 Table 9 shows the scores attained on each of the VTAB-1k tasks. 

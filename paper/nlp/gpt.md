@@ -198,7 +198,7 @@ The task of natural language inference (NLI), also known as recognizing textual 
 
 Table 2 details various results on the different NLI tasks for our model and previous state-of-the-art approaches. Our method significantly outperforms the baselines on four of the five datasets, achieving absolute improvements of upto 1.5% on MNLI, 5% on SciTail, 5.8% on QNLI and 0.6% on SNLI over the previous best results. This demonstrates our model’s ability to better reason over multiple sentences, and handle aspects of linguistic ambiguity. On RTE, one of the smaller datasets we evaluate on (2490 examples), we achieve an accuracy of 56%, which is below the 61.7% reported by a multi-task biLSTM model. Given the strong performance of our approach on larger NLI datasets, it is likely our model will benefit from multi-task training as well but we have not explored this currently. 
 
-表 2 详细列出了我们的模型和以前最先进的方法在不同 NLI 任务上的各种结果。 我们的方法在五个数据集中的四个上明显优于基线，与之前的最佳结果相比，MNLI 的绝对改进高达 1.5%，SciTail 的绝对改进高达 5%，QNLI 的绝对改进高达 5.8%，SNLI 的绝对改进高达 0.6%。 这表明我们的模型能够更好地推理多个句子，并处理语言歧义的各个方面。 在 RTE 上，我们评估的较小数据集之一(2490 个样本)，我们达到了 56% 的准确率，低于多任务 biLSTM 模型报告的 61.7%。 鉴于我们的方法在更大的 NLI 数据集上的强大性能，我们的模型很可能也会从多任务训练中受益，但我们目前尚未对此进行探索。
+表 2 详细列出了我们的模型和以前最先进的方法在不同 NLI 任务上的各种结果。 我们的方法在五个数据集中的四个上明显优于基线，与之前的最佳结果相比，MNLI 的绝对改进高达 1.5%，SciTail 的绝对改进高达 5%，QNLI 的绝对改进高达 5.8%，SNLI 的绝对改进高达 0.6%。 这表明我们的模型能够更好地推理多个句子，并处理语言歧义的各个方面。 在 RTE 上，我们评估的较小数据集之一(2490 个样本)，我们达到了 56% 的精度，低于多任务 biLSTM 模型报告的 61.7%。 鉴于我们的方法在更大的 NLI 数据集上的强大性能，我们的模型很可能也会从多任务训练中受益，但我们目前尚未对此进行探索。
 
 ![table 2](../images/gpt_1/tab_2.png)<br/>
 Table 2: Experimental results on natural language inference tasks, comparing our model with current state-of-the-art methods. 5x indicates an ensemble of 5 models. All datasets use accuracy as the evaluation metric.
@@ -225,7 +225,7 @@ Table 4: Semantic similarity and classification results, comparing our model wit
 #### Classification 
 Finally, we also evaluate on two different text classification tasks. The Corpus of Linguistic Acceptability (CoLA) [65] contains expert judgements on whether a sentence is grammatical or not, and tests the innate linguistic bias of trained models. The Stanford Sentiment Treebank (SST-2) [54], on the other hand, is a standard binary classification task. Our model obtains an score of 45.4 on CoLA, which is an especially big jump over the previous best result of 35.0, showcasing the innate linguistic bias learned by our model. The model also achieves 91.3% accuracy on SST-2, which is competitive with the state-of-the-art results. We also achieve an overall score of 72.8 on the GLUE benchmark, which is significantly better than the previous best of 68.9.
 
-最后，我们还评估了两个不同的文本分类任务。 语言可接受性语料库 (CoLA) [65] 包含对句子是否符合语法的专家判断，并测试训练模型的先天语言偏差。 另一方面，斯坦福情感树库 (SST-2) [54] 是标准的二元分类任务。 我们的模型在 CoLA 上获得了 45.4 分，这比之前的最佳成绩 35.0 有了很大的飞跃，展示了我们的模型学习到的先天语言偏见。 该模型还在 SST-2 上达到了 91.3% 的准确率，这与最先进的结果具有竞争力。 我们还在 GLUE 基准测试中获得了 72.8 的总分，明显优于之前的最佳成绩 68.9。
+最后，我们还评估了两个不同的文本分类任务。 语言可接受性语料库 (CoLA) [65] 包含对句子是否符合语法的专家判断，并测试训练模型的先天语言偏差。 另一方面，斯坦福情感树库 (SST-2) [54] 是标准的二元分类任务。 我们的模型在 CoLA 上获得了 45.4 分，这比之前的最佳成绩 35.0 有了很大的飞跃，展示了我们的模型学习到的先天语言偏见。 该模型还在 SST-2 上达到了 91.3% 的精度，这与最先进的结果具有竞争力。 我们还在 GLUE 基准测试中获得了 72.8 的总分，明显优于之前的最佳成绩 68.9。
 
 Overall, our approach achieves new state-of-the-art results in 9 out of the 12 datasets we evaluate on, outperforming ensembles in many cases. Our results also indicate that our approach works well across datasets of different sizes, from smaller datasets such as STS-B (≈5.7k training examples) – to the largest one – SNLI (≈550k training examples). 
 

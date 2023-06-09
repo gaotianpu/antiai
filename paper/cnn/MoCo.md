@@ -285,7 +285,7 @@ Previous unsupervised learning methods can differ substantially in model sizes. 
 
 MoCo with R50 performs competitively and achieves  60.6% accuracy, better than all competitors of similar model sizes (∼24M). MoCo benefits from larger models and achieves 68.6% accuracy with R50w4×.
 
-具有 R50 的 MoCo 具有竞争力，达到 60.6% 的准确率，优于所有具有相似模型尺寸 (∼24M) 的竞争对手。 MoCo 受益于更大的模型，并通过 R50w4× 实现了 68.6% 的准确率。
+具有 R50 的 MoCo 具有竞争力，达到 60.6% 的精度，优于所有具有相似模型尺寸 (∼24M) 的竞争对手。 MoCo 受益于更大的模型，并通过 R50w4× 实现了 68.6% 的精度。
 
 Notably, we achieve competitive results using a standard ResNet-50 and require no specific architecture designs, e.g., patchified inputs [46, 35], carefully tailored receptive fields [2], or combining two networks [56]. By using an architecture that is not customized for the pretext task, it is easier to transfer features to a variety of visual tasks and make comparisons, studied in the next subsection.
 
@@ -296,7 +296,7 @@ Table 1. Comparison under the linear classification protocol on ImageNet. The fi
 表 1. ImageNet 上线性分类协议下的比较。 该图可视化了表格。 所有这些都被报告为在 ImageNet-1M 训练集上进行无监督预训练，然后是在冻结特征上训练的监督线性分类，在验证集上进行评估。 参数计数是特征提取器的参数计数。 如果可用(在数字后引用)，我们将与改进的重新实现进行比较。 符号：R101*/R170* 是移除了最后一个残差阶段的 ResNet-101/170 [14、46、35]，并且 R170 变宽了 [35];  Rv50 是可逆网络 [23]，RX50 是 ResNeXt-50-32×8d [62]。 †：预训练使用由 ImageNet 标签监督的 FastAutoAugment [40]。
 
 This paper’s focus is on a mechanism for general contrastive learning; we do not explore orthogonal factors (such as specific pretext tasks) that may further improve accuracy. As an example, “MoCo v2” [8], an extension of a preliminary version of this manuscript, achieves 71.1% accuracy with R50 (up from 60.6%), given small changes on the data augmentation and output projection head [7]. We believe that this additional result shows the generality and robustness of the MoCo framework. 
-本文的重点是一般对比学习的机制;  我们不探索可能进一步提高准确性的正交因素(例如特定的前置任务)。 例如，“MoCo v2”[8] 是该手稿初步版本的扩展，在数据增广和输出投影头 [7] 发生微小变化的情况下，R50 的准确率达到 71.1%(高于 60.6%)。 我们相信这个额外的结果显示了 MoCo 框架的普遍性和稳健性。
+本文的重点是一般对比学习的机制;  我们不探索可能进一步提高准确性的正交因素(例如特定的前置任务)。 例如，“MoCo v2”[8] 是该手稿初步版本的扩展，在数据增广和输出投影头 [7] 发生微小变化的情况下，R50 的精度达到 71.1%(高于 60.6%)。 我们相信这个额外的结果显示了 MoCo 框架的普遍性和稳健性。
 
 ![Table 2](../images/MoCo/tab_2.png)<br/>
 Table 2. Object detection fine-tuned on PASCAL VOC trainval07+12. Evaluation is on test2007: AP50 (default VOC metric), AP (COCO-style), and AP75, averaged over 5 trials. All are fine-tuned for 24k iterations (∼23 epochs). In the brackets are the gaps to the ImageNet supervised pre-training counterpart. In green are the gaps of at least +0.5 point.
@@ -481,7 +481,7 @@ pre-train random init. MoCoIG-1B accuracy (%) 76.5 77.3
 
 As here ImageNet is the downstream task, the case of MoCo pre-trained on IN-1M does not represent a real scenario (for reference, we report that its accuracy is 77.0% after fine-tuning). But unsupervised pre-training in the separate, unlabeled dataset of IG-1B represents a typical scenario: in this case, MoCo improves by 0.8%. 
 
-由于此处 ImageNet 是下游任务，因此在 IN-1M 上预训练的 MoCo 的情况并不代表真实场景(供参考，我们报告其微调后的准确率为 77.0%)。 但在 IG-1B 的独立、未标注数据集中进行的无监督预训练代表了一个典型场景：在这种情况下，MoCo 提高了 0.8%。
+由于此处 ImageNet 是下游任务，因此在 IN-1M 上预训练的 MoCo 的情况并不代表真实场景(供参考，我们报告其微调后的精度为 77.0%)。 但在 IG-1B 的独立、未标注数据集中进行的无监督预训练代表了一个典型场景：在这种情况下，MoCo 提高了 0.8%。
 
 Table A.1. Object detection and instance segmentation fine-tuned on COCO: 2× vs. 6× schedule. In the brackets are the gaps to the ImageNet supervised pre-training counterpart. In green are the gaps of at least +0.5 point.
 
@@ -499,7 +499,7 @@ We observe: (i) fine-tuning with ImageNet-supervised pre-training still has impr
 ### A.9. Ablation on Shuffling BN
 Figure A.1 provides the training curves of MoCo with or without shuffling BN: removing shuffling BN shows obvious overfitting to the pretext task: training accuracy of the pretext task (dash curve) quickly increases to >99.9%, and the kNN-based validation classification accuracy (solid curve) drops soon. This is observed for both the MoCo and end-to-end variants; the memory bank variant implicitly has different statistics for q and k, so avoids this issue.
 
-图A.1 提供了有或没有混洗 BN 的 MoCo 的训练曲线：去除混洗 BN 对前置任务有明显的过度拟合：前置任务(虚线曲线)的训练准确率迅速提高到 >99.9%，基于 kNN 的验证 分类精度(实线)很快下降。 对于 MoCo 和端到端变体都观察到了这一点;  memory bank 变体隐式地对 q 和 k 具有不同的统计信息，因此避免了这个问题。
+图A.1 提供了有或没有混洗 BN 的 MoCo 的训练曲线：去除混洗 BN 对前置任务有明显的过度拟合：前置任务(虚线曲线)的训练精度迅速提高到 >99.9%，基于 kNN 的验证 分类精度(实线)很快下降。 对于 MoCo 和端到端变体都观察到了这一点;  memory bank 变体隐式地对 q 和 k 具有不同的统计信息，因此避免了这个问题。
 
 These experiments suggest that without shuffling BN, the sub-batch statistics can serve as a “signature” to tell which sub-batch the positive key is in. Shuffling BN can remove this signature and avoid such cheating. 
 

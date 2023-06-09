@@ -142,7 +142,7 @@ Table 1. Zero-shot ablation experiments. Pre-training is on LAION-400M for 6.4 e
 #### Masking ratio.  掩码率
 Table 1a studies the image masking ratios. Here we scale the batch size accordingly (ablated next), so as to roughly maintain the memory footprint(1Directly comparing TPU memory usage can be difficult due to its memory optimizations. We instead validate GPU memory usage using [36]’s reimplementation of FLIP, and find the memory usage is 25.5G, 23.9G and 24.5G for masking 0%, 50% and 75% on 256 GPUs). The 0% masking entry indicates our CLIP counterpart. Masking 50% gives 1.2% higher accuracy than the CLIP baseline, and masking 75% is on par with the baseline. Speed-wise, masking 50% or 75% takes only 0.50× or 0.33× wall-clock training time, thanks to the large reduction on FLOPs.
 
-表1a研究了图像掩码比。在这里，我们相应地缩放批次大小(下一步消融)，以便大致保持内存足迹(1 由于其内存优化，直接比较TPU内存使用情况可能很困难。相反，我们使用[36]对FLIP的重新实现来验证GPU内存使用情况，并发现在256个GPU上掩码0%、50%和75%的内存使用情况分别为25.5G、23.9G和24.5G)。0%掩码条目表示我们的CLIP对应项。掩码50%的准确率比CLIP基线高1.2%，掩码75%的准确率与基线相当。在速度方面，由于FLOP的大幅减少，掩码50%或75%只需要0.50倍或0.33倍的挂钟训练时间。
+表1a研究了图像掩码比。在这里，我们相应地缩放批次大小(下一步消融)，以便大致保持内存足迹(1 由于其内存优化，直接比较TPU内存使用情况可能很困难。相反，我们使用[36]对FLIP的重新实现来验证GPU内存使用情况，并发现在256个GPU上掩码0%、50%和75%的内存使用情况分别为25.5G、23.9G和24.5G)。0%掩码条目表示我们的CLIP对应项。掩码50%的精度比CLIP基线高1.2%，掩码75%的精度与基线相当。在速度方面，由于FLOP的大幅减少，掩码50%或75%只需要0.50倍或0.33倍的挂钟训练时间。
 
 #### Batch size. 批量大小
 We ablate the effect of batch size in Table 1b. Increasing the batch size consistently improves accuracy.
@@ -178,12 +178,12 @@ By default, we apply our models on intact images at inference-time, similar to [
 
 Table 1d reports that if using masking at inference time, the accuracy drops by a lot (e.g., 7.3%). This drop can be partially caused by information loss at inference, so we also compare with ensembling multiple masked views [10], where the views are complementary to each other and put together cover all patches. Ensembling reduces the gap (Table 1d), but still lags behind the simple full-view inference.
 
-表1d报告称，如果在推理时使用掩码，准确率会下降很多(例如，7.3%)。这种下降可能部分是由推理时的信息丢失引起的，因此我们也将其与多个掩码视图进行比较[10]，其中视图相互补充，放在一起覆盖所有分块。镶嵌减少了差距(表1d)，但仍落后于简单的全视图推断。
+表1d报告称，如果在推理时使用掩码，精度会下降很多(例如，7.3%)。这种下降可能部分是由推理时的信息丢失引起的，因此我们也将其与多个掩码视图进行比较[10]，其中视图相互补充，放在一起覆盖所有分块。镶嵌减少了差距(表1d)，但仍落后于简单的全视图推断。
 
 #### Unmasked tuning. 无掩码微调
 Our ablation experiments thus far do not involve unmasked tuning. Table 1e reports the results of unmasked tuning for extra 0.32 epoch on the pre-training dataset. It increases accuracy by 1.3% at the high masking ratio of 75%, suggesting that tuning can effectively reduce the distribution gap between pre-training and inference.
 
-到目前为止，我们的消融实验不涉及无掩码微调。表1e报告了在预训练数据集上针对额外0.32历元的未掩码微调的结果。在75%的高掩码率下，它将准确率提高了1.3%，这表明调整可以有效地减少预训练和推理之间的分布差距。
+到目前为止，我们的消融实验不涉及无掩码微调。表1e报告了在预训练数据集上针对额外0.32历元的未掩码微调的结果。在75%的高掩码率下，它将精度提高了1.3%，这表明调整可以有效地减少预训练和推理之间的分布差距。
 
 Fig. 3 plots the trade-off affected by unmasked tuning (solid vs. dashed). Unmasked tuning leads to a more desirable trade-off for 75% masking; it has a comparable tradeoff for 50% masking but improves final accuracy.
 
@@ -250,12 +250,12 @@ As a sanity check, our CLIP reproduction has slightly higher accuracy than OpenC
 
 Table 2 reports the results of our FLIP models, using the best practice as we have ablated in Table 1 (a 64k batch, 50% masking ratio, and unmasked tuning). For ViT-L/14(3 For a legacy reason, we pre-trained our ViT-L models with a patch size of 16, following the original ViT paper [20]. The CLIP paper [52] uses L/14 instead. To save resources, we report our L/14 results by tuning the L/16 pre-trained model, in a way similar to unmasked tuning), our method has 74.6% accuracy, which is 1.8% higher than OpenCLIP and 1.5% higher than our CLIP reproduction. Comparing with the original CLIP, our method reduces the gap to 0.7%. We hope our method will improve the original CLIP result if it were trained on the WIT data.
 
-表2报告了我们的FLIP模型的结果，使用了我们在表1中消融的最佳实践(64k批次，50%掩码比，和未掩码微调)。对于ViT-L/14(3 由于遗留问题，我们根据原始ViT论文[20]，用16的分块大小预训练了我们的ViT-L模型。CLIP论文[52]使用L/14代替。为了节省资源，我们通过调整L/16预训练模型来报告我们的L/14结果，其方式类似于无掩码调整)，我们的方法有74.6%的准确率，比OpenCLIP高1.8%，比我们的CLIP复制高1.5%。与原始CLIP相比，我们的方法将差距缩小到0.7%。如果我们的方法是在WIT数据上训练的，我们希望它能改善原始CLIP的结果。
+表2报告了我们的FLIP模型的结果，使用了我们在表1中消融的最佳实践(64k批次，50%掩码比，和未掩码微调)。对于ViT-L/14(3 由于遗留问题，我们根据原始ViT论文[20]，用16的分块大小预训练了我们的ViT-L模型。CLIP论文[52]使用L/14代替。为了节省资源，我们通过调整L/16预训练模型来报告我们的L/14结果，其方式类似于无掩码调整)，我们的方法有74.6%的精度，比OpenCLIP高1.8%，比我们的CLIP复制高1.5%。与原始CLIP相比，我们的方法将差距缩小到0.7%。如果我们的方法是在WIT数据上训练的，我们希望它能改善原始CLIP的结果。
 
 #### ImageNet linear probing. ImageNet线性探测
 Table 3 compares the linear probing results, i.e., training a linear classifier on the target dataset with frozen features. FLIP has 83.6% accuracy, 1.0% higher than our CLIP counterpart. It is also 0.6% higher than our transfer of the original CLIP checkpoint, using the same SGD trainer.
 
-表3比较了线性探测结果，即在具有冻结特征的目标数据集上训练线性分类器。FLIP的准确率为83.6%，比CLIP的准确率高1.0%。它也比我们使用相同的SGD训练器迁移原始CLIP检查点高出0.6%。
+表3比较了线性探测结果，即在具有冻结特征的目标数据集上训练线性分类器。FLIP的精度为83.6%，比CLIP的精度高1.0%。它也比我们使用相同的SGD训练器迁移原始CLIP检查点高出0.6%。
 
 ![Table 3](../images/FLIP/tab_3.png)</br>
 Table 3. Linear probing and fine-tuning accuracy on ImageNet-1K classification, compared with various CLIP baselines. The entries noted by grey are pre-trained on a different dataset. The image size is 224. † : CLIP in [52] optimizes with L-BFGS; we use SGD instead.
@@ -299,7 +299,7 @@ Table 5. Zero-shot image/text retrieval, compared with various CLIP baselines. T
 #### Zero-shot robustness evaluation. 零样本稳健性评估
 In Table 6 we compare on robustness evaluation, following [52]. We again observe clear systematic gaps caused by pre-training data. Using the same evaluation code (“our eval” in Table 6), CLIP pre-trained on WIT is clearly better than other entries pretrained on LAION. Taking IN-Adversarial (IN-A) as an example: the LAION-based OpenCLIP [36] has only 48.3% accuracy (or 46.6% reported by [36]). While FLIP (51.2%) can outperform the LAION-based CLIP by a large margin, it is still 20% below the WIT-based CLIP (71.9%).
 
-在表6中，我们对稳健性评估进行了比较，如下[52]。我们再次观察到训练前数据造成的明显的系统性差距。使用相同的评估代码(表6中的“我们的评估”)，在WIT上预训练的CLIP明显优于在LAION上预训练过的其他条目。以IN对抗性(IN-A)为例：基于LAION的OpenCLIP[36]的准确率仅为48.3%(或[36]报告的46.6%)。虽然FLIP(51.2%)可以大幅度优于基于LAION的CLIP，但仍比基于WIT的CLIP(71.9%)低20%。
+在表6中，我们对稳健性评估进行了比较，如下[52]。我们再次观察到训练前数据造成的明显的系统性差距。使用相同的评估代码(表6中的“我们的评估”)，在WIT上预训练的CLIP明显优于在LAION上预训练过的其他条目。以IN对抗性(IN-A)为例：基于LAION的OpenCLIP[36]的精度仅为48.3%(或[36]报告的46.6%)。虽然FLIP(51.2%)可以大幅度优于基于LAION的CLIP，但仍比基于WIT的CLIP(71.9%)低20%。
 
 ![Table 6](../images/FLIP/tab_6.png)</br>
 Table 6. Zero-shot robustness evaluation, compared with various CLIP baselines. This table follows Table 16 in [52]. The image size is 224 if not noted. Entries in green are the best ones using the LAION-400M data.

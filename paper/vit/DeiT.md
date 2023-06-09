@@ -13,7 +13,7 @@ In this work, we produce competitive convolution-free transformers by training o
 
 More importantly, we introduce a teacher-student strategy specific to transformers. It relies on a distillation token ensuring that the student learns from the teacher through attention. We show the interest of this token-based distillation, especially when using a convnet as a teacher. This leads us to report results competitive with convnets for both Imagenet (where we obtain up to 85.2% accuracy) and when transferring to other tasks. We share our code and models. 
 
-更重要的是，我们引入了专门针对transformers的师生策略。它依赖于一个蒸馏令牌，确保学生通过注意力从老师那里学习。我们展示了这种基于令牌的蒸馏的兴趣，特别是当使用convnet作为教师时。这导致我们在Imagenet(我们获得了高达85.2%的准确率)和迁移到其他任务时报告的结果与convnets相比具有竞争力。我们共享代码和模型。
+更重要的是，我们引入了专门针对transformers的师生策略。它依赖于一个蒸馏令牌，确保学生通过注意力从老师那里学习。我们展示了这种基于令牌的蒸馏的兴趣，特别是当使用convnet作为教师时。这导致我们在Imagenet(我们获得了高达85.2%的精度)和迁移到其他任务时报告的结果与convnets相比具有竞争力。我们共享代码和模型。
 
 ## 1 Introduction
 Convolutional neural networks have been the main design paradigm for image understanding tasks, as initially demonstrated on image classification tasks. One of the ingredient to their success was the availability of a large training set, namely Imagenet [13, 42]. Motivated by the success of attention-based models in Natural Language Processing [14, 52], there has been increasing interest in architectures leveraging attention mechanisms within convnets [2, 34, 61]. More recently several researchers have proposed hybrid architecture transplanting transformer ingredients to convnets to solve vision tasks [6, 43].

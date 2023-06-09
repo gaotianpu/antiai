@@ -276,7 +276,7 @@ We train the network on the standard ImageNet 1000 class classification dataset 
 
 As discussed above, after our initial training on images at 224 × 224 we fine tune our network at a larger size, 448. For this fine tuning we train with the above parameters but for only 10 epochs and starting at a learning rate of $10^{−3}$ . At this higher resolution our network achieves a top-1 accuracy of 76.5% and a top-5 accuracy of 93.3%.  
 
-如上所述，在对 224 × 224 的图像进行初始训练后，我们将网络微调为更大的尺寸448。对于这种微调，我们使用上述参数进行训练，但仅训练 10 个 epoch，并以 $10^{−3}$ 的学习率开始.在这个更高的分辨率下，我们的网络达到了 76.5% 的 top-1 准确率和 93.3% 的 top-5 准确率。
+如上所述，在对 224 × 224 的图像进行初始训练后，我们将网络微调为更大的尺寸448。对于这种微调，我们使用上述参数进行训练，但仅训练 10 个 epoch，并以 $10^{−3}$ 的学习率开始.在这个更高的分辨率下，我们的网络达到了 76.5% 的 top-1 精度和 93.3% 的 top-5 精度。
 
 ### Training for detection. 
 We modify this network for detection by removing the last convolutional layer and instead adding on three 3 × 3 convolutional layers with 1024 filters each followed by a final 1 × 1 convolutional layer with the number of outputs we need for detection. For VOC we predict 5 boxes with 5 coordinates each and 20 classes per box so 125 filters. We also add a passthrough layer from the final 3 × 3 × 512 layer to the second to last convolutional layer so that our model can use fine grain features. We train the network for 160 epochs with a starting learning rate of $10^{−3}$ , dividing it by 10 at 60 and 90 epochs.
@@ -355,7 +355,7 @@ Figure 5: Prediction on ImageNet vs WordTree. Most ImageNet models use one large
 
 Using the same training parameters as before, our hierarchical Darknet-19 achieves 71.9% top-1 accuracy and 90.4% top-5 accuracy. Despite adding 369 additional concepts and having our network predict a tree structure our accuracy only drops marginally. Performing classification in this manner also has some benefits. Performance degrades gracefully on new or unknown object categories. For example, if the network sees a picture of a dog but is uncertain what type of dog it is, it will still predict “dog” with high confidence but have lower confidences spread out among the hyponyms.
 
-使用与以前相同的训练参数，我们的分层 Darknet-19 达到了 71.9% 的 top-1 准确率和 90.4% 的 top-5 准确率。尽管添加了 369 个额外的概念并让我们的网络预测树结构，但我们的准确度仅略有下降。以这种方式执行分类也有一些好处。在新的或未知的目标类别上，性能会优雅地下降。例如，如果网络看到一张狗的照片，但不确定它是什么类型的狗，它仍然会以高置信度预测“狗”，但在下位词中的置信度较低。
+使用与以前相同的训练参数，我们的分层 Darknet-19 达到了 71.9% 的 top-1 精度和 90.4% 的 top-5 精度。尽管添加了 369 个额外的概念并让我们的网络预测树结构，但我们的准确度仅略有下降。以这种方式执行分类也有一些好处。在新的或未知的目标类别上，性能会优雅地下降。例如，如果网络看到一张狗的照片，但不确定它是什么类型的狗，它仍然会以高置信度预测“狗”，但在下位词中的置信度较低。
 
 This formulation also works for detection. Now, instead of assuming every image has an object, we use YOLOv2’s objectness predictor to give us the value of P r(physical object). The detector predicts a bounding box and the tree of probabilities. We traverse the tree down, taking the highest confidence path at every split until we reach some threshold and we predict that object class.
 

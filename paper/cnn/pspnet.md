@@ -4,7 +4,7 @@
 ## ABSTRACT 
 Scene parsing is challenging for unrestricted open vocabulary and diverse scenes. In this paper, we exploit the capability of global context information by different-region-based context aggregation through our pyramid pooling module together with the proposed pyramid scene parsing network (PSPNet). Our global prior representation is effective to produce good quality results on the scene parsing task, while PSPNet provides a superior framework for pixel-level prediction tasks. The proposed approach achieves state-of-the-art performance on various datasets. It came first in ImageNet scene parsing challenge 2016, PASCAL VOC 2012 benchmark and Cityscapes benchmark. A single PSPNet yields new record of mIoU accuracy 85.4% on PASCAL VOC 2012 and accuracy 80.2% on Cityscapes.
 
-场景解析对于不受限制的开放词汇表和多样的场景来说是一个挑战。本文通过我们的金字塔池化模块和提出的金字塔场景解析网络(PSPNet)，通过基于不同区域的上下文聚合来利用全局上下文信息的能力。我们的全局先验表示可以有效地在场景解析任务中产生高质量的结果，而PSPNet为像素级预测任务提供了一个优秀的框架。提出的方法在各种数据集上实现了最先进的性能。它在ImageNet 2016场景解析挑战赛、PASCAL VOC 2012基准测试和Cityscapes基准测试中名列前茅。单个PSPNet在PASCAL VOC 2012上的mIoU准确率达到85.4%，在Cityscapes上的准确率达到80.2%。
+场景解析对于不受限制的开放词汇表和多样的场景来说是一个挑战。本文通过我们的金字塔池化模块和提出的金字塔场景解析网络(PSPNet)，通过基于不同区域的上下文聚合来利用全局上下文信息的能力。我们的全局先验表示可以有效地在场景解析任务中产生高质量的结果，而PSPNet为像素级预测任务提供了一个优秀的框架。提出的方法在各种数据集上实现了最先进的性能。它在ImageNet 2016场景解析挑战赛、PASCAL VOC 2012基准测试和Cityscapes基准测试中名列前茅。单个PSPNet在PASCAL VOC 2012上的mIoU精度达到85.4%，在Cityscapes上的精度达到80.2%。
 
 ## 1. Introduction
 Scene parsing, based on semantic segmentation, is a fundamental topic in computer vision. The goal is to assign each pixel in the image a category label. Scene parsing provides complete understanding of the scene. It predicts the label, location, as well as shape for each element. This topic is of broad interest for potential applications of automatic driving, robot sensing, to name a few.
@@ -232,7 +232,7 @@ Figure 7. Visual improvements on PASCAL VOC 2012 data. PSPNet produces more accu
 图7.PASCAL VOC 2012数据的视觉改进。PSPNet产生更准确和详细的结果。
 
 As shown in Table 6, PSPNet outperforms prior methods on both settings. Trained with only VOC 2012 data, we achieve 82.6% accuracy2 – we get the highest accuracy on all 20 classes. When PSPNet is pre-trained with MS-COCO dataset, it reaches 85.4% accuracy3 where 19 out of the 20 classes receive the highest accuracy. Intriguingly, our PSPNet trained with only VOC 2012 data outperforms existing methods trained with the MS-COCO pre-trained model.
-如表6所示，PSPNet在两种设置上都优于现有方法。我们只接受了2012年VOC数据的培训，准确率达到82.6%2–我们在所有20个课程中都获得了最高的准确率。当PSPNet使用MS-COCO数据集进行预训练时，其精度达到85.4%，其中20个类中有19个类的精度最高。有趣的是，我们仅使用VOC 2012数据训练的PSPNet优于使用MS-COCO预训练模型训练的现有方法。
+如表6所示，PSPNet在两种设置上都优于现有方法。我们只接受了2012年VOC数据的培训，精度达到82.6%2–我们在所有20个课程中都获得了最高的精度。当PSPNet使用MS-COCO数据集进行预训练时，其精度达到85.4%，其中20个类中有19个类的精度最高。有趣的是，我们仅使用VOC 2012数据训练的PSPNet优于使用MS-COCO预训练模型训练的现有方法。
 
 One may argue that our based classification model is more powerful than several prior methods since ResNet was recently proposed. To exhibit our unique contribution, we show that our method also outperforms stateof-the-art frameworks that use the same model, including FCRNs [38], LRR [9], and DeepLab [4]. In this process, we even do not employ time-consuming but effective postprocessing, such as CRF, as that in [4, 9].
 

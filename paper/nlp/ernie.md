@@ -232,7 +232,7 @@ FIGER的结果如表2所示。从结果中，我们观察到：(1)BERT在宏观�
 
 The results on Open Entity are shown in Table 3. From the table, we observe that: (1) BERT and ERNIE achieve much higher recall scores than the previous entity typing models, which means pre-training language models make full use of both the unsupervised pre-training and manuallyannotated training data for better entity typing. (2) Compared to BERT, ERNIE improves the precision by 2% and the recall by 2%, which means the informative entities help ERNIE predict the labels more precisely.
 
-关于开放实体的结果如表3所示。从表中，我们观察到：(1)BERT和ERNIE的召回分数比以前的实体类型模型高得多，这意味着预训练语言模型充分利用了无监督的预训练和人工注释的训练数据，以更好地进行实体类型。(2) 与BERT相比，ERNIE提高了2%的准确率和2%的召回率，这意味着信息实体帮助ERNIE更准确地预测标签。
+关于开放实体的结果如表3所示。从表中，我们观察到：(1)BERT和ERNIE的召回分数比以前的实体类型模型高得多，这意味着预训练语言模型充分利用了无监督的预训练和人工注释的训练数据，以更好地进行实体类型。(2) 与BERT相比，ERNIE提高了2%的精度和2%的召回率，这意味着信息实体帮助ERNIE更准确地预测标签。
 
 In summary, ERNIE effectively reduces the noisy label challenge in FIGER, which is a widely-used distantly supervised entity typing dataset, by injecting the information from KGs. Besides, ERNIE also outperforms the baselines on Open Entity which has gold annotations.
 

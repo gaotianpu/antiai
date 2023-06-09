@@ -262,7 +262,7 @@ George bought some baseball equipment, a ball, a glove, and a ___ . →
 
 When presented with examples formatted this way, GPT-3 achieves 86.4% accuracy in the few-shot setting, an increase of over 18% from the previous state-of-the-art. We observe that few-shot performance improves strongly with model size. While this setting decreases the performance of the smallest model by almost 20%, for GPT-3 it improves accuracy by 10%. Finally, the fill-in-blank method is not effective one-shot, where it always performs worse than the zero-shot setting. Perhaps this is because all models still require several examples to recognize the pattern. 
 
-当以这种格式呈现样本时，GPT-3 在少样本设置中达到 86.4% 的准确率，比之前的SOTA提高了 18% 以上。 我们观察到，少样本性能随着模型大小的增加而显著提高。 虽然此设置将最小模型的性能降低了近 20%，但对于 GPT-3，它提高了 10% 的准确性。 最后，填空方法不是有效的one-shot方法，它总是比零样本设置更差。 也许这是因为所有模型仍然需要几个样本来识别模式。
+当以这种格式呈现样本时，GPT-3 在少样本设置中达到 86.4% 的精度，比之前的SOTA提高了 18% 以上。 我们观察到，少样本性能随着模型大小的增加而显著提高。 虽然此设置将最小模型的性能降低了近 20%，但对于 GPT-3，它提高了 10% 的准确性。 最后，填空方法不是有效的one-shot方法，它总是比零样本设置更差。 也许这是因为所有模型仍然需要几个样本来识别模式。
 
 
 
@@ -273,7 +273,7 @@ One note of caution is that an analysis of test set contamination identified tha
 #### 3.1.3 HellaSwag
 The HellaSwag dataset [ZHB+19] involves picking the best ending to a story or set of instructions. The examples were adversarially mined to be difficult for language models while remaining easy for humans (who achieve 95.6% accuracy). GPT-3 achieves 78.1% accuracy in the one-shot setting and 79.3% accuracy in the few-shot setting, outperforming the 75.4% accuracy of a fine-tuned 1.5B parameter language model [ZHR+19] but still a fair amount lower than the overall SOTA of 85.6% achieved by the fine-tuned multi-task model ALUM.
 
-HellaSwag 数据集 [ZHB+19] 涉及为故事或指令集选择最佳结局。 这些例子被对抗性挖掘为语言模型很难，但对人类来说很容易(准确率达到 95.6%)。 GPT-3 在单次设置中达到 78.1% 的准确率，在少次设置中达到 79.3% 的准确率，优于微调的 1.5B 参数语言模型 [ZHR+19] 的 75.4% 准确率，但仍低很多 比整体微调的多任务模型 ALUM 实现了 85.6% 的 SOTA。
+HellaSwag 数据集 [ZHB+19] 涉及为故事或指令集选择最佳结局。 这些例子被对抗性挖掘为语言模型很难，但对人类来说很容易(精度达到 95.6%)。 GPT-3 在单次设置中达到 78.1% 的精度，在少次设置中达到 79.3% 的精度，优于微调的 1.5B 参数语言模型 [ZHR+19] 的 75.4% 精度，但仍低很多 比整体微调的多任务模型 ALUM 实现了 85.6% 的 SOTA。
 
 #### 3.1.4 StoryCloze 故事完形填空
 We next evaluate GPT-3 on the StoryCloze 2016 dataset [MCH+16], which involves selecting the correct ending sentence for five-sentence long stories. Here GPT-3 achieves 83.2% in the zero-shot setting and 87.7% in the few-shot setting (with K = 70). This is still 4.1% lower than the fine-tuned SOTA using a BERT based model [LDL19] but improves over previous zero-shot results by roughly 10%.
@@ -363,14 +363,14 @@ On the more difficult Winogrande dataset, we do find gains to in-context learnin
 ### 3.5 Common Sense Reasoning 常识推理
 Next we consider three datasets which attempt to capture physical or scientific reasoning, as distinct from sentence completion, reading comprehension, or broad knowledge question answering. The first, PhysicalQA (PIQA) [BZB+19], asks common sense questions about how the physical world works and is intended as a probe of grounded understanding of the world. GPT-3 achieves 81.0% accuracy zero-shot, 80.5% accuracy one-shot, and 82.8% accuracy few-shot (the last measured on PIQA’s test server). This compares favorably to the 79.4% accuracy prior state-of-the-art of a fine-tuned RoBERTa. PIQA shows relatively shallow scaling with model size and is still over 10% worse than human performance, but GPT-3’s few-shot and even zero-shot result outperform the current state-of-the-art. Our analysis flagged PIQA for a potential data contamination issue (despite hidden test labels), and we therefore conservatively mark the result with an asterisk. See Section 4 for details. 
 
-接下来我们考虑三个数据集，它们试图捕捉物理或科学推理，与句子完成、阅读理解或广义知识问答不同。 第一个，PhysicalQA (PIQA) [BZB+19]，询问有关物理世界如何运作的常识性问题，旨在探索对世界的扎根理解。 GPT-3 实现了 81.0% 的zero-shot准确率、80.5% 的one-shot准确率和 82.8% 的few-shot准确率(最后在 PIQA 的测试服务器上测得)。 这与经过微调的 RoBERTa 的 79.4% 准确率相比是有利的。 PIQA 显示模型大小的缩放比例相对较浅，仍然比人类表现差 10% 以上，但 GPT-3 的few-shot甚至zero-shot结果优于当前的最新技术水平。 我们的分析将 PIQA 令牌为潜在的数据污染问题(尽管隐藏了测试标签)，因此我们保守地将结果令牌为星号。 有关详情，请参阅第 4 节。
+接下来我们考虑三个数据集，它们试图捕捉物理或科学推理，与句子完成、阅读理解或广义知识问答不同。 第一个，PhysicalQA (PIQA) [BZB+19]，询问有关物理世界如何运作的常识性问题，旨在探索对世界的扎根理解。 GPT-3 实现了 81.0% 的zero-shot精度、80.5% 的one-shot精度和 82.8% 的few-shot精度(最后在 PIQA 的测试服务器上测得)。 这与经过微调的 RoBERTa 的 79.4% 精度相比是有利的。 PIQA 显示模型大小的缩放比例相对较浅，仍然比人类表现差 10% 以上，但 GPT-3 的few-shot甚至zero-shot结果优于当前的最新技术水平。 我们的分析将 PIQA 令牌为潜在的数据污染问题(尽管隐藏了测试标签)，因此我们保守地将结果令牌为星号。 有关详情，请参阅第 4 节。
 
 Table 3.7: Results on reading comprehension tasks. All scores are F1 except results for RACE which report accuracy. a[JZC+19] b[JN20] c[AI19] d[QIA20] e[SPP+19] 
 表 3.7：阅读理解任务的结果。 除了报告准确性的 RACE 结果外，所有分数均为 F1。 a[JZC+19] b[JN20] c[AI19] d[QIA20] e[SPP+19]
 
 ARC [CCE+18] is a dataset of multiple-choice questions collected from 3rd to 9th grade science exams. On the “Challenge” version of the dataset which has been filtered to questions which simple statistical or information retrieval methods are unable to correctly answer, GPT-3 achieves 51.4% accuracy in the zero-shot setting, 53.2% in the one-shot setting, and 51.5% in the few-shot setting. This is approaching the performance of a fine-tuned RoBERTa baseline (55.9%) from UnifiedQA [KKS+20]. On the “Easy” version of the dataset (questions which either of the mentioned baseline approaches answered correctly), GPT-3 achieves 68.8%, 71.2%, and 70.1% which slightly exceeds a fine-tuned RoBERTa baseline from [KKS+20]. However, both of these results are still much worse than the overall SOTAs achieved by the UnifiedQA which exceeds GPT-3’s few-shot results by 27% on the challenge set and 22% on the easy set.
 
-ARC [CCE+18] 是从 3 至 9级科学考试中收集的多项选择题的数据集。 在过滤掉简单统计或信息检索方法无法正确回答的问题的“挑战”版数据集上，GPT-3 在零样本设置中的准确率为 51.4%，在单样本设置中的准确率为 53.2% ，在少样本设置中为 51.5%。 这接近 UnifiedQA [KKS+20] 的微调 RoBERTa 基线 (55.9%) 的性能。 在数据集的“简单”版本(上述任一基线方法都正确回答的问题)上，GPT-3 达到了 68.8%、71.2% 和 70.1%，略微超过了来自 [KKS+20] 的微调 RoBERTa 基线 . 然而，这两个结果仍然比 UnifiedQA 获得的整体 SOTA 差得多，UnifiedQA 在挑战集上比 GPT-3 的few-shot结果高出 27%，在简单集上高出 22%。
+ARC [CCE+18] 是从 3 至 9级科学考试中收集的多项选择题的数据集。 在过滤掉简单统计或信息检索方法无法正确回答的问题的“挑战”版数据集上，GPT-3 在零样本设置中的精度为 51.4%，在单样本设置中的精度为 53.2% ，在少样本设置中为 51.5%。 这接近 UnifiedQA [KKS+20] 的微调 RoBERTa 基线 (55.9%) 的性能。 在数据集的“简单”版本(上述任一基线方法都正确回答的问题)上，GPT-3 达到了 68.8%、71.2% 和 70.1%，略微超过了来自 [KKS+20] 的微调 RoBERTa 基线 . 然而，这两个结果仍然比 UnifiedQA 获得的整体 SOTA 差得多，UnifiedQA 在挑战集上比 GPT-3 的few-shot结果高出 27%，在简单集上高出 22%。
 
 On OpenBookQA [MCKS18], GPT-3 improves significantly from zero to few shot settings but is still over 20 points short of the overall SOTA. GPT-3’s few-shot performance is similar to a fine-tuned BERT Large baseline on the leaderboard.
 
@@ -460,7 +460,7 @@ In all 10 tasks the model must generate the correct answer exactly. For each tas
 
 First we evaluate GPT-3 in the few-shot setting, for which results are shown in Figure 3.10. On addition and subtraction, GPT-3 displays strong proficiency when the number of digits is small, achieving 100% accuracy on 2 digit addition, 98.9% at 2 digit subtraction, 80.2% at 3 digit addition, and 94.2% at 3-digit subtraction. Performance decreases as the number of digits increases, but GPT-3 still achieves 25-26% accuracy on four digit operations and 9-10% accuracy on five digit operations, suggesting at least some capacity to generalize to larger numbers of digits. GPT-3 also achieves 29.2% accuracy at 2 digit multiplication, an especially computationally intensive operation. Finally, GPT-3 achieves 21.3% accuracy at single digit combined operations (for example, 9*(7+5)), suggesting that it has some robustness beyond just single operations.
 
-首先，我们在 few-shot 设置中评估 GPT-3，其结果如图 3.10 所示。 在加减法上，GPT-3在位数较少时表现出很强的熟练度，2位加法100%，2位减法98.9%，3位加法80.2%，3位减法94.2% . 性能会随着位数的增加而降低，但 GPT-3 在四位数运算上仍能达到 25-26% 的准确率，在五位数运算上仍能达到 9-10% 的准确率，这表明至少有一定的能力可以泛化到更多的位数。 GPT-3 在 2 位数乘法时也达到了 29.2% 的准确率，这是一种计算量特别大的运算。 最后，GPT-3 在个位数组合运算(例如 9*(7+5))中实现了 21.3% 的准确率，这表明它具有超越单一运算的稳健性。
+首先，我们在 few-shot 设置中评估 GPT-3，其结果如图 3.10 所示。 在加减法上，GPT-3在位数较少时表现出很强的熟练度，2位加法100%，2位减法98.9%，3位加法80.2%，3位减法94.2% . 性能会随着位数的增加而降低，但 GPT-3 在四位数运算上仍能达到 25-26% 的精度，在五位数运算上仍能达到 9-10% 的精度，这表明至少有一定的能力可以泛化到更多的位数。 GPT-3 在 2 位数乘法时也达到了 29.2% 的精度，这是一种计算量特别大的运算。 最后，GPT-3 在个位数组合运算(例如 9*(7+5))中实现了 21.3% 的精度，这表明它具有超越单一运算的稳健性。
 
 As Figure 3.10 makes clear, small models do poorly on all of these tasks – even the 13 billion parameter model (the second largest after the 175 billion full GPT-3) can solve 2 digit addition and subtraction only half the time, and all other operations less than 10% of the time.
 
@@ -527,7 +527,7 @@ To test GPT-3 on another task that is somewhat unusual relative to the typical d
 为了在另一个相对于典型的文本分布有些不寻常的任务上测试 GPT-3，我们收集了一组 374 个“SAT 类比”问题 [TLBS03]。 类比是2005年以前SAT高考的一种选择题题型。典型的例子是“大胆就是大胆，因为(a)道貌岸然就是虚伪，(b)匿名就是身份，(c) 悔恨是对不当行为，(d)有害是结果，(e)易受影响是诱惑”。 学生需要选择五个词对中的哪一个与原始词对具有相同的关系;  在这个例子中，答案是“道貌岸然就是伪善”。 在这项任务中，GPT-3 在少样本设置中达到 65.2%，在单样本设置中达到 59.1%，在零样本设置中达到 53.7%，而大学申请者的平均得分为 57% [TL05](随机 猜测收益率为 20%)。 如图 3.12 所示，结果随着规模的扩大而提高，与 130 亿参数模型相比，完整的 1750 亿模型提高了 10% 以上。
 
 Figure 3.12: Zero-, one-,and few-shot performance on SAT analogy tasks, for different sizes of model. The largest model achieves 65% accuracy in the few-shot setting, and also demonstrates significant gains to in-context learning which are not present in smaller models.
-图 3.12：对于不同大小的模型，SAT 类比任务的零、一和少样本性能。 最大的模型在少样本设置中达到了 65% 的准确率，并且还展示了上下文学习的显著收益，这在较小的模型中是不存在的。
+图 3.12：对于不同大小的模型，SAT 类比任务的零、一和少样本性能。 最大的模型在少样本设置中达到了 65% 的精度，并且还展示了上下文学习的显著收益，这在较小的模型中是不存在的。
 
 #### 3.9.4 News Article Generation 新闻文章生成
 Previous work on generative language models qualitatively tested their ability to generate synthetic “news articles” by conditional sampling from the model given a human-written prompt consisting of a plausible first sentence for a news story [RWC+19]. Relative to [RWC+19], the dataset used to train GPT-3 is much less weighted towards news articles, so trying to generate news articles via raw unconditional samples is less effective – for example GPT-3 often interprets the proposed first sentence of a “news article” as a tweet and then posts synthetic responses or follow-up tweets. To solve this problem we employed GPT-3’s few-shot learning abilities by providing three previous news articles in the model’s context to condition it. With the title and subtitle of a proposed next article, the model is able to reliably generate short articles in the “news” genre.
@@ -582,10 +582,10 @@ Table 3.12: People’s ability to identify whether ∼ 500 word articles are mod
 
 
 Figure 3.14: The GPT-3 generated news article that humans had the greatest difficulty distinguishing from a human written article (accuracy: 12%).
-图 3.14：GPT-3 生成的新闻文章人类最难区分人类撰写的文章(准确率：12%)。
+图 3.14：GPT-3 生成的新闻文章人类最难区分人类撰写的文章(精度：12%)。
 
 Figure 3.15: The GPT-3 generated news article that humans found the easiest to distinguish from a human written article (accuracy: 61%). 
-图 3.15：GPT-3 生成的新闻文章是人类发现最容易与人类撰写的文章区分开来的(准确率：61%)。
+图 3.15：GPT-3 生成的新闻文章是人类发现最容易与人类撰写的文章区分开来的(精度：61%)。
 
 Figure 3.16: Representative GPT-3 completions for the few-shot task of using a new word in a sentence. Boldface is GPT-3’s completions, plain text is human prompts. In the first example both the prompt and the completion are provided by a human; this then serves as conditioning for subsequent examples where GPT-3 receives successive additional prompts and provides the completions. Nothing task-specific is provided to GPT-3 other than the conditioning shown here. 
 图 3.16：在句子中使用新词的少量任务的代表性 GPT-3 补全。 粗体字是 GPT-3 的补全，纯文本是人工提示。 在第一个例子中，提示和完成都是由人提供的;  然后，这将作为后续样本的条件，在这些样本中，GPT-3 会收到连续的附加提示并提供补全。 除了此处显示的条件之外，没有向 GPT-3 提供任何特定于任务的内容。

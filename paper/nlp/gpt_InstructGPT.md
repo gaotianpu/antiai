@@ -448,7 +448,7 @@ Held-out labelers have similar ranking preferences as workers who we used to pro
 
 We see further evidence of this from the generalization capabilities of our reward models. We ran an experiment where we split our labelers into 5 groups, and train 5 RMs (with 3 different seeds) using 5-fold cross validation (training on 4 of the groups, and evaluating on the held-out group). These RMs have an accuracy of 69.6 ± 0.9% on predicting the preferences of labelers in the held-out group, a small decrease from their 72.4 ± 0.4% accuracy on predicting the preferences of labelers in their training set.
 
-我们从奖励模型的泛化能力中看到了进一步的证据。我们进行了一项实验，将标注人员分为5组，并使用5倍交叉验证(对其中4组进行训练，并对持牌组进行评估)训练5名RM(含3种不同种子)。这些RM在预测被搁置组中标注人员偏好方面的准确率为69.6±0.9%，与预测训练集中标注人员偏好的准确率72.4±0.4%相比略有下降。
+我们从奖励模型的泛化能力中看到了进一步的证据。我们进行了一项实验，将标注人员分为5组，并使用5倍交叉验证(对其中4组进行训练，并对持牌组进行评估)训练5名RM(含3种不同种子)。这些RM在预测被搁置组中标注人员偏好方面的精度为69.6±0.9%，与预测训练集中标注人员偏好的精度72.4±0.4%相比略有下降。
 
 #### Public NLP datasets are not reflective of how our language models are used. 
 In Figure 5, we also compare InstructGPT to our 175B GPT-3 baselines fine-tuned on the FLAN (Wei et al., 2021) and T0 (Sanh et al., 2021) datasets (see Appendix C for details). We find that these models perform better than GPT-3, on par with GPT-3 with a well-chosen prompt, and worse than our SFT baseline. This indicates that these datasets are not sufficiently diverse to improve performance on our API prompt distribution. In a head to head comparison, our 175B InstructGPT model outputs were preferred over our FLAN model 78 ±4% of the time and over our T0 model 79 ± 4% of the time. Likert scores for these models are shown in Figure 5.

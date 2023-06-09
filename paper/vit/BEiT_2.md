@@ -182,12 +182,12 @@ Table 1: Fine-tuning results of image classification and semantic segmentation o
 
 From Table 1, base-size BEIT V2 with a 300-epoch pretraining schedule reaches 85.0% top-1 accuracy, which outperforms BEIT, CAE, SplitMask and PeCo by 2.1%, 1.4%, 1.4% and 0.9% respectively. Compared with masked distillation methods, like MVP, BEIT V2 also shows superiority. 
 
-从表1 可以看出，具有 300 个 epoch 预训练计划的 base-size BEIT V2 达到 85.0% top-1 准确率，分别优于 BEIT、CAE、SplitMask 和 PeCo 2.1%、1.4%、1.4% 和 0.9%。 与 MVP 等掩蔽蒸馏方法相比，BEIT V2 也显示出优越性。
+从表1 可以看出，具有 300 个 epoch 预训练计划的 base-size BEIT V2 达到 85.0% top-1 精度，分别优于 BEIT、CAE、SplitMask 和 PeCo 2.1%、1.4%、1.4% 和 0.9%。 与 MVP 等掩蔽蒸馏方法相比，BEIT V2 也显示出优越性。
 
 
 Furthermore, with a longer pretraining schedule, BEIT V2 achieves 85.5% top-1 accuracy, developing a new state of the art on ImageNet-1K among self-supervised methods. Meanwhile, BEIT V2 using ViT-L/16 with 300 epochs reaches 86.6% top-1 accuracy, which is comparable to data2vec with 1600 epochs. A longer pretraining schedule further boosts the performance to 87.3%.
 
-此外，通过更长的预训练时间表，BEIT V2 达到了 85.5% 的 top-1 准确率，在自监督方法中开发了 ImageNet-1K 上的最新技术水平。 同时，使用 ViT-L/16 的 BEIT V2 在 300 个 epoch 时达到 86.6% 的 top-1 精度，与 data2vec 的 1600 个 epoch 相当。 更长的预训练时间表进一步将性能提高到 87.3%。
+此外，通过更长的预训练时间表，BEIT V2 达到了 85.5% 的 top-1 精度，在自监督方法中开发了 ImageNet-1K 上的最新技术水平。 同时，使用 ViT-L/16 的 BEIT V2 在 300 个 epoch 时达到 86.6% 的 top-1 精度，与 data2vec 的 1600 个 epoch 相当。 更长的预训练时间表进一步将性能提高到 87.3%。
 
 Following BEIT, we add an intermediate fine-tuning phase between the pretraining stage and the fine-tuning stage. Only the intermediate fine-tuning phase uses the ImageNet-21k dataset. As shown in Table 1, we find that intermediate fine-tuning achieves about 1% performance gain on image classification for both base- and large-size models. Refer to Appendix B for more results of intermediate fine-tuning. 
 
@@ -322,7 +322,7 @@ Figure 5: Visualization of image patches corresponding to discrete codes. Upper:
 ## B Comparison with Large-scale Supervised Pretraining
 We report the performance by using the ImageNet-1k for pretraining in Table 1. To show the data scalability of BEIT V2, we conduct intermediate fine-tuning experiments on ImagNet-21k and final fine-tuning on ImageNet-1k, by using the 1600 epoch pretraining models in Table 1. From Table 7, BEIT V2 using ViT-L/16 with 384×384 input resolution, achieves 89.0% top-1 accuracy, which even outperforms ViT-H/14 using Google JFT-3B labeled dataset by 0.5%. This significant performance gain indicates the data efficiency and superiority of the proposed BEIT V2. 
 
-我们在表1 中报告了使用 ImageNet-1k 进行预训练的性能。为了展示 BEIT V2 的数据可扩展性，我们在 ImagNet-21k 上进行了中间微调实验，并在 ImageNet-1k 上进行了最终微调，使用 1600 表1 中的 epoch 预训练模型。从表7 可以看出，BEIT V2 使用 ViT-L/16 和 384×384 输入分辨率，达到 89.0% top-1 准确率，甚至优于使用 Google JFT-3B 令牌数据集的 ViT-H/14 0.5%。 这一显著的性能提升表明了所提出的 BEIT V2 的数据效率和优越性。
+我们在表1 中报告了使用 ImageNet-1k 进行预训练的性能。为了展示 BEIT V2 的数据可扩展性，我们在 ImagNet-21k 上进行了中间微调实验，并在 ImageNet-1k 上进行了最终微调，使用 1600 表1 中的 epoch 预训练模型。从表7 可以看出，BEIT V2 使用 ViT-L/16 和 384×384 输入分辨率，达到 89.0% top-1 精度，甚至优于使用 Google JFT-3B 令牌数据集的 ViT-H/14 0.5%。 这一显著的性能提升表明了所提出的 BEIT V2 的数据效率和优越性。
 
 ![Table 7](../images/BEiT_2/tab_7.png)<br/>
 Table 7: Top-1 accuracy on ImageNet-1K fine-tuning. 2242 and 3842 denote model resolutions.

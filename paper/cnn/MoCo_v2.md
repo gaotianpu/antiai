@@ -71,7 +71,7 @@ w/ MLP|62.9|64.9|66.2|65.7|65.0|64.3
 
 Using the default τ = 0.07 [16, 6], pre-training with the MLP head improves from 60.6% to 62.9%; switching to the optimal value for MLP (0.2), the accuracy increases to 66.2%. Table 1(a) shows its detection results: in contrast to the big leap on ImageNet, the detection gains are smaller.
 
-使用默认的 τ = 0.07 [16, 6]，MLP head 的预训练从 60.6% 提高到 62.9%;  切换到 MLP 的最佳值 (0.2)，准确率提高到 66.2%。 表1(a)显示了它的检测结果：对比ImageNet上的大飞跃，检测增益较小。
+使用默认的 τ = 0.07 [16, 6]，MLP head 的预训练从 60.6% 提高到 62.9%;  切换到 MLP 的最佳值 (0.2)，精度提高到 66.2%。 表1(a)显示了它的检测结果：对比ImageNet上的大飞跃，检测增益较小。
 
 ![Table 1](../images/MoCo_v2/tab_1.png)<br/>
 Table 1. Ablation of MoCo baselines, evaluated by ResNet-50 for (i) ImageNet linear classification, and (ii) fine-tuning VOC object detection (mean of 5 trials). “MLP”: with an MLP head; “aug+”: with extra blur augmentation; “cos”: cosine learning rate schedule.
@@ -98,7 +98,7 @@ Table 3. Memory and time cost in 8 V100 16G GPUs, implemented in PyTorch. † : 
 ### Comparison with SimCLR.  与 SimCLR 的比较
 Table 2 compares SimCLR [2] with our results, referred to as MoCo v2. For fair comparisons, we also study a cosine (half-period) learning rate schedule [11] which SimCLR adopts. See Table 1(d, e). Using pre-training with 200 epochs and a batch size of 256,MoCo v2 achieves 67.5% accuracy on ImageNet: this is 5.6% higher than SimCLR under the same epochs and batch size, and better than SimCLR’s large-batch result 66.6%. With 800-epoch pre-training, MoCo v2 achieves 71.1%, outperforming SimCLR’s 69.3% with 1000 epochs.
 
-表 2 将 SimCLR [2] 与我们的结果进行了比较，称为 MoCo v2。 为了公平比较，我们还研究了 SimCLR 采用的余弦（半周期）学习率计划 [11]。 见表 1(d, e)。 使用 200 个 epochs 和 256 batch size 的预训练，MoCo v2 在 ImageNet 上达到了 67.5% 的准确率：在相同的 epochs 和 batch size 下比 SimCLR 高 5.6%，优于 SimCLR 的 large-batch 结果 66.6%。 通过 800 个 epoch 的预训练，MoCo v2 达到 71.1%，优于 SimCLR 在 1000 个 epoch 时的 69.3%。
+表 2 将 SimCLR [2] 与我们的结果进行了比较，称为 MoCo v2。 为了公平比较，我们还研究了 SimCLR 采用的余弦（半周期）学习率计划 [11]。 见表 1(d, e)。 使用 200 个 epochs 和 256 batch size 的预训练，MoCo v2 在 ImageNet 上达到了 67.5% 的精度：在相同的 epochs 和 batch size 下比 SimCLR 高 5.6%，优于 SimCLR 的 large-batch 结果 66.6%。 通过 800 个 epoch 的预训练，MoCo v2 达到 71.1%，优于 SimCLR 在 1000 个 epoch 时的 69.3%。
 
 ### Computational cost. 计算成本
 In Table 3 we report the memory and time cost of our implementation. The end-to-end case re- flects the SimCLR cost in GPUs (instead of TPUs in [2]). The 4k batch size is intractable even in a high-end 8-GPU machine. Also, under the same batch size of 256, the endto-end variant is still more costly in memory and time, because it back-propagates to both q and k encoders, while MoCo back-propagates to the q encoder only.

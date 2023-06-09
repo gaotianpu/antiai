@@ -72,7 +72,7 @@ By merging and adding many local layers, there is a global representation. In ad
 ## 3 Scaling Vision Transformer 缩放Vit
 Deep learning and scale are related. In fact, scale is a key component in pushing the state-of-theart. In this study, the authors from Google Brain Research trained a slightly modified ViT model with 2 billion parameters and achieved a top-1 accuracy of 90.45% on ImageNet. This over-parameterized generalized model was tested on few-shot learning, with only 10 examples per class. A top-1 accuracy of 84.86% was achieved on ImageNet.
 
-深度学习与规模相关。事实上，规模是推动最先进技术的关键因素。在这项研究中，谷歌大脑研究的作者用20亿个参数训练了一个稍加修改的ViT模型，并在ImageNet上获得了90.45%的top-1精度。这种过度参数化的广义模型在少样本学习中进行了测试，每个分类只有10个样本。ImageNet的准确率为84.86%，排名第一。
+深度学习与规模相关。事实上，规模是推动最先进技术的关键因素。在这项研究中，谷歌大脑研究的作者用20亿个参数训练了一个稍加修改的ViT模型，并在ImageNet上获得了90.45%的top-1精度。这种过度参数化的广义模型在少样本学习中进行了测试，每个分类只有10个样本。ImageNet的精度为84.86%，排名第一。
 
 Few-shot learning refers to fine-tuning a model with an extremely limited number of samples. The goal of few-shot learning is to motivate generalization by slightly adapting the acquired pre-trained knowledge to a specific task. If large models are successfully pre-trained, it makes sense to perform well with a very limited understanding of the downstream task (provided by only a few examples).
 

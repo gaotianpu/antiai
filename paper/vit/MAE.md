@@ -55,7 +55,7 @@ Driven by this analysis, we present a simple, effective, and scalable form of a 
 
 Our MAE learns very high-capacity models that generalize well. With MAE pre-training, we can train datahungry models like ViT-Large/-Huge [16] on ImageNet-1K with improved generalization performance. With a vanilla ViT-Huge model, we achieve 87.8% accuracy when finetuned on ImageNet-1K. This outperforms all previous results that use only ImageNet-1K data. We also evaluate transfer learning on object detection, instance segmentation, and semantic segmentation. In these tasks, our pre-training achieves better results than its supervised pre-training counterparts, and more importantly, we observe significant gains by scaling up models. These observations are aligned with those witnessed in self-supervised pre-training in NLP [14, 47, 48, 4] and we hope that they will enable our field to explore a similar trajectory. 
 
-我们的MAE学习非常高容量、泛化良好的模型。通过MAE预训练，我们可以在ImageNet-1K上训练像ViT Large/-Huge[16]这样的数据饥渴型模型，并提高泛化性能。使用普通的ViT Huge模型，在ImageNet-1K上进行微调时，我们实现了87.8%的准确率。这优于以前仅使用ImageNet-1K数据的所有结果。我们还评估了目标检测、实例分割和语义分割方面的迁移学习。在这些任务中，我们的预训练比其受监督的预训练同行取得了更好的结果，更重要的是，我们观察到了通过扩展模型而获得的显著收益。这些观察结果与NLP自监督预训练中的观察结果一致[14，47，48，4]，我们希望它们将使我们的领域能够探索类似的轨迹。
+我们的MAE学习非常高容量、泛化良好的模型。通过MAE预训练，我们可以在ImageNet-1K上训练像ViT Large/-Huge[16]这样的数据饥渴型模型，并提高泛化性能。使用普通的ViT Huge模型，在ImageNet-1K上进行微调时，我们实现了87.8%的精度。这优于以前仅使用ImageNet-1K数据的所有结果。我们还评估了目标检测、实例分割和语义分割方面的迁移学习。在这些任务中，我们的预训练比其受监督的预训练同行取得了更好的结果，更重要的是，我们观察到了通过扩展模型而获得的显著收益。这些观察结果与NLP自监督预训练中的观察结果一致[14，47，48，4]，我们希望它们将使我们的领域能够探索类似的轨迹。
 
 ## 2. Related Work
 <strong>Masked language modeling</strong> and its autoregressive counterparts, e.g., BERT [14] and GPT [47, 48, 4], are highly successful methods for pre-training in NLP. These methods hold out a portion of the input sequence and train models to predict the missing content. These methods have been shown to scale excellently [4] and a large abundance of evidence indicates that these pre-trained representations generalize well to various downstream tasks.
@@ -281,7 +281,7 @@ Table 3. Comparisons with previous results on ImageNet-1K. The pre-training data
 
 Our MAE can scale up easily and has shown steady improvement from bigger models. We obtain 86.9% accuracy using ViT-H (224 size). By fine-tuning with a 448 size, we achieve 87.8% accuracy, using only IN1K data. The previous best accuracy, among all methods using only IN1K data, is 87.1% (512 size) [67], based on advanced networks. We improve over the state-of-the-art by a nontrivial margin in the highly competitive benchmark of IN1K (no external data). Our result is based on vanilla ViT, and we expect advanced networks will perform better.
 
-我们的MAE可以很容易地扩展，并且从更大的模型中显示出稳步的改进。我们使用ViT-H(224尺寸)获得86.9%的准确率。通过对448大小的微调，我们仅使用IN1K数据就实现了87.8%的准确率。在所有仅使用IN1K数据的方法中，基于先进网络，先前的最佳精度为87.1%(512大小)[67]。在竞争激烈的IN1K基准(无外部数据)中，我们比最先进的技术提高了不少。我们的结果基于普通ViT，我们预计高级网络将表现更好。
+我们的MAE可以很容易地扩展，并且从更大的模型中显示出稳步的改进。我们使用ViT-H(224尺寸)获得86.9%的精度。通过对448大小的微调，我们仅使用IN1K数据就实现了87.8%的精度。在所有仅使用IN1K数据的方法中，基于先进网络，先前的最佳精度为87.1%(512大小)[67]。在竞争激烈的IN1K基准(无外部数据)中，我们比最先进的技术提高了不少。我们的结果基于普通ViT，我们预计高级网络将表现更好。
 
 Comparing with BEiT [2], our MAE is more accurate while being simpler and faster. Our method reconstructs pixels, in contrast to BEiT that predicts tokens: BEiT reported a 1.8% degradation [2] when reconstructing pixels with ViT-B(2 We observed the degradation also in BEiT with ViT-L: it produces 85.2% (tokens) and 83.5% (pixels), reproduced from the official code.). We do not need dVAE pre-training. Moreover, our MAE is considerably faster (3.5× per epoch) than BEiT, for the reason as studied in Table 1c. 
 
@@ -515,7 +515,7 @@ Table 11. Supervised training ViT from scratch.
 
 The accuracy is 82.6% for ViT-L (81.5% w/o EMA), and 83.1% for ViT-H (80.9% w/o EMA). Both ViT-L and ViT-H show an overfitting trend if not using EMA. As a by-product, our recipe for ViT-B has 82.3% accuracy (82.1% w/o EMA), vs. 81.8% in [53].
 
-ViT-L的准确度为82.6%(81.5%w/o EMA)，ViT-H的准确率为83.1%(80.9%w/o电磁A)。如果不使用EMA，ViT-L和ViT-H都显示出过拟合趋势。作为副产品，我们的ViT-B配置的准确率为82.3%(82.1%w/o EMA)，而在[53]中为81.8%。
+ViT-L的准确度为82.6%(81.5%w/o EMA)，ViT-H的精度为83.1%(80.9%w/o电磁A)。如果不使用EMA，ViT-L和ViT-H都显示出过拟合趋势。作为副产品，我们的ViT-B配置的精度为82.3%(82.1%w/o EMA)，而在[53]中为81.8%。
 
 #### A.3. Object Detection and Segmentation in COCO
 We adapt the vanilla ViT for the use of an FPN backbone [36] in Mask R-CNN [24]. ViT has a stack of Transformer blocks that all produce feature maps at a single scale (e.g., stride 16). We equally divide this stack into 4 subsets and apply convolutions to upsample or downsample the intermediate feature maps for producing different scales (stride 4, 8, 16, or 32, the same as a standard ResNet [25]). FPN is built on these multi-scale maps.

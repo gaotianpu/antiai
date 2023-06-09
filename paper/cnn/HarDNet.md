@@ -47,7 +47,7 @@ Figure 1: Concept of MoC constraint. A Conv layer with MoC below the constraint 
 
 The contribution of this paper is that we introduce DRAM traffic for feature map access and its platformindependent approximation, CIO, as a new metric for evaluating a CNN architecture and show that the inference latency is highly correlated with the DRAM traffic. By constraining the MoC of each layer, we propose HarDNets that reduces DRAM traffic by 40% compared with DenseNets. We evaluate the proposed HarDNet on the CamVid[3], ImageNet (ILSVRC)[9], PASCAL VOC[12], and MS COCO [26] datasets. Compared to DenseNet and ResNet, HarDNet achieves the same accuracy with 30%∼50% less CIO, and accordingly, 30%∼40% less inference time.
 
-本文的贡献在于，我们引入了用于特征图访问的DRAM流量及其平台无关近似CIO，作为评估CNN架构的新指标，并表明推断延迟与DRAM流量高度相关。通过限制每层的MoC，我们提出了HarDNet，与DenseNets相比，它可以将DRAM流量减少40%。我们在CamVid[3]、ImageNet(ILSVRC)[9]、PASCAL VOC[12]和MS COCO[26]数据集上评估了建议的HarDNet。与DenseNet和ResNet相比，HarDNet的准确率达到30%∼首席信息官减少50%，相应地减少30%∼推理时间减少40%。
+本文的贡献在于，我们引入了用于特征图访问的DRAM流量及其平台无关近似CIO，作为评估CNN架构的新指标，并表明推断延迟与DRAM流量高度相关。通过限制每层的MoC，我们提出了HarDNet，与DenseNets相比，它可以将DRAM流量减少40%。我们在CamVid[3]、ImageNet(ILSVRC)[9]、PASCAL VOC[12]和MS COCO[26]数据集上评估了建议的HarDNet。与DenseNet和ResNet相比，HarDNet的精度达到30%∼首席信息官减少50%，相应地减少30%∼推理时间减少40%。
 
 ## 2. Related works
 A significant trend in neural network research is exploiting shortcuts. To cope with the degradation problem,

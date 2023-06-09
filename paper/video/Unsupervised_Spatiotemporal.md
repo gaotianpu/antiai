@@ -172,7 +172,7 @@ Table 1 shows dataset statistics of all datasets used for unsupervised pre-train
 
 Evaluation protocols. For evaluation we use two protocols. The first one is common to evaluate unsupervised image representations [36, 12]. It validates the linear classifier performance based on frozen encoder features that are taken from the global average pooling layer. We report top-1 classification accuracy (%) on the K400 validation set.
 
-评估协议。 我们使用两种协议进行评估。 第一个通常用于评估无监督图像表示 [36、12]。 它基于从全局平均池化层获取的冻结编码器特征来验证线性分类器的性能。 我们报告了 K400 验证集上的 top-1 分类准确率 (%)。
+评估协议。 我们使用两种协议进行评估。 第一个通常用于评估无监督图像表示 [36、12]。 它基于从全局平均池化层获取的冻结编码器特征来验证线性分类器的性能。 我们报告了 K400 验证集上的 top-1 分类精度 (%)。
 
 The second protocol reports finetuning accuracy on the first split of the UCF101 dataset [77] which contains 13k videos in 101 human action classes; this is a common procedure used to evaluate unsupervised video representations. Finally, we also report finetuning accuracy on AVA [33], Charades [75], Something-Something [31] and HMDB51 [50].
 
@@ -239,7 +239,7 @@ Table 4a shows performance for increasing the maximum temporal distance between 
 
 Table 4b shows performance for increasing the temporal distance between positive samples on IG-Curated-1M. This dataset has a maximum duration of 60 seconds; statistics are in Table 1. Table 4b reveals that increasing the maximum duration between positive pairs is beneficial for performance and unrestricted sampling of positives is the best with 64.1% top-1 accuracy for evaluation on K400. This is especially interesting, as it shows that even longer videos benefit from global sampling. There is no benefit from restricting the time window of positives, which can be interpreted as the objective of learning extremely-slow features [88] that do not change over 60 seconds of video. Long-temporal-distance samples might also increase robustness of the model by providing “hard-positive” samples for learning. Note that here the videos are still sampled according to hashtags related to K400 classes [24]; therefore, the conjecture might be biased.
 
-表 4b 显示了在 IG-Curated-1M 上增加阳性样本之间时间距离的性能。 该数据集的最长持续时间为 60 秒;  统计数据在表 1 中。表 4b 表明，增加正对之间的最大持续时间有利于性能，并且对正的无限制采样是最好的，在 K400 上的评估准确率为 64.1% top-1。 这特别有趣，因为它表明甚至更长的视频都可以从全局采样中受益。 限制阳性的时间窗口没有任何好处，这可以解释为学习极慢特征的目标 [88]，这些特征不会超过 60 秒的视频发生变化。 长时间距离样本还可以通过为学习提供“硬阳性”样本来提高模型的稳健性。 请注意，这里的视频仍然是根据与 K400 类 [24] 相关的主题标签进行采样的;  因此，推测可能有失偏颇。
+表 4b 显示了在 IG-Curated-1M 上增加阳性样本之间时间距离的性能。 该数据集的最长持续时间为 60 秒;  统计数据在表 1 中。表 4b 表明，增加正对之间的最大持续时间有利于性能，并且对正的无限制采样是最好的，在 K400 上的评估精度为 64.1% top-1。 这特别有趣，因为它表明甚至更长的视频都可以从全局采样中受益。 限制阳性的时间窗口没有任何好处，这可以解释为学习极慢特征的目标 [88]，这些特征不会超过 60 秒的视频发生变化。 长时间距离样本还可以通过为学习提供“硬阳性”样本来提高模型的稳健性。 请注意，这里的视频仍然是根据与 K400 类 [24] 相关的主题标签进行采样的;  因此，推测可能有失偏颇。
 
 Finally, we are looking at the IG-Uncurated-1M dataset which consists of a random sampling of 1M videos from Instagram. These videos can be between 0.5s and 10 minutes of duration. Most of the videos however are much shorter than 10 minutes, with a mean duration of 35.3 seconds and a standard deviation of 38.4 seconds (Table 1). For this data, Table 4c shows the results of progressively increasing the maximum timespan between positive samples. It can be observed that increasing the maximum distance between positives up to 36 seconds is beneficial and beyond that performance decreases, but only slightly, even when performing global sampling of positives (the default).
 
@@ -366,7 +366,7 @@ The first two rows in Table 10 show the two main competitors for this evaluation
 
 Downstream datasets. For K400 pre-training and linear evaluation, its supervised counterpart has an advantage between 12.7% and 6.4% top-1 accuracy among the methods.
 
-下游数据集。 对于 K400 预训练和线性评估，其受监督的对应方法在这些方法中具有 12.7% 和 6.4% 的 top-1 准确率优势。
+下游数据集。 对于 K400 预训练和线性评估，其受监督的对应方法在这些方法中具有 12.7% 和 6.4% 的 top-1 精度优势。
 
 On UCF101 unsupervised pre-training is only 1% lower than the supervised counterpart for BYOL (the strongest).
 
@@ -389,7 +389,7 @@ On Something-Something v2 (SSv2 in Table 10), all the methods perform strong, wi
 
 Pre-training sets: Kinetics vs. IG. Next, we experiment with pre-training on videos from the web. We first investigate IG-Curated-1M [24], which is a dataset that has been collected with hashtags that are similar to Kinetics labels. This data is a 1M subset of the original 65M introduced in [24]. Using this data (penultimate row in Table 10) can excel the performance of MoCo with K400 pre-training, which has a training set of 240K samples (roughly 4.2× smaller), and surprisingly even outperforms pre-training on K400 linear readout itself (69.9% vs. 67.3% accuracy).
 
-预训练集：Kinetics vs. IG。 接下来，我们对来自网络的视频进行预训练实验。 我们首先研究 IG-Curated-1M [24]，这是一个使用类似于 Kinetics 标签的主题标签收集的数据集。 该数据是 [24] 中引入的原始 65M 的 1M 子集。 使用此数据(表 10 中的倒数第二行)可以超越 MoCo 与 K400 预训练的性能，它具有 240K 样本的训练集(大约小 4.2 倍)，并且令人惊讶的是甚至优于 K400 线性读数本身的预训练( 69.9% 与 67.3% 的准确率)。
+预训练集：Kinetics vs. IG。 接下来，我们对来自网络的视频进行预训练实验。 我们首先研究 IG-Curated-1M [24]，这是一个使用类似于 Kinetics 标签的主题标签收集的数据集。 该数据是 [24] 中引入的原始 65M 的 1M 子集。 使用此数据(表 10 中的倒数第二行)可以超越 MoCo 与 K400 预训练的性能，它具有 240K 样本的训练集(大约小 4.2 倍)，并且令人惊讶的是甚至优于 K400 线性读数本身的预训练( 69.9% 与 67.3% 的精度)。
 
 Second, we ablate the effect of using uncurated videos, with IG-Uncurated-1M which are purely random videos taken from the web. On most downstream tasks performance shown in the last row of Table 10 is equal or only slightly lower than pre-training on K400. Specifically, MoCo changes by -1.3% on K400 (as expected), +0.1% on UCF, +0.2% on AVA, -2.2% on Charades and -1.2% on SomethingSomething v2. This is an encouraging result for unsupervised learning, as only ∼4.2×the number of videos but random ones are required to match the performance of supervised K400 pre-training on the UCF101 and AVA.
 
@@ -458,7 +458,7 @@ In this experiment, we increase the scale of the data from 128K to 1M distinct v
 2. Comparing the scale axis: Doubling the data scale (number of videos) roughly linearly increases the accuracy across all datasets. With 1M uncurated videos the performance approaches 65.4% which is similar to the 65.8% produced by using K400 pre-training. The experiment indicates that it is possible to approach unsupervised Kinetics pretraining when using 4×more (1M vs. 240K in Kinetics), but random, videos when evaluating on Kinetics.
 
 在这个实验中，我们将数据规模从 128K 增加到 1M 不同的视频。 我们增加了 IG-Curated [24]、IG-CuratedUnbalanced [24](具有随机类分布)和 IG-Uncurated(随机 IG 视频)的数据集大小(视频数量)。 图 4 显示了 200-epoch MoCo 的实验，其中 ρ = 2，K400 上的线性协议下游评估显示：
-1. curation 轴比较：在 240K 训练样本时，四个数据源分别为 K400、IG-Curated、IG-CuratedUnbalanced 和 IG-Uncurated 提供 65.8%、63.2%、63.1%、60.6% 的 top-1 准确率。 从精心策划的 K400 到 IG-Curated (2.6%) 的衰减与从 IG-Curated 到 IG-Uncurated (2.5%) 的衰减相似，而类平衡似乎对准确性影响很小。
+1. curation 轴比较：在 240K 训练样本时，四个数据源分别为 K400、IG-Curated、IG-CuratedUnbalanced 和 IG-Uncurated 提供 65.8%、63.2%、63.1%、60.6% 的 top-1 精度。 从精心策划的 K400 到 IG-Curated (2.6%) 的衰减与从 IG-Curated 到 IG-Uncurated (2.5%) 的衰减相似，而类平衡似乎对准确性影响很小。
 2. 比较比例轴：将数据比例(视频数量)加倍大致呈线性增加所有数据集的准确性。 对于 100 万未经处理的视频，性能接近 65.4%，这与使用 K400 预训练产生的 65.8% 相似。 实验表明，在使用 4 倍以上(1M vs. 240K 的 Kinetics)但随机的视频进行 Kinetics 评估时，可以接近无监督 Kinetics 预训练。
 
 Figure 4. Data scale and curation. We increase dataset size (number of videos) for IG-Curated, IG-Curated-Unbalanced, and IGUncurated. By using 4× the number of videos, IG-Uncurated approaches the heavily curated Kinetics (K400) pre-training on K400 linear evaluation protocol. The dotted line represents a linear trend. Method: MoCo, 200 epochs, ρ=2.
@@ -483,7 +483,7 @@ The next row shows MoCo trained on K600 with a temporal persistency objective ac
 
 The final two rows of Table 14, show the same two models when pre-trained on K700. Here, we see that going from K400 to K700 increases accuracy by 2.7%, 3.2% and 3.9%, 1.2% on K400, K600, K700 and UCF101, respectively.
 
-表 14 的最后两行显示了在 K700 上预训练时相同的两个模型。 在这里，我们看到从 K400 到 K700，在 K400、K600、K700 和 UCF101 上，准确率分别提高了 2.7%、3.2% 和 3.9%，分别提高了 1.2%。
+表 14 的最后两行显示了在 K700 上预训练时相同的两个模型。 在这里，我们看到从 K400 到 K700，在 K400、K600、K700 和 UCF101 上，精度分别提高了 2.7%、3.2% 和 3.9%，分别提高了 1.2%。
 
 Overall the experiments suggest clear benefits of using larger-scale datasets for unsupervised pre-training and room for improvement under the linear classification protocol, especially when evaluated on larger datasets.
 

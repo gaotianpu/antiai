@@ -277,7 +277,7 @@ For the 50 000 most frequent words, the representation is the same for all neura
 
 The F1 numbers hide some qualitative differences between systems. For English→German, WDict produces few OOVs (26.5% recall), but with high precision (60.6%) , whereas the subword systems achieve higher recall, but lower precision. We note that the character bigram model C2-50k produces the most OOV words, and achieves relatively low precision of 29.1% for this category. However, it outperforms the back-off dictionary in recall (33.0%). BPE-60k, which suffers from transliteration (or copy) errors due to segmentation inconsistencies, obtains a slightly better precision (32.4%), but a worse recall (26.6%). In contrast to BPE-60k, the joint BPE encoding of BPEJ90k improves both precision (38.6%) and recall (29.8%).
 
-F1 数字隐藏了系统之间的一些质的差异。 对于英语→德语，WDict 产生的 OOV 很少(召回率 26.5%)，但准确率很高(60.6%)，而子词系统的召回率较高，但准确率较低。 我们注意到字符二元模型 C2-50k 产生了最多的 OOV 词，并且该类别的精度相对较低，为 29.1%。 然而，它在召回率 (33.0%) 方面优于回退字典。 BPE-60k 由于分段不一致而遭受音译(或复制)错误，其精度略高(32.4%)，但召回率较差(26.6%)。 与 BPE-60k 相比，BPEJ90k 的联合 BPE 编码提高了精度 (38.6%) 和召回率 (29.8%)。
+F1 数字隐藏了系统之间的一些质的差异。 对于英语→德语，WDict 产生的 OOV 很少(召回率 26.5%)，但精度很高(60.6%)，而子词系统的召回率较高，但精度较低。 我们注意到字符二元模型 C2-50k 产生了最多的 OOV 词，并且该类别的精度相对较低，为 29.1%。 然而，它在召回率 (33.0%) 方面优于回退字典。 BPE-60k 由于分段不一致而遭受音译(或复制)错误，其精度略高(32.4%)，但召回率较差(26.6%)。 与 BPE-60k 相比，BPEJ90k 的联合 BPE 编码提高了精度 (38.6%) 和召回率 (29.8%)。
 
 For English→Russian, unknown names can only rarely be copied, and usually require transliteration. Consequently, the WDict baseline performs more poorly for OOVs (9.2% precision; 5.2% recall), and the subword models improve both precision and recall (21.9% precision and 15.6% recall for BPE-J90k). The full unigram F1 plot is shown in Figure 3. 
 

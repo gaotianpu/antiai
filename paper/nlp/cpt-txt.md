@@ -159,7 +159,7 @@ Table 2. cpt-text models of different sizes, ranging from 300M (S) to 175B (XL),
 
 
 Table 3. Comparison of different classification strategies using the 6B cpt-text model fine-tuned on NLI data for SST-2 binary sentiment task (Socher et al., 2013). Our zero-shot results are better than the 85.4% accuracy obtained by supervised neural networks reported along with the release of the dataset (Socher et al., 2013).
-表 3. 使用 6B cpt-text 模型对 SST-2 二元情感任务的 NLI 数据进行微调的不同分类策略的比较(Socher et al., 2013)。 我们的零样本结果优于数据集发布时报告的监督神经网络获得的 85.4% 准确率(Socher et al., 2013)。
+表 3. 使用 6B cpt-text 模型对 SST-2 二元情感任务的 NLI 数据进行微调的不同分类策略的比较(Socher et al., 2013)。 我们的零样本结果优于数据集发布时报告的监督神经网络获得的 85.4% 精度(Socher et al., 2013)。
 
 Table 4. cpt-text performs worse than the previous best sentence embedding method on sentence similarity tasks. We investigate this result in more detail in Section 3.4.2.
 表 4. cpt-text 在句子相似性任务上的表现比之前最好的句子嵌入方法差。 我们在第 3.4.2 节中更详细地研究了这个结果。
