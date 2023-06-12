@@ -31,17 +31,17 @@ Due to the success, a variety of Transformer variants (a.k.a. X-formers) have be
 
 In this survey, we aim to provide a comprehensive review of the Transformer and its variants.Although we can organize X-formers on the basis of the perspectives mentioned above, many existing X-formers may address one or several issues. For example, sparse attention variants not only reduce the computational complexity but also introduce structural prior on input data to alleviate the overfitting problem on small datasets. Therefore, it is more methodical to categorize the various existing X-formers and propose a new taxonomy mainly according to their ways to improve the vanilla Transformer: architecture modification, pre-training, and applications. Considering the audience of this survey may be from different domains, we mainly focus on the general architecture variants and just briefly discuss the specific variants on pre-training and applications.
 
-在本次调查中，我们旨在对Transformer及其变体进行全面审查。尽管我们可以根据上述观点来组织X成形者，但许多现有的X成形者可能会解决一个或多个问题。例如，稀疏注意变量不仅降低了计算复杂性，还引入了输入数据的结构先验，以缓解小数据集上的过度拟合问题。因此，对各种现有的X形器进行分类并提出一种新的分类法更具系统性，主要是根据它们改进普通Transformer的方式：架构修改、预训练和应用程序。考虑到本次调查的受众可能来自不同的领域，我们主要关注一般架构变体，仅简要讨论预培训和应用程序的具体变体。
+在本次调查中，我们旨在对Transformer及其变体进行全面审查。尽管我们可以根据上述观点来组织X成形者，但许多现有的X成形者可能会解决一个或多个问题。例如，稀疏注意变量不仅降低了计算复杂性，还引入了输入数据的结构先验，以缓解小数据集上的过度拟合问题。因此，对各种现有的X形器进行分类并提出一种新的分类法更具系统性，主要是根据它们改进普通Transformer的方式：架构修改、预训练和应用程序。考虑到本次调查的受众可能来自不同的领域，我们主要关注一般架构变体，仅简要讨论预训练和应用程序的具体变体。
 
 The rest of the survey is organized as follows. Sec. 2 introduces the architecture and the key components of Transformer. Sec. 3 clarifies the categorization of Transformer variants. Sec. 4∼5 review the module-level modifications, including attention module, position encoding, layer normalization and feed-forward layer. Sec. 6 reviews the architecture-level variants. Sec. 7 introduces some of the representative Transformer-based PTMs. Sec. 8 introduces the application of Transformer to various different fields. Sec. 9 discusses some aspects of Transformer that researchers might find intriguing and summarizes the paper. 
 
-调查的其余部分组织如下。第2节介绍了Transformer的架构和关键组件。第3节阐明了Transformer变体的分类。第4～5节回顾了模块级修改，包括注意模块、位置编码、层规范化和前馈层。第6节审查了架构级别的变体。第7节介绍了一些典型的基于Transformer的PTM。第8节介绍了Transformer在不同领域的应用。第9节讨论了研究人员可能会发现有趣的Transformer的一些方面，并总结了论文。
+调查的其余部分组织如下。第2节介绍了Transformer的架构和关键组件。第3节阐明了Transformer变体的分类。第4～5节回顾了模块级修改，包括注意模块、位置编码、层归一化和前馈层。第6节审查了架构级别的变体。第7节介绍了一些典型的基于Transformer的PTM。第8节介绍了Transformer在不同领域的应用。第9节讨论了研究人员可能会发现有趣的Transformer的一些方面，并总结了论文。
 
 ## 2 BACKGROUND
 ### 2.1 Vanilla Transformer
 The vanilla Transformer [137] is a sequence-to-sequence model and consists of an encoder and a decoder, each of which is a stack of 𝐿 identical blocks. Each encoder block is mainly composed of a multi-head self-attention module and a position-wise feed-forward network (FFN). For building a deeper model, a residual connection [49] is employed around each module, followed by Layer Normalization [4] module. Compared to the encoder blocks, decoder blocks additionally insert cross-attention modules between the multi-head self-attention modules and the position-wise FFNs. Furthermore, the self-attention modules in the decoder are adapted to prevent each position from attending to subsequent positions. The overall architecture of the vanilla Transformer is shown in Fig. 1.
 
-最初的Transformer[137]是一个序列到序列模型，由编码器和解码器组成，每个编码器和解码器都是一个堆栈𝐿 相同的块。每个编码器块主要由多头自关注模块和位置前馈网络(FFN)组成。为了构建更深入的模型，在每个模块周围使用残差连接[49]，然后是层规范化[4]模块。与编码器块相比，解码器块额外地在多头自关注模块和位置方向FFN之间插入交叉关注模块。此外，解码器中的自注意模块适于防止每个位置关注后续位置。普通Transformer的总体结构如图1所示。
+最初的Transformer[137]是一个序列到序列模型，由编码器和解码器组成，每个编码器和解码器都是一个堆栈𝐿 相同的块。每个编码器块主要由多头自关注模块和位置前馈网络(FFN)组成。为了构建更深入的模型，在每个模块周围使用残差连接[49]，然后是层归一化[4]模块。与编码器块相比，解码器块额外地在多头自关注模块和位置方向FFN之间插入交叉关注模块。此外，解码器中的自注意模块适于防止每个位置关注后续位置。普通Transformer的总体结构如图1所示。
 
 In the following subsection, we shall introduce the key modules of the vanilla Transformer.
 在下面的小节中，我们将介绍最初的Transformer的关键模块。
@@ -92,13 +92,13 @@ where H′ is the outputs of previous layer, and W1 ∈ R𝐷𝑚×𝐷𝑓 , W2
 #### 2.1.3 Residual Connection and Normalization. 
 In order to build a deep model, Transformer employs a residual connection [49] around each module, followed by Layer Normalization [4]. For instance, each Transformer encoder block may be written as
 
-为了建立一个深度模型，Transformer在每个模块周围使用了一个残余连接[49]，然后是层规范化[4]。例如，每个Transformer编码器块可以写为
+为了建立一个深度模型，Transformer在每个模块周围使用了一个残余连接[49]，然后是层归一化[4]。例如，每个Transformer编码器块可以写为
 
 H′ = LayerNorm(SelfAttention(X) + X) 5. 
 
 H = LayerNorm(FFN(H′ ) + H′), 6.  where SelfAttention(·) denotes self attention module and LayerNorm(·) denotes the layer normalization operation.
 
-H=LayerNorm(FFN(H′)+H′)，(6)，其中SelfAttention(·)表示自注意模块，LayerNor(·)指示层规范化操作。
+H=LayerNorm(FFN(H′)+H′)，(6)，其中SelfAttention(·)表示自注意模块，LayerNor(·)指示层归一化操作。
 
 #### 2.1.4 Position Encodings. 
 Since Transformer doesn’t introduce recurrence or convolution, it is ignorant of positional information (especially for the encoder). Thus additional positional representation (Detailed discussion in Sec. 5.1) is needed to model the ordering of tokens.
@@ -167,7 +167,7 @@ Fig. 3 illustrates our taxonomy and some representative models.
 
 In this survey, we focus on reviewing the works on architecture modifications. Since the attention module is the key component of Transformer, we solely describe the attention-related variants in Sec. 4 and introduce the other module-level variants in Sec. 5. Then Sec. 6 describes the other architecture-level variants. Finally, we briefly review the works on pre-training in Sec. 7 and applications in Sec. 8. There are some comprehensive surveys on the latter two categories of work, such as pre-trained models (PTMs) [100] and visual Transformers[47, 64]. 
 
-在本次调查中，我们重点回顾了架构修改方面的工作。由于注意力模块是Transformer的关键组件，我们在第4节中仅描述了与注意力相关的变体，并在第5节中介绍了其他模块级变体。然后，第6节描述了其他架构级变体。最后，我们简要回顾了第7节中的预培训工作和第8节中的应用。对后两类工作进行了一些全面的调查，如预训练模型(PTM)[100]和视觉Transformer[47，64]。
+在本次调查中，我们重点回顾了架构修改方面的工作。由于注意力模块是Transformer的关键组件，我们在第4节中仅描述了与注意力相关的变体，并在第5节中介绍了其他模块级变体。然后，第6节描述了其他架构级变体。最后，我们简要回顾了第7节中的预训练工作和第8节中的应用。对后两类工作进行了一些全面的调查，如预训练模型(PTM)[100]和视觉Transformer[47，64]。
 
 ## 4 ATTENTION
 Self-attention plays an important role in Transformer, but there are two challenges in practical applications. 

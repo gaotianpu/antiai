@@ -222,7 +222,7 @@ Recent work in computer vision has shown that common image datasets contain a no
 
 To study this we created Bloom filters containing 8-grams of WebText training set tokens. To improve recall, strings were normalized to contain only lower-cased alphanumeric words with a single space as a delimiter. The Bloom filters were constructed such that the false positive rate is upper bounded by ${1/10^8}$ . We further verified the low false positive rate by generating 1M strings, of which zero were found by the filter.
 
-为了研究这一点，我们创建了包含 8-grams WebText 训练集标记的布隆过滤器。 为了提高记忆力，字符串被规范化为仅包含小写字母数字单词，并以单个空格作为分隔符。 构造布隆过滤器使得误报率上限为 ${1/10^8}$ 。 我们通过生成 1M 字符串进一步验证了低误报率，其中过滤器没发现了重复。
+为了研究这一点，我们创建了包含 8-grams WebText 训练集标记的布隆过滤器。 为了提高记忆力，字符串被归一化为仅包含小写字母数字单词，并以单个空格作为分隔符。 构造布隆过滤器使得误报率上限为 ${1/10^8}$ 。 我们通过生成 1M 字符串进一步验证了低误报率，其中过滤器没发现了重复。
 
 These Bloom filters let us calculate, given a dataset, the percentage of 8-grams from that dataset that are also found in the WebText training set. Table 6 shows this overlap analysis for the test sets of common LM benchmarks. Common LM datasets’ test sets have between 1-6% overlap with WebText train, with an average of overlap of 3.2%. Somewhat surprisingly, many datasets have larger overlaps with their own training splits, with an average of 5.9% overlap.
 

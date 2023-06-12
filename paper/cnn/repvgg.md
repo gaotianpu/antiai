@@ -183,7 +183,7 @@ We compare RepVGG with the baselines on ImageNet, justify the significance of st
 ### 4.1. RepVGG for ImageNet Classification
 We compare RepVGG with the classic and state-of-theart models including VGG-16 [31], ResNet [12], ResNeXt [38], EfficientNet [35], and RegNet [28] on ImageNet-1K [6], which comprises 1.28M images for training and 50K for validation. We use EfficientNet-B0/B3 and RegNet3.2GF/12GF as the representatives for middleweight and heavyweight state-of-the-art models, respectively. We vary the multipliers a and b to generate a series of RepVGG models to compare against the baselines (Table. 3).
 
-我们将RepVGG与ImageNet-1K[6]上的经典和SOTA模型进行了比较，包括VGG-16[31]、ResNet[12]、ResNeXt[38]、EfficientNet[35]和RegNet[28]，其中包括1.28M个用于培训的图像和50K个用于验证的图像。我们分别使用EfficientNet-B0/B3和RegNet3.2GF/12GF作为中量级和权重级最先进车型的代表。我们改变乘数a和b，以生成一系列RepVGG模型，与基线进行比较(表3)。
+我们将RepVGG与ImageNet-1K[6]上的经典和SOTA模型进行了比较，包括VGG-16[31]、ResNet[12]、ResNeXt[38]、EfficientNet[35]和RegNet[28]，其中包括1.28M个用于训练的图像和50K个用于验证的图像。我们分别使用EfficientNet-B0/B3和RegNet3.2GF/12GF作为中量级和权重级最先进车型的代表。我们改变乘数a和b，以生成一系列RepVGG模型，与基线进行比较(表3)。
 
 We first compare RepVGG against ResNets [12], which are the most common benchmarks. We use RepVGGA0/A1/A2 for the comparisons with ResNet-18/34/50, respectively. To compare against the larger models, we construct the deeper RepVGG-B0/B1/B2/B3 with increasing width. For those RepVGG models with interleaved groupwise layers, we postfix g2/g4 to the model name.
 

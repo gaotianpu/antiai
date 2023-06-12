@@ -256,7 +256,7 @@ One limitation of this work is that we only focused on deformations sampled from
 
 Finally, our work compares only two points in time: the beginning and the end of training. There remain open questions about how these characteristics change over the course of training. For example, when do filters become smooth? Is this a statistical regularity that a network learns early in training, or does filter smoothness continue to change even as network performance begins to asymptote? Does this differ across layers and architectures? Is the trajectory toward smooth filters and deformation stability monotone, or are there periods of training where filters become smoother and then periods when the filter smoothness decreases? Future work will be required to answer all of these questions. 
 
-最后，我们的工作只比较了两个时间点：培训的开始和结束。关于这些特征如何在培训过程中发生变化，仍存在一些悬而未决的问题。例如，过滤器何时变得平滑？这是网络在训练早期学习到的统计规律吗，还是即使网络性能开始逐渐下降，滤波器平滑度也会继续变化？这在不同的层和架构之间是否有所不同？朝向平滑过滤器和变形稳定性的轨迹是单调的，还是存在过滤器变得平滑的训练周期，然后过滤器平滑度降低的训练周期？未来的工作将需要回答所有这些问题。
+最后，我们的工作只比较了两个时间点：训练的开始和结束。关于这些特征如何在训练过程中发生变化，仍存在一些悬而未决的问题。例如，过滤器何时变得平滑？这是网络在训练早期学习到的统计规律吗，还是即使网络性能开始逐渐下降，滤波器平滑度也会继续变化？这在不同的层和架构之间是否有所不同？朝向平滑过滤器和变形稳定性的轨迹是单调的，还是存在过滤器变得平滑的训练周期，然后过滤器平滑度降低的训练周期？未来的工作将需要回答所有这些问题。
 
 ## References
 1. Alessandro Achille and Stefano Soatto. On the emergence of invariance and disentangling in deep representations. CoRR, abs/1706.01350, 2017. URL http://arxiv.org/abs/1706. 01350.

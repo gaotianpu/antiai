@@ -1,5 +1,5 @@
 # Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift
-批归一化(BN): 通过减少内部协变量偏移加快深度网络培训 2015-02 原文: https://arxiv.org/abs/1502.03167
+批归一化(BN): 通过减少内部协变量偏移加快深度网络训练 2015-02 原文: https://arxiv.org/abs/1502.03167
 
 ## Abstract
 Training Deep Neural Networks is complicated by the fact that the distribution of each layer’s inputs changes during training, as the parameters of the previous layers change. This slows down the training by requiring lower learning rates and careful parameter initialization, and makes it notoriously hard to train models with saturating nonlinearities. We refer to this phenomenon as internal covariate shift, and address the problem by normalizing layer inputs. Our method draws its strength from making normalization a part of the model architecture and performing the normalization for each training mini-batch. Batch Normalization allows us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, in some cases eliminating the need for Dropout. Applied to a state-of-the-art image classification model, Batch Normalization achieves the same accuracy with 14 times fewer training steps, and beats the original model by a significant margin. Using an ensemble of batch normalized networks, we improve upon the best published result on ImageNet classification: reaching 4.9% top-5 validation error (and 4.8% test error), exceeding the accuracy of human raters. 
@@ -15,7 +15,7 @@ $Θ = arg min \frac{1}{N}\sum_{i=1}^Nℓ(x_i, Θ)$
 
 where $x_1..._N$ is the training data set. With SGD, the training proceeds in steps, and at each step we consider a minibatch $x_1..._m$ of size m. The mini-batch is used to approximate the gradient of the loss function with respect to the parameters, by computing 
 
-其中$x_1…_N$是训练数据集。对于SGD，培训分步骤进行，在每个步骤中，我们都考虑一个大小为m的小批次$x_1…_m$。通过计算，小批次用于近似损失函数相对于参数的梯度
+其中$x_1…_N$是训练数据集。对于SGD，训练分步骤进行，在每个步骤中，我们都考虑一个大小为m的小批次$x_1…_m$。通过计算，小批次用于近似损失函数相对于参数的梯度
 
 $\frac{1}{m}\frac{∂ℓ(xi, Θ)}{∂Θ} $.
 
@@ -68,15 +68,15 @@ We define Internal Covariate Shift as the change in the distribution of network 
 
 We could consider whitening activations at every training step or at some interval, either by modifying the network directly or by changing the parameters of the optimization algorithm to depend on the network activation values (Wiesler et al., 2014; Raiko et al., 2012; Povey et al., 2014; Desjardins & Kavukcuoglu). However, if these modifications are interspersed with the optimization steps, then the gradient descent step may attempt to update the parameters in a way that requires the normalization to be updated, which reduces the effect of the gradient step. For example, consider a layer with the input u that adds the learned bias b, and normalizes the result by subtracting the mean of the activation computed over the training data:  x = x − E[x] where x = u + b, $X = {x_1..._N }$ is the set of values of x over the training set, and $E[x] = \frac{1}{N}\sum_{i=1}^Nx_i$ . If a gradient descent step ignores the dependence of E[x] on b, then it will update b ← b + ∆b, where ∆b ∝ −∂ℓ/∂bx. Then u + (b + ∆b) − E[u + (b + ∆b)] = u + b − E[u + b].
 
-我们可以考虑在每个训练步骤或某个时间间隔进行白化激活，要么直接修改网络，要么根据网络激活值改变优化算法的参数(Wiesleret al., 2014; Raikoet al., 2012; Poveyet al., 2014;Desjardins和Kavukcuoglu)。然而，如果这些修改穿插在优化步骤中，那么梯度下降步骤可能会尝试以需要更新归一化的方式更新参数，这会降低梯度步骤的效果。例如，考虑一个具有输入u的层，该层添加了学习偏差b，并通过减去通过训练数据计算的激活平均值来规范化结果：x=x− E[x]其中x=u+b，$x={x_1…_N}$是训练集中x的值集，$E[x]=\frac{1}{N}\sum_{i=1}^Nx_i$。如果梯度下降步骤忽略了E[x对b的依赖性，则它将更新b← b+∆b、 其中∆b∝ −∂ℓ/∂bx。然后是u+(b+∆b)− E[u+(b+∆b) ]=u+b− E[u+b]。
+我们可以考虑在每个训练步骤或某个时间间隔进行白化激活，要么直接修改网络，要么根据网络激活值改变优化算法的参数(Wiesleret al., 2014; Raikoet al., 2012; Poveyet al., 2014;Desjardins和Kavukcuoglu)。然而，如果这些修改穿插在优化步骤中，那么梯度下降步骤可能会尝试以需要更新归一化的方式更新参数，这会降低梯度步骤的效果。例如，考虑一个具有输入u的层，该层添加了学习偏差b，并通过减去通过训练数据计算的激活平均值来归一化结果：x=x− E[x]其中x=u+b，$x={x_1…_N}$是训练集中x的值集，$E[x]=\frac{1}{N}\sum_{i=1}^Nx_i$。如果梯度下降步骤忽略了E[x对b的依赖性，则它将更新b← b+∆b、 其中∆b∝ −∂ℓ/∂bx。然后是u+(b+∆b)− E[u+(b+∆b) ]=u+b− E[u+b]。
 
 Thus, the combination of the update to b and subsequent change in normalization led to no change in the output of the layer nor, consequently, the loss. As the training continues, b will grow indefinitely while the loss remains fixed. This problem can get worse if the normalization not only centers but also scales the activations. We have observed this empirically in initial experiments, where the model blows up when the normalization parameters are computed outside the gradient descent step.
 
-因此，对b的更新和随后的规一化更改相结合，不会导致层的输出发生变化，也不会导致损失。随着培训的继续，b将无限期增长，而损失保持不变。如果规一化不仅集中而且扩展激活，则此问题可能会变得更糟。我们在最初的实验中观察到了这一点，当在梯度下降步骤之外计算归一化参数时，模型会崩溃。
+因此，对b的更新和随后的规一化更改相结合，不会导致层的输出发生变化，也不会导致损失。随着训练的继续，b将无限期增长，而损失保持不变。如果规一化不仅集中而且扩展激活，则此问题可能会变得更糟。我们在最初的实验中观察到了这一点，当在梯度下降步骤之外计算归一化参数时，模型会崩溃。
 
 The issue with the above approach is that the gradient descent optimization does not take into account the fact that the normalization takes place. To address this issue, we would like to ensure that, for any parameter values, the network always produces activations with the desired distribution. Doing so would allow the gradient of the loss with respect to the model parameters to account for the normalization, and for its dependence on the model parameters Θ. Let again x be a layer input, treated as a 2 vector, and X be the set of these inputs over the training data set. The normalization can then be written as a transformation 
 
-上述方法的问题是梯度下降优化没有考虑到发生归一化的事实。为了解决这个问题，我们希望确保，对于任何参数值，网络总是以所需的分布生成激活。这样做将允许损失相对于模型参数的梯度说明归一化及其对模型参数的依赖性。再次假设x是一个层输入，被视为一个2向量，x是这些输入在训练数据集上的集合。然后可以将规范化写为转换
+上述方法的问题是梯度下降优化没有考虑到发生归一化的事实。为了解决这个问题，我们希望确保，对于任何参数值，网络总是以所需的分布生成激活。这样做将允许损失相对于模型参数的梯度说明归一化及其对模型参数的依赖性。再次假设x是一个层输入，被视为一个2向量，x是这些输入在训练数据集上的集合。然后可以将归一化写为转换
 
 x = Norm(x, X) 
 
@@ -92,11 +92,11 @@ ignoring the latter term would lead to the explosion described above. Within thi
 
 $Cov[x]^{−1/2}(x − E[x])$, as well as the derivatives of these transforms for backpropagation. This motivates us to seek an alternative that performs input normalization in a way that is differentiable and does not require the analysis of the entire training set after every parameter update.
 
-$Cov[x]^{−1/2}(x− E[x])$，以及这些变换对反向传播的导数。这促使我们寻找一种替代方法，以可区分的方式执行输入规范化，并且不需要在每次参数更新后分析整个训练集。
+$Cov[x]^{−1/2}(x− E[x])$，以及这些变换对反向传播的导数。这促使我们寻找一种替代方法，以可区分的方式执行输入归一化，并且不需要在每次参数更新后分析整个训练集。
 
 Some of the previous approaches (e.g. (Lyu & Simoncelli, 2008)) use statistics computed over a single training example, or, in the case of image networks, over different feature maps at a given location. However, this changes the representation ability of a network by discarding the absolute scale of activations. We want to a preserve the information in the network, by normalizing the activations in a training example relative to the statistics of the entire training data. 
 
-之前的一些方法(例如(Lyu&Simoncelli，2008))使用在单个训练样本上计算的统计数据，或者在图像网络的情况下，使用在给定位置的不同特征图上计算的数据。然而，这通过放弃激活的绝对规模改变了网络的表示能力。我们希望通过规范化与整个训练数据统计相关的训练样本中的激活，来保存网络中的信息。
+之前的一些方法(例如(Lyu&Simoncelli，2008))使用在单个训练样本上计算的统计数据，或者在图像网络的情况下，使用在给定位置的不同特征图上计算的数据。然而，这通过放弃激活的绝对规模改变了网络的表示能力。我们希望通过归一化与整个训练数据统计相关的训练样本中的激活，来保存网络中的信息。
 
 ## 3 Normalization via Mini-Batch Statistics
 Since the full whitening of each layer’s inputs is costly and not everywhere differentiable, we make two necessary simplifications. The first is that instead of whitening the features in layer inputs and outputs jointly, we will normalize each scalar feature independently, by making it have the mean of zero and the variance of 1. For a layer with d-dimensional input $x = (x ^{(1)} . . . x^{(d)})$, we will normalize each dimension 

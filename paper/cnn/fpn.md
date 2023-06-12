@@ -173,7 +173,7 @@ We evaluate the COCO-style Average Recall (AR) and AR on small, medium, and larg
 
 Implementation details. All architectures in Table 1 are trained end-to-end. The input image is resized such that its shorter side has 800 pixels. We adopt synchronized SGD training on 8 GPUs. A mini-batch involves 2 images per GPU and 256 anchors per image. We use a weight decay of 0.0001 and a momentum of 0.9. The learning rate is 0.02 for the first 30k mini-batches and 0.002 for the next 10k. For all RPN experiments (including baselines), we include the anchor boxes that are outside the image for training, which is unlike [29] where these anchor boxes are ignored. Other implementation details are as in [29]. Training RPN with FPN on 8 GPUs takes about 8 hours on COCO. 
 
-实施细节。表1中的所有架构都经过端到端培训。调整输入图像的大小，使其短边具有800个像素。我们在8个GPU上采用同步SGD培训。一个小批量包含每个GPU 2个图像和每个图像256个锚点。我们使用0.0001的权重衰减和0.9的动量。前30k小批量的学习率为0.02，后10k的学习率是0.002。对于所有RPN实验(包括基线)，我们包括图像外部的锚框用于训练，这不同于[29]，这些锚框被忽略。其他实施细节如[29]所示。在COCO上用FPN在8个GPU上训练RPN大约需要8小时。
+实施细节。表1中的所有架构都经过端到端训练。调整输入图像的大小，使其短边具有800个像素。我们在8个GPU上采用同步SGD训练。一个小批量包含每个GPU 2个图像和每个图像256个锚点。我们使用0.0001的权重衰减和0.9的动量。前30k小批量的学习率为0.02，后10k的学习率是0.002。对于所有RPN实验(包括基线)，我们包括图像外部的锚框用于训练，这不同于[29]，这些锚框被忽略。其他实施细节如[29]所示。在COCO上用FPN在8个GPU上训练RPN大约需要8小时。
 
 2https://github.com/kaiminghe/deep-residual-networks 
 3https://github.com/rbgirshick/py-faster-rcnn 
@@ -310,7 +310,7 @@ DeepMask/SharpMask were trained on image crops for predicting instance segments 
 
 It is easy to adapt FPN to generate mask proposals. We use a fully convolutional setup for both training and inference. We construct our feature pyramid as in Sec. 5.1 and set d = 128. On top of each level of the feature pyramid, we apply a small 5×5 MLP to predict 14×14 masks and object scores in a fully convolutional fashion, see Fig. 4. Additionally, motivated by the use of 2 scales per octave in the image pyramid of [27, 28], we use a second MLP of input size 7×7 to handle half octaves. The two MLPs play a similar role as anchors in RPN. The architecture is trained end-to-end; full implementation details are given in the appendix. 
 
-很容易调整FPN以生成掩码建议。我们使用完全卷积设置进行训练和推理。我们如第5.1节所述构建了我们的特征金字塔，并将d设置为128。在特征金字塔的每个级别上，我们应用一个小的5×5 MLP以完全卷积的方式预测14×14掩模和目标分数，见图4。此外，受[27，28]图像金字塔中每八度使用2个尺度的激励，我们使用输入大小为7×7的第二个MLP来处理半八度。这两个MLP在RPN中扮演着类似的锚定角色。架构经过端到端培训; 附录中给出了完整的实施细节。
+很容易调整FPN以生成掩码建议。我们使用完全卷积设置进行训练和推理。我们如第5.1节所述构建了我们的特征金字塔，并将d设置为128。在特征金字塔的每个级别上，我们应用一个小的5×5 MLP以完全卷积的方式预测14×14掩模和目标分数，见图4。此外，受[27，28]图像金字塔中每八度使用2个尺度的激励，我们使用输入大小为7×7的第二个MLP来处理半八度。这两个MLP在RPN中扮演着类似的锚定角色。架构经过端到端训练; 附录中给出了完整的实施细节。
 
 Table 6. Instance segmentation proposals evaluated on the first 5k COCO val images. All models are trained on the train set. DeepMask, SharpMask, and FPN use ResNet-50 while InstanceFCN uses VGG-16. DeepMask and SharpMask performance is computed with models available from https://github. com/facebookresearch/deepmask (both are the ‘zoom’ variants). †Runtimes are measured on an NVIDIA M40 GPU, except the InstanceFCN timing which is based on the slower K40.
 表6.对前5k COCO值图像评估的实例分割建议。所有模特都在火车上训练。DeepMask、SharpMask和FPN使用ResNet-50，而InstanceFCN使用VGG-16。DeepMask和SharpMask性能使用以下模型计算：https://github.com/facebookresearch/deepmask(两者都是“缩放”变体)。†运行时间在NVIDIA M40 GPU上测量，但InstanceFCN计时基于较慢的K40。

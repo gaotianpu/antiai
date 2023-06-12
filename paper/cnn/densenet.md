@@ -31,7 +31,7 @@ A possibly counter-intuitive effect of this dense connectivity pattern is that i
 
 Besides better parameter efficiency, one big advantage of DenseNets is their improved flow of information and gradients throughout the network, which makes them easy to train. Each layer has direct access to the gradients from the loss function and the original input signal, leading to an implicit deep supervision [20]. This helps training of deeper network architectures. Further, we also observe that dense connections have a regularizing effect, which reduces over- fitting on tasks with smaller training set sizes.
 
-除了更好的参数效率外，DenseNets的一大优势是其在整个网络中改进的信息流和梯度，这使其易于训练。每一层都可以直接从损失函数和原始输入信号获得梯度，从而实现隐式深度监控[20]。这有助于培训更深层次的网络架构。此外，我们还观察到，密集连接具有正则化效果，这减少了对较小训练集大小的任务的过度拟合。
+除了更好的参数效率外，DenseNets的一大优势是其在整个网络中改进的信息流和梯度，这使其易于训练。每一层都可以直接从损失函数和原始输入信号获得梯度，从而实现隐式深度监控[20]。这有助于训练更深层次的网络架构。此外，我们还观察到，密集连接具有正则化效果，这减少了对较小训练集大小的任务的过度拟合。
 
 We evaluate DenseNets on four highly competitive benchmark datasets (CIFAR-10, CIFAR-100, SVHN, and ImageNet). Our models tend to require much fewer parameters than existing algorithms with comparable accuracy. Further, we significantly outperform the current state-ofthe-art results on most of the benchmark tasks.
 

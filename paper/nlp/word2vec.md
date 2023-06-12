@@ -126,7 +126,7 @@ The new architectures directly follow those proposed in our earlier work [13, 14
 ### 3.1 Continuous Bag-of-Words Model 连续单词袋模型
 The first proposed architecture is similar to the feedforward NNLM, where the non-linear hidden layer is removed and the projection layer is shared for all words (not just the projection matrix); thus, all words get projected into the same position (their vectors are averaged). We call this architecture a bag-of-words model as the order of words in the history does not influence the projection.Furthermore, we also use words from the future; we have obtained the best performance on the task introduced in the next section by building a log-linear classifier with four future and four history words at the input, where the training criterion is to correctly classify the current (middle) word. Training complexity is then
 
-第一个提出的架构类似于前馈NNLM，其中去除了非线性隐藏层，并为所有单词(而不仅仅是投影矩阵)共享投影层; 因此，所有单词被投影到相同的位置(它们的向量被平均)。我们称这种架构为一个词袋模型，因为历史上单词的顺序不会影响投影。 此外，我们还使用来自未来的词语; 在下一节介绍的任务中，我们通过在输入端构建具有四个未来和四个历史单词的对数线性分类器，获得了最佳性能，其中训练标准是正确地对当前(中间)单词进行分类。 那么培训的复杂性就是:
+第一个提出的架构类似于前馈NNLM，其中去除了非线性隐藏层，并为所有单词(而不仅仅是投影矩阵)共享投影层; 因此，所有单词被投影到相同的位置(它们的向量被平均)。我们称这种架构为一个词袋模型，因为历史上单词的顺序不会影响投影。 此外，我们还使用来自未来的词语; 在下一节介绍的任务中，我们通过在输入端构建具有四个未来和四个历史单词的对数线性分类器，获得了最佳性能，其中训练标准是正确地对当前(中间)单词进行分类。 那么训练的复杂性就是:
 
 $Q = N × D + D × log_2(V )$. (4)
 
@@ -225,7 +225,7 @@ Table 5: Comparison of models trained for three epochs on the same data and mode
 ### 4.4 Large Scale Parallel Training of Models 模型的大规模并行训练
 As mentioned earlier, we have implemented various models in a distributed framework called DistBelief. Below we report the results of several models trained on the Google News 6B data set, with mini-batch asynchronous gradient descent and the adaptive learning rate procedure called Adagrad [7]. We used 50 to 100 model replicas during the training. The number of CPU cores is an estimate since the data center machines are shared with other production tasks, and the usage can fluctuate quite a bit. Note that due to the overhead of the distributed framework, the CPU usage of the CBOW model and the Skip-gram model are much closer to each other than their single-machine implementations. The result are reported in Table 6.
 
-如前所述，我们在一个名为DistBelief的分布式框架中实现了各种模型。下面，我们报告了在谷歌新闻6B数据集上训练的几个模型的结果，包括小批量异步梯度下降和称为Adgrad[7]的自适应学习率程序。我们在培训期间使用了50到100个模型副本。由于数据中心机器与其他生产任务共享，因此CPU核心的数量是一个估计值，使用情况可能会有很大的波动。注意，由于分布式框架的开销，CBOW模型和Skip gram模型的CPU使用情况比它们的单机实现更接近。结果见表6。
+如前所述，我们在一个名为DistBelief的分布式框架中实现了各种模型。下面，我们报告了在谷歌新闻6B数据集上训练的几个模型的结果，包括小批量异步梯度下降和称为Adgrad[7]的自适应学习率程序。我们在训练期间使用了50到100个模型副本。由于数据中心机器与其他生产任务共享，因此CPU核心的数量是一个估计值，使用情况可能会有很大的波动。注意，由于分布式框架的开销，CBOW模型和Skip gram模型的CPU使用情况比它们的单机实现更接近。结果见表6。
 
 Table 6: Comparison of models trained using the DistBelief distributed framework. Note that training of NNLM with 1000-dimensional vectors would take too long to complete.
 表6：使用DistBelief分布式框架训练的模型的比较。注意，用1000维向量训练NNLM需要太长时间才能完成。

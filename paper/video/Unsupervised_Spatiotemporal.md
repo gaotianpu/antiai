@@ -184,7 +184,7 @@ Architecture. By default, we use a R-50 [39] following the Slow pathway in [20] 
 
 Implementation details. We follow default settings in video classification [20]. Specifics on the approaches, their training and evaluation and the impact of implementation on performance are provided in §B and §A.3, respectively.
 
-实施细节。 我们遵循视频分类中的默认设置 [20]。 §B 和 §A.3 分别提供了方法的具体细节、它们的培训和评估以及实施对绩效的影响。
+实施细节。 我们遵循视频分类中的默认设置 [20]。 §B 和 §A.3 分别提供了方法的具体细节、它们的训练和评估以及实施对绩效的影响。
 
 ### 4.1. Persistent temporal learning 持续时间学习
 Here, we investigate the impact of learning spatiotemporal vs. only spatial persistent features. Table 2 shows the accuracy of the four methods when trained for 200 epochs on K400, and evaluated on K400 (linear) and UCF101 (finetuned), i.e. our default setting. 
@@ -267,7 +267,7 @@ The second observation is that R2+1D [82] has a large gap on Kinetics (71.7% sup
 
 ### 4.4. Uncurated data and video duration 未经整理的数据和视频时长
 Table 6. Training on curated (a), uncurated (b) and short duration video (c) data from the web. Longer training degrades performance for BYOL, possibly due to suboptimal hyper-parameters. ρ=2.
-表 6. 对来自网络的精选 (a)、未精选 (b) 和短时视频 (c) 数据进行培训。 较长的训练会降低 BYOL 的性能，这可能是由于次优的超参数造成的。 ρ=2。
+表 6. 对来自网络的精选 (a)、未精选 (b) 和短时视频 (c) 数据进行训练。 较长的训练会降低 BYOL 的性能，这可能是由于次优的超参数造成的。 ρ=2。
 
 In Table 6 we show the performance of all four methodologies on IG-Curated-1M (a), IG-Uncurated-1M (b) and IG-Uncurated-Short-1M (c) for pre-training with 50 and 200 epochs. We make the following observations: 
 1. Among the methods MoCo performs the best with e.g. 69.0% vs. second-best 64.3% of SwAV on curated data (a). 

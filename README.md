@@ -74,6 +74,7 @@
     * 多模输入更统一：文本、图像、视频，都当成一串连续字节输入；
     * 可以处理超长字节串；
     * 并行生成，多快好省。 并行分块(多token)生成，是不是意味着RLHF就没用了？
+    * [Bytes Are All You Need: Transformers Operating Directly On File Bytes](https://arxiv.org/abs/2306.00238)
 6. 稀疏专家模型：[调研](./paper/Sparse_Expert_review.md), [X-MoE](./paper/X-MoE.md), [SwitchT](./paper/Switch_Transformers.md)
 7. 开源的基础架构：[TorchScale](./paper/Multimodal/TorchScale.md) 
 

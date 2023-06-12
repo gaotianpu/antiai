@@ -163,7 +163,7 @@ For a practical deep learning system, devil is always in the details. Our implem
 
 During the course of experiments, we notice that an appropriately large “cropsize” can yield good performance and “batchsize” in the batch normalization [14] layer is of great importance. Due to limited physical memory on GPU cards, we set the “batchsize” to 16 during training. To achieve this, we modify Caffe from [37] together with branch [4] and make it support batch normalization on data gathered from multiple GPUs based on OpenMPI. For the auxiliary loss, we set the weight to 0.4 in experiments.
 
-在实验过程中，我们注意到，适当大的“cropsize”可以产生良好的性能，批次归一化[14]层中的“批次大小”非常重要。由于GPU卡上的物理内存有限，我们在训练期间将“批量大小”设置为16。为了实现这一点，我们修改了[37]中的Caffe和分支[4]，并使其支持基于OpenMPI从多个GPU收集的数据的批处理规范化。对于辅助损失，我们在实验中将权重设置为0.4。
+在实验过程中，我们注意到，适当大的“cropsize”可以产生良好的性能，批次归一化[14]层中的“批次大小”非常重要。由于GPU卡上的物理内存有限，我们在训练期间将“批量大小”设置为16。为了实现这一点，我们修改了[37]中的Caffe和分支[4]，并使其支持基于OpenMPI从多个GPU收集的数据的批处理归一化。对于辅助损失，我们在实验中将权重设置为0.4。
 
 Table 1. Investigation of PSPNet with different settings. Baseline is ResNet50-based FCN with dilated network. ‘B1’ and ‘B1236’ denote pooled feature maps of bin sizes {1 × 1} and {1 × 1, 2 × 2, 3 × 3, 6 × 6} respectively. ‘MAX’ and ‘AVE’ represent max pooling and average pooling operations individually. ‘DR’ means that dimension reduction is taken after pooling. The results are tested on the validation set with the single-scale input. 
 表1.不同设置的PSPNet调查。基线是基于ResNet50的FCN，网络扩张B1’和‘B1236’分别表示仓大小为{1×1}和{1×1，2×2，3×3，6×6}的合并特征图MAX和AVE分别表示最大池操作和平均池操作DR’表示在合并后进行维度缩减。结果在验证集上用单尺度输入进行测试。
@@ -232,7 +232,7 @@ Figure 7. Visual improvements on PASCAL VOC 2012 data. PSPNet produces more accu
 图7.PASCAL VOC 2012数据的视觉改进。PSPNet产生更准确和详细的结果。
 
 As shown in Table 6, PSPNet outperforms prior methods on both settings. Trained with only VOC 2012 data, we achieve 82.6% accuracy2 – we get the highest accuracy on all 20 classes. When PSPNet is pre-trained with MS-COCO dataset, it reaches 85.4% accuracy3 where 19 out of the 20 classes receive the highest accuracy. Intriguingly, our PSPNet trained with only VOC 2012 data outperforms existing methods trained with the MS-COCO pre-trained model.
-如表6所示，PSPNet在两种设置上都优于现有方法。我们只接受了2012年VOC数据的培训，精度达到82.6%2–我们在所有20个课程中都获得了最高的精度。当PSPNet使用MS-COCO数据集进行预训练时，其精度达到85.4%，其中20个类中有19个类的精度最高。有趣的是，我们仅使用VOC 2012数据训练的PSPNet优于使用MS-COCO预训练模型训练的现有方法。
+如表6所示，PSPNet在两种设置上都优于现有方法。我们只接受了2012年VOC数据的训练，精度达到82.6%2–我们在所有20个课程中都获得了最高的精度。当PSPNet使用MS-COCO数据集进行预训练时，其精度达到85.4%，其中20个类中有19个类的精度最高。有趣的是，我们仅使用VOC 2012数据训练的PSPNet优于使用MS-COCO预训练模型训练的现有方法。
 
 One may argue that our based classification model is more powerful than several prior methods since ResNet was recently proposed. To exhibit our unique contribution, we show that our method also outperforms stateof-the-art frameworks that use the same model, including FCRNs [38], LRR [9], and DeepLab [4]. In this process, we even do not employ time-consuming but effective postprocessing, such as CRF, as that in [4, 9].
 

@@ -376,7 +376,7 @@ linear acc. |76.5 |69.7 |76.3
 
 Global average pooling is used right after the final block if [CLS] is not used. ViT has an extra LayerNorm (LN) after the final block [16], and if we keep this LN and remove [CLS], the result is much worse (69.7%). But if we remove this LN and [CLS], the result is nearly unchanged (76.3%). This comparison indicates that the class token is not essential for the system to work. It also suggests that the choice of normalization layers can make a difference.
 
-如果未使用 [CLS]，则在最后一个块之后立即使用全局平均池化。 ViT 在最后一个块 [16] 之后有一个额外的 LayerNorm (LN)，如果我们保留这个 LN 并删除 [CLS]，结果会更糟 (69.7%)。 但如果我们删除这个 LN 和 [CLS]，结果几乎没有变化 (76.3%)。 此比较表明类令牌对于系统工作不是必不可少的。 它还表明，规范化层的选择可以有所作为。
+如果未使用 [CLS]，则在最后一个块之后立即使用全局平均池化。 ViT 在最后一个块 [16] 之后有一个额外的 LayerNorm (LN)，如果我们保留这个 LN 并删除 [CLS]，结果会更糟 (69.7%)。 但如果我们删除这个 LN 和 [CLS]，结果几乎没有变化 (76.3%)。 此比较表明类令牌对于系统工作不是必不可少的。 它还表明，归一化层的选择可以有所作为。
 
 BatchNorm in MLP heads. Unlike the standard ResNets [21], ViT models by default have no BN, and thus all BN layers are in the MLP heads. The following table compares with vs. without BN in the heads:
 

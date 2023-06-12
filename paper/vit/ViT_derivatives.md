@@ -131,7 +131,7 @@ Figure 8: XCiT architecture
 
 XCA: For information mixing, the authors propose a cross-covariance attention (XCA) function that operates on the feature dimension of a token rather than on its own. Importantly, this method is only applicable to the L2-normalized set of queries, keys, and values. the L2 norm is denoted by the hat above the letters K and Q. The result of multiplication is also normalized to [-1,1] before softmax.
 
-XCA：对于信息混合，作者提出了一个 交叉协方差注意力(XCA)函数，该函数在token的特征维度上操作，而不是单独操作。重要的是，此方法仅适用于二级规范化查询、键和值集。L2范数由字母K和Q上方的帽子表示。乘法结果也在softmax之前标准化为[-1,1]。
+XCA：对于信息混合，作者提出了一个 交叉协方差注意力(XCA)函数，该函数在token的特征维度上操作，而不是单独操作。重要的是，此方法仅适用于二级归一化查询、键和值集。L2范数由字母K和Q上方的帽子表示。乘法结果也在softmax之前标准化为[-1,1]。
 
 Local Patch Interaction: To achieve explicit communication between the patches, the researchers added two depth-wise 3×3 convolutional layers with Batch Normalization and GELU nonlinearity in between, as shown in Figure 9. Depth-wise convolution was applied to each channel (here the patch) independently.
 

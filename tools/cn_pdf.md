@@ -99,7 +99,7 @@ Re-use of Established Components MEGABYTE consists of two transformer models int
 重新使用已建立的组件MEGABYTE由两个变压器模型组成，这些模型与移位、整形和线性投影交织在一起。这种重用增加了体系结构继承转换器所需缩放特性的可能性。
 
 ## 3. Efficiency Analysis  3. 效率分析
-### 3.1. Training Efficiency  3.1. 培训效率
+### 3.1. Training Efficiency  3.1. 训练效率
 We analyze the cost of different architectures when scaling both the sequence length and size of the models.
 
 当缩放模型的序列长度和大小时，我们分析了不同架构的成本。
@@ -133,17 +133,17 @@ Generating long sequences with transformers is slow, because the input to each t
 ### 4.1. Controlling for Compute and Data  4.1. 控制计算和数据
 Models show consistent improvements when increasing both data and compute (Kaplan et al., 2020; Hoffmann et al., 2022), meaning that one model can outperform another because of an increased training budget instead of an improved architecture. However, in practice, both compute and data are typically limited. We conduct experiments using a fixed compute and data budget across all models to focus comparisons solely on the model architecture rather than training resources. To achieve this, we adjust model hyperparameters (mainly, number of layers) within each architecture so that the forward pass time taken per byte is matched, and then train all models for the same number of bytes.
 
-当增加数据和计算时，模型显示出一致的改进（Kaplan et al.，2020；Hoffmann et al.，2022），这意味着一个模型可以优于另一个模型，因为增加了培训预算，而不是改进了架构。然而，在实践中，计算和数据通常都是有限的。我们在所有模型中使用固定的计算和数据预算进行实验，以将比较仅集中在模型架构上，而不是训练资源上。为了实现这一点，我们调整每个体系结构中的模型超参数（主要是层数），使每个字节所花费的前向通过时间相匹配，然后为相同数量的字节训练所有模型。
+当增加数据和计算时，模型显示出一致的改进（Kaplan et al.，2020；Hoffmann et al.，2022），这意味着一个模型可以优于另一个模型，因为增加了训练预算，而不是改进了架构。然而，在实践中，计算和数据通常都是有限的。我们在所有模型中使用固定的计算和数据预算进行实验，以将比较仅集中在模型架构上，而不是训练资源上。为了实现这一点，我们调整每个体系结构中的模型超参数（主要是层数），使每个字节所花费的前向通过时间相匹配，然后为相同数量的字节训练所有模型。
 
 ### 4.2. Comparison Systems  4.2. 比较系统
 We compare MEGABYTE with both a standard decoderonly Transformer and PerceiverAR (Hawthorne et al., 2022).PerceiverAR extends the original transformer with a single cross-attention layer over a much longer context sequence, and is the best performing general purpose autoregressive model we are aware of and achieves state-of-the-art results across several modalities. We implemented both models in the same codebase, and all models share a similar data loader, preprocessing step, and trainer to avoid any artifacts in our compute-controlled experiments.
 
 我们将MEGABYTE与标准解码转换器和PerceiverAR进行了比较（Hawthorne et al.，2022）。PerceiverAR在更长的上下文序列上扩展了具有单个交叉注意力层的原始转换器，是我们所知的性能最好的通用自回归模型，并在几种模式中取得了最先进的结果。我们在同一个代码库中实现了这两个模型，并且所有模型共享相似的数据加载器、预处理步骤和训练器，以避免在我们的计算控制实验中出现任何伪影。
 
-### 4.3. Training Procedure  4.3. 培训程序
+### 4.3. Training Procedure  4.3. 训练程序
 All models were trained using the Metaseq2 code base (Zhang et al., 2022b). The training used the PyTorch framework (Paszke et al., 2019), with fairscale to improve memory efficiency through fully sharded model and optimizer states (Baines et al., 2021). Mixed precision training was used to improve training efficiency at scale (Micikevicius et al., 2017). More training details and various model parameters can be found in Section A.1 in the Appendix.
 
-所有模型均使用Metaseq2代码库进行训练（Zhang等人，2022b）。培训使用PyTorch框架（Paszke et al.，2019），通过完全碎片化的模型和优化器状态，利用公平尺度来提高内存效率（Baines et al.，2021）。混合精度训练被用于大规模提高训练效率（Micikevicius et al.，2017）。更多训练细节和各种模型参数可在附录的第A.1节中找到。
+所有模型均使用Metaseq2代码库进行训练（Zhang等人，2022b）。训练使用PyTorch框架（Paszke et al.，2019），通过完全碎片化的模型和优化器状态，利用公平尺度来提高内存效率（Baines et al.，2021）。混合精度训练被用于大规模提高训练效率（Micikevicius et al.，2017）。更多训练细节和各种模型参数可在附录的第A.1节中找到。
 
 To validate our implementation of PerceiverAR, we reproduced their experiments on downsized ImageNet at 64 pixels. By carefully matching hyperparameters, we achieved a bits per byte (bpb) score of 3.53, compared to the reporte 3.54 in the original paper.
 
@@ -383,7 +383,7 @@ We introduced MEGABYTE, a scaleable architecture for modeling long sequences. ME
 
 ## References 参考文献
 ## A. Appendices A.附录
-### A.1. Training Details A.1。培训详细信息
+### A.1. Training Details A.1。训练详细信息
 To ensure stable training, we applied gradient clipping with a maximum norm of 1.0 and used the Adam optimizer with β1 = 0.9, β2 = 0.98 (Kingma & Ba, 2015). We used the built-in polynomial decay learning rate scheduler in MetaSeq with 500 warmup updates and the end learning rate set to 0. All models are trained with pre-norm and using ReLU activation. We apply a dropout of 0.1 throughout, but we do not apply any dropout to embeddings. We also use weight decay of 0.1. To initialize the weights, we use a variant based on Megatron-LM codebase, which involves using a normal distribution with a mean of zero and a standard deviation of 0.006. We truncate this normal distribution within two standard deviations and observed substantial gain in both training stability and performance.
 
 为了确保稳定的训练，我们应用了最大范数为1.0的梯度裁剪，并使用了β1=0.9，β2=0.98的Adam优化器（Kingma&Ba，2015）。我们在MetaSeq中使用了内置的多项式衰减学习速率调度器，具有500次预热更新，最终学习速率设置为0。所有模型都使用预范数和ReLU激活进行训练。我们在整个过程中应用0.1的丢弃，但我们不对嵌入应用任何丢弃。我们还使用0.1的重量衰减。为了初始化权重，我们使用了一个基于威震天LM码库的变体，该变体包括使用平均值为零、标准偏差为0.006的正态分布。我们在两个标准差内截断了这个正态分布，并观察到训练稳定性和性能都有了显著的提高。

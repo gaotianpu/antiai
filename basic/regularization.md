@@ -16,3 +16,6 @@ https://zhuanlan.zhihu.com/p/38200980
 https://pytorch.org/docs/stable/generated/torch.nn.Dropout.html
 
 [Improving neural networks by preventing co-adaptation of feature detectors](./https://arxiv.org/abs/1207.0580)
+
+
+Label Smoothing , 标签平滑

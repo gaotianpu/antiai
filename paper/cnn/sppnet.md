@@ -141,7 +141,7 @@ Note that the above single/multi-size solutions are for training only. At the te
 请注意，上述单/多尺寸解决方案仅用于训练。在测试阶段，直接将SPP网络应用于任何大小的图像。
 
 Table 1: Network architectures: filter number×filter size (e.g., 96×72 ), filter stride (e.g., str 2), pooling window size (e.g., pool 32 ), and the output feature map size (e.g., map size 55 × 55). LRN represents Local Response Normalization. The padding is adjusted to produce the expected output feature map size. 
-表1：网络架构：滤波器数量×滤波器大小(例如96×72)、滤波器步长(例如str 2)、池化窗口大小(例如池32)和输出特征映射大小(例如映射大小55×55)。LRN表示本地响应规范化。调整填充以产生预期的输出特征图大小。
+表1：网络架构：滤波器数量×滤波器大小(例如96×72)、滤波器步长(例如str 2)、池化窗口大小(例如池32)和输出特征映射大小(例如映射大小55×55)。LRN表示本地响应归一化。调整填充以产生预期的输出特征图大小。
 
 ## 3 SPP-NET FOR IMAGE CLASSIFICATION
 ### 3.1 Experiments on ImageNet 2012 Classification

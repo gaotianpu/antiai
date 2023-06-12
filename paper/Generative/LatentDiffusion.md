@@ -108,7 +108,7 @@ More precisely, given an image x ∈ $R^{H×W×3}$ in RGB space, the encoder E e
 
 In order to avoid arbitrarily high-variance latent spaces, we experiment with two different kinds of regularizations. The first variant, KL-reg., imposes a slight KL-penalty towards a standard normal on the learned latent, similar to a VAE [46, 69], whereas VQ-reg. uses a vector quantization layer [96] within the decoder. This model can be interpreted as a VQGAN [23] but with the quantization layer absorbed by the decoder. Because our subsequent DM is designed to work with the two-dimensional structure of our learned latent space z = E(x), we can use relatively mild compression rates and achieve very good reconstructions. This is in contrast to previous works [23, 66], which relied on an arbitrary 1D ordering of the learned space z to model its distribution autoregressively and thereby ignored much of the inherent structure of z. Hence, our compression model preserves details of x better (see Tab. 8). The full objective and training details can be found in the supplement.
 
-为了避免任意高方差的潜在空间，我们尝试了两种不同的正则化。第一种变体KL-reg.对学习到的潜像施加了轻微的KL惩罚，类似于VAE[46，69]，而VQ-reg。使用解码器内的矢量量化层[96]。该模型可以解释为VQGAN[23]，但量化层被解码器吸收。因为我们的后续DM被设计为与我们学习的潜在空间z＝E(x)的二维结构一起工作，所以我们可以使用相对温和的压缩率并实现非常好的重建。这与之前的工作[23，66]形成对比，之前的工作依赖于学习空间z的任意1D排序来对其分布进行自回归建模，从而忽略了z的大部分固有结构。因此，我们的压缩模型更好地保留了x的细节(见表8)。完整的目标和培训细节可以在补充中找到。
+为了避免任意高方差的潜在空间，我们尝试了两种不同的正则化。第一种变体KL-reg.对学习到的潜像施加了轻微的KL惩罚，类似于VAE[46，69]，而VQ-reg。使用解码器内的矢量量化层[96]。该模型可以解释为VQGAN[23]，但量化层被解码器吸收。因为我们的后续DM被设计为与我们学习的潜在空间z＝E(x)的二维结构一起工作，所以我们可以使用相对温和的压缩率并实现非常好的重建。这与之前的工作[23，66]形成对比，之前的工作依赖于学习空间z的任意1D排序来对其分布进行自回归建模，从而忽略了z的大部分固有结构。因此，我们的压缩模型更好地保留了x的细节(见表8)。完整的目标和训练细节可以在补充中找到。
 
 ### 3.2. Latent Diffusion Models 潜在扩散模型
 Diffusion Models [82] are probabilistic models designed to learn a data distribution p(x) by gradually denoising a normally distributed variable, which corresponds to learning the reverse process of a fixed Markov Chain of length T. For image synthesis, the most successful models [15,30,72] rely on a reweighted variant of the variational lower bound on p(x), which mirrors denoising score-matching [85]. These models can be interpreted as an equally weighted sequence of denoising autoencoders $e_θ(xt, t)$; t = 1 . . . T, which are trained to predict a denoised variant of their input $x_t$, where $x_t$ is a noisy version of the input x. The corresponding objective can be simplified to (Sec. B) 
@@ -274,7 +274,7 @@ Table 6. Assessing inpainting efficiency. † : Deviations from Fig. 7 due to va
 ### 4.5. Inpainting with Latent Diffusion 使用潜在扩散修复
 Inpainting is the task of filling masked regions of an image with new content either because parts of the image are are corrupted or to replace existing but undesired content within the image. We evaluate how our general approach for conditional image generation compares to more specialized, state-of-the-art approaches for this task. Our evaluation follows the protocol of LaMa [88], a recent inpainting model that introduces a specialized architecture relying on Fast Fourier Convolutions [8]. The exact training & evaluation protocol on Places [108] is described in Sec. E.2.2.
 
-修复是用新内容填充图像的蒙版区域的任务，因为图像的部分已损坏，或者替换图像中现有但不需要的内容。我们评估了我们用于条件图像生成的一般方法与用于此任务的更专业、最先进的方法的比较。我们的评估遵循LaMa[88]的协议，这是一种最近的修复模型，它引入了一种基于快速傅里叶卷积的专门架构[8]。第E.2.2节描述了场所[108]的准确培训和评估方案。
+修复是用新内容填充图像的蒙版区域的任务，因为图像的部分已损坏，或者替换图像中现有但不需要的内容。我们评估了我们用于条件图像生成的一般方法与用于此任务的更专业、最先进的方法的比较。我们的评估遵循LaMa[88]的协议，这是一种最近的修复模型，它引入了一种基于快速傅里叶卷积的专门架构[8]。第E.2.2节描述了场所[108]的准确训练和评估方案。
 
 We first analyze the effect of different design choices for the first stage. In particular, we compare the inpainting ef- ficiency of LDM-1 (i.e. a pixel-based conditional DM) with LDM-4, for both KL and VQ regularizations, as well as VQLDM-4 without any attention in the first stage (see Tab. 8), where the latter reduces GPU memory for decoding at high resolutions. For comparability, we fix the number of parameters for all models. Tab. 6 reports the training and sampling throughput at resolution 2562 and 5122 , the total training time in hours per epoch and the FID score on the validation split after six epochs. Overall, we observe a speed-up of at least 2.7× between pixel- and latent-based diffusion models while improving FID scores by a factor of at least 1.6×.
 
@@ -298,7 +298,7 @@ Limitations While LDMs significantly reduce computational requirements compared 
 
 Societal Impact Generative models for media like imagery are a double-edged sword: On the one hand, they enable various creative applications, and in particular approaches like ours that reduce the cost of training and inference have the potential to facilitate access to this technology and democratize its exploration. On the other hand, it also means that it becomes easier to create and disseminate manipulated data or spread misinformation and spam. In particular, the deliberate manipulation of images (“deep fakes”) is a common problem in this context, and women in particular are disproportionately affected by it [13, 24].
 
-社会影响-媒体图像的生成模型是一把双刃剑：一方面，它们支持各种创造性应用，特别是像我们这样降低培训和推理成本的方法，有可能促进获取这项技术并使其探索民主化。另一方面，这也意味着创建和传播被操纵的数据或传播错误信息和垃圾邮件变得更加容易。特别是，故意操纵图像(“深度假货”)是这方面的一个常见问题，尤其是女性受其影响更大[13，24]。
+社会影响-媒体图像的生成模型是一把双刃剑：一方面，它们支持各种创造性应用，特别是像我们这样降低训练和推理成本的方法，有可能促进获取这项技术并使其探索民主化。另一方面，这也意味着创建和传播被操纵的数据或传播错误信息和垃圾邮件变得更加容易。特别是，故意操纵图像(“深度假货”)是这方面的一个常见问题，尤其是女性受其影响更大[13，24]。
 
 Table 7. Comparison of inpainting performance on 30k crops of size 512 × 512 from test images of Places [108]. The column 40- 50% reports metrics computed over hard examples where 40-50% of the image region have to be inpainted. † recomputed on our test set, since the original test set used in [88] was not available. 
 表7.从地点[108]的测试图像中对比了30k株大小为512×512的作物的修补性能。40-50%列报告了在硬样本中计算的度量，其中40-50%的图像区域必须修复。†由于[88]中使用的原始测试集不可用，因此在我们的测试集上重新计算。
@@ -547,7 +547,7 @@ Figure 16. More samples from our best model for layout-to-image synthesis, LDM-4
 图16.从布局到图像合成的最佳模型LDM-4的更多样本，该模型在OpenImages数据集上进行了训练，并在COCO数据集上得到了微调。使用100个DDIM步骤和η=0生成的样本。布局来自COCO验证集。
 
 Table 9. Quantitative comparison of our layout-to-image models on the COCO [4] and OpenImages [49] datasets. † : Training from scratch on COCO; ∗ : Finetuning from OpenImages.
-表9.我们的布局与COCO[4]和OpenImages[49]数据集上的图像模型的定量比较†：从头开始COCO培训; ∗ : 从OpenImages进行微调。
+表9.我们的布局与COCO[4]和OpenImages[49]数据集上的图像模型的定量比较†：从头开始COCO训练; ∗ : 从OpenImages进行微调。
 
 Table 10. Comparison of a class-conditional ImageNet LDM with recent state-of-the-art methods for class-conditional image generation on the ImageNet [12] dataset.∗ : Classifier rejection sampling with the given rejection rate as proposed in [67].
 表10.类条件ImageNet LDM与ImageNet[12]数据集上类条件图像生成的最新技术方法的比较。∗ : 分类器拒绝采样，具有[67]中提出的给定拒绝率。
@@ -558,7 +558,7 @@ Figure 17. For completeness we also report the training progress of class-condit
 
 For the assessment of sample quality over the training progress in Sec. 4.1, we reported FID and IS scores as a function of train steps. Another possibility is to report these metrics over the used resources in V100 days. Such an analysis is additionally provided in Fig. 17, showing qualitatively similar results. 
 
-为了评估第4.1节中培训过程中的样本质量，我们报告了FID和IS分数作为培训步骤的函数。另一种可能是在V100天内报告这些指标。图17中还提供了这种分析，显示了定性相似的结果。
+为了评估第4.1节中训练过程中的样本质量，我们报告了FID和IS分数作为训练步骤的函数。另一种可能是在V100天内报告这些指标。图17中还提供了这种分析，显示了定性相似的结果。
 
 Table 11. ×4 upscaling results on ImageNet-Val. (2562 ); † : FID features computed on validation split, ‡ : FID features computed on train split. We also include a pixel-space baseline that receives the same amount of compute as LDM-4. The last two rows received 15 epochs of additional training compared to the former results.
 表11.×4 ImageNet-Val.的放大结果。(2562 ); † : 验证拆分时计算的FID特征，‡：列车拆分时计算出的FID特征。我们还包括一个像素空间基线，它接收的计算量与LDM-4相同。与前一个结果相比，最后两行接受了15个时期的额外训练。
@@ -596,7 +596,7 @@ Table 13. Hyperparameters for the conditional LDMs trained on the ImageNet datas
 ##### E.2.1 Implementations of τθ for conditional LDMs
 For the experiments on text-to-image and layout-to-image (Sec. 4.3.1) synthesis, we implement the conditioner τθ as an unmasked transformer which processes a tokenized version of the input y and produces an output ζ := τθ(y), where ζ ∈ RM×dτ . More specifically, the transformer is implemented from N transformer blocks consisting of global self-attention layers, layer-normalization and position-wise MLPs as follows2: 2 adapted from https://github.com/lucidrains/x-transformers 
 
-对于文本到图像和布局到图像(第4.3.1节)合成的实验，我们将调节器τθ实现为无掩模转换器，它处理输入y的标记化版本，并产生输出ζ：=τθ(y)，其中ζ∈ RM×dτ。更具体地说，变换器由N个变换器块实现，该变换器块由全局自关注层、层规范化和按位置MLP组成，如下所示：2https://github.com/lucidrains/x-transformers
+对于文本到图像和布局到图像(第4.3.1节)合成的实验，我们将调节器τθ实现为无掩模转换器，它处理输入y的标记化版本，并产生输出ζ：=τθ(y)，其中ζ∈ RM×dτ。更具体地说，变换器由N个变换器块实现，该变换器块由全局自关注层、层归一化和按位置MLP组成，如下所示：2https://github.com/lucidrains/x-transformers
 
 Table 14. Hyperparameters for the unconditional LDMs trained on the CelebA dataset for the analysis in Fig. 7. All models trained on a single NVIDIA A100. ∗ : All models are trained for 500k iterations. If converging earlier, we used the best checkpoint for assessing the provided FID scores.
 表14.在CelebA数据集上训练的用于图7中分析的无条件LDM的超参数。在单个NVIDIA A100上训练的所有模型。∗ : 所有模型都经过500k次迭代的训练。如果提前收敛，我们使用最佳检查点来评估提供的FID分数。
@@ -676,7 +676,7 @@ For the results of the user study presented in Tab. 4 we followed the protocoll 
 ### F. Computational Requirements 计算要求
 Table 18. Comparing compute requirements during training and inference throughput with state-of-the-art generative models. Compute during training in V100-days, numbers of competing methods taken from [15] unless stated differently;∗ : Throughput measured in samples/sec on a single NVIDIA A100;† : Numbers taken from [15] ;‡ : Assumed to be trained on 25M train examples; ††: R-FID vs. ImageNet validation set
 
-表18.将训练期间的计算需求和推理吞吐量与最先进的生成模型进行比较。在V100天的培训期间，计算[15]中的竞争方法数量，除非另有说明; ∗ : 单个NVIDIA A100上以样本/秒为单位测量的吞吐量; †：数字取自[15]; ‡：假设接受25M列车样本培训; ††：R-FID与ImageNet验证集
+表18.将训练期间的计算需求和推理吞吐量与最先进的生成模型进行比较。在V100天的训练期间，计算[15]中的竞争方法数量，除非另有说明; ∗ : 单个NVIDIA A100上以样本/秒为单位测量的吞吐量; †：数字取自[15]; ‡：假设接受25M列车样本训练; ††：R-FID与ImageNet验证集
 
 In Tab 18 we provide a more detailed analysis on our used compute ressources and compare our best performing models on the CelebA-HQ, FFHQ, LSUN and ImageNet datasets with the recent state of the art models by using their provided numbers, cf . [15]. As they report their used compute in V100 days and we train all our models on a single NVIDIA A100 GPU, we convert the A100 days to V100 days by assuming a ×2.2 speedup of A100 vs V100 [74]4 . To assess sample quality, we additionally report FID scores on the reported datasets. We closely reach the performance of state of the art methods as StyleGAN2 [42] and ADM [15] while significantly reducing the required compute resources. 4This factor corresponds to the speedup of the A100 over the V100 for a U-Net, as defined in Fig. 1 in [74] 28
 
@@ -695,7 +695,7 @@ LAutoencoder = min E,D max ψ  Lrec(x, D(E(x))) − Ladv(D(E(x))) + log Dψ(x) 
 
 DM Training in Latent Space. Note that for training diffusion models on the learned latent space, we again distinguish two cases when learning p(z) or p(z|y) (Sec. 4.3): (i) For a KL-regularized latent space, we sample z = Eµ(x)+Eσ(x)·ε =: E(x), where ε ∼ N (0, 1). When rescaling the latent, we estimate the component-wise variance 
 
-潜在空间中的DM培训。注意，对于学习的潜在空间上的训练扩散模型，我们再次区分了学习p(z)或p(z|y)时的两种情况(第4.3节)：(i)对于KL正则化的潜在空间，我们采样z=Eµ(x)+Eσ(x)·ε=：E(x)，其中ε∼ N(0，1)。当重新缩放潜在值时，我们估计分量方差
+潜在空间中的DM训练。注意，对于学习的潜在空间上的训练扩散模型，我们再次区分了学习p(z)或p(z|y)时的两种情况(第4.3节)：(i)对于KL正则化的潜在空间，我们采样z=Eµ(x)+Eσ(x)·ε=：E(x)，其中ε∼ N(0，1)。当重新缩放潜在值时，我们估计分量方差
 
 σˆ2 = 1 bchw X b,c,h,w (z b,c,h,w − µˆ)2 
 

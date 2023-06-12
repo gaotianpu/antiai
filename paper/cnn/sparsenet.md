@@ -32,7 +32,7 @@ Besides increasing depth or width, increasing number of shortcut connections is 
 2. Shortcut connections can take advantage of multi-scale feature maps, which can improve performances on various computer vision tasks[11][3][12][13].
 
 除了增加深度或宽度之外，增加快捷连接的数量也是提高网络性能的另一种有效方法。它可以从两个方面获得网络性能。
-1. 它缩短了输入和输出之间的距离，从而缓解了具有更短前向流的消失梯度问题。公路网[10]和ResNet[6]提出了不同的快捷连接方式，这两种方式都使培训变得更容易。
+1. 它缩短了输入和输出之间的距离，从而缓解了具有更短前向流的消失梯度问题。公路网[10]和ResNet[6]提出了不同的快捷连接方式，这两种方式都使训练变得更容易。
 2. 快捷连接可以利用多尺度特征图，这可以提高各种计算机视觉任务的性能[11][3][12][13]。
 
 Huang[14]takes this idea to the extreme. He proposed DenseNet, for the l th layer of which, it takes all previous (l − 1) layers as its input(connections of this layer is O(l)). By this kind of network structure design, it not only alleviates vanishing-gradient problem, but also achieves better feature reuse. DenseNet achieves superior performance on datasets of CIFAR-10,CIFAR-100 and SVHN. However, it has its own disadvantages. There are total L(L − 1) 2 connections for a L-layer DenseNet. The excessive connections not only decrease networks’ computation-efficiency and parameter-efficiency, but also make networks more prone to overfitting. As we can see from upper of Fig.1, When I modify connections of a 40-layer DenseNet, the test error rates on CIFAR10 first decrease and then increase as connection is increasing. When the connections is 22, the error rate reaches the lowest, 5.11%. However, as we can see from bottom of Fig.1, error rates on the training datasets is decreasing as connections is increasing.

@@ -137,7 +137,7 @@ Here, i is the index of an anchor in a mini-batch and pi is the predicted probab
 
 The two terms are normalized by Ncls and Nreg and weighted by a balancing parameter λ. In our current implementation (as in the released code), the cls term in Eqn.(1) is normalized by the mini-batch size (i.e., Ncls = 256) and the reg term is normalized by the number of anchor locations (i.e., Nreg ∼ 2, 400). By default we set λ = 10, and thus both cls and reg terms are roughly equally weighted. We show by experiments that the results are insensitive to the values of λ in a wide range (Table 9). We also note that the normalization as above is not required and could be simplified.
 
-这两项由Ncls和Nreg归一化，并由平衡参数λ加权。在我们当前的实现中(如在发布的代码中)。(1) 通过小批量大小(即Ncls＝256)归一化，并且通过锚位置的数量(即Nreg)归一化reg项∼ 2, 400). 默认情况下，我们将λ设置为10，因此cls和reg项的权重大致相等。我们通过实验表明，结果在宽范围内对λ值不敏感(表9)。我们还注意到，上述规范化不是必需的，可以简化。
+这两项由Ncls和Nreg归一化，并由平衡参数λ加权。在我们当前的实现中(如在发布的代码中)。(1) 通过小批量大小(即Ncls＝256)归一化，并且通过锚位置的数量(即Nreg)归一化reg项∼ 2, 400). 默认情况下，我们将λ设置为10，因此cls和reg项的权重大致相等。我们通过实验表明，结果在宽范围内对λ值不敏感(表9)。我们还注意到，上述归一化不是必需的，可以简化。
 
 For bounding box regression, we adopt the parameterizations of the 4 coordinates following [5]: 
 
@@ -175,7 +175,7 @@ Table 1: the learned average proposal size for each anchor using the ZF net (num
 
 Both RPN and Fast R-CNN, trained independently, will modify their convolutional layers in different ways. We therefore need to develop a technique that allows for sharing convolutional layers between the two networks, rather than learning two separate networks. We discuss three ways for training networks with features shared: 
 
-独立训练的RPN和Fast R-CNN都将以不同的方式修改其卷积层。因此，我们需要开发一种技术，允许在两个网络之间共享卷积层，而不是学习两个独立的网络。我们讨论了三种具有共享功能的培训网络方式：
+独立训练的RPN和Fast R-CNN都将以不同的方式修改其卷积层。因此，我们需要开发一种技术，允许在两个网络之间共享卷积层，而不是学习两个独立的网络。我们讨论了三种具有共享功能的训练网络方式：
 
 (i) Alternating training. In this solution, we first train RPN, and use the proposals to train Fast R-CNN. The network tuned by Fast R-CNN is then used to initialize RPN, and this process is iterated. This is the solution that is used in all experiments in this paper. 
 

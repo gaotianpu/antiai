@@ -57,8 +57,8 @@ Dashed lines suggest that different tasks can be connected by sharing parameters
 
 表1:NLP中的四种范式。“工程”栏表示构建强大系统所需的工程类型。“任务关系”列显示语言模型(LM)与其他NLP任务(CLS:分类，TAG:序列标记，GEN：文本生成)之间的关系。
 * 完全无监督训练
-* 全监督培训
-* 监督培训与无监督培训相结合
+* 全监督训练
+* 监督训练与无监督训练相结合
 * 表示文本提示
 虚线表明，可以通过共享预训练模型的参数来连接不同的任务。“”LM“→任务”表示使LMs(目标)适应下游任务，而“任务”→LM”表示使下游任务(配方)适应LM。
 
@@ -270,7 +270,7 @@ Example & Applicable Scenario.
 Representative pre-trained models using MLMs include: BERT (Devlin et al., 2019), ERNIE (Zhang et al., 2019; Sun et al., 2019b) and many variants. In prompting methods, MLMs are generally most suitable for natural language understanding or analysis tasks (e.g., text classification, natural language inference , and extractive question answering). These tasks are often relatively easy to be reformulated into cloze problems, which are consistent with the training objectives of the MLM. Additionally, MLMs have been a pre-trained model of choice when exploring methods that combine prompting with fine-tuning, elaborated further in §7.
 
 样本和适用场景. 
-使用MLM的代表性预训练模型包括：BERT(Devlinet al., 2019)、ERNIE(Zhanget al., 2019; Sunet al., 2019b)和许多变体。在提示方法中，MLM通常最适合自然语言理解或分析任务(例如，文本分类、自然语言推理和提取式问题回答)。这些任务通常相对容易重新表述为完形填空问题，这与MLM的培训目标一致。此外，在探索将提示与微调相结合的方法时，MLM是一个预先训练的选择模型，在§7中进一步阐述。
+使用MLM的代表性预训练模型包括：BERT(Devlinet al., 2019)、ERNIE(Zhanget al., 2019; Sunet al., 2019b)和许多变体。在提示方法中，MLM通常最适合自然语言理解或分析任务(例如，文本分类、自然语言推理和提取式问题回答)。这些任务通常相对容易重新表述为完形填空问题，这与MLM的训练目标一致。此外，在探索将提示与微调相结合的方法时，MLM是一个预先训练的选择模型，在§7中进一步阐述。
 
 #### 3.4.3 Prefix and Encoder-Decoder 前缀和编码器-解码器
 For conditional text generation tasks such as translation and summarization where an input text x = x1, · · · , xn is given and the goal is to generate target text y, we need a pre-trained model that is both capable of encoding the input text and generating the output text. There are two popular architectures for this purpose that share a common 10 thread of (1) using an encoder with fully-connected mask to encode the source x first and then (2) decode the target y auto-regressively (from the left to right).

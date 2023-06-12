@@ -172,7 +172,7 @@ The specific fine-tuning procedure for entity typing is a simplified version of 
 ## 4 Experiments
 In this section, we present the details of pretraining ERNIE and the fine-tuning results on five NLP datasets, which contain both knowledgedriven tasks and the common NLP tasks.
 
-在本节中，我们将详细介绍ERNIE的预培训以及五个NLP数据集的微调结果，这些数据集包含知识驱动任务和常见NLP任务。
+在本节中，我们将详细介绍ERNIE的预训练以及五个NLP数据集的微调结果，这些数据集包含知识驱动任务和常见NLP任务。
 
 ### 4.1 Pre-training Dataset
 The pre-training procedure primarily acts in accordance with the existing literature on pre-training language models. For the large cost of training ERNIE from scratch, we adopt the parameters of BERT released by Google3 to initialize the Transformer blocks for encoding tokens. Since pre-training is a multi-task procedure consisting of NSP, MLM, and dEA, we use English Wikipedia as our pre-training corpus and align text to Wikidata. After converting the corpus into the formatted data for pre-training, the annotated input has nearly 4, 500M subwords and 140M entities, and discards the sentences having less than 3 entities.

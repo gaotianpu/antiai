@@ -196,8 +196,8 @@ Settings For image classification, we benchmark the proposed Swin Transformer on
 * Regular ImageNet-1K training. This setting mostly follows [63]. We employ an AdamW [37] optimizer for 300 epochs using a cosine decay learning rate scheduler and 20 epochs of linear warm-up. A batch size of 1024, an initial learning rate of 0.001, and a 5 ... weight decay of 0.05 are used. We include most of the augmentation and regularization strategies of [63] in training, except for repeated augmentation [31] and EMA [45], which do not enhance performance. Note that this is contrary to [63] where repeated augmentation is crucial to stabilize the training of ViT.
 * Pre-training on ImageNet-22K and fine-tuning on ImageNet-1K. We also pre-train on the larger ImageNet-22K dataset, which contains 14.2 million images and 22K classes. We employ an AdamW optimizer for 90 epochs using a linear decay learning rate scheduler with a 5-epoch linear warm-up. A batch size of 4096, an initial learning rate of 0.001, and a weight decay of 0.01 are used. In ImageNet-1K fine-tuning, we train the models for 30 epochs with a batch size of 1024, a constant learning rate of 10−5 , and a weight decay of 10−8.
 
-设置对于图像分类，我们在ImageNet-1K[19]上对所提出的Swin Transformer进行了基准测试，其中包含来自1000个类的1.28M个训练图像和50K个验证图像。报道了单作物的最高精度。我们考虑两种培训设置：
-* 定期ImageNet-1K培训。该设置主要遵循[63]。我们使用AdamW[37]优化器，使用余弦衰减学习速率调度器和20个时间段的线性预热，对300个时间段进行优化。使用1024的批量大小、0.001的初始学习率和0.05的5…权重衰减。我们在训练中包括了[63]的大部分增强和正则化策略，但重复增强[31]和EMA[45]除外，它们不会提高性能。注意，这与[63]相反，其中重复增强对于稳定ViT的训练至关重要。
+设置对于图像分类，我们在ImageNet-1K[19]上对所提出的Swin Transformer进行了基准测试，其中包含来自1000个类的1.28M个训练图像和50K个验证图像。报道了单作物的最高精度。我们考虑两种训练设置：
+* 定期ImageNet-1K训练。该设置主要遵循[63]。我们使用AdamW[37]优化器，使用余弦衰减学习速率调度器和20个时间段的线性预热，对300个时间段进行优化。使用1024的批量大小、0.001的初始学习率和0.05的5…权重衰减。我们在训练中包括了[63]的大部分增强和正则化策略，但重复增强[31]和EMA[45]除外，它们不会提高性能。注意，这与[63]相反，其中重复增强对于稳定ViT的训练至关重要。
 * ImageNet-22K上的预训练和ImageNet-1K上的微调。我们还对较大的ImageNet-22K数据集进行了预训练，该数据集包含1420万张图像和22K个类。我们使用具有5个周期线性预热的线性衰减学习速率调度器，使用90个周期的AdamW优化器。批量大小为4096，初始学习率为0.001，权重衰减为0.01。在ImageNet-1K微调中，我们训练了30个时期的模型，批量大小为1024，恒定学习率为10−5，重量衰减10−8.
 
 Results with regular ImageNet-1K training Table 1(a) presents comparisons to other backbones, including both Transformer-based and ConvNet-based, using regular ImageNet-1K training.
@@ -214,7 +214,7 @@ Compared with the state-of-the-art ConvNets, i.e. RegNet [48] and EfficientNet [
 
 Results with ImageNet-22K pre-training We also pretrain the larger-capacity Swin-B and Swin-L on ImageNet- 22K. Results fine-tuned on ImageNet-1K image classification are shown in Table 1(b). For Swin-B, the ImageNet- 22K pre-training brings 1.8%∼1.9% gains over training on ImageNet-1K from scratch. Compared with the previous best results for ImageNet-22K pre-training, our models achieve significantly better speed-accuracy trade-offs: Swin-B obtains 86.4% top-1 accuracy, which is 2.4% higher than that of ViT with similar inference throughput (84.7 vs. 85.9 images/sec) and slightly lower FLOPs (47.0G vs. 55.4G). The larger Swin-L model achieves 87.3% top-1 accuracy, +0.9% better than that of the Swin-B model.
 
-使用ImageNet-22K预训练的结果我们还在ImageNet-22K上预训练更大容量的Swin-B和Swin-L。对ImageNet-1K图像分类进行微调的结果如表1(b)所示。对于Swin-B，ImageNet-22K预训练带来1.8%∼与从头开始的ImageNet-1K培训相比，增长1.9%。与之前ImageNet-22K预训练的最佳结果相比，我们的模型实现了明显更好的速度-精度权衡：Swin-B获得了86.4%的前1精度，比ViT高2.4%，具有相似的推理吞吐量(84.7 vs.85.9图像/秒)和略低的FLOP(47.0G vs.55.4G)。更大的Swin-L模型实现了87.3%的前1精度，比Swin-B模型好+0.9%。
+使用ImageNet-22K预训练的结果我们还在ImageNet-22K上预训练更大容量的Swin-B和Swin-L。对ImageNet-1K图像分类进行微调的结果如表1(b)所示。对于Swin-B，ImageNet-22K预训练带来1.8%∼与从头开始的ImageNet-1K训练相比，增长1.9%。与之前ImageNet-22K预训练的最佳结果相比，我们的模型实现了明显更好的速度-精度权衡：Swin-B获得了86.4%的前1精度，比ViT高2.4%，具有相似的推理吞吐量(84.7 vs.85.9图像/秒)和略低的FLOP(47.0G vs.55.4G)。更大的Swin-L模型实现了87.3%的前1精度，比Swin-B模型好+0.9%。
 
 Table 1. Comparison of different backbones on ImageNet-1K classification. Throughput is measured using the GitHub repository of [68] and a V100 GPU, following [63].
 表1.ImageNet-1K分类中不同主干的比较。使用[68]的GitHub存储库和V100 GPU测量吞吐量，接着[63]。
@@ -330,7 +330,7 @@ The image classification is performed by applying a global average pooling layer
 
 Regular ImageNet-1K training. The training settings mostly follow [63]. For all model variants, we adopt a default input image resolution of 2242 . For other resolutions such as 3842 , we fine-tune the models trained at 2242 resolution, instead of training from scratch, to reduce GPU consumption.
 
-定期ImageNet-1K培训。培训设置主要遵循[63]。对于所有模型变体，我们采用默认输入图像分辨率2242。对于其他分辨率(如3842)，我们微调以2242分辨率训练的模型，而不是从头开始训练，以减少GPU消耗。
+定期ImageNet-1K训练。训练设置主要遵循[63]。对于所有模型变体，我们采用默认输入图像分辨率2242。对于其他分辨率(如3842)，我们微调以2242分辨率训练的模型，而不是从头开始训练，以减少GPU消耗。
 
 When training from scratch with a 2242 input, we employ an AdamW [37] optimizer for 300 epochs using a cosine decay learning rate scheduler with 20 epochs of linear warm-up. A batch size of 1024, an initial learning rate of 0.001, a weight decay of 0.05, and gradient clipping with a max norm of 1 are used. We include most of the augmentation and regularization strategies of [63] in training, including RandAugment [17], Mixup [77], Cutmix [75], random erasing [82] and stochastic depth [35], but not repeated augmentation [31] and Exponential Moving Average (EMA) [45] which do not enhance performance. Note that this is contrary to [63] where repeated augmentation is crucial to stabilize the training of ViT. An increasing degree of stochastic depth augmentation is employed for larger models, i.e. 0.2, 0.3, 0.5 for Swin-T, Swin-S, and Swin-B, respectively.
 
@@ -342,7 +342,7 @@ For fine-tuning on input with larger resolution, we employ an adamW [37] optimiz
 
 ImageNet-22K pre-training. We also pre-train on the larger ImageNet-22K dataset, which contains 14.2 million images and 22K classes. The training is done in two stages. For the first stage with 2242 input, we employ an AdamW optimizer for 90 epochs using a linear decay learning rate scheduler with a 5-epoch linear warm-up. A batch size of 4096, an initial learning rate of 0.001, and a weight decay of 0.01 are used. In the second stage of ImageNet-1K finetuning with 2242 /3842 input, we train the models for 30 epochs with a batch size of 1024, a constant learning rate of 10−5 , and a weight decay of 10−8.
 
-ImageNet-22K预训练。我们还对较大的ImageNet-22K数据集进行了预训练，该数据集包含1420万张图像和22K个类。培训分两个阶段进行。对于具有2242个输入的第一阶段，我们使用具有5个时期线性预热的线性衰减学习速率调度器，使用90个时期的AdamW优化器。批量大小为4096，初始学习率为0.001，权重衰减为0.01。在使用2242/3842输入的ImageNet-1K微调的第二阶段中，我们训练了30个时期的模型，批量大小为1024，恒定学习率为10−5，重量衰减10−8.
+ImageNet-22K预训练。我们还对较大的ImageNet-22K数据集进行了预训练，该数据集包含1420万张图像和22K个类。训练分两个阶段进行。对于具有2242个输入的第一阶段，我们使用具有5个时期线性预热的线性衰减学习速率调度器，使用90个时期的AdamW优化器。批量大小为4096，初始学习率为0.001，权重衰减为0.01。在使用2242/3842输入的ImageNet-1K微调的第二阶段中，我们训练了30个时期的模型，批量大小为1024，恒定学习率为10−5，重量衰减10−8.
 
 ### A2.2. Object detection on COCO
 For an ablation study, we consider four typical object detection frameworks: Cascade Mask R-CNN [29, 6], ATSS [79], RepPoints v2 [12], and Sparse RCNN [56] in mmdetection [10]. For these four frameworks, we utilize the same settings: multi-scale training [8, 56] (resizing the input such that the shorter side is between 480 and 800 while the longer side is at most 1333), AdamW [44] optimizer (initial learning rate of 0.0001, weight decay of 0.05, and batch size of 16), and 3x schedule (36 epochs with the learning rate decayed by 10× at epochs 27 and 33).

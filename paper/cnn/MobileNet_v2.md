@@ -403,7 +403,7 @@ where Σn = {(s1, . . . , sm)| P k θ(sk) ≥ n}, θ is a step function and Vσ(
 ![Figure 7](../images/MobileNet_v2/fig_7.png)<br/>
 Figure 7: Distribution of activation patterns. The x-axis is the layer index, and we show minimum/maximum/average number of positive channels after each convolution with ReLU. y-axis is either absolute or relative number of channels. The “threshold” line indicates the ReLU invertibility threshold - that is the number of positive dimensions is higher than the input space. In our case this is 1/6 fraction of the channels. Note how at the beginning of the training on Figure 7a the distribution is much more tightly concentrated around the mean. After the training has finished (Figure 7b), the average hasn’t changed but the standard deviation grew dramatically. Best viewed in color.
 
-图7：激活模式的分布。x轴是层索引，我们显示了每次与ReLU卷积后正通道的最小/最大/平均数量。y轴是通道的绝对数量或相对数量。“阈值”行表示ReLU可逆性阈值，即正维度的数量高于输入空间。在我们的例子中，这是通道的1/6。请注意，在图7a的培训开始时，分布更紧密地集中在平均值周围。训练结束后(图7b)，平均值没有变化，但标准差显著增加。最佳颜色。
+图7：激活模式的分布。x轴是层索引，我们显示了每次与ReLU卷积后正通道的最小/最大/平均数量。y轴是通道的绝对数量或相对数量。“阈值”行表示ReLU可逆性阈值，即正维度的数量高于输入空间。在我们的例子中，这是通道的1/6。请注意，在图7a的训练开始时，分布更紧密地集中在平均值周围。训练结束后(图7b)，平均值没有变化，但标准差显著增加。最佳颜色。
 
 Notice that for sufficiently large expansion layers with m>>n, the fraction of collapsed space Nm,n/2 m can be bounded by:
 注意，对于m>>n的足够大的膨胀层，塌陷空间Nm，n/2m的分数可以由以下公式限定：

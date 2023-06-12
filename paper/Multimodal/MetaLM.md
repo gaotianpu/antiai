@@ -365,7 +365,7 @@ Image Captioning. 我们在 MS COCO Caption (Chen et al., 2015)、NoCaps (Agrawa
 
 Visual Question Answering. Following (Tsimpoukelli et al., 2021), we evaluate the zero-shot performance on VQAv2 (Goyal et al., 2017) validation set and OK-VQA (Marino et al., 2019) test set. VQA score is calculated using normalization rules of the VQAv2 evaluation code(3 https://github.com/GT-Vision-Lab/VQA ). Different from classification over a predefined set of candidate answers, MetaLM predicts answers in an open-ended generation manner. We prompt MetaLM with the template“question: question text answer:” for all visual question answering experiments.
 
-视觉问答.  继(Tsimpoukelli et al., 2021) 之后，我们评估了 VQAv2 (Goyal et al., 2017) 验证集和 OK-VQA (Marino et al., 2019) 测试集的零样本性能。 VQA 分数是使用 VQAv2 评估代码的规范化规则计算的(3 https://github.com/GT-Vision-Lab/VQA)。 与对一组预定义的候选答案进行分类不同，MetaLM 以开放式生成方式预测答案。 对于所有视觉问答实验，我们使用模板“question: question text answer:”提示 MetaLM。
+视觉问答.  继(Tsimpoukelli et al., 2021) 之后，我们评估了 VQAv2 (Goyal et al., 2017) 验证集和 OK-VQA (Marino et al., 2019) 测试集的零样本性能。 VQA 分数是使用 VQAv2 评估代码的归一化规则计算的(3 https://github.com/GT-Vision-Lab/VQA)。 与对一组预定义的候选答案进行分类不同，MetaLM 以开放式生成方式预测答案。 对于所有视觉问答实验，我们使用模板“question: question text answer:”提示 MetaLM。
 
 
 #### 4.3.2 Results
@@ -408,7 +408,7 @@ We evaluate the capability of in-context learning (Brown et al., 2020) on visual
 #### 4.4.1 Evaluation Setup
 Following (Tsimpoukelli et al., 2021), we carry out few-shot experiments on the VQAv2 (Goyal et al., 2017) validation set and OK-VQA (Marino et al., 2019) test set. We randomly sample up to four full examples from the training set for each test instance. The predicted answers are evaluated against the ground-truth answers following the normalization rules from the VQAv2 evaluation code. We use an image resolution of 224x224 during inference.
 
-在 (Tsimpoukelli et al., 2021) 之后，我们在 VQAv2 (Goyal et al., 2017) 验证集和 OK-VQA (Marino et al., 2019) 测试集上进行了小样本实验。 我们从每个测试实例的训练集中随机抽取最多四个完整样本。 根据 VQAv2 评估代码中的规范化规则，根据真实答案评估预测答案。 我们在推理过程中使用 224x224 的图像分辨率。
+在 (Tsimpoukelli et al., 2021) 之后，我们在 VQAv2 (Goyal et al., 2017) 验证集和 OK-VQA (Marino et al., 2019) 测试集上进行了小样本实验。 我们从每个测试实例的训练集中随机抽取最多四个完整样本。 根据 VQAv2 评估代码中的归一化规则，根据真实答案评估预测答案。 我们在推理过程中使用 224x224 的图像分辨率。
 
 As shown in Figure 6(b), we put several examples before the test input and directly obtain the prediction from the universal task layer. Specifically, a full example is denoted as e = [i, q, a], where i, q, a denote image, question, and answer, respectively. Similarly, a test input t is denoted as t = [i, q]. For k-shot in-context learning, the whole input sequence is e1, ..., ek, t. Moreover, we use “Question: [question text] Answer:” as the prompt to instruct MetaLM. Then MetaLM uses greedy decoding to generate answers.
 

@@ -585,7 +585,7 @@ Benchmarks. A number of benchmarks for continual learning work quite well with s
 ### 5.8 Domain Adaptation and Domain Generalization
 Domain-shift refers to the statistics of data encountered in deployment being different from those used in training. Numerous domain adaptation and generalization algorithms have been studied to address this issue in supervised, unsupervised, and semi-supervised settings [58].
 
-域迁移是指部署中遇到的数据与培训中使用的数据不同的统计数据。已经研究了许多域自适应和泛化算法来解决监督、无监督和半监督设置中的这一问题[58]。
+域迁移是指部署中遇到的数据与训练中使用的数据不同的统计数据。已经研究了许多域自适应和泛化算法来解决监督、无监督和半监督设置中的这一问题[58]。
 
 Domain Generalization. Domain generalization aims to train models with increased robustness to train-test domain shift [261], often by exploiting a distribution over training domains. Using a validation domain that is shifted with respect to the training domain [262], different kinds of metaknowledge such as regularizers [95], losses [42], and noise augmentation [119] can be (meta) learned to maximize the robustness of the learned model to train-test domain-shift.
 

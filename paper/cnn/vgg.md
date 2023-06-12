@@ -25,7 +25,7 @@ As a result, we come up with significantly more accurate ConvNet architectures, 
 
 The rest of the paper is organised as follows. In Sect. 2, we describe our ConvNet configurations. The details of the image classification training and evaluation are then presented in Sect. 3, and the configurations are compared on the ILSVRC classification task in Sect. 4. Sect. 5 concludes the paper. For completeness, we also describe and assess our ILSVRC-2014 object localisation system in Appendix A, and discuss the generalisation of very deep features to other datasets in Appendix B. Finally, Appendix C contains the list of major paper revisions. 
 
-论文的其余部分组织如下。在Sect。2，我们描述我们的ConvNet配置。图像分类培训和评估的详情见第节。3节中的ILSVRC分类任务比较了这些配置。第4、5总结全文。为了完整性，我们还在附录A中描述和评估了ILSVRC-2014对象定位系统，并在附录B中讨论了对其他数据集的深度特征的概括。最后，附录C包含了主要文件修订清单。
+论文的其余部分组织如下。在Sect。2，我们描述我们的ConvNet配置。图像分类训练和评估的详情见第节。3节中的ILSVRC分类任务比较了这些配置。第4、5总结全文。为了完整性，我们还在附录A中描述和评估了ILSVRC-2014对象定位系统，并在附录B中讨论了对其他数据集的深度特征的概括。最后，附录C包含了主要文件修订清单。
 
 ## 2 CONVNET CONFIGURATIONS
 To measure the improvement brought by the increased ConvNet depth in a fair setting, all our ConvNet layer configurations are designed using the same principles, inspired by Ciresan et al. (2011); Krizhevsky et al. (2012). In this section, we first describe a generic layout of our ConvNet configurations (Sect. 2.1) and then detail the specific configurations used in the evaluation (Sect. 2.2). Our design choices are then discussed and compared to the prior art in Sect. 2.3.
@@ -43,7 +43,7 @@ A stack of convolutional layers (which has a different depth in different archit
 
 All hidden layers are equipped with the rectification (ReLU (Krizhevsky et al., 2012)) non-linearity. We note that none of our networks (except for one) contain Local Response Normalisation (LRN) normalisation (Krizhevsky et al., 2012): as will be shown in Sect. 4, such normalisation does not improve the performance on the ILSVRC dataset, but leads to increased memory consumption and computation time. Where applicable, the parameters for the LRN layer are those of (Krizhevsky et al., 2012).
 
-所有隐藏层都配备了校正(ReLU(Krizhevskyet al., 2012))非线性。我们注意到，我们的网络(除一个网络外)均不包含局部响应规范化(LRN)规范化(Krizhevskyet al., 2012年)：如第。4，这种归一化不会提高ILSVRC数据集的性能，但会增加内存消耗和计算时间。如适用，LRN层的参数为(Krizhevskyet al., 2012年)。
+所有隐藏层都配备了校正(ReLU(Krizhevskyet al., 2012))非线性。我们注意到，我们的网络(除一个网络外)均不包含局部响应归一化(LRN)归一化(Krizhevskyet al., 2012年)：如第。4，这种归一化不会提高ILSVRC数据集的性能，但会增加内存消耗和计算时间。如适用，LRN层的参数为(Krizhevskyet al., 2012年)。
 
 ### 2.2 CONFIGURATIONS
 The ConvNet configurations, evaluated in this paper, are outlined in Table 1, one per column. In the following we will refer to the nets by their names (A–E). All configurations follow the generic design presented in Sect. 2.1, and differ only in the depth: from 11 weight layers in the network A (8 conv. and 3 FC layers) to 19 weight layers in the network E (16 conv. and 3 FC layers). The width of conv. layers (the number of channels) is rather small, starting from 64 in the first layer and then increasing by a factor of 2 after each max-pooling layer, until it reaches 512.
@@ -115,7 +115,7 @@ Since the fully-convolutional network is applied over the whole image, there is 
 ### 3.3 IMPLEMENTATION DETAILS
 Our implementation is derived from the publicly available C++ Caffe toolbox (Jia, 2013) (branched out in December 2013), but contains a number of significant modifications, allowing us to perform training and evaluation on multiple GPUs installed in a single system, as well as train and evaluate on full-size (uncropped) images at multiple scales (as described above). Multi-GPU training exploits data parallelism, and is carried out by splitting each batch of training images into several GPU batches, processed in parallel on each GPU. After the GPU batch gradients are computed, they are averaged to obtain the gradient of the full batch. Gradient computation is synchronous across the GPUs, so the result is exactly the same as when training on a single GPU.
 
-我们的实现源于公开的C++Caffe工具箱(Jia，2013年)(2013年12月推出)，但包含了一些重要的修改，允许我们在单个系统中安装的多个GPU上执行培训和评估，以及在多个尺度上对全尺寸(未裁剪)图像进行培训和评估(如上所述)。多GPU训练利用数据并行性，通过将每批训练图像分割为若干GPU批次来执行，并在每个GPU上并行处理。计算GPU批次梯度后，将其平均以获得整个批次的梯度。梯度计算是跨GPU同步的，因此结果与在单个GPU上训练时完全相同。
+我们的实现源于公开的C++Caffe工具箱(Jia，2013年)(2013年12月推出)，但包含了一些重要的修改，允许我们在单个系统中安装的多个GPU上执行训练和评估，以及在多个尺度上对全尺寸(未裁剪)图像进行训练和评估(如上所述)。多GPU训练利用数据并行性，通过将每批训练图像分割为若干GPU批次来执行，并在每个GPU上并行处理。计算GPU批次梯度后，将其平均以获得整个批次的梯度。梯度计算是跨GPU同步的，因此结果与在单个GPU上训练时完全相同。
 
 While more sophisticated methods of speeding up ConvNet training have been recently proposed (Krizhevsky, 2014), which employ model and data parallelism for different layers of the net, we have found that our conceptually much simpler scheme already provides a speedup of 3.75 times on an off-the-shelf 4-GPU system, as compared to using a single GPU. On a system equipped with four NVIDIA Titan Black GPUs, training a single net took 2–3 weeks depending on the architecture. 
 
@@ -193,10 +193,10 @@ Table 6: Multiple ConvNet fusion results.
 
 As can be seen from Table 7, our very deep ConvNets significantly outperform the previous generation of models, which achieved the best results in the ILSVRC-2012 and ILSVRC-2013 competitions. Our result is also competitive with respect to the classification task winner (GoogLeNet with 6.7% error) and substantially outperforms the ILSVRC-2013 winning submission Clarifai, which achieved 11.2% with outside training data and 11.7% without it. This is remarkable, considering that our best result is achieved by combining just two models – significantly less than used in most ILSVRC submissions. In terms of the single-net performance, our architecture achieves the best result (7.0% test error), outperforming a single GoogLeNet by 0.9%. Notably, we did not depart from the classical ConvNet architecture of LeCun et al. (1989), but improved it by substantially increasing the depth.
 
-从表7可以看出，我们的深度ConvNets显著优于上一代模型，后者在ILSVRC-2012和ILSVRC-2003比赛中取得了最佳成绩。我们的结果在分类任务获胜者(GoogleLeNet，错误率为6.7%)方面也很有竞争力，并大大优于ILSVRC-2013获奖提交的Clarifai，后者在外部培训数据的情况下达到11.2%，没有外部培训数据时达到11.7%。考虑到我们的最佳结果是通过组合两个模型实现的，这一点值得注意——大大低于大多数ILSVRC提交文件中使用的模型。就单网性能而言，我们的架构实现了最佳结果(7.0%的测试误差)，比单个GoogleLeNet高0.9%。值得注意的是，我们没有偏离LeCunet al (1989)的经典ConvNet架构，而是通过大幅增加深度来改进它。
+从表7可以看出，我们的深度ConvNets显著优于上一代模型，后者在ILSVRC-2012和ILSVRC-2003比赛中取得了最佳成绩。我们的结果在分类任务获胜者(GoogleLeNet，错误率为6.7%)方面也很有竞争力，并大大优于ILSVRC-2013获奖提交的Clarifai，后者在外部训练数据的情况下达到11.2%，没有外部训练数据时达到11.7%。考虑到我们的最佳结果是通过组合两个模型实现的，这一点值得注意——大大低于大多数ILSVRC提交文件中使用的模型。就单网性能而言，我们的架构实现了最佳结果(7.0%的测试误差)，比单个GoogleLeNet高0.9%。值得注意的是，我们没有偏离LeCunet al (1989)的经典ConvNet架构，而是通过大幅增加深度来改进它。
 
 Table 7: Comparison with the state of the art in ILSVRC classification. Our method is denoted as “VGG”. Only the results obtained without outside training data are reported.
-表7：与ILSVRC分类的最新技术进行比较。我们的方法表示为“VGG”。只报告没有外部培训数据的结果。
+表7：与ILSVRC分类的最新技术进行比较。我们的方法表示为“VGG”。只报告没有外部训练数据的结果。
 
 ## 5 CONCLUSION
 In this work we evaluated very deep convolutional networks (up to 19 weight layers) for largescale image classification. It was demonstrated that the representation depth is beneficial for the classification accuracy, and that state-of-the-art performance on the ImageNet challenge dataset can be achieved using a conventional ConvNet architecture (LeCun et al., 1989; Krizhevsky et al., 2012) with substantially increased depth. In the appendix, we also show that our models generalise well to a wide range of tasks and datasets, matching or outperforming more complex recognition pipelines built around less deep image representations. Our results yet again confirm the importance of depth in visual representations.
@@ -279,7 +279,7 @@ Table 11: Comparison with the state of the art in image classification on VOC-20
 
 Image Classification on VOC-2007 and VOC-2012. We begin with the evaluation on the image classification task of PASCAL VOC-2007 and VOC-2012 benchmarks (Everingham et al., 2015). These datasets contain 10K and 22.5K images respectively, and each image is annotated with one or several labels, corresponding to 20 object categories. The VOC organisers provide a pre-defined split into training, validation, and test data (the test data for VOC-2012 is not publicly available; instead, an official evaluation server is provided). Recognition performance is measured using mean average precision (mAP) across classes.
 
-VOC-2007和VOC-2012的图像分类。我们首先对PASCAL VOC-2007与VOC-2012基准的图像分类任务进行评估(Everinghamet al., 2015)。这些数据集分别包含10K和22.5K图像，每个图像都用一个或多个标签标注，对应于20个对象类别。VOC组织者提供预先定义的培训、验证和测试数据(VOC-2012的测试数据不公开，而是提供官方评估服务器)。识别性能是使用跨类平均精度(mAP)来测量的。
+VOC-2007和VOC-2012的图像分类。我们首先对PASCAL VOC-2007与VOC-2012基准的图像分类任务进行评估(Everinghamet al., 2015)。这些数据集分别包含10K和22.5K图像，每个图像都用一个或多个标签标注，对应于20个对象类别。VOC组织者提供预先定义的训练、验证和测试数据(VOC-2012的测试数据不公开，而是提供官方评估服务器)。识别性能是使用跨类平均精度(mAP)来测量的。
 
 Notably, by examining the performance on the validation sets of VOC-2007 and VOC-2012, we found that aggregating image descriptors, computed at multiple scales, by averaging performs similarly to the aggregation by stacking. We hypothesize that this is due to the fact that in the VOC dataset the objects appear over a variety of scales, so there is no particular scale-specific semantics which a classifier could exploit. Since averaging has a benefit of not inflating the descriptor dimensionality, we were able to aggregated image descriptors over a wide range of scales: Q ∈ {256, 384, 512, 640, 768}. It is worth noting though that the improvement over a smaller range of {256, 384, 512} was rather marginal (0.3%).
 

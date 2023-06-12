@@ -445,7 +445,7 @@ Table 16. GRN component analysis. We report the fine-tuning performance after th
 ### D. Additional Experiments
 GRN component analysis. The proposed Global Relation Network (GRN) consists of three steps: global feature aggregation, feature normalization, and feature calibration. The main paper demonstrates that the combination of L2- norm based aggregation and divisive normalization works well in practice. Table 16 verifies the individual contribution of these components using ConvNeXt V2-Base as the encoder. When either component is dropped, performance significantly decreases, and the training becomes unstable if feature normalization is not preceded by global aggregation. This supports the idea that both operations work together to make GRN effective.
 
-GRN成分分析。提出的全局关系网络(GRN)由三个步骤组成：全局特征聚合、特征归一化和特征校准。主要论文证明了基于L2规范的聚合和分裂规范化的结合在实践中效果良好。表16使用ConvNeXt V2 Base作为编码器验证了这些组件的单独贡献。当任何一个组件被丢弃时，性能都会显著下降，如果在特征归一化之前没有进行全局聚合，那么训练就会变得不稳定。这支持这样一种观点，即两种操作共同工作以使GRN有效。
+GRN成分分析。提出的全局关系网络(GRN)由三个步骤组成：全局特征聚合、特征归一化和特征校准。主要论文证明了基于L2规范的聚合和分裂归一化的结合在实践中效果良好。表16使用ConvNeXt V2 Base作为编码器验证了这些组件的单独贡献。当任何一个组件被丢弃时，性能都会显著下降，如果在特征归一化之前没有进行全局聚合，那么训练就会变得不稳定。这支持这样一种观点，即两种操作共同工作以使GRN有效。
 
 ![Figure 8](../images/ConvNeXt_v2/fig_8.png)<br/>
 Figure 8. Masking ratio. We observe that a masking ratio of 0.6 provides the best result. The y-axis is ImageNet-1K accuracy (%). 

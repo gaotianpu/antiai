@@ -206,7 +206,7 @@ As has become standard, we use ImageNet[38] for all our classification experimen
 作为标准，我们使用ImageNet[38]进行所有分类实验，并将准确性与各种资源使用度量(如延迟和乘法加法(MAdds))进行比较。
 
 Table 1. Specification for MobileNetV3-Large. SE denotes whether there is a Squeeze-And-Excite in that block. NL denotes the type of nonlinearity used. Here, HS denotes h-swish and RE denotes ReLU. NBN denotes no batch normalization. s denotes stride.
-表1。MobileNetV3大型规范。SE表示该区块中是否存在挤压和兴奋。NL表示使用的非线性类型。这里，HS表示h-swish，RE表示ReLU。NBN表示无批次规范化。s表示步幅。
+表1。MobileNetV3大型规范。SE表示该区块中是否存在挤压和兴奋。NL表示使用的非线性类型。这里，HS表示h-swish，RE表示ReLU。NBN表示无批次归一化。s表示步幅。
 
 Table 2. Specification for MobileNetV3-Small. See table 1 for notation. 
 表2。MobileNetV3小型规范。符号见表1。

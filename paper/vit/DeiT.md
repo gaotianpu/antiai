@@ -100,7 +100,7 @@ Finally, Multi-head self-attention layer (MSA) is defined by considering h atten
 ### Transformer block for images. 
 To get a full transformer block as in [52], we add a Feed-Forward Network (FFN) on top of the MSA layer. This FFN is composed of two linear layers separated by a GeLu activation [23]. The first linear layer expands the dimension from D to 4D, and the second layer reduces the dimension from 4D back to D. Both MSA and FFN are operating as residual operators thank to skip-connections, and with a layer normalization [3].
 
-图像转换器块。为了获得[52]中的完整变换器块，我们在MSA层顶部添加了前馈网络(FFN)。该FFN由GeLu激活所分隔的两个线性层组成[23]。第一个线性层将维度从D扩展到4D，第二个层将维度由4D减小到D。由于跳过连接，MSA和FFN都作为残余算子运行，并且具有层规范化[3]。
+图像转换器块。为了获得[52]中的完整变换器块，我们在MSA层顶部添加了前馈网络(FFN)。该FFN由GeLu激活所分隔的两个线性层组成[23]。第一个线性层将维度从D扩展到4D，第二个层将维度由4D减小到D。由于跳过连接，MSA和FFN都作为残余算子运行，并且具有层归一化[3]。
 
 In order to get a transformer to process images, our work builds upon the ViT model [15]. It is a simple and elegant architecture that processes input images as if they were a sequence of input tokens. The fixed-size input RGB image is decomposed into a batch of N patches of a fixed size of 16 × 16 pixels (N = 14 × 14). Each patch is projected with a linear layer that conserves its overall dimension 3 × 16 × 16 = 768.
 
