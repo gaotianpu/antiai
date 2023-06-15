@@ -11,6 +11,9 @@ $f(X) = w_0*x_0 + w_1*x_1 + ... + w_n*x_n + b $
 
 因此，我们需要将向量不同维度的值区间统一起来，这种操作就叫做归一化。
 
+可显著减少训练时长。
+
+统一单位量, ICS(Internal Covariate Shift) 内部 协变量偏移 covariate shift ?
 
 ## 二、归一化函数
 ### 1. 最大最小归一化 (Min-Max Normalization)
@@ -55,13 +58,14 @@ https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html  #1D,2D,3D
     * local contrast normalization 局部对比归一
 ### 5. Instance Normalization(IN)
     * https://pytorch.org/docs/stable/generated/torch.nn.InstanceNorm2d.html #1D,2D,3D
-
+* [Weight normalization: A simple reparameterization to accelerate training of deep neural networks](https://arxiv.org/abs/1602.07868)
 * Switchable Normalization(SN)
-* Weight Normalization(WN)
 *  Cosine Norm
 
 RMSNorm, Zhang and Sennrich (2019)
 
 https://bbs.huaweicloud.com/blogs/187196
 
-统一单位量, ICS(Internal Covariate Shift) 内部协变量迁移 ?
+
+
+问：归一化是否能起到激活(非线性)函数的作用？ 归一化起到了缩放作用，向量空间分布的相对位置不会发生变化。 重新居中

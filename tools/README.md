@@ -25,3 +25,14 @@ cat cn_pdf.md | python trans_dict.py > cn_fixed_pdf.md
 https://github.com/jsvine/pdfplumber
 
 pdfplumber < /mnt/d/paper/vit_JPEG.2211.16421.pdf > pdf.csv
+
+
+
+
+
+```shell
+rsync -ruv --delete --exclude '/mnt/d/github/antiai/.git' /mnt/d/github/antiai/ /mnt/d/gitee/antiai-2/
+
+# 隐藏目录排除
+rsync -ruv --delete --exclude=".[!.]*" /mnt/d/github/antiai/ /mnt/d/gitee/antiai/
+```

@@ -1,5 +1,5 @@
 # Attention Is All You Need
-google 论文：https://arxiv.org/abs/1706.03762
+google 2017.6.12 https://arxiv.org/abs/1706.03762
 
 ## 阅读笔记
 1. 组件

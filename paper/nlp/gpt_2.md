@@ -1,5 +1,5 @@
 # Language Models are Unsupervised Multitask Learners
-语言模型是无监督多任务学习者  论文：https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+语言模型是无监督多任务学习者  2019.2.14 论文：https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
 
 ## 阅读笔记
 * 大模型预训练 + 零样本
