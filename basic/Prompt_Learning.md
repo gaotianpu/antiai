@@ -1,4 +1,5 @@
 # 提示学习 Prompt Learning
+如何使用chatGPT完成任务。
 
 https://www.bilibili.com/video/BV1s24y1F7eq/  吴恩达
 

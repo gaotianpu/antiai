@@ -1,4 +1,5 @@
 # 多模态
+理想的多模态应该能够像人类一样，
 
 ## 一些思考
 * 基于图片，将各种语言的概念对齐？
@@ -64,7 +65,8 @@
 ## 二、主要问题和改进
 1. 训练稳定性 
     * 2022.3.1 [DeepNet: Scaling Transformers to 1,000 Layers](./DeepNet.md) DeepNorm + 初始化方法
-    * 2022.10.12 [Foundation Transformers](./MAGNETO.md)  MAGNETO, 文本、视觉等transformer架构统一，重点改造LN;  
+    * 2022.10.12 [MAGNETO: Foundation Transformers](./MAGNETO.md)  文本、视觉等transformer架构统一，重点改造LN;  
+    * 2022.11.23 [TorchScale: Transformers at Scale](./TorchScale.md) 
 2. 输入长度外推 
     * 2022.12.20 [A Length-Extrapolatable Transformer](../nlp/XPOS.md) XPOS, 相对位置编码 + 推理阶段使用分块因果注意力。
     * 2021.8.27 [Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation](../nlp/Alibi.md) Alibi,结合xpos的论文，这个alibi更具有创新型
@@ -96,7 +98,7 @@
     * https://github.com/karpathy/minGPT
 3. BERT
     * https://github.com/codertimo/BERT-pytorch
-4. ViT,MAE,ViTDet 
+4. ViT,MAE,ViTDet
     * https://github.com/lucidrains/vit-pytorch, ViT,MAE等实现
     * https://github.com/facebookresearch/mae 官方实现
     * ViTDet 

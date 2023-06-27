@@ -4,7 +4,7 @@ DeepNet：将Transformers扩展到1000层 2022.3.1 https://arxiv.org/abs/2203.00
 ## 阅读笔记
 * 训练不稳定的原因：
 * DeepNorm
-    * 在执行层归一化(LN)之前对残差连接进行了放大, 引入了放大常熟α，增加了个超参数，不好。后面Mageto论文多增加个LN的方式更好
+    * 在执行层归一化(LN)之前对残差连接进行了放大, 引入了放大常数α，增加了个超参数，不好。后面Mageto论文多增加个LN的方式更好
     * stabilize the optimization with a constant upper bound
 * 初始化方法 
     * Xavier 初始化 (Glorot and Bengio, 2010)

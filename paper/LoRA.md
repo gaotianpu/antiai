@@ -2,6 +2,8 @@
 LORA：大型语言模型的低秩适配 2021.6.17 https://arxiv.org/abs/2106.09685
 
 ## 阅读笔记
+* 前提：预训练时，只有少部分参数调整幅度较大，其他大部分几乎无变化。
+* 方法：1.分离原始参数和预训练要调整的参数,训练时冻结原始参数，只变更预训练参数；2.预训练调整部分因假设稀疏，可以改造为2个小矩阵AB乘积的形式：A：原始大小*r，B：r*原始大小
 * 优化适配过程中密集层变化的秩分解矩阵来间接训练神经网络中的一些密集层
 * 部署时将可训练矩阵与冻结权重合并
 * https://github.com/huggingface/peft
@@ -9,12 +11,12 @@ LORA：大型语言模型的低秩适配 2021.6.17 https://arxiv.org/abs/2106.09
 ## Abstract
 An important paradigm of natural language processing consists of large-scale pretraining on general domain data and adaptation to particular tasks or domains. As we pre-train larger models, full fine-tuning, which retrains all model parameters, becomes less feasible. Using GPT-3 175B as an example – deploying independent instances of fine-tuned models, each with 175B parameters, is prohibitively expensive. We propose Low-Rank Adaptation, or LoRA, which freezes the pretrained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks. Compared to GPT-3 175B fine-tuned with Adam, LoRA can reduce the number of trainable parameters by 10,000 times and the GPU memory requirement by 3 times. LoRA performs on-par or better than finetuning in model quality on RoBERTa, DeBERTa, GPT-2, and GPT-3, despite having fewer trainable parameters, a higher training throughput, and, unlike adapters, no additional inference latency. We also provide an empirical investigation into rank-deficiency in language model adaptation, which sheds light on the efficacy of LoRA. We release a package that facilitates the integration of LoRA with PyTorch models and provide our implementations and model checkpoints for RoBERTa, DeBERTa, and GPT-2 at https://github.com/microsoft/LoRA.
 
-自然语言处理的一个重要范式包括对一般领域数据的大规模预训练和对特定任务或领域的适配。当我们预训练更大的模型时，重新训练所有模型参数的完全微调变得不太可行。以GPT-3 175B为例，部署微调模型的独立实例，每个实例都有175B的参数，成本高得令人望而却步。我们提出了低秩适配，即LoRA，它冻结预训练的模型权重，并将可训练的秩分解矩阵注入Transformer架构的每一层，从而大大减少了下游任务的可训练参数数量。与Adam微调的GPT-3 175B相比，LoRA可以将可训练参数的数量减少10000倍，并将GPU内存需求减少3倍。不但具有较少的可训练参数、较高的训练吞吐量，并且与适配器不同，没有额外的推理延迟，LoRA在RoBERTa、DeBERTa、GPT-2和GPT-3上的模型质量的性能与微调不相上下或更好。我们还对语言模型适配中的秩缺陷(rank-deficiency)进行了实证研究，这揭示了LoRA的有效性。我们发布了一个包，该包有助于LoRA与PyTorch模型的集成，在https://github.com/microsoft/LoRA.
+自然语言处理的一个重要范式包括对一般领域数据的大规模预训练和对特定任务或领域的适配。当我们预训练更大的模型时，重新训练所有模型参数的完全微调变得不太可行。以GPT-3 175B为例，部署微调模型的独立实例，每个实例都有175B的参数，成本高得令人望而却步。我们提出了低秩适配，即LoRA，它冻结预训练的模型权重，并将可训练的秩分解矩阵注入Transformer架构的每一层，从而大大减少了下游任务的可训练参数数量。与Adam微调的GPT-3 175B相比，LoRA可以将可训练参数的数量减少10000倍，并将GPU内存需求减少3倍。不但具有较少的可训练参数、较高的训练吞吐量，并且与适配器不同，没有额外的推理延迟，LoRA在RoBERTa、DeBERTa、GPT-2和GPT-3上的模型质量的性能与微调不相上下或更好。我们还对语言模型适配中的秩缺陷(rank-deficiency)进行了实证研究，这揭示了LoRA的有效性。我们发布了一个包，该包有助于LoRA与PyTorch模型的集成，在 https://github.com/microsoft/LoRA.
 
 ## 1 INTRODUCTION
 ![Figure 1](./images/LoRA/fig_1.png)</br>
 Figure 1: Our reparametrization. We only train A and B.
-图1：我们的重新参数化。我们只训练A和B。<!--where is B ?-->
+图1：我们的重新参数化。我们只训练A和B。
 
 Many applications in natural language processing rely on adapting one large-scale, pre-trained language model to multiple downstream applications. Such adaptation is usually done via fine-tuning, which updates all the parameters of the pre-trained model. The major downside of fine-tuning is that the new model contains as many parameters as in the original model. As larger models are trained every few months, this changes from a mere “inconvenience” for GPT-2 (Radford et al., b) or RoBERTa large (Liu et al., 2019) to a critical deployment challenge for GPT-3 (Brown et al., 2020) with 175 billion trainable parameters.(1While GPT-3 175B achieves non-trivial performance with few-shot learning, fine-tuning boosts its performance significantly as shown in Appendix A.)
 
@@ -130,7 +132,7 @@ When deployed in production, we can explicitly compute and store W = $W_0$ + BA 
 
 当在部署生产环境中时，我们可以显式地计算和存储 W=$W_0$+BA，并像往常一样执行推理。请注意，$W_0$ 和 BA 都在 $R^{d×k}$ 中。当我们需要切换到另一个下游任务时，我们可以通过减去BA，然后添加不同的 B'A' 来恢复$W_0$，这是一种快速操作，内存开销非常小。至关重要的是，这保证了与通过构造微调的模型相比，我们在推理过程中不会引入任何额外的延迟。
 
-### 4.2 APPLYING LORA TO TRANSFORMER 将LORA应用于Transformer
+### 4.2 APPLYING LORA TO TRANSFORMER
 In principle, we can apply LoRA to any subset of weight matrices in a neural network to reduce the number of trainable parameters. In the Transformer architecture, there are four weight matrices in the self-attention module ($W_q, W_k, W_v, W_o$) and two in the MLP module. We treat $W_q$ (or Wk, $W_v$) as a single matrix of dimension $d_{model} × d_{model}$, even though the output dimension is usually sliced into attention heads. We limit our study to only adapting the attention weights for downstream tasks and freeze the MLP modules (so they are not trained in downstream tasks) both for simplicity and parameter-efficiency.We further study the effect on adapting different types of attention weight matrices in a Transformer in Section 7.1. We leave the empirical investigation of adapting the MLP layers, LayerNorm layers, and biases to a future work.
 
 原则上，我们可以将LoRA应用于神经网络中权重矩阵的任何子集，以减少可训练参数的数量。在Transformer架构中，自注意模块中有四个权重矩阵($W_q, W_k, W_v, W_o$)，MLP模块中有两个。我们将$W_q$(或$W_k，W_v$)视为维度 $d_{model} × d_{model}$ 的单个矩阵，即使输出维度通常被划分为注意力头部。为了简单和参数高效，我们将研究限制为仅调整下游任务的注意力权重，并冻结MLP模块(因此它们不在下游任务中训练)。我们在第7.1节中进一步研究了在Transformer中调整不同类型注意力权重矩阵的影响。我们将调整MLP层、LayerNorm层和偏差的实证研究留给未来的工作。

@@ -1,339 +1,334 @@
+# Adaptive Budget Allocation for Parameter-Efficient Fine-Tuning 用于参数有效微调的自适应预算分配
 ## Abstract 摘要
-Training state-of-the-art, deep neural networks is computationally expensive. One way to reduce the training time is to normalize the activities of the neurons. A recently introduced technique called batch normalization uses the distribution of the summed input to a neuron over a mini-batch of training cases to compute a mean and variance which are then used to normalize the summed input to that neuron on each training case. This significantly reduces the training time in feedforward neural networks. However, the effect of batch normalization is dependent on the mini-batch size and it is not obvious how to apply it to recurrent neural networks. In this paper, we transpose batch normalization into layer normalization by computing the mean and variance used for normalization from all of the summed inputs to the neurons in a layer on a single training case. Like batch normalization, we also give each neuron its own adaptive bias and gain which are applied after the normalization but before the non-linearity. Unlike batch normalization, layer normalization performs exactly the same computation at training and test times. It is also straightforward to apply to recurrent neural networks by computing the normalization statistics separately at each time step. Layer normalization is very effective at stabilizing the hidden state dynamics in recurrent networks. Empirically, we show that layer normalization can substantially reduce the training time compared with previously published techniques.
+Fine-tuning large pre-trained language models on downstream tasks has become an important paradigm in NLP. However, common practice fine-tunes all of the parameters in a pre-trained model, which becomes prohibitive when a large number of downstream tasks are present. Therefore, many fine-tuning methods are proposed to learn incremental updates of pre-trained weights in a parameter efficient way, e.g., low-rank increments. These methods often evenly distribute the budget of incremental updates across all pre-trained weight matrices, and overlook the varying importance of different weight parameters. As a consequence, the finetuning performance is suboptimal. To bridge this gap, we propose AdaLoRA, which adaptively allocates the parameter budget among weight matrices according to their importance score. In particular, AdaLoRA parameterizes the incremental updates in the form of singular value decomposition. Such a novel approach allows us to effectively prune the singular values of unimportant updates, which is essentially to reduce their parameter budget but circumvent intensive exact SVD computations. We conduct extensive experiments with several pre-trained models on natural language processing, question answering, and natural language generation to validate the effectiveness of AdaLoRA. Results demonstrate that AdaLoRA manifests notable improvement over baselines, especially in the low budget settings. Our code is publicly available at https://github.com/QingruZhang/AdaLoRA.
 
-训练最先进的深度神经网络在计算上是昂贵的。减少训练时间的一种方法是使神经元的活动正常化。最近引入的一种称为批量归一化的技术使用神经元的总输入在小批量训练情况上的分布来计算均值和方差，然后使用均值和方差来归一化每个训练情况下该神经元的总输出。这显著减少了前馈神经网络中的训练时间。然而，批量归一化的效果取决于小批量大小，如何将其应用于递归神经网络尚不清楚。在本文中，我们通过计算用于归一化的均值和方差，将批量归一化转换为层归一化，该均值和方差是在单个训练情况下从层中神经元的所有求和输入归一化的。像批量归一化一样，我们也给每个神经元自己的自适应偏置和增益，这些偏置和增益在归一化之后但在非线性之前应用。与批处理规范化不同，层规范化在训练和测试时执行完全相同的计算。通过在每个时间步长分别计算归一化统计量，也可以直接应用于递归神经网络。层规范化在稳定递归网络中的隐藏状态动力学方面非常有效。根据经验，我们表明，与先前发表的技术相比，层归一化可以显著减少训练时间。
+在下游任务上微调大型预先训练的语言模型已经成为NLP中的一个重要范例。然而，通常的实践对预训练模型中的所有参数进行微调，当存在大量下游任务时，这变得令人望而却步。因此，提出了许多微调方法来以参数有效的方式学习预训练权重的增量更新，例如，低秩增量。这些方法通常将增量更新的预算均匀分布在所有预先训练的权重矩阵中，并忽略了不同权重参数的不同重要性。因此，微调性能是次优的。为了弥补这一差距，我们提出了AdaLoRA，它根据权重矩阵的重要性得分在权重矩阵之间自适应地分配参数预算。特别地，AdaLoRA以奇异值分解的形式对增量更新进行参数化。这种新颖的方法使我们能够有效地修剪不重要更新的奇异值，这本质上是为了减少它们的参数预算，但避免密集的精确SVD计算。我们在自然语言处理、问答和自然语言生成方面对几个预先训练的模型进行了广泛的实验，以验证AdaLoRA的有效性。结果表明，AdaLoRA比基线有显著改善，尤其是在低预算环境中。我们的代码可在https://github.com/QingruZhang/AdaLoRA.
 
 ## 1 Introduction 1简介
-Deep neural networks trained with some version of Stochastic Gradient Descent have been shown to substantially outperform previous approaches on various supervised learning tasks in computer vision [Krizhevsky et al., 2012] and speech processing [Hinton et al., 2012]. But state-of-the-art deep neural networks often require many days of training. It is possible to speed-up the learning by computing gradients for different subsets of the training cases on different machines or splitting the neural network itself over many machines [Dean et al., 2012], but this can require a lot of communication and complex software. It also tends to lead to rapidly diminishing returns as the degree of parallelization increases. An orthogonal approach is to modify the computations performed in the forward pass of the neural net to make learning easier. Recently, batch normalization [Ioffe and Szegedy, 2015] has been proposed to reduce training time by including additional normalization stages in deep neural networks. The normalization standardizes each summed input using its mean and its standard deviation across the training data. Feedforward neural networks trained using batch normalization converge faster even with simple SGD. In addition to training time improvement, the stochasticity from the batch statistics serves as a regularizer during training.
+Pre-trained language models (PLMs) have manifested superior performance in various natural language processing tasks (Devlin et al., 2019; Liu et al., 2019; He et al., 2021b; Radford et al., 2019; Brown et al., 2020). The most common way to adapt pre-trained models to down-stream tasks is to fine-tune all the parameters (full fine-tuning, Qiu et al. (2020); Raffel et al. (2020)). However, pre-trained models typically incurs large memory footprint. For example, BERT model (Devlin et al., 2019) consists up to 300 million parameters; T5 (Raffel et al., 2020) comprises up to 11 billion parameters and GPT-3 (Brown et al., 2020) contains up to 175 billion parameters. When building a NLP system upon these pre-trained models, we usually handle multiple tasks that arrive simultaneously (Radford et al., 2019). Given a large number of down-stream tasks, full fine-tuning requires that each task maintains a separated copy of large models. The resulting memory consumption is prohibitively expensive.
 
-在计算机视觉[Krizhevsky et al.，2012]和语音处理[Hinton et al.，2012]中的各种监督学习任务上，用某种版本的随机梯度下降训练的深度神经网络已被证明显著优于以前的方法。但最先进的深度神经网络通常需要很多天的训练。通过计算不同机器上训练案例的不同子集的梯度或将神经网络本身拆分到许多机器上，可以加快学习[Dien et al.，2012]，但这可能需要大量的通信和复杂的软件。随着并行化程度的增加，它也往往导致回报迅速减少。正交方法是修改在神经网络的前向传递中执行的计算，以使学习更容易。最近，有人提出了批量归一化[Iofe和Szegedy，2015]，通过在深度神经网络中包括额外的归一化阶段来减少训练时间。归一化使用其在训练数据上的平均值和标准差来标准化每个求和的输入。使用批量归一化训练的前馈神经网络即使使用简单的SGD也能更快地收敛。除了训练时间的改进，来自批量统计的随机性在训练过程中起到了正则化的作用。
+预训练语言模型（PLM）在各种自然语言处理任务中表现出优异的性能（Devlin et al.，2019；刘等人，2019；何等人，2021b；Radford等人，2019年；Brown等人，2020）。使预先训练的模型适应下游任务的最常见方法是对所有参数进行微调（完全微调，Qiu et al.（2020）；Raffel等人（2020））。然而，预先训练的模型通常会占用大量内存。例如，BERT模型（Devlin et al.，2019）由多达3亿个参数组成；T5（Raffel等人，2020）包含多达110亿个参数，GPT-3（Brown等人，2020年）包含多达1750亿个参数。当在这些预先训练的模型上构建NLP系统时，我们通常会处理同时到达的多个任务（Radford et al.，2019）。给定大量的下游任务，完全的微调需要每个任务维护一个大型模型的独立副本。由此产生的内存消耗非常昂贵。
 
-Despite its simplicity, batch normalization requires running averages of the summed input statistics. In feed-forward networks with fixed depth, it is straightforward to store the statistics separately for each hidden layer. However, the summed inputs to the recurrent neurons in a recurrent neural network (RNN) often vary with the length of the sequence so applying batch normalization to RNNs appears to require different statistics for different time-steps. Furthermore, batch normalizaarXiv:1607.06450v1 [stat.ML] 21 Jul 2016 tion cannot be applied to online learning tasks or to extremely large distributed models where the minibatches have to be small.
+To address this issue, researchers have proposed two main lines of research to reduce the fine-tuning parameters, while maintaining or even improving the performance of PLMs. Specifically, one line of research focuses on adding small neural modules to PLMs and fine-tune only these modules for each task – the base model is kept frozen and shared across tasks. In this way, only a small number of task-specific parameters are introduced and updated, greatly enhancing the practicality of large models. For example, adapter tuning (Houlsby et al., 2019; Rebuffi et al., 2017; Pfeiffer et al., 2020; He et al., 2022) inserts small neural modules called adapters between the layers of the base model. Prefix tuning (Li & Liang, 2021) and prompt tuning (Lester et al., 2021) attach additional trainable prefix tokens to the input or hidden layers of the base model. These methods have shown to achieve comparable performance to full fine-tuning, while only updating less than 1% of the original model parameters, significantly releasing the memory consumption.
 
-尽管批处理规范化很简单，但它需要求和输入统计数据的平均值。在具有固定深度的前馈网络中，可以直接为每个隐藏层单独存储统计信息。然而，递归神经网络（RNN）中递归神经元的总输入通常随着序列的长度而变化，因此对RNN应用批量归一化似乎需要不同时间步长的不同统计。此外，批量归一化Xiv:1607.06450v1[stat.ML]21 Jul 2016不能应用于在线学习任务或极小批量的超大分布式模型。
+为了解决这个问题，研究人员提出了两条主要的研究路线，以减少微调参数，同时保持甚至提高PLM的性能。具体而言，有一条研究路线侧重于将小型神经模块添加到PLM中，并为每个任务仅微调这些模块——基本模型保持冻结并在任务之间共享。这样，只引入和更新了少量特定任务的参数，大大增强了大型模型的实用性。例如，适配器调整（Houlsby等人，2019；Rebuffi等人，2017；Pfeiffer等人，2020；He等人，2022）在基础模型的层之间插入称为适配器的小型神经模块。前缀调整（Li&Liang，2021）和提示调整（Lester et al.，2021）将额外的可训练前缀标记附加到基础模型的输入层或隐藏层。这些方法已经证明可以实现与完全微调相当的性能，同时只更新不到1%的原始模型参数，显著释放了内存消耗。
 
-This paper introduces layer normalization, a simple normalization method to improve the training speed for various neural network models. Unlike batch normalization, the proposed method directly estimates the normalization statistics from the summed inputs to the neurons within a hidden layer so the normalization does not introduce any new dependencies between training cases. We show that layer normalization works well for RNNs and improves both the training time and the generalization performance of several existing RNN models. 
+Figure 1: Given the total trainable parameters as 0.28M, we apply LoRA only to selected weight matrices (left) or selected layers (right) of DeBERTaV3-base and compare the fine-tuning performance on MNLI-m. Figure 1a: we only fine-tune a selected type of weight matrix of every transformer layer, including query/key/value projection (Wq, Wk, Wv), output projection (Wo) in the self-attention, and two weight matrices (Wf1 , Wf2 ) in two-layer FFNs. In Figure 1b, we apply LoRA to every weight matrix of the selected layers.
 
-本文介绍了层归一化，这是一种简单的归一化方法，可以提高各种神经网络模型的训练速度。与批量归一化不同，所提出的方法直接从隐藏层内神经元的总输入估计归一化统计信息，因此归一化不会在训练案例之间引入任何新的相关性。我们证明了层归一化对RNN很有效，并提高了现有几种RNN模型的训练时间和泛化性能。
+图1：给定0.28M的总可训练参数，我们仅将LoRA应用于DeBERTaV3基础的选定权重矩阵（左）或选定层（右），并比较MNLI-m上的微调性能。图1a：我们只微调每个变换器层的选定类型的权重矩阵，包括自注意中的查询/键/值投影（Wq，Wk，Wv）、输出投影（Wo）和两层FFN中的两个权重矩阵（Wf1，Wf2）。在图1b中，我们将LoRA应用于所选层的每个权重矩阵。
 
-## 2 Background 2背景
-A feed-forward neural network is a non-linear mapping from a input pattern x to an output vector y. Consider the l th hidden layer in a deep feed-forward, neural network, and let a l be the vector representation of the summed inputs to the neurons in that layer. The summed inputs are computed through a linear projection with the weight matrix Wl and the bottom-up inputs h l given as follows: 
+Another line of research proposes to model the incremental update of the pre-trained weights in a parameter-efficient way, without modifying the model architecture (Zaken et al., 2021; Guo et al., 2020; Hu et al., 2022). Given a pre-trained weight matrix1 W(0), for example, diff pruning (Guo et al., 2020) models its incremental update ∆ as a sparse matrix. Diff pruning initializes ∆ as the same dimension as W(0) and then prunes ∆ element-wise based on the magnitude of the entries. As such, diff pruning can increase the parameter efficiency substantially by adaptively retaining important updates and pruning unimportant ones. Nonetheless, diff pruning has several limitations. First, it relies on low-level implementation to speed up the computation of unstructured sparse matrices, which is not well supported by existing deep learning frameworks. Therefore, we have to store ∆ as a dense matrix during training. Second, it needs to update every entry of ∆ with their gradients and then prune them. This results in similar computational cost as full fine-tuning (Guo et al., 2020).
 
-前馈神经网络是从输入模式x到输出向量y的非线性映射。考虑深度前馈神经网络中的第l个隐藏层，并让A l是该层中神经元的总输入的向量表示。求和的输入是通过线性投影计算的，其中权重矩阵Wl和自下而上的输入h l如下所示：
+另一条研究路线提出以参数有效的方式对预训练权重的增量更新进行建模，而不修改模型架构（Zaken等人，2021；郭等人，2020；胡等人，2022）。例如，给定预先训练的权重矩阵1 W（0），diff修剪（Guo et al.，2020）将其增量更新∆建模为稀疏矩阵。Diff修剪将∆初始化为与W（0）相同的维度，然后根据条目的大小逐元素修剪∆。因此，diff修剪可以通过自适应地保留重要更新和修剪不重要的更新来显著提高参数效率。尽管如此，差异修剪有几个局限性。首先，它依赖于底层实现来加快非结构化稀疏矩阵的计算，而现有的深度学习框架并没有很好地支持这一点。因此，在训练过程中，我们必须将∆存储为密集矩阵。其次，它需要用它们的梯度更新∆的每个条目，然后对它们进行修剪。这导致了与完全微调类似的计算成本（Guo et al.，2020）。
 
-a l i = w l i > h l h l+1 i = f(a l i + b l i ) (1) 
+To overcome these drawbacks, Hu et al. (2022) propose a method named LoRA, which parameterizes ∆ as a low-rank matrix by the product of two much smaller matrices:
 
-a l i=w l i>h l h l+1 i=f（a l i+b l i）（1）
+为了克服这些缺点，Hu等人（2022）提出了一种名为LoRA的方法，该方法通过两个小得多的矩阵的乘积将∆参数化为低秩矩阵：
 
-where f(·) is an element-wise non-linear function and w l i is the incoming weights to the i th hidden units and b l i is the scalar bias parameter. The parameters in the neural network are learnt using gradient-based optimization algorithms with the gradients being computed by back-propagation.
+W = W(0) + ∆ = W(0) + BA, (1)
 
-其中f（·）是逐元非线性函数，wli是第i个隐藏单元的输入权重，bli是标量偏置参数。使用基于梯度的优化算法来学习神经网络中的参数，其中梯度通过反向传播来计算。
+W=W（0）+∆=W（O）+BA，（1）
 
-One of the challenges of deep learning is that the gradients with respect to the weights in one layer are highly dependent on the outputs of the neurons in the previous layer especially if these outputs change in a highly correlated way. Batch normalization [Ioffe and Szegedy, 2015] was proposed to reduce such undesirable “covariate shift”. The method normalizes the summed inputs to each hidden unit over the training cases. Specifically, for the i th summed input in the l th layer, the batch normalization method rescales the summed inputs according to their variances under the distribution of the data 
+where W(0) , ∆ ∈ R d1×d2 , A ∈ R r×d2 and B ∈ R d1×r with r  {d1, d2}. During fine-tuning, only A and B are updated. The rank r is chosen to be much smaller than the dimension of W (e.g., r = 8 when d1 = d2 = 1024). With less than 0.5% additional trainable parameters, the training overhead can be reduced up to 70%, compared to full fine-tuning. However, LoRA achieves comparable or even better performance than full fine-tuning (Hu et al., 2022). Meanwhile, the product of two samll matrices is more friendly to implement and deploy than unstructured sparse matrices in diff pruning.
 
-深度学习的挑战之一是，一层中相对于权重的梯度高度依赖于前一层中神经元的输出，特别是如果这些输出以高度相关的方式变化。批量归一化[Iofe和Szegedy，2015]被提出来减少这种不希望的“协变量偏移”。该方法对训练案例中每个隐藏单元的总输入进行归一化。具体来说，对于第l层中的第i个求和输入，批处理归一化方法根据数据分布下的方差重新缩放求和输入
+其中W（0），∆∈R d1×d2，A∈R R×d2和B∈R d1×R与R{d1，d2}。在微调期间，仅更新A和B。秩r被选择为比W的维度小得多（例如，当d1＝d2＝1024时，r＝8）。在不到0.5%的额外可训练参数的情况下，与完全微调相比，训练开销可以减少多达70%。然而，LoRA实现了与完全微调相当甚至更好的性能（Hu et al.，2022）。同时，在diff修剪中，两个samll矩阵的乘积比非结构化稀疏矩阵更易于实现和部署。
 
-(2)
+LoRA still has limitations as it prespecifies the rank r of each incremental matrix ∆ identical. This ignores the fact that the importance of weight matrices varies significantly across modules and layers when fine-tuning pre-trained models. To illustrate this point, we present an concrete example in Figure 1. We compare the performance of LoRA when fine-tuning specific modules or layers with the same number of trainable parameters. Figure 1a shows that fine-tuning feed-forward networks (FFN) achieves better performance than self-attention modules. In addition, Figure 1b demonstrates that weight matrices in top layers are more important than those in bottom layers.
 
-（2）
+LoRA仍然有局限性，因为它预先指定了每个增量矩阵∆的秩r相同。这忽略了这样一个事实，即当微调预先训练的模型时，权重矩阵的重要性在模块和层之间变化很大。为了说明这一点，我们在图1中给出了一个具体的例子。当使用相同数量的可训练参数微调特定模块或层时，我们比较了LoRA的性能。图1a显示，微调前馈网络（FFN）比自注意模块实现了更好的性能。此外，图1b表明，顶层的权重矩阵比底层的权重矩阵更重要。
 
-where ¯a l i is normalized summed inputs to the i th hidden unit in the l th layer and gi is a gain parameter scaling the normalized activation before the non-linear activation function. Note the expectation is under the whole training data distribution. It is typically impractical to compute the expectations in Eq. (2) exactly, since it would require forward passes through the whole training dataset with the current set of weights. Instead, µ and σ are estimated using the empirical samples from the current mini-batch. This puts constraints on the size of a mini-batch and it is hard to apply to recurrent neural networks. 
+Adding more trainable parameters to the critical weight matrices can lead to better model performance. In contrast, adding more parameters to those less important weight matrices yields very marginal gains or even hurt model performance. Given the parameter budget, i.e., the number of total trainable parameters, we always prefer to allocate more parameters to those important modules. Distributing the budget evenly to all weight matrices/layers, like LoRA and other methods (e.g., adapter and prefix tuning), often gives suboptimal performance. To this end, a natural question is:
 
-其中，a l i是第l层中第i个隐藏单元的归一化求和输入，gi是在非线性激活函数之前缩放归一化激活的增益参数。注意，期望是在整个训练数据分布下。精确计算方程中的期望值通常是不切实际的。（2），因为它需要用当前的一组权重向前通过整个训练数据集。相反，使用当前小批量的经验样本来估计µ和σ。这限制了小批量的大小，并且很难应用于递归神经网络。
+将更多可训练的参数添加到临界权重矩阵可以导致更好的模型性能。相反，在那些不太重要的权重矩阵中添加更多的参数会产生非常边际的收益，甚至损害模型性能。考虑到参数预算，即总可训练参数的数量，我们总是倾向于为那些重要的模块分配更多的参数。将预算平均分配到所有权重矩阵/层，如LoRA和其他方法（例如，适配器和前缀调整），通常会产生次优性能。为此，一个自然的问题是：
 
-## 3 Layer normalization 3层规范化
-We now consider the layer normalization method which is designed to overcome the drawbacks of batch normalization.
+How can we allocate the parameter budget adaptively according to importance of modules to improve the performance of parameter-efficient fine-tuning? 
 
-我们现在考虑层归一化方法，该方法旨在克服批量归一化的缺点。
+如何根据模块的重要性自适应地分配参数预算，以提高参数高效微调的性能？
 
-Notice that changes in the output of one layer will tend to cause highly correlated changes in the summed inputs to the next layer, especially with ReLU units whose outputs can change by a lot. This suggests the “covariate shift” problem can be reduced by fixing the mean and the variance of the summed inputs within each layer. We, thus, compute the layer normalization statistics over all the hidden units in the same layer as follows: 
+1Unless specified otherwise, we use W(0) to denote any pre-trained weight matrix. 
 
-请注意，一层输出的变化往往会导致下一层的总输入发生高度相关的变化，尤其是ReLU单元的输出可能会发生很大变化。这表明，可以通过固定每层内求和输入的平均值和方差来减少“协变量偏移”问题。因此，我们计算同一层中所有隐藏单元的层归一化统计信息，如下所示：
+1除非另有规定，否则我们使用W（0）来表示任何预先训练的权重矩阵。
 
-(3) 
+To answer this question, we propose a new method – AdaLoRA (Adaptive Low-Rank Adaptation), which dynamically allocates the parameter budget among weight matrices during LoRA-alike finetuning. Specifically, AdaLoRA adjusts the rank of incremental matrices to control their budget. Critical incremental matrices are assigned with high rank such that they can capture more fine-grained and task-specific information. Less importance ones are pruned to have lower rank to prevent overfitting and save the computational budget. There are some methods to control the rank of matrices in the existing literature of matrix approximation (Cai et al., 2010; Koltchinskii et al., 2011; Toh & Yun, 2010). Most of them directly compute singular value decomposition (SVD) of a matrix and then truncate the smallest singular values. Such an operation can manipulate the rank explicitly and, more importantly, minimize the difference between the resulting matrix and the original matrix. However, for fine-tuning large models, it becomes prohibitively expensive to iteratively apply SVD for a large number of high-dimensional weight matrices. Therefore, instead of computing SVD exactly, we parameterize ∆ as ∆ = PΛQ to mimic SVD. The diagonal matrix Λ contains singular values while the orthogonal matrices P and Q represent left/right singular vectors of ∆. To regularize the orthogonality of P and Q, an additional penalty is added to training loss. Such a parameterization avoids the intensive computations of SVD. Besides, another advantage is that we only need to drop the unimportant singular values while the singular vectors are maintained. This preserves the possibility of future recovery and stabilizes the training. See a detailed comparison to LoRA in Section 3.
 
-（3）
+为了回答这个问题，我们提出了一种新的方法——AdaLoRA（自适应低秩自适应），该方法在类似LoRA的微调过程中在权重矩阵之间动态分配参数预算。具体而言，AdaLoRA调整增量矩阵的秩以控制其预算。关键增量矩阵具有较高的秩，因此它们可以捕获更细粒度和特定于任务的信息。不太重要的被修剪为具有较低的秩，以防止过拟合并节省计算预算。在现有的矩阵近似文献中，有一些控制矩阵秩的方法（Cai et al.，2010；Koltchinski et al.，2011；Toh&Yun，2010）。它们大多直接计算矩阵的奇异值分解（SVD），然后截断最小的奇异值。这样的操作可以显式地操纵秩，更重要的是，最小化结果矩阵和原始矩阵之间的差异。然而，对于微调大型模型，迭代地将SVD应用于大量高维权重矩阵会变得非常昂贵。因此，我们不是精确计算SVD，而是将∆参数化为∆=P∧Q，以模拟SVD。对角矩阵∧包含奇异值，而正交矩阵P和Q表示∆的左/右奇异向量。为了正则化P和Q的正交性，在训练损失中添加了额外的惩罚。这样的参数化避免了SVD的密集计算。此外，另一个优点是，我们只需要在保持奇异向量的同时删除不重要的奇异值。这保留了未来恢复的可能性，并稳定了训练。参见第3节中与LoRA的详细比较。
 
-where H denotes the number of hidden units in a layer. The difference between Eq. (2) and Eq. (3) is that under layer normalization, all the hidden units in a layer share the same normalization terms µ and σ, but different training cases have different normalization terms. Unlike batch normalization, layer normaliztion does not impose any constraint on the size of a mini-batch and it can be used in the pure online regime with batch size 1. 
+Based on our SVD parameterization, AdaLoRA dynamically adjusts the rank of ∆ = P V Q by importance scoring. Specifically, we divide the incremental matrix PΛQ into triplets, where each triplet Gi contains the i-th singular value and the corresponding singular vectors. To quantify the importance of triplets, we propose a novel importance metric, which takes account of the contribution of every entry in Gi to the model performance (Sanh et al., 2020; Liang et al., 2021; Zhang et al., 2022). Triplets with low importance scores are granted low priority and hence the singular values are zeroed out. Triplets with high importance are retained for fine-tuning. Moreover, we also propose a global budget scheduler to facilitate the training. In particular, we start from an initial parameter budget, which is slightly higher than the final budget, and then gradually reduce it until matching the target. Such a scheduler can improve the training stability and model performance. Please see Section 3 for a detailed description of our importance metric and budget scheduler.
 
-其中H表示层中隐藏单元的数量。等式（2）和等式（3）之间的区别在于，在层归一化下，层中的所有隐藏单元共享相同的归一化项µ和σ，但不同的训练情况具有不同的归一化项。与批量规范化不同，层规范化不对小批量的大小施加任何约束，并且它可以用于批量大小为1的纯在线状态。
+基于我们的SVD参数化，AdaLoRA通过重要性评分动态调整∆=P V Q的等级。具体来说，我们将增量矩阵P∧Q划分为三元组，其中每个三元组Gi包含第i个奇异值和相应的奇异向量。为了量化三元组的重要性，我们提出了一种新的重要性度量，该度量考虑了Gi中每个条目对模型性能的贡献（Sanh et al.，2020；梁等人，2021；张等人，2022）。具有低重要性分数的三元组被授予低优先级，因此奇异值被清零。保留具有高度重要性的三元组进行微调。此外，我们还提出了一个全球预算调度器，以促进培训。特别是，我们从一个初始参数预算开始，该预算略高于最终预算，然后逐渐减少，直到达到目标。这样的调度器可以提高训练稳定性和模型性能。请参阅第3节，了解我们的重要性度量和预算计划的详细描述。
 
-## 3.1 Layer normalized recurrent neural networks 3.1分层归一化递归神经网络
-The recent sequence to sequence models [Sutskever et al., 2014] utilize compact recurrent neural networks to solve sequential prediction problems in natural language processing. It is common among the NLP tasks to have different sentence lengths for different training cases. This is easy to deal with in an RNN because the same weights are used at every time-step. But when we apply batch normalization to an RNN in the obvious way, we need to to compute and store separate statistics for each time step in a sequence. This is problematic if a test sequence is longer than any of the training sequences. Layer normalization does not have such problem because its normalization terms depend only on the summed inputs to a layer at the current time-step. It also has only one set of gain and bias parameters shared over all time-steps.
+We conduct extensive experiments on a wide range of tasks and models to demonstrate the effectiveness of AdaLoRA. Specifically, we evaluate the performance using DeBERTaV3-base (He et al., 2021a) on natural language understanding (GLUE, Wang et al. (2019)) and question answering (SQuADv1, Rajpurkar et al. (2016) and SQuADv2, Rajpurkar et al. (2018)) datasets. We also apply our methods to BART-large (Lewis et al., 2019) and evaluate the performance on natural language generation (XSum, Narayan et al. (2018) and CNN/DailyMail, Hermann et al. (2015)) tasks. We show AdaLoRA consistently outperforms the baseline, especially under low budget settings. For example, with less than 0.1% trainable parameters of full fine-tuning, AdaLoRA achieves a 1.2% F1 improvement on the SQuAD2.0 dataset compared with state-of-the-art approaches. 
 
-最近的序列到序列模型[Sutskever et al.，2014]利用紧凑递归神经网络来解决自然语言处理中的序列预测问题。在NLP任务中，针对不同的训练情况具有不同的句子长度是常见的。这在RNN中很容易处理，因为在每个时间步长使用相同的权重。但是，当我们以显而易见的方式将批处理规范化应用于RNN时，我们需要为序列中的每个时间步长计算和存储单独的统计信息。如果测试序列比任何训练序列都长，这是有问题的。层归一化不存在这样的问题，因为其归一化项仅取决于在当前时间步长对层的求和输入。它也只有一组在所有时间步长上共享的增益和偏置参数。
+我们在广泛的任务和模型上进行了广泛的实验，以证明AdaLoRA的有效性。具体而言，我们使用DeBERTaV3基础（He et al.，2021a）评估自然语言理解（GLUE，Wang et al.（2019））和问答（SQuADv1，Rajpurkar et al.（2016）和SQuADv2，Rajpurka et al.（2018））数据集的性能。我们还将我们的方法应用于BART大型（Lewis et al.，2019），并评估自然语言生成（XSum，Narayan et al.（2018）和CNN/DaylyMail，Hermann et al.（2015））任务的性能。我们发现AdaLoRA始终优于基线，尤其是在低预算环境下。例如，与最先进的方法相比，AdaLoRA在SQuAD2.0数据集上实现了1.2%的F1改进，完全微调的可训练参数不到0.1%。
 
-In a standard RNN, the summed inputs in the recurrent layer are computed from the current input x t and previous vector of hidden states h t−1 which are computed as a t = Whhh t−1 + Wxhx t . The layer normalized recurrent layer re-centers and re-scales its activations using the extra normalization terms similar to Eq. (3): 
+## 2 BACKGROUND 2背景
+Transformer-based Models. A typical transformer model consists of L stacked blocks, where each block contains two submodules: a multi-head attention (MHA) and a fully connected FFN. Given the input sequence X ∈ R n×d , MHA performs the attention function in parallel h heads:
 
-在标准RNN中，递归层中的求和输入是根据当前输入x t和隐藏状态的先前向量h t−1计算的，其计算为t=Whhh t−1+Wxxx t。使用类似于等式（3）的额外归一化项，层归一化的递归层重新定中心并重新缩放其激活。（3）：
+基于变压器的模型。典型的变压器模型由L个堆叠块组成，其中每个块包含两个子模块：多头注意力（MHA）和全连接FFN。给定输入序列X∈Rn×d，MHA在平行h头中执行注意函数：
 
-(4) 
+MHA (X) = Concat(head1, ..., headh)Wo, headi = Softmax  XWqi (XWki ) > / p dh  XWvi , 
 
-（4）
+MHA（X）=Concat（head1，…，headh）Wo，headi=Softmax XWqi（XWki）>/p dh XWvi，
 
-where Whh is the recurrent hidden to hidden weights and Wxh are the bottom up input to hidden weights.  is the element-wise multiplication between two vectors. b and g are defined as the bias and gain parameters of the same dimension as h t .
+where Wo ∈ R d×d is an output projection and Wqi , Wki , Wvi ∈ R d×dh are query, key and value projections of head i. dh is typically set to d/h. The other important module is a FFN which consists of two linear transformations with a ReLU activation in between: FFN(X) = ReLU(XWf1 + b1)Wf2 + b2, where Wf1 ∈ R d×dm and Wf2 ∈ R dm×d . Finally, a residual connection is used followed by a layer normalization (Ba et al., 2016).
 
-其中Whh是递归的隐藏到隐藏权重，Wxh是自下而上的隐藏权重输入。是两个向量之间的逐元素相乘。b和g被定义为与ht具有相同维度的偏置和增益参数。
+其中Wo∈RD×d是输出投影，Wqi，Wki，Wvi∈RD？dh是头i的查询、键和值投影。dh通常设置为d/h。另一个重要的模块是FFN，它由两个线性变换组成，ReLU激活介于两者之间：FFN（X）=ReLU（XWf1+b1）Wf2+b2，其中Wf1∈Rd×dm和Wf2∈Rdm×d。最后，使用残差连接，然后进行层归一化（Ba等人，2016）。
 
-In a standard RNN, there is a tendency for the average magnitude of the summed inputs to the recurrent units to either grow or shrink at every time-step, leading to exploding or vanishing gradients. In a layer normalized RNN, the normalization terms make it invariant to re-scaling all of the summed inputs to a layer, which results in much more stable hidden-to-hidden dynamics. 
+Low Rank Adaptation. LoRA (Hu et al., 2022) models the incremental update of the pre-trained weights by the product of two small matrices. For h = W(0)x, the modified forward pass is: h = W(0)x + ∆x = W(0)x + BAx, (2) where W(0) , ∆ ∈ R d1×d2 , A ∈ R r×d2 and B ∈ R d1×r with r  {d1, d2}. A typically adopts a random Gaussion initialization while B is initialized with zero to have ∆ = 0 at the beginning of training. We further denote Ai∗ as the i-th row of A, B∗i as the i-th column of B, and Gi = {Ai∗, B∗i} as the i-th doublet. Hu et al. (2022) only apply LoRA to query and value projections (i.e, Wq and Wv) in the MHAs. He et al. (2022) extend it to weight matrices of FFNs (i.e, Wf1 and Wf2 ), leading to the performance improvement . Meanwhile, they propose a unified view of various efficient tuning methods including adapter tuning, prefix tuning and LoRA. 
 
-在标准RNN中，递归单元的总输入的平均幅度在每个时间步长都有增长或收缩的趋势，导致梯度爆炸或消失。在层规范化的RNN中，规范化项使其对重新缩放层的所有求和输入保持不变，这导致更稳定的隐藏到隐藏的动力学。
+低阶自适应。LoRA（Hu et al.，2022）通过两个小矩阵的乘积对预先训练的权重的增量更新进行建模。对于h=W（0）x，修改后的前向行程为：h=W（0）x+∆x=W（O）x+BAx，（2）其中W（0，∆∈R d1×d2，A∈R R×d2和B∈R d1×R与R｛d1，d2｝。A通常采用随机高斯初始化，而B在训练开始时用零初始化为∆=0。我们进一步将Ai*表示为A的第i行，B*i表示为B的第i列，Gi={Ai*，B*i}表示为第i个二重集。Hu等人（2022）仅将LoRA应用于MHA中的查询和价值预测（即Wq和Wv）。He等人（2022）将其扩展到FFN的权重矩阵（即Wf1和Wf2），从而提高了性能。同时，他们提出了各种高效调优方法的统一观点，包括适配器调优、前缀调优和LoRA。
 
-## 4 Related work 4相关工作
-Batch normalization has been previously extended to recurrent neural networks [Laurent et al., 2015, Amodei et al., 2015, Cooijmans et al., 2016]. The previous work [Cooijmans et al., 2016] suggests the best performance of recurrent batch normalization is obtained by keeping independent normalization statistics for each time-step. The authors show that initializing the gain parameter in the recurrent batch normalization layer to 0.1 makes significant difference in the final performance of the model. Our work is also related to weight normalization [Salimans and Kingma, 2016]. In weight normalization, instead of the variance, the L2 norm of the incoming weights is used to normalize the summed inputs to a neuron. Applying either weight normalization or batch normalization using expected statistics is equivalent to have a different parameterization of the original feed-forward neural network. Re-parameterization in the ReLU network was studied in the Pathnormalized SGD [Neyshabur et al., 2015]. Our proposed layer normalization method, however, is not a re-parameterization of the original neural network. The layer normalized model, thus, has different invariance properties than the other methods, that we will study in the following section. 
+## 3 ADALORA METHOD 3阿达洛拉法
+Our method contains two important components: (i) SVD-based adaptation, which formulates the incremental matrices in the form of singular value decomposition; (ii) Importance-aware rank allocation, which prunes redundant singular values based on our newly-designed importance metric.
 
-批量归一化先前已扩展到递归神经网络[Launt等人，2015，Amodei等人，2015；Cooijmans等人，2016]。先前的工作[Cooijmans et al.，2016]表明，通过对每个时间步长保持独立的归一化统计，可以获得递归批量归一化的最佳性能。作者表明，将递归批量归一化层中的增益参数初始化为0.1会对模型的最终性能产生显著影响。我们的工作也与体重标准化有关[Salimans和Kingma，2016]。在权重归一化中，代替方差，引入权重的L2范数用于归一化到神经元的求和输入。使用期望统计应用权重归一化或批量归一化相当于对原始前馈神经网络进行不同的参数化。在路径归一化SGD中研究了ReLU网络中的重新参数化[Neyshabur等人，2015]。然而，我们提出的层归一化方法并不是对原始神经网络的重新参数化。因此，层归一化模型与我们将在下一节中研究的其他方法具有不同的不变性。
+我们的方法包含两个重要组成部分：（i）基于奇异值分解的自适应，以奇异值分解形式表示增量矩阵；（ii）重要性感知秩分配，它基于我们新设计的重要性度量修剪冗余奇异值。
 
-##　5 Analysis 　5分析
-In this section, we investigate the invariance properties of different normalization schemes.
+## 3.1 SVD-BASED ADAPTATION 3.1基于SVD的自适应
+As mentioned in Section 1, we propose to parameterize the incremental updates of the pre-trained weight matrices in the form of singular value decomposition:
 
-在本节中，我们研究了不同归一化方案的不变性。
+如第1节所述，我们建议以奇异值分解的形式对预先训练的权重矩阵的增量更新进行参数化：
 
-## 5.1 Invariance under weights and data transformations 5.1权重和数据变换下的不变性
-The proposed layer normalization is related to batch normalization and weight normalization. Although, their normalization scalars are computed differently, these methods can be summarized as normalizing the summed inputs ai to a neuron through the two scalars µ and σ. They also learn an adaptive bias b and gain g for each neuron after the normalization. 
+W = W(0) + ∆ = W(0) + PΛQ, (3) 
 
-所提出的层归一化与批量归一化和权重归一化有关。尽管它们的归一化标量的计算方式不同，但这些方法可以概括为通过两个标量µ和σ对神经元的相加输入ai进行归一化。他们还学习了归一化后每个神经元的自适应偏差b和增益g。
+W=W（0）+∆=W（O）+P∧Q，（3）
 
-hi = f( gi σi (ai − µi) + bi) (5)
+where P ∈ R d1×r and Q ∈ R r×d2 represent the left/right singular vectors of ∆ and the diagonal matrix Λ ∈ R r×r contains the singular values {λi}1≤i≤r with r  min(d1, d2). We further denote Gi = {P∗i , λi , Qi∗} as the triplet containing the i-th singular value and vectors. In practice, since Λ is diagonal, we only need to save it as a vector in R r . Λ is initialized with zero while P and Q adopt a random Gaussian initialization to ensure ∆ = 0 at the beginning of training. To enforce the orthogonality of P and Q, i.e., P > P = QQ> = I, we utilize the following regularizer2 :
 
-hi=f（giσi（ai−µi）+bi）（5）
+其中P∈R d1×R和Q∈R R×d2表示∆的左/右奇异向量，对角矩阵∧∈R R×R包含奇异值{λi}1≤i≤R和R min（d1，d2）。我们进一步将Gi={P*i，λi，Qi*}表示为包含第i个奇异值和向量的三元组。在实践中，由于∧是对角的，我们只需要将其保存为R R中的向量。∧用零初始化，而P和Q采用随机高斯初始化，以确保在训练开始时∆=0。为了加强P和Q的正交性，即P>P=Q>=i，我们使用以下正则化2：
 
-Note that for layer normalization and batch normalization, µ and σ is computed according to Eq. 2 and 3. In weight normalization, µ is 0, and σ = k wk 2. 
+R(P, Q) = k P > P − Ik 2 F + k QQ> − Ik 2 F . (4)
 
-请注意，对于层归一化和批量归一化，µ和σ是根据等式2和3计算的。在权重归一化中，µ为0，σ=k wk 2。
+R（P，Q）=k P>P−Ik 2 F+k QQ>−Ik 1 F。（4）
 
-Table 1: Invariance properties under the normalization methods.
+In our method, Λ is iteratively pruned to adjust the rank after each gradient decent step. As mentioned in Section 1, one can directly compute SVD for every ∆ to manipulate singular values. The computational complexity, however, is O(min(d1, d2)d1d2). It becomes extremely expensive to iteratively apply SVD for a large number of high-dimensional incremental matrices. In contrast, our parameterization avoids intensive SVD computation, greatly releasing the computational overhead.
 
-表1：归一化方法下的不变性。
+在我们的方法中，在每个梯度体面步骤之后，对∧进行迭代修剪以调整秩。如第1节所述，可以直接计算每个∆的SVD，以操纵奇异值。然而，计算复杂度是O（min（d1，d2）d1d2）。对于大量的高维增量矩阵迭代地应用SVD变得极其昂贵。相反，我们的参数化避免了密集的SVD计算，极大地释放了计算开销。
 
-Table 1 highlights the following invariance results for three normalization methods.
+We remark that one can also apply structured pruning to LoRA to control the rank (i.e., prune BA doublet-wise in (1)), whereas it has the following disadvantages. First, when a doublet is measured as unimportant, we have to prune all of its elements. It makes scarcely possible to reactivate the pruned doublets as their entries are all zeroed out and not trained. In contrast, AdaLoRA only masks out the singular values based on (3) while the singular vectors are always maintained. It preserves the potential of future recovery for the triplets dropped by mistake. Second, A and B of LoRA are not orthogonal, meaning the doublets can be dependent with each other. Discarding the doublets can incur larger variation from the original matrix than truncating the smallest singular values. Therefore, the incremental matrices are often altered dramatically after each step of rank allocation, which causes training instability and even hurts generalization. To demonstrate this point, we present an ablation study in Section 4.4, which compares AdaLoRA with structured pruning for LoRA.
 
-表1强调了以下三种归一化方法的不变性结果。
+我们注意到，也可以将结构化修剪应用于LoRA来控制秩（即，在（1）中对BA进行双修剪），但它有以下缺点。首先，当一个二重集被测量为不重要时，我们必须修剪它的所有元素。它几乎不可能重新激活修剪过的二重集，因为它们的条目都被归零并且没有经过训练。相反，AdaLoRA仅屏蔽基于（3）的奇异值，而奇异向量始终保持不变。它为错误掉落的三元组保留了未来恢复的潜力。其次，LoRA的A和B不是正交的，这意味着对偶可以相互依赖。与截断最小奇异值相比，丢弃二重集可能导致原始矩阵发生更大的变化。因此，在秩分配的每一步之后，增量矩阵往往会发生显著的变化，这会导致训练的不稳定性，甚至损害泛化能力。为了证明这一点，我们在第4.4节中介绍了一项消融研究，该研究将AdaLoRA与LoRA的结构化修剪进行了比较。
 
-Weight re-scaling and re-centering: First, observe that under batch normalization and weight normalization, any re-scaling to the incoming weights wi of a single neuron has no effect on the normalized summed inputs to a neuron. To be precise, under batch and weight normalization, if the weight vector is scaled by δ, the two scalar µ and σ will also be scaled by δ. The normalized summed inputs stays the same before and after scaling. So the batch and weight normalization are invariant to the re-scaling of the weights. Layer normalization, on the other hand, is not invariant to the individual scaling of the single weight vectors. Instead, layer normalization is invariant to scaling of the entire weight matrix and invariant to a shift to all of the incoming weights in the weight matrix. Let there be two sets of model parameters θ, θ 0 whose weight matrices W and W0 differ by a scaling factor δ and all of the incoming weights in W0 are also shifted by a constant vector γ, that is W0 = δW + 1γ > . Under layer normalization, the two models effectively compute the same output: 
+## 3.2 IMPORTANCE-AWARE RANK ALLOCATION 3.2重要软件等级分配
+We apply the SVD-based adaptation (3) to every weight matrix including Wq, Wk, Wv, Wf1 and Wf2 of each transformer layer. In order to control the budget, we iteratively prune singular values in correspondence to their importance score during the training. For clear reference, we use k to index the incremental matrix, i.e., ∆k = PkΛkQk for k = 1, . . . , n, where n is the number of adapted weight matrices. We denote the i-th triplet of ∆k as Gk,i = {Pk,∗i , λk,i, Qk,i∗} and its importance score as Sk,i. We further denote the parameter sets P = {Pk} n k=1, E = {Λk} n k=1, Q = {Qk} n k=1 and training cost as C(P, E, Q). With the regularization (4), the training objective is given by L(P, E, Q) = C(P, E, Q) + γ P n k=1 R(Pk, Qk), where γ > 0 is the regularization coefficient. At the t-th step, we first take a stochastic gradient step to update P (t) k ,Λ (t) k and Q (t) k for k = 1, . . . , n. Specifically, for Λ (t) 
 
-权重重新缩放和重新居中：首先，观察到在批量归一化和权重归一化下，对单个神经元的传入权重wi的任何重新缩放都不会对神经元的归一化求和输入产生影响。准确地说，在批量和权重归一化下，如果权重向量由δ缩放，那么两个标量µ和σ也将由δ缩放。归一化的求和输入在缩放前后保持不变。因此，批量和权重归一化对于权重的重新缩放是不变的。另一方面，层归一化对于单个权重向量的单独缩放不是不变的。相反，层归一化对于整个权重矩阵的缩放是不变的，并且对于权重矩阵中所有传入权重的移位是不变的。设有两组模型参数θ，θ0，其权重矩阵W和W0相差一个比例因子δ，并且W0中的所有输入权重也偏移一个常数向量γ，即W0=δW+1γ>。在层归一化下，这两个模型有效地计算出相同的输出：
+我们将基于SVD的自适应（3）应用于每个权重矩阵，包括每个变换器层的Wq、Wk、Wv、Wf1和Wf2。为了控制预算，我们在训练过程中根据奇异值的重要性分数迭代修剪奇异值。为了便于参考，我们使用k来索引增量矩阵，即∆k=Pk∧kQk，k=1，n、 其中n是自适应权重矩阵的数目。我们将∆k的第i个三元组表示为Gk，i={Pk，*i，λk，i，Qk，i*}，其重要性得分表示为Sk，i。我们进一步将参数集P={Pk}n k=1，E={∧k}n k+1，Q={Qk}n k=1和训练成本表示为C（P，E，Q）。对于正则化（4），训练目标由L（P，E，Q）=C（P，E，Q）+γPNk=1R（Pk，Qk）给出，其中γ>0是正则化系数。在第t步，我们首先采取随机梯度步骤来更新P（t）k、∧（t）k和Q（t）k=1，n.具体而言，对于∧（t）
 
-(6)
+k ˜Λ (t) k = Λ(t) k − η∇Λk L(P (t) , E (t) , Q (t) ), (5) 
 
-（6）
+k~∧（t）k=∧（t）k−ηŞ∧k L（P（t），E（t）、Q（t）），（5）
 
-Notice that if normalization is only applied to the input before the weights, the model will not be invariant to re-scaling and re-centering of the weights.
+2We present the experiments in Appendix G to verify the effectiveness of the regularization. 4
 
-请注意，如果规范化仅应用于权重之前的输入，则模型将不会对权重的重新缩放和重新居中保持不变。
+2我们在附录G中介绍了实验，以验证正则化的有效性。4.
 
-Data re-scaling and re-centering: We can show that all the normalization methods are invariant to re-scaling the dataset by verifying that the summed inputs of neurons stays constant under the changes. Furthermore, layer normalization is invariant to re-scaling of individual training cases, because the normalization scalars µ and σ in Eq. (3) only depend on the current input data. Let x 0 be a new data point obtained by re-scaling x by δ. Then we have, 
+where η > 0 is learning rate. Then, given importance score S (t) k , the singular values are pruned following
 
-数据重新缩放和重新居中：我们可以通过验证神经元的总输入在变化下保持不变来证明所有归一化方法对重新缩放数据集都是不变的。此外，层归一化对个别训练情况的重新缩放是不变的，因为方程中的归一化标量µ和σ。（3）仅取决于当前输入数据。设x0是通过用δ重新缩放x而获得的新数据点。然后我们有，
+其中η>0为学习率。然后，给定重要性得分S（t）k，奇异值被修剪如下
 
-. (7)
+Λ (t+1) k = T ( ˜Λ (t) k , S(t) k ), with T ( ˜Λ (t) k , S(t) k )ii =  ˜Λ (t) k,ii S (t) k,i is in the top-b (t) of S (t) , 0 otherwise, (6)
 
-.（7）
+∧（t+1）k=t（~∧（t）k，S（t）k），其中t（~Γ
 
-It is easy to see re-scaling individual data points does not change the model’s prediction under layer normalization. Similar to the re-centering of the weight matrix in layer normalization, we can also show that batch normalization is invariant to re-centering of the dataset.
+where S (t) = {S (t) k,i}1≤k≤n,1≤i≤r contains the importance score of all triplets. Here b (t) is the budget of remaining singular values at the t-th step, which we explain more in Section 3.3. In this way, we leave more budget to the incremental matrices of higher priority by pruning the singular values of less important ones. In the sequel, we introduce several options to design the importance score.
 
-很容易看出，在层归一化下，重新缩放单个数据点不会改变模型的预测。类似于层归一化中权重矩阵的重新定中心，我们还可以证明批量归一化对数据集的重新定中是不变的。
+其中，S（t）={S（t）k，i}1≤k≤n，1≤i≤r包含所有三元组的重要性得分。这里，b（t）是第t步剩余奇异值的预算，我们在第3.3节中对此进行了更多解释。通过这种方式，我们通过修剪不太重要的矩阵的奇异值，将更多的预算留给优先级较高的增量矩阵。在续集中，我们介绍了几个选项来设计重要性分数。
 
-## 5.2 Geometry of parameter space during learning 5.2学习过程中的参数空间几何
-We have investigated the invariance of the model’s prediction under re-centering and re-scaling of the parameters. Learning, however, can behave very differently under different parameterizations, even though the models express the same underlying function. In this section, we analyze learning behavior through the geometry and the manifold of the parameter space. We show that the normalization scalar σ can implicitly reduce learning rate and makes learning more stable.
+Magnitude of singular values is the most straightforward way to quantify the importance of every triplet, i.e., Sk,i = |λk,i|. In this way, only the least significant singular values are discarded. It minimizes the deviation from the original matrix and further stabilizes the training. Many existing methods use this criterion to control the rank of matrix (Cai et al., 2010; Koltchinskii et al., 2011; Toh & Yun, 2010). However, we remark that such a simple metric cannot properly quantify the contribution of parameters to model performance.
 
-我们研究了在参数重新定中心和重新缩放的情况下模型预测的不变性。然而，学习在不同的参数化下可能表现得非常不同，即使模型表达了相同的基本函数。在本节中，我们通过参数空间的几何和流形来分析学习行为。我们证明了归一化标量σ可以隐含地降低学习率，使学习更加稳定。
+奇异值的幅值是量化每个三元组重要性的最直接的方法，即Sk，i=|λk，i|。以这种方式，只丢弃最不重要的奇异值。它最大限度地减少了与原始矩阵的偏差，并进一步稳定了训练。许多现有的方法都使用这一标准来控制矩阵的秩（Cai et al.，2010；Koltchinski et al.，2011；Toh&Yun，2010）。然而，我们注意到，这样一个简单的度量不能正确地量化参数对模型性能的贡献。
 
-### 5.2.1 Riemannian metric 5.2.1黎曼度量
-The learnable parameters in a statistical model form a smooth manifold that consists of all possible input-output relations of the model. For models whose output is a probability distribution, a natural way to measure the separation of two points on this manifold is the Kullback-Leibler divergence between their model output distributions. Under the KL divergence metric, the parameter space is a Riemannian manifold.
+Sensitivity-based importance is another option for importance scoring, which quantifies the sensitivity of parameters to the training loss (Molchanov et al., 2019; Sanh et al., 2020; Liang et al., 2021; Zhang et al., 2022). The prior work, however, leverages the sensitivity to quantify the importance of single entries and applies it for unstructured pruning that prunes weights element-wise. When it turns to our case, we have to design a new metric as the triplets are discarded group-wise. Every entry’s sensitivity ought to be considered and properly combined to quantify the overall contribution of the triplet to model performance. Therefore, we propose a newly-designed importance metric in account of both the singular value and vectors in triplet Gk,i:
 
-统计模型中的可学习参数形成了一个光滑的流形，该流形由模型的所有可能的输入输出关系组成。对于输出是概率分布的模型，测量该流形上两点分离的一种自然方法是其模型输出分布之间的Kullback-Leibler散度。在KL散度度量下，参数空间是一个黎曼流形。
+基于敏感性的重要性是重要性评分的另一种选择，它量化了参数对训练损失的敏感性（Molchanov等人，2019；Sanh等人，2020；梁等人，2021；张等人，2022）。然而，先前的工作利用敏感性来量化单个条目的重要性，并将其应用于按元素修剪权重的非结构化修剪。当谈到我们的情况时，我们必须设计一个新的度量，因为三元组是按组丢弃的。应该考虑每个条目的敏感性，并将其适当组合，以量化三元组对模型性能的总体贡献。因此，考虑到三元组Gk，i中的奇异值和向量，我们提出了一个新设计的重要性度量：
 
-The curvature of a Riemannian manifold is entirely captured by its Riemannian metric, whose quadratic form is denoted as ds2 . That is the infinitesimal distance in the tangent space at a point in the parameter space. Intuitively, it measures the changes in the model output from the parameter space along a tangent direction. The Riemannian metric under KL was previously studied [Amari, 1998] and was shown to be well approximated under second order Taylor expansion using the Fisher 4 information matrix: 
+Sk,i = s(λk,i) + 1 d1 d1 X j=1 s(Pk,ji) + 1 d2 d2 X j=1 s(Qk,ij ), (7) 
 
-黎曼流形的曲率完全由其黎曼度量捕获，其二次形式表示为ds2。这是在参数空间中的一点上的切线空间中的无穷小距离。直观地，它测量从参数空间输出的模型沿切线方向的变化。先前研究了KL下的黎曼度量[Amari，1998]，并证明其在使用Fisher 4信息矩阵的二阶Taylor展开下很好地近似：
+Sk，i=s（λk，i）+1 d1 d1 X j=1 s（Pk，ji）+1 d2 X j=1秒（Qk，ij），（7）
 
-ds2 = DKL P(y | x; θ)k P(y | x; θ + δ) ≈ 1 2 δ > F(θ)δ, (8)
+where we calculate the mean importance of Pk,∗i and Qk,i∗ such that Sk,i does not scale with the number of parameters in Gk,i. Here s(·) is a specific importance function for single entries. We can adopt the sensitivity for s(·), which is defined as the magnitude of the gradient-weight product:
 
-ds2=DKL P（y|x；θ）k P（y| x；θ+δ）≈12δ>F（θ）δ，（8）
+其中，我们计算Pk，*i和Qk，i*的平均重要性，使得Sk，i不随Gk，i中的参数数量而缩放。这里的s（·）是单个条目的特定重要性函数。我们可以采用s（·）的灵敏度，其定义为梯度权重乘积的大小：
 
-F(θ) = E x∼P (x),y∼P (y | x) " ∂ log P(y | x; θ) ∂θ ∂ log P(y | x; θ) ∂θ > # , (9) 
+I(wij ) = |wij∇wijL|, (8) 
 
-F（θ）=E x～P（x），y～P（y|x
+I（wij）=|wijŞwijL|，（8）
 
-where, δ is a small change to the parameters. The Riemannian metric above presents a geometric view of parameter spaces. The following analysis of the Riemannian metric provides some insight into how normalization methods could help in training neural networks.
+where wij is any trainable parameter. (8) essentially approximates the change in loss when a parameter is zeroed out. If the removal of a parameter has a large influence, then the model is sensitive to it and we should retain it (Molchanov et al., 2019; Liang et al., 2021; Zhang et al., 2022).
 
-其中，δ是参数的微小变化。上面的黎曼度量给出了参数空间的几何视图。下面对黎曼度量的分析为规范化方法如何帮助训练神经网络提供了一些见解。
+其中wij是任何可训练的参数。（8） 本质上近似于当参数被清零时损失的变化。如果参数的去除有很大的影响，那么模型对它很敏感，我们应该保留它（Molchanov et al.，2019；梁等人，2021；张等人，2022）。
 
-### 5.2.2 The geometry of normalized generalized linear models 5.2.2归一化广义线性模型的几何
-We focus our geometric analysis on the generalized linear model. The results from the following analysis can be easily applied to understand deep neural networks with block-diagonal approximation to the Fisher information matrix, where each block corresponds to the parameters for a single neuron.
+However, Zhang et al. (2022) point out that the sensitivity in (8) is not yet a reliable importance indicator. Such a score is estimated on the sampled mini batch. The stochastic sampling and complicated training dynamics incur high variability and large uncertainty for estimating the sensitivity with (8). Therefore, Zhang et al. (2022) propose to resolve this issue by sensitivity smoothing and uncertainty quantification:
 
-我们把几何分析的重点放在广义线性模型上。以下分析的结果可以很容易地应用于理解具有Fisher信息矩阵的块对角近似的深度神经网络，其中每个块对应于单个神经元的参数。
+然而，张等人（2022）指出，（8）中的敏感性还不是一个可靠的重要性指标。这样的分数是在采样的小批量上估计的。随机采样和复杂的训练动力学导致了用（8）估计灵敏度的高可变性和大的不确定性。因此，张等人（2022）提出通过灵敏度平滑和不确定性量化来解决这一问题：
 
-A generalized linear model (GLM) can be regarded as parameterizing an output distribution from the exponential family using a weight vector w and bias scalar b. To be consistent with the previous sections, the log likelihood of the GLM can be written using the summed inputs a as the following: 
+I (t) (wij ) =β1I (t−1)(wij ) + (1 − β1)I (t) (wij ) (9)
 
-广义线性模型（GLM）可以被视为使用权向量w和偏置标量b对指数族的输出分布进行参数化。为了与前面的章节一致，GLM的对数似然可以使用求和输入A写成如下：
+I（t）（wij）=β1I（t−1）
 
-log P(y | x; w, b) = (a + b)y − η(a + b) φ + c(y, φ), (10)
+U (t) (wij ) =β2U (t−1)(wij ) + (1 − β2)  I (t) (wij ) − I (t) (wij )  , (10) 
 
-log P（y|x；w，b）=（a+b）y−η（a+b）φ+c（y，φ），（10）
+U（t）（wij）=β2U（t−1）（wij+（1−β2）I（t）
 
-E[y | x] = f(a + b) = f(w > x + b), Var[y | x] = φf0 (a + b), (11) 
+where 0 < β1, β2 < 1. I (t) is the smoothed sensitivity by exponential moving average and U (t) is the uncertainty term quantified by the local variation between I (t) and I (t) . Then they define the importance as the product between I (t) and U (t) , which can be another option for s(·): 
 
-E[y|x]=f（a+b）=f（w>x+b），Var[y|x]=φf0（a+b），（11）
+其中0<β1，β2<1。I（t）是通过指数移动平均平滑的灵敏度，而U（t）则是通过I（t。然后他们将重要性定义为I（t）和U（t）之间的乘积，这可以是s（·）的另一个选项：
 
-where, f(·) is the transfer function that is the analog of the non-linearity in neural networks, f 0 (·) is the derivative of the transfer function, η(·) is a real valued function and c(·) is the log partition function. φ is a constant that scales the output variance. Assume a H-dimensional output vector y = [y1, y2, · · · , yH] is modeled using H independent GLMs and log P(y | x; W, b) = P H i=1 log P(yi | x; wi , bi). Let W be the weight matrix whose rows are the weight vectors of the individual GLMs, b denote the bias vector of length H and vec(·) denote the Kronecker vector operator. The Fisher information matrix for the multi-dimensional GLM with respect to its parameters θ = [w1 > , b1, · · · , w>H, bH] > = vec([W, b] > ) is simply the expected Kronecker product of the data features and the output covariance matrix:
+s (t) (wij ) = I (t) (wij ) · U (t) (wij ). (11)
 
-其中，f（·）是神经网络中非线性的模拟传递函数，f0（·）为传递函数的导数，η（·）表示实值函数，c（·）则为对数配分函数。φ是缩放输出方差的常数。假设H维输出向量y=[y1，y2，··，yH]使用H无关的GLM和log P（y|x；W，b）=P H i=1 log P（yi|x；wi，bi）建模。设W是权重矩阵，其行是单个GLM的权重向量，b表示长度为H的偏置向量，vec（·）表示Kronecker向量算子。多维GLM关于其参数θ=[w1>，b1，···，w>H，bH]>=vec（[w，b]>）的Fisher信息矩阵简单地是数据特征和输出协方差矩阵的预期Kronecker乘积：
+s（t）（wij）=I（t）。（11）
 
-(12)
+We present a detailed ablation study in Section 4.4 to compare the performance of different importance metrics. We find the proposed metric (7) based on the sensitivity variant (11) generally performs best.
 
-（12）
+我们在第4.4节中介绍了一项详细的消融研究，以比较不同重要性指标的性能。我们发现基于灵敏度变体（11）的所提出的度量（7）通常表现最好。
 
-We obtain normalized GLMs by applying the normalization methods to the summed inputs a in the original model through µ and σ. Without loss of generality, we denote F¯ as the Fisher information matrix under the normalized multi-dimensional GLM with the additional gain parameters θ = vec([W, b, g] > ):
+We summarize the detailed algorithm in Algorithm 1. 
 
-我们通过µ和σ将归一化方法应用于原始模型中的求和输入a，从而获得归一化GLM。在不失一般性的情况下，我们将F表示为具有附加增益参数θ=vec（[W，b，g]>）的归一化多维GLM下的Fisher信息矩阵：
+我们在算法1中总结了详细的算法。
 
-. (14)
+Algorithm 1 AdaLoRA  
 
-（14）
+算法1 AdaLoRA
 
-Implicit learning rate reduction through the growth of the weight vector: Notice that, comparing to standard GLM, the block F¯ ij along the weight vector wi direction is scaled by the gain parameters and the normalization scalar σi . If the norm of the weight vector wi grows twice as large, even though the model’s output remains the same, the Fisher information matrix will be different. The curvature along the wi direction will change by a factor of 1 2 because the σi will also be twice as large. As a result, for the same parameter update in the normalized model, the norm of the weight vector effectively controls the learning rate for the weight vector. During learning, it is harder to change the orientation of the weight vector with large norm. The normalization methods, therefore, 5 0 50 100 150 200 250 300 iteration x 300 34 35 36 37 38 39 40 41 42 43 Image Retrieval (Validation)
+## 3.3 GLOBAL BUDGET SCHEDULER 3.3全球预算调度器
+As mentioned in Section 1, adjusting the rank is naturally to control the parameter budget in the context of low-rank adaptation. Hence we define the budget b (t) as the total rank of all incremental matrices, i.e., the number of total singular values. Recall that the budget allocation is iteratively conducted during the fine-tuning. To facilitate the training, we propose a global budget scheduler.
 
-通过权重向量的增长来降低内隐学习率：注意，与标准GLM相比，沿着权重向量wi方向的块F’ij由增益参数和归一化标量σi缩放。如果权重向量wi的范数增长两倍大，即使模型的输出保持不变，Fisher信息矩阵也会不同。沿着wi方向的曲率将以12的因子变化，因为σi也将是其两倍大。结果，对于归一化模型中的相同参数更新，权重向量的范数有效地控制了权重向量的学习率。在学习过程中，很难改变具有大范数的权重向量的方向。因此，标准化方法是5 0 50 100 150 200 250 300迭代x 300 34 35 36 37 39 40 41 42 43图像检索（验证）
+如第1节所述，在低秩自适应的背景下，调整秩自然是为了控制参数预算。因此，我们将预算b（t）定义为所有增量矩阵的总秩，即总奇异值的数量。回想一下，预算分配是在微调期间反复进行的。为了便于培训，我们提出了一个全局预算调度程序。
 
-Figure 1: Recall@K curves using order-embeddings with and without layer normalization.
+Specifically, we start from an initial budget b (0) that is slightly higher than the target budget b (T) (e.g., 1.5 times of b (T) ). We set the initial rank of each incremental matrix as r = b (0)/n. We warm up the training for ti steps, and then follow a cubic schedule to decrease the budget b (t) until it reaches b (T) . Finally, we fix the resulting budget distribution and fine-tune the model for tf steps. The exact equation for the budget schedule is presented in Appendix A. This allows AdaLoRA to explore the parameter space first and then focus on the most important weights later. 
 
-图1：Recall@K使用具有和不具有层规范化的顺序嵌入的曲线。
+具体地说，我们从初始预算b（0）开始，该预算略高于目标预算b（T）（例如，b（T）的1.5倍）。我们将每个增量矩阵的初始秩设置为r＝b（0）/n。我们为ti步的训练热身，然后遵循三次计划来减少预算b（t），直到它达到b（t）。最后，我们修复了由此产生的预算分布，并对tf步骤的模型进行了微调。预算时间表的精确方程如附录A所示。这使得AdaLoRA可以首先探索参数空间，然后再关注最重要的权重。
 
-Table 2: Average results across 5 test splits for caption and image retrieval. R@K is Recall@K (high is good). Mean r is the mean rank (low is good). Sym corresponds to the symmetric baseline while OE indicates order-embeddings. have an implicit “early stopping” effect on the weight vectors and help to stabilize learning towards convergence.
+## 4 EXPERIMENTS 4个实验
+We implement AdaLoRA for fine-tuning DeBERTaV3-base (He et al., 2021a) and BART-large (Lewis et al., 2019). We evaluate the effectiveness of the proposed algorithm on natural language understanding (GLUE, Wang et al. (2019)), question answering (SQuADv1, Rajpurkar et al. (2016) and SQuADv2, Rajpurkar et al. (2018)), and natural language generation (XSum, Narayan et al. (2018) and CNN/DailyMail Hermann et al. (2015)). All the gains have passed significant tests with p < 0.05.
 
-表2：标题和图像检索的5个测试拆分的平均结果。R@K是Recall@K（高即好）。平均r是平均等级（低即好）。Sym对应于对称基线，而OE表示有序嵌入。对权重向量具有隐含的“早期停止”效应，并有助于稳定向收敛的学习。
+我们实现了AdaLoRA来微调DeBERTaV3碱基（He等人，2021a）和BART大（Lewis等人，2019）。我们评估了所提出的算法在自然语言理解（GLUE，Wang et al.（2019））、问题回答（SQuADv1，Rajpurkar et al.（2016）和SQuADv2，Rajpurka et al.（2018））和自然语言生成（XSum，Narayan等人（2018）和CNN/DailyMail-Hermann et al.（2015））方面的有效性。所有的收益都通过了显著的检验，p＜0.05。
 
-Learning the magnitude of incoming weights: In normalized models, the magnitude of the incoming weights is explicitly parameterized by the gain parameters. We compare how the model output changes between updating the gain parameters in the normalized GLM and updating the magnitude of the equivalent weights under original parameterization during learning. The direction along the gain parameters in F¯ captures the geometry for the magnitude of the incoming weights. We show that Riemannian metric along the magnitude of the incoming weights for the standard GLM is scaled by the norm of its input, whereas learning the gain parameters for the batch normalized and layer normalized models depends only on the magnitude of the prediction error. Learning the magnitude of incoming weights in the normalized model is therefore, more robust to the scaling of the input and its parameters than in the standard model. See Appendix for detailed derivations. 
+Implementation Details. We use PyTorch (Paszke et al., 2019) to implement all the algorithms. Our implementation is based on the publicly available Huggingface Transformers3 (Wolf et al., 2019) code-base. All the experiments are conducted on NVIDIA V100 GPUs.
 
-学习传入权重的大小：在归一化模型中，传入权重的幅度由增益参数明确参数化。我们比较了在学习过程中，在原始参数化下更新归一化GLM中的增益参数和更新等效权重的大小之间，模型输出如何变化。F’中沿增益参数的方向捕获了传入权重大小的几何结构。我们证明了标准GLM沿输入权重大小的黎曼度量是由其输入的范数缩放的，而学习批量归一化和层归一化模型的增益参数仅取决于预测误差的大小。因此，在归一化模型中学习传入权重的大小对输入及其参数的缩放比在标准模型中更鲁棒。详细推导见附录。
+实施细节。我们使用PyTorch（Paszke et al.，2019）来实现所有算法。我们的实现基于公开的Huggingface Transformers3（Wolf et al.，2019）代码库。所有实验都是在NVIDIA V100 GPU上进行的。
 
-## 6 Experimental results 6实验结果
-We perform experiments with layer normalization on 6 tasks, with a focus on recurrent neural networks: image-sentence ranking, question-answering, contextual language modelling, generative modelling, handwriting sequence generation and MNIST classification. Unless otherwise noted, the default initialization of layer normalization is to set the adaptive gains to 1 and the biases to 0 in the experiments.
+LoRA scales ∆x by α/r where α is a constant in r. As a result, the magnitude of output can be consistent given different r. It reduces the efforts of retuning learning rate when varying r. Typically α is set as 16 or 32 and never tuned (Hu et al., 2022; Yang & Hu, 2020). Following LoRA, we add the same scaling for (3) and fix α as LoRA. Besides, in Algorithm 1, we prune singular values every ∆T steps (e.g., ∆T = 100) such that the pruned triplets can still get updated within these intervals and possibly reactivated in future iterations.
 
-我们在6个任务上进行了层归一化实验，重点是递归神经网络：图像句子排序、问题回答、上下文语言建模、生成建模、手写序列生成和MNIST分类。除非另有说明，否则在实验中，层归一化的默认初始化是将自适应增益设置为1，将偏差设置为0。
+LoRA用α/r来缩放∆x，其中α是r中的常数。因此，给定不同的r，输出的幅度可以是一致的。当r变化时，它减少了重新调整学习率的努力。通常，α被设置为16或32，并且从不调整（Hu et al.，2022；杨和胡，2020）。在LoRA之后，我们为（3）添加相同的缩放，并将α固定为LoRA。此外，在算法1中，我们每∆T步（例如∆T=100）修剪奇异值，这样修剪后的三元组仍然可以在这些间隔内更新，并可能在未来的迭代中重新激活。
 
-## 6.1 Order embeddings of images and language 6.1图像和语言的顺序嵌入
-In this experiment, we apply layer normalization to the recently proposed order-embeddings model of Vendrov et al. [2016] for learning a joint embedding space of images and sentences. We follow the same experimental protocol as Vendrov et al. [2016] and modify their publicly available code to incorporate layer normalization 1 which utilizes Theano [Team et al., 2016]. Images and sentences from the Microsoft COCO dataset [Lin et al., 2014] are embedded into a common vector space, where a GRU [Cho et al., 2014] is used to encode sentences and the outputs of a pre-trained VGG ConvNet [Simonyan and Zisserman, 2015] (10-crop) are used to encode images. The orderembedding model represents images and sentences as a 2-level partial ordering and replaces the cosine similarity scoring function used in Kiros et al. [2014] with an asymmetric one. 
+Baselines. We compare
 
-在这个实验中，我们将层归一化应用于Vendrov等人最近提出的顺序嵌入模型。[2016]用于学习图像和句子的联合嵌入空间。我们遵循与Vendrov等人相同的实验协议。【2016】并修改其公开可用的代码，以纳入利用Theano的层规范化1【Team等人，2016】。来自Microsoft COCO数据集[Lin et al.，2014]的图像和句子被嵌入到公共向量空间中，其中GRU[Cho et al.，14]用于对句子进行编码，并且预训练的VGG ConvNet[Simonyan和Zisserman，2015]（10作物）的输出用于对图像进行编码。有序嵌入模型将图像和句子表示为2级偏序，并将Kiros等人[2014]中使用的余弦相似性评分函数替换为非对称函数。
+基线。我们比较
 
-1 https://github.com/ivendrov/order-embedding 
+* Full fine-tuning is the most common approach for adaptation. During fine-tuning, the model is initialized with pre-trained weights and biases, and all model parameters undergo gradient updates. 
 
-1.https://github.com/ivendrov/order-embedding
+*全面微调是适应的最常见方法。在微调过程中，使用预先训练的权重和偏差初始化模型，并对所有模型参数进行梯度更新。
 
-Figure 2: Validation curves for the attentive reader model. BN results are taken from [Cooijmans et al., 2016].
+* Bitfit (Zaken et al., 2021) is an effective parameter-efficient fine-tuning method. The method only fine-tunes bias vectors in the pre-trained model. 
 
-图2：专注读者模型的验证曲线。BN结果取自【Cooijmans等人，2016】。
+*Bitfit（Zaken et al.，2021）是一种有效的参数高效微调方法。该方法仅微调预训练模型中的偏差向量。
 
-We trained two models: the baseline order-embedding model as well as the same model with layer normalization applied to the GRU. After every 300 iterations, we compute Recall@K (R@K) values on a held out validation set and save the model whenever R@K improves. The best performing models are then evaluated on 5 separate test sets, each containing 1000 images and 5000 captions, for which the mean results are reported. Both models use Adam [Kingma and Ba, 2014] with the same initial hyperparameters and both models are trained using the same architectural choices as used in Vendrov et al. [2016]. We refer the reader to the appendix for a description of how layer normalization is applied to GRU.
+* Adapter tuning (Houlsby et al., 2019; Pfeiffer et al., 2020) inserts two-layer adapters between transformer blocks. We compare with two types of adapter. Houlsby adapter as proposed in Houlsby et al. (2019) is inserted between the self-attention module and the FFN module followed by a subsequent residual connection. Recently, Pfeiffer et al. (2020) propose a more efficient design with adapters only applied after FFN modules and LayerNorm modules (Ba et al., 2016), which we call Pfeiffer adapter. The number of trainable parameters is determined by the number of layers, the hidden dimension of adapters and the dimension of their inputs. 
 
-我们训练了两个模型：基线顺序嵌入模型以及应用于GRU的层归一化的同一模型。每300次迭代后，我们计算Recall@K(R@K)值，并随时保存模型R@K改进。然后，在5个单独的测试集上评估表现最好的模型，每个测试集包含1000张图像和5000个字幕，并报告其平均结果。两个模型都使用具有相同初始超参数的Adam[Kingma和Ba，2014]，并且两个模型使用与Vendrov等人相同的架构选择进行训练。[2016]。我们请读者参阅附录，了解层规范化如何应用于GRU。
+*适配器调谐（Houlsby等人，2019；Pfeiffer等人，2020）在变压器块之间插入两层适配器。我们比较了两种类型的适配器。Houlsby等人提出的Houlsby适配器。（2019）插入自注意模块和FFN模块之间，然后是后续的剩余连接。最近，Pfeiffer等人（2020）提出了一种更有效的设计，其中适配器仅应用于FFN模块和LayerNorm模块之后（Ba et al.，2016），我们称之为Pfeiffr适配器。可训练参数的数量由层的数量、适配器的隐藏维度及其输入的维度决定。
 
-Figure 1 illustrates the validation curves of the models, with and without layer normalization. We plot R@1, R@5 and R@10 for the image retrieval task. We observe that layer normalization offers a per-iteration speedup across all metrics and converges to its best validation model in 60% of the time it takes the baseline model to do so. In Table 2, the test set results are reported from which we observe that layer normalization also results in improved generalization over the original model. The results we report are state-of-the-art for RNN embedding models, with only the structure-preserving model of Wang et al. [2016] reporting better results on this task. However, they evaluate under different conditions (1 test set instead of the mean over 5) and are thus not directly comparable.
+* LoRA (Hu et al., 2022) is a state-of-the-art method for parameter-efficient fine-tuning. The method parameterizes incremental updates by two small matrices and only fine-tune them. The number of trainable parameter is controlled by the rank r and the number of adapted weight matrices n. Hu et al. (2022) apply LoRA to query and value projections only. In empirical, we find that applying LoRA to all weight matrices, i.e., Wq, Wk, Wv, Wf1 and Wf2 , can further improve its performance (Please see Appendix F). Hence, we compare with this generalized LoRA to maximize its performance. We use publicly available implementation 4 to run all the baselines. Please refer to Hu et al. (2022) and reference therein for details.
 
-图1显示了模型的验证曲线，包括和不包括层归一化。我们策划R@1，R@5和R@10用于图像检索任务。我们观察到，层归一化在所有度量中提供了每次迭代的加速，并在基线模型所需时间的60%内收敛到其最佳验证模型。在表2中，报告了测试集结果，我们从中观察到，与原始模型相比，层归一化还提高了泛化能力。我们报告的结果对于RNN嵌入模型来说是最先进的，只有Wang等人的结构保持模型。[2016]报告了这项任务的更好结果。然而，它们在不同的条件下进行评估（1个测试集，而不是5个以上的平均值），因此不能直接进行比较。
+*LoRA（Hu et al.，2022）是一种最先进的参数有效微调方法。该方法通过两个小矩阵对增量更新进行参数化，并且只对它们进行微调。可训练参数的数量由秩r和自适应权重矩阵的数量n控制。Hu等人（2022）仅将LoRA应用于查询和值投影。在经验中，我们发现将LoRA应用于所有权重矩阵，即Wq、Wk、Wv、Wf1和Wf2，可以进一步提高其性能（请参见附录F）。因此，我们将其与该广义LoRA进行比较，以最大限度地提高其性能。我们使用公开可用的实现4来运行所有基线。详情请参考Hu等人（2022）及其参考文献。
 
-## 6.2 Teaching machines to read and comprehend 6.2教学机器阅读和理解
-In order to compare layer normalization to the recently proposed recurrent batch normalization [Cooijmans et al., 2016], we train an unidirectional attentive reader model on the CNN corpus both introduced by Hermann et al. [2015]. This is a question-answering task where a query description about a passage must be answered by filling in a blank. The data is anonymized such that entities are given randomized tokens to prevent degenerate solutions, which are consistently permuted during training and evaluation. We follow the same experimental protocol as Cooijmans et al. [2016] and modify their public code to incorporate layer normalization 2 which uses Theano [Team et al., 2016]. We obtained the pre-processed dataset used by Cooijmans et al. [2016] which differs from the original experiments of Hermann et al. [2015] in that each passage is limited to 4 sentences. In Cooijmans et al. [2016], two variants of recurrent batch normalization are used: one where BN is only applied to the LSTM while the other applies BN everywhere throughout the model. In our experiment, we only apply layer normalization within the LSTM.
+3https://github.com/huggingface/transformers 
 
-为了将层规范化与最近提出的递归批量规范化进行比较[Coijmans et al.，2016]，我们在Hermann et al.[2015]引入的CNN语料库上训练了一个单向注意读者模型。这是一个问答任务，必须通过填空来回答关于一段话的查询描述。数据是匿名的，因此实体被赋予随机令牌，以防止退化解，退化解在训练和评估过程中被一致地排列。我们遵循与Cooijmans等人相同的实验协议。【2016】并修改他们的公共代码，以纳入使用Theano的层规范化2【Team等人，2016】。我们获得了Cooijmans等人使用的预处理数据集。【2016】与Hermann等人【2015】的原始实验不同之处在于，每个段落限制为4个句子。在Cooijmans等人[2016]中，使用了两种循环批量归一化的变体：一种是BN仅应用于LSTM，而另一种是在整个模型中处处应用BN。在我们的实验中，我们只在LSTM中应用层归一化。
+3.https://github.com/huggingface/transformers
 
-The results of this experiment are shown in Figure 2. We observe that layer normalization not only trains faster but converges to a better validation result over both the baseline and BN variants. In Cooijmans et al. [2016], it is argued that the scale parameter in BN must be carefully chosen and is set to 0.1 in their experiments. We experimented with layer normalization for both 1.0 and 0.1 scale initialization and found that the former model performed significantly better. This demonstrates that layer normalization is not sensitive to the initial scale in the same way that recurrent BN is. 3
+Table 1: Results with DeBERTaV3-base on GLUE development set. The best results on each dataset are shown in bold. We report the average correlation for STS-B. Full FT, HAdapter and PAdapter represent full fine-tuning, Houlsby adapter, and Pfeiffer adapter respectively. We report mean of 5 runs using different random seeds.
 
-这个实验的结果如图2所示。我们观察到，与基线和BN变体相比，层归一化不仅训练得更快，而且收敛到更好的验证结果。在Cooijmans等人[2016]中，有人认为BN中的尺度参数必须仔细选择，并且在他们的实验中设置为0.1。我们对1.0和0.1尺度初始化的层归一化进行了实验，发现前一个模型的性能明显更好。这表明，层归一化对初始尺度不敏感，就像反复出现的BN一样。3
+表1：基于GLUE发育集的DeBERTaV3结果。每个数据集的最佳结果以粗体显示。我们报告了STS-B的平均相关性。全FT、HAdapter和PAdapter分别代表全微调、Houlsby适配器和Pfeiffer适配器。我们报告了使用不同随机种子的5次运行的平均值。
 
-## 6.3 Skip-thought vectors 6.3跳过思想载体
-Skip-thoughts [Kiros et al., 2015] is a generalization of the skip-gram model [Mikolov et al., 2013] for learning unsupervised distributed sentence representations. Given contiguous text, a sentence is encoded with a encoder RNN and decoder RNNs are used to predict the surrounding sentences. Kiros et al. [2015] showed that this model could produce generic sentence representations that perform well on several tasks without being fine-tuned. However, training this model is timeconsuming, requiring several days of training in order to produce meaningful results.
+## 4.1 NATURAL LANGUAGE UNDERSTANDING 4.1自然语言理解
+Models and Datasets. We evaluate the fine-tuning performance of DeBERTaV3-base (He et al., 2021a) using the proposed algorithm. We conduct experiments on the General Language Understanding Evaluation (GLUE, Wang et al. 2019) benchmark. The benchmark includes two single-sentence classification tasks, three similarity and paraphrase tasks and four natural language inference tasks. Dataset details are summarized in Appendix B.
 
-Skip things[Kiros et al.，2015]是Skip gram模型[Mikolov et al.，2013]的推广，用于学习无监督的分布式句子表示。给定连续文本，使用编码器RNN对句子进行编码，解码器RNN用于预测周围的句子。Kiros等人[2015]表明，该模型可以产生在几个任务上表现良好的通用句子表示，而无需进行微调。然而，训练这个模型很耗时，需要几天的训练才能产生有意义的结果。
+模型和数据集。我们使用所提出的算法评估了DeBERTaV3碱基（He et al.，2021a）的微调性能。我们在通用语言理解评估（GLUE，Wang et al.2019）基准上进行了实验。该基准包括两个单句分类任务、三个相似和转述任务以及四个自然语言推理任务。附录B中总结了数据集的详细信息。
 
-2 https://github.com/cooijmanstim/Attentive_reader/tree/bn 
+Implementation Details. DeBERTaV3-base consists of 183 millions parameters. We compare AdaLoRA with the baselines under different budget levels, for example, given the total trainable parameters as 0.3/0.6/1.2 million. In order to match the parameter budget, we select the hidden dimensions of adapters from {8, 16, 32, 64}, set the rank r of LoRA as {2, 4, 8}, and choose the final budget b (T) of AdaLoRA from {144, 288, 576}. Then we set b (0) as 1.5 times of b (T) for AdaLoRA and select the regularization coefficient γ from {0.1, 0.3, 0.5}. We set the exponential moving average parameters β1 and β2 as their default value 0.85. We select the learning rate from {5 × 10−5 , 8 × 10−5 , 1 × 10−4 , 2 × 10−4}. More details are presented in Appendix C.
 
-2.https://github.com/cooijmanstim/Attentive_reader/tree/bn
+实施细节。DeBERTaV3基础由1.83亿个参数组成。例如，我们将AdaLoRA与不同预算水平下的基线进行了比较，假设总可训练参数为0.3/0.6/120万。为了匹配参数预算，我们从{8，16，32，64}中选择适配器的隐藏维度，将LoRA的秩r设置为{2，4，8}，并从{144288576}中选择AdaLoRA的最终预算b（T）。然后，我们将b（0）设置为AdaLoRA的b（T）的1.5倍，并从{0.1，0.3，0.5}中选择正则化系数γ。我们将指数移动平均参数β1和β2设置为它们的默认值0.85。我们从{5×10−5，8×10−5.1×10−4，2×10−4}中选择学习率。更多细节见附录C。
 
-3 We only produce results on the validation set, as in the case of Cooijmans et al. [2016] 
+Main results. We compare AdaLoRA with the baseline methods under different budget settings. Table 1 shows experimental results on the GLUE development set. We see that AdaLoRA achieves better or on par performance compared with existing approaches on all datasets under all budget levels. For example, when the parameter budget is 0.3M, AdaLoRA achieves 87.36% accuracy on RTE, which is 1.8% higher than the best-performing baseline. Besides, AdaLoRA with extreme low budget can often perform better than the baselines with higher budget. For example, AdaLoRA achieve 70.04% Mcc. score on CoLA with 0.3M fine-tuning parameters, which is higher than all baseline methods with lager budget (e.g., 0.6M and 1.2M).
 
-3我们只在验证集上产生结果，如Cooijmans等人的情况。【2016】
+主要结果。我们将AdaLoRA与不同预算设置下的基线方法进行了比较。表1显示了GLUE开发套件的实验结果。我们看到，在所有预算水平下，与现有方法相比，AdaLoRA在所有数据集上都实现了更好或同等的性能。例如，当参数预算为0.3 M时，AdaLoRA在RTE上的准确率为87.36%，比性能最佳的基线高1.8%。此外，预算极低的AdaLoRA通常比预算较高的基线表现更好。例如，AdaLoRA实现了70.04%Mcc。CoLA的得分为0.3 M微调参数，高于所有预算较大的基线方法（如0.6 M和1.2 M）。
 
-Figure 3: Performance of skip-thought vectors with and without layer normalization on downstream tasks as a function of training iterations. The original lines are the reported results in [Kiros et al., 2015]. Plots with error use 10-fold cross validation. Best seen in color.
+## 4.2 QUESTION ANSWERING 4.2问答
+Models and Datasets. We evaluate performance of the proposed algorithm on two question answering (QA) datasets: SQuAD v1.1 (Rajpurkar et al., 2016) and SQuADv2.0 (Rajpurkar et al., 2018), where we use AdaLoRA to fine-tune DeBERTaV3-base. These tasks are treated as a sequence labeling problem, where we predict the probability of each token being the start and end of the answer span. Dataset details can be found in Appendix D.
 
-图3：作为训练迭代的函数，具有和不具有层规范化的跳跃思想向量在下游任务上的性能。原始线是[Kiros et al.，2015]中报告的结果。有错误的绘图使用10倍交叉验证。最好的颜色。
+模型和数据集。我们在两个问答（QA）数据集上评估了所提出算法的性能：SQuAD v1.1（Rajpurkar et al.，2016）和SQuADv2.0（Rajpurka et al.，2018），其中我们使用AdaLoRA来微调DeBERTaV3基础。这些任务被视为序列标记问题，我们预测每个令牌成为答案跨度的开始和结束的概率。数据集详细信息见附录D。
 
-Table 3: Skip-thoughts results. The first two evaluation columns indicate Pearson and Spearman correlation, the third is mean squared error and the remaining indicate classification accuracy. Higher is better for all evaluations except MSE. Our models were trained for 1M iterations with the exception of (†) which was trained for 1 month (approximately 1.7M iterations) 
+4https://github.com/microsoft/LoRA 
 
-表3：跳过思考结果。前两个评估列表示Pearson和Spearman相关性，第三个是均方误差，其余表示分类准确性。对于除MSE之外的所有评估，越高越好。我们的模型训练了1M次迭代，但（†）除外，它训练了1个月（约1.7M次迭代）
+4.https://github.com/microsoft/LoRA
 
-In this experiment we determine to what effect layer normalization can speed up training. Using the publicly available code of Kiros et al. [2015] 4 , we train two models on the BookCorpus dataset [Zhu et al., 2015]: one with and one without layer normalization. These experiments are performed with Theano [Team et al., 2016]. We adhere to the experimental setup used in Kiros et al. [2015], training a 2400-dimensional sentence encoder with the same hyperparameters. Given the size of the states used, it is conceivable layer normalization would produce slower per-iteration updates than without. However, we found that provided CNMeM 5 is used, there was no significant difference between the two models. We checkpoint both models after every 50,000 iterations and evaluate their performance on five tasks: semantic-relatedness (SICK) [Marelli et al., 2014], movie review sentiment (MR) [Pang and Lee, 2005], customer product reviews (CR) [Hu and Liu, 2004], subjectivity/objectivity classification (SUBJ) [Pang and Lee, 2004] and opinion polarity (MPQA) [Wiebe et al., 2005]. We plot the performance of both models for each checkpoint on all tasks to determine whether the performance rate can be improved with LN.
+Table 2: Results with DeBERTaV3-base on SQuAD v1.1 and SQuADv2.0. Here # Params is the number of trainable parameters relative to that in full fine-tuning. We report EM/F1. The best results in each setting are shown in bold.
 
-在这个实验中，我们确定了层规范化可以在多大程度上加快训练。使用Kiros等人的公开代码。[2015]4，我们在BookCorpus数据集上训练了两个模型[Zhu et al.，2015]：一个有层规范化，一个没有层规范化。这些实验是用Theano进行的[Team et al.，2016]。我们坚持Kiros等人使用的实验设置。[2015]，用相同的超参数训练2400维句子编码器。考虑到所使用的状态的大小，可以想象，层规范化将产生比没有更慢的每次迭代更新。然而，我们发现，如果使用CNMeM 5，两种模型之间没有显著差异。我们在每50000次迭代后检查这两个模型，并评估它们在五项任务上的性能：语义相关性（SICK）[Marelli et al.，2014]、电影评论情感（MR）[Pang和Lee，2005]、客户产品评论（CR）[Hu和Liu，2004]、主观/客观分类（SUBJ）[Pong和Lee，2004]和意见极性（MPQA）[Wiebe et al。我们绘制了两个模型在所有任务中每个检查点的性能图，以确定LN是否可以提高性能。
+表2：基于SQuAD v1.1和SQuADv2.0的DeBERTaV3结果。这里，#Params是相对于完全微调中的可训练参数的数量。我们报告EM/F1。每个设置中的最佳结果以粗体显示。
 
-The experimental results are illustrated in Figure 3. We observe that applying layer normalization results both in speedup over the baseline as well as better final results after 1M iterations are performed as shown in Table 3. We also let the model with layer normalization train for a total of a month, resulting in further performance gains across all but one task. We note that the performance differences between the original reported results and ours are likely due to the fact that the publicly available code does not condition at each timestep of the decoder, where the original model does.
+Implementation Details. We compare AdaLoRA with the baseline methods under different parameter budgets. That is we have the number of trainable parameters as 0.08%/0.16%/0.32%/0.65% of total pre-trained parameters. To match the budget requirements, we select the hidden dimensions of adapters from {4, 8, 16, 32, 64}, set the rank r of LoRA as {1, 2, 4, 8} and choose the final total rank b (T) of AdaLoRA from {72, 144, 288, 576}. We set the batch size as 16. We use AdamW (Loshchilov & Hutter, 2019) as the optimizer and we set the learning rate as 1 × 10−3 for AdaLoRA. Please refer to Appendix D for more details.
 
-实验结果如图3所示。我们观察到，如表3所示，在执行1M次迭代后，应用层归一化导致在基线上的加速以及更好的最终结果。我们还让具有层规范化的模型总共训练一个月，从而在除一个任务外的所有任务中进一步提高性能。我们注意到，原始报告的结果和我们的结果之间的性能差异可能是由于公开可用的代码在解码器的每个时间步长都不存在条件，而原始模型存在条件。
+实施细节。我们将AdaLoRA与基线方法在不同参数预算下进行了比较。也就是说，我们的可训练参数的数量为总预训练参数的0.08%/0.16%/0.32%/0.65%。为了匹配预算要求，我们从{4，8，16，32，64}中选择适配器的隐藏维度，将LoRA的秩r设置为{1，2，4，8}，并从{72144288576}中选择AdaLoRA的最终总秩b（T）。我们将批量大小设置为16。我们使用AdamW（Loshchilov&Hutter，2019）作为优化器，并将AdaLoRA的学习率设置为1×10−3。有关更多详细信息，请参阅附录D。
 
-4 https://github.com/ryankiros/skip-thoughts 
+Main Results. Table 2 summarizes experimental results when we fine-tune DeBERTaV3-base under 4 different budget settings: 0.08%, 0.16%, 0.32% and 0.65% of total pre-trained parameters. From the result, we see that AdaLoRA consistently outperforms existing approaches under all the budget levels in term of two evaluation metrics: exact match (EM) and F1. Notice that the performance of Houlsby adapter and Pfeiffer adapter are notably decreased when we reduce the parameter budget. In contrast, our method shows the consistent performance under different budget levels. For example, AdaLoRA achieves 88.7% F1 on SQuADv2.0 with the smallest budget 0.08%. It is close to its performance under the high budget and it is also 1.2% higher than the best-performing baseline.
 
-4.https://github.com/ryankiros/skip-thoughts
+主要结果。表2总结了当我们在4种不同的预算设置下微调DeBERTaV3基础时的实验结果：0.08%、0.16%、0.32%和0.65%的总预训练参数。从结果中，我们可以看出，在所有预算水平下，AdaLoRA在两个评估指标方面始终优于现有方法：精确匹配（EM）和F1。请注意，当我们减少参数预算时，Houlsby适配器和Pfeiffer适配器的性能显著降低。相比之下，我们的方法显示了在不同预算水平下的一致性能。例如，AdaLoRA在SQuADv2.0上以0.08%的最小预算实现了88.7%的F1成绩。这接近其在高预算下的表现，也比表现最好的基线高出1.2%。
 
-5 https://github.com/NVIDIA/cnmem 
+## 4.3 NATURAL LANGUAGE GENERATION 4.3自然语言生成
+Table 3: Results with BART-large on XSum and CNN/DailyMail. Here # Params is the number of trainable parameters relative to that in full fine-tuning. We report R-1/2/L. The best results are shown in bold.
 
-5.https://github.com/NVIDIA/cnmem
+表3：XSum和CNN/DaylyMail上BART大的结果。这里，#Params是相对于完全微调中的可训练参数的数量。我们报告R-1/2/L。最佳结果以粗体显示。
 
-Figure 5: Handwriting sequence generation model negative log likelihood with and without layer normalization. The models are trained with mini-batch size of 8 and sequence length of 500. 
+Models and Datasets. To provide a comparison with the state-of-the-art in natural language generation (NLG) tasks, we apply AdaLoRA to fine-tune a BART-large model (Lewis et al., 2019). We evaluate model performance on two datasets: XSum (Narayan et al., 2018) and CNN/DailyMail (Hermann et al., 2015).
 
-图5：有和没有层归一化的手写序列生成模型负对数似然。模型以8的小批量大小和500的序列长度进行训练。
+模型和数据集。为了与最先进的自然语言生成（NLG）任务进行比较，我们将AdaLoRA应用于BART大型模型的微调（Lewis et al.，2019）。我们在两个数据集上评估了模型性能：XSum（Narayan et al.，2018）和CNN/DaylyMail（Hermann et al.，2015）。
 
-Figure 4: DRAW model test negative log likelihood with and without layer normalization.
+Implementation Details. Similarly as DeBERTav3-base, we apply low-rank/SVD-based adaptation to every weight matrix of both encoder and decoder layers. We report ROUGE 1/2/L scores (R-1/2/L, Lin (2004)). We set the training epochs as 15. For XSum, we set the beam length as 8 and batch size as 64. For CNN/DailyMail, we set the beam length as 4 and batch size as 32. Please see Appendix E for the detailed configuration.
 
-图4:DRAW模型在有和没有层归一化的情况下测试负对数似然性。
+实施细节。类似于DeBERTav3基础，我们将基于低秩/SVD的自适应应用于编码器和解码器层的每个权重矩阵。我们报告了ROUGE 1/2/L评分（R-1/2/L，Lin（2004））。我们将训练时期定为15年。对于XSum，我们将光束长度设置为8，批量大小设置为64。对于美国有线电视新闻网/每日邮报，我们将波束长度设置为4，批量大小设置为32。详细配置请参见附录E。
 
-We also experimented with the generative modeling on the MNIST dataset. Deep Recurrent Attention Writer (DRAW) [Gregor et al., 2015] has previously achieved the state-of-theart performance on modeling the distribution of MNIST digits. The model uses a differential attention mechanism and a recurrent neural network to sequentially generate pieces of an image. We evaluate the effect of layer normalization on a DRAW model using 64 glimpses and 256 LSTM hidden units. The model is trained with the default setting of Adam [Kingma and Ba, 2014] optimizer and the minibatch size of 128. Previous publications on binarized MNIST have used various training protocols to generate their datasets. In this experiment, we used the fixed binarization from Larochelle and Murray [2011]. The dataset has been split into 50,000 training, 10,000 validation and 10,000 test images.
+Main Results. Experimental results are summarized in Table 3, where we compare the fine-tuning performance under four budget levels: the number of trainable parameters is 0.13%, 0.26%, 1.10% and 2.20% of total pre-trained parameters. We see that AdaLoRA achieves better or on par performance compared with the baseline on both datasets (XSum and CNN/DailyMail) under all the budget levels. For example, AdaLoRA achieves 21.13 R-2 score when budget level is 1.10%, compared with 19.89 for LoRA.
 
-我们还在MNIST数据集上进行了生成建模实验。深度递归注意力书写器（DRAW）[Gregor et al.，2015]此前在MNIST数字分布建模方面取得了最先进的性能。该模型使用差分注意力机制和递归神经网络来顺序生成图像片段。我们使用64个一瞥和256个LSTM隐藏单元来评估层规范化对DRAW模型的影响。该模型使用Adam[Kingma和Ba，2014]优化器的默认设置和128的小批量大小进行训练。先前关于二进制MNIST的出版物已经使用各种训练协议来生成其数据集。在这个实验中，我们使用了Larochelle和Murray[2011]的固定二值化。数据集分为50000个训练图像、10000个验证图像和10000个测试图像。
+主要结果。实验结果总结在表3中，我们比较了四个预算水平下的微调性能：可训练参数的数量分别为预训练参数总数的0.13%、0.26%、1.10%和2.20%。我们看到，在所有预算水平下，与两个数据集（XSum和CNN/DaylyMail）的基线相比，AdaLoRA实现了更好或不相上下的性能。例如，当预算水平为1.10%时，AdaLoRA的R-2得分为21.13，而LoRA的得分为19.89。
 
-Figure 4 shows the test variational bound for the first 100 epoch. It highlights the speedup benefit of applying layer normalization that the layer normalized DRAW converges almost twice as fast than the baseline model. After 200 epoches, the baseline model converges to a variational log likelihood of 82.36 nats on the test data and the layer normalization model obtains 82.09 nats.
+## 4.4 ANALYSIS 4.4分析
+Different budget levels. Figure 2 illustrates experimental results of fine-tuning DeBERTaV3-base under different budget levels. We see that on all the three datasets (MNLI-m, SQuADv2.0 and XSum), AdaLoRA achieves consistent performance improvement under all the budget levels compared with the baseline. The performance gain is more significant when increasing the budget for the XSum task, suggesting a high budget can help NLG tasks. Note that on the MNLI and SQuADv2.0 datasets, the performance of AdaLoRA under low budget levels (≤ 1%) can match the results of high budget settings. For example, AdaLoRA achieves 88.78% F1 on SQuADv2.0 when the budget is 0.16%. It is close to the performance (88.89% F1) of the highest budget (4.65%) with a more significant gain over the baseline.
 
-图4显示了第一个100历元的测试变分界限。它强调了应用层规范化的加速优势，即层规范化DRAW的收敛速度几乎是基线模型的两倍。在200个时期之后，基线模型在测试数据上收敛到82.36 nats的变分对数似然，并且层归一化模型获得82.09 nats。
+不同的预算水平。图2显示了在不同预算水平下微调DeBERTaV3基础的实验结果。我们看到，在所有三个数据集（MNLI-m、SQuADv2.0和XSum）上，与基线相比，AdaLoRA在所有预算级别下都实现了一致的性能改进。当增加XSum任务的预算时，性能增益更显著，这表明高预算可以帮助NLG任务。请注意，在MNLI和SQuADv2.0数据集上，AdaLoRA在低预算水平（≤1%）下的性能可以与高预算设置的结果相匹配。例如，当预算为0.16%时，AdaLoRA在SQuADv2.0上实现了88.78%的F1。它接近最高预算（4.65%）的性能（88.89%F1），比基线有更显著的增益。
 
-## 6.5 Handwriting sequence generation 6.5手写序列生成
-The previous experiments mostly examine RNNs on NLP tasks whose lengths are in the range of 10 to 40. To show the effectiveness of layer normalization on longer sequences, we performed handwriting generation tasks using the IAM Online Handwriting Database [Liwicki and Bunke, 2005]. IAM-OnDB consists of handwritten lines collected from 221 different writers. When given the input character string, the goal is to predict a sequence of x and y pen co-ordinates of the corresponding handwriting line on the whiteboard. There are, in total, 12179 handwriting line sequences. The input string is typically more than 25 characters and the average handwriting line has a length around 700.
+Figure 2: Fine-tuning performance under different budget levels. We compare AdaLoRA with the generalized LoRA that applies to every weight matrix.
 
-先前的实验主要研究长度在10到40之间的NLP任务上的RNN。为了显示层规范化对较长序列的有效性，我们使用IAM在线手写数据库[Liwicki和Bunke，2005]执行了手写生成任务。IAM OnDB由221位不同作者收集的手写行组成。当给定输入字符串时，目标是预测白板上相应手写线的x和y笔坐标序列。总共有12179个手写行序列。输入字符串通常超过25个字符，并且平均手写行的长度约为700。
+图2：在不同预算水平下对性能进行微调。我们将AdaLoRA与适用于每个权重矩阵的广义LoRA进行了比较。
 
-We used the same model architecture as in Section (5.2) of Graves [2013]. The model architecture consists of three hidden layers of 400 LSTM cells, which produce 20 bivariate Gaussian mixture components at the output layer, and a size 3 input layer. The character sequence was encoded with one-hot vectors, and hence the window vectors were size 57. A mixture of 10 Gaussian functions was used for the window parameters, requiring a size 30 parameter vector. The total number of weights was increased to approximately 3.7M. The model is trained using mini-batches of size 8 and the Adam [Kingma and Ba, 2014] optimizer.
+Comparison to low-rank parameterization. As mentioned in Section 3.1, one can alternatively prune LoRA doublet-wise to conduct the rank allocation. In this case, the doublets are zeroed out entirely, raising the barrier to reactivate them. It can cause training instability and hurt the generalization when some crucial doublets are pruned by mistake. In Table 4, we compare AdaLoRA with pruning LoRA on three datasets (SST-2, RTE, and CoLA) to illustrate this point. We apply the same importance score, budget scheduler and training setups as Section 4.1 for pruning LoRA. We can see that AdaLoRA outperforms pruning LoRA on all the datasets under all the budget levels.
 
-我们使用了与Graves[2013]第（5.2）节中相同的模型架构。该模型架构由400个LSTM单元的三个隐藏层组成，在输出层产生20个二元高斯混合分量，以及一个大小为3的输入层。字符序列是用一个热矢量编码的，因此窗口矢量的大小为57。10个高斯函数的混合用于窗口参数，需要大小为30的参数向量。权重总数增加到约370万。使用尺寸为8的小批量和Adam[Kingma和Ba，2014]优化器对模型进行训练。
+与低秩参数化的比较。如第3.1节所述，可以选择性地修剪LoRA二重集以进行秩分配。在这种情况下，二重态被完全归零，从而提高了重新激活它们的屏障。当一些关键的对偶被错误地修剪时，它会导致训练的不稳定性，并损害泛化能力。在表4中，我们在三个数据集（SST-2、RTE和CoLA）上比较了AdaLoRA和修剪LoRA，以说明这一点。我们应用与第4.1节相同的重要性分数、预算调度器和训练设置来修剪LoRA。我们可以看到，在所有预算级别下，AdaLoRA在所有数据集上都优于修剪LoRA。
 
-The combination of small mini-batch size and very long sequences makes it important to have very stable hidden dynamics. Figure 5 shows that layer normalization converges to a comparable log likelihood as the baseline model but is much faster.
+Table 4: We present two ablation studies in this table: (i) Comparison between AdaLoRA and structured pruning on LoRA. (ii) Comparison of different importance metrics for AdaLoRA.
 
-小批量和超长序列的结合使得具有非常稳定的隐藏动力学非常重要。图5显示，层归一化收敛到与基线模型相当的对数似然，但速度要快得多。
+表4：我们在该表中介绍了两项消融研究：（i）AdaLoRA和LoRA结构化修剪之间的比较。（ii）AdaLoRA不同重要性指标的比较。
 
-Figure 6: Permutation invariant MNIST 784-1000-1000-10 model negative log likelihood and test error with layer normalization and batch normalization. (Left) The models are trained with batchsize of 128. (Right) The models are trained with batch-size of 4.
+Variants of the importance score. Recall that in AdaLoRA, the importance score is defined by the sensitivity and uncertainty of every entry in the triplet (7). In Table 4, we examine two variants of the importance score: (i) changing s(·) in (7) to sensitivity-only; (ii) directly defining Si as |λi |. From the results, we can see that the proposed importance score generally performs best. The other two variants can degenerate the model performance up to 0.9%.
 
-图6：置换不变MNIST 784-1000-1000-10使用层归一化和批归一化对负对数似然和测试误差进行建模。（左）以128的批量大小训练模型。（右）使用批量大小为4的模型进行训练。
+重要性分数的变体。回想一下，在AdaLoRA中，重要性得分是由三元组中每个条目的敏感性和不确定性定义的（7）。在表4中，我们检查了重要性评分的两种变体：（i）将（7）中的s（·）改为仅敏感性；（ii）直接将Si定义为|λi|。从结果中可以看出，所提出的重要性评分通常表现最好。其他两种变体可以使模型性能退化高达0.9%。
 
-## 6.6 Permutation invariant MNIST 6.6置换不变MNIST
-In addition to RNNs, we investigated layer normalization in feed-forward networks. We show how layer normalization compares with batch normalization on the well-studied permutation invariant MNIST classification problem. From the previous analysis, layer normalization is invariant to input re-scaling which is desirable for the internal hidden layers. But this is unnecessary for the logit outputs where the prediction confidence is determined by the scale of the logits. We only apply layer normalization to the fully-connected hidden layers that excludes the last softmax layer.
+The role of two components. We remark that both two components of our method - SVD adaptation and adaptive budget allocation, play vital roles for the performance gain. To demonstrate it, we compare AdaLoRA with the following variants: (i) SVD-LoRA: fine-tuning only with the proposed SVD-based adaptation in (3) and (4); (ii) LoRAregu: LoRA with orthogonal regularization (4) on A and B; (iii) AdaLoRAγ = 0: AdaLoRA without orthogonal regularization (4). Table 5 present the results when fine-tuning DeBERTaVe-base on SST-2 and MNLI. We can see that fine-tuning only with SVD adaptation shows an improvement over LoRA but cannot match the performance of AdaLoRA. Meanwhile, without SVD orthogonal regularization, the performance of AdaLoRA can degenerate. These results validate that both components contribute to the model performance.
 
-除了RNN，我们还研究了前馈网络中的层归一化。我们展示了在充分研究的置换不变MNIST分类问题上，层归一化与批归一化的比较。根据先前的分析，层归一化对于输入重缩放是不变的，这对于内部隐藏层是期望的。但这对于logit输出来说是不必要的，其中预测置信度由logit的规模决定。我们只将层规范化应用于完全连接的隐藏层，不包括最后一个softmax层。
+两个组成部分的作用。我们注意到，我们的方法的两个组成部分——SVD自适应和自适应预算分配，对性能增益起着至关重要的作用。为了证明这一点，我们将AdaLoRA与以下变体进行了比较：（i）SVD-LoRA：仅与（3）和（4）中提出的基于SVD的自适应进行微调；（ii）LoRAregu:A和B上具有正交正则化（4）的LoRA；（iii）阿达洛拉γ=0：没有正交正则化的阿达洛拉（4）。表5给出了在SST-2和MNLI基础上微调DeBERTaVe时的结果。我们可以看到，仅使用SVD自适应的微调显示出对LoRA的改进，但无法与AdaLoRA的性能相匹配。同时，如果没有SVD正交正则化，AdaLoRA的性能可能会退化。这些结果验证了这两个组件对模型性能的贡献。
 
-All the models were trained using 55000 training data points and the Adam [Kingma and Ba, 2014] optimizer. For the smaller batch-size, the variance term for batch normalization is computed using the unbiased estimator. The experimental results from Figure 6 highlight that layer normalization is robust to the batch-sizes and exhibits a faster training convergence comparing to batch normalization that is applied to all layers.
+Table 5: We present ablation studies about SVD-based adaptation, orthogonal regularization, and budget allocation in this table. For MNLI, we report the average score of m/mm acc.
 
-所有模型都使用55000个训练数据点和Adam[Kingma和Ba，2014]优化器进行了训练。对于较小的批量，使用无偏估计器计算批量归一化的方差项。图6的实验结果强调，与应用于所有层的批处理归一化相比，层归一化对批处理大小是鲁棒的，并且表现出更快的训练收敛。
+表5：我们在该表中介绍了关于基于SVD的自适应、正交正则化和预算分配的消融研究。对于MNLI，我们报告了根据。
 
-## 6.7 Convolutional Networks 6.7卷积网络
-We have also experimented with convolutional neural networks. In our preliminary experiments, we observed that layer normalization offers a speedup over the baseline model without normalization, but batch normalization outperforms the other methods. With fully connected layers, all the hidden units in a layer tend to make similar contributions to the final prediction and re-centering and rescaling the summed inputs to a layer works well. However, the assumption of similar contributions is no longer true for convolutional neural networks. The large number of the hidden units whose receptive fields lie near the boundary of the image are rarely turned on and thus have very different statistics from the rest of the hidden units within the same layer. We think further research is needed to make layer normalization work well in ConvNets. 
+The resulting budget distribution. Figure 3 shows the resulting rank of each incremental matrix of DeBERTaV3-base fine-tuned with AdaLoRA. We find that AdaLoRA always prefers to allocating more budget to FFNs and top layers. Such behavior aligns with our empirical conclusions presented in Figure 1 that weight matrices of FFN moduels and top layers are more important for model performance. Hence, it validates that our proposed importance metric can guide AdaLoRA to focus on crucial modules. Meanwhile, the rank distribution generated by AdaLoRA is consistent across different budget levels, tasks and models. It means the number of remaining parameters is linearly scaled with b (T) and hence we can tune b (T) to control the remaining parameters. 
 
-我们还对卷积神经网络进行了实验。在我们的初步实验中，我们观察到，在没有归一化的情况下，层归一化比基线模型提供了加速，但批量归一化优于其他方法。对于完全连接的层，层中的所有隐藏单元往往会对最终预测做出类似的贡献，并且对层的总输入进行重新居中和重新缩放效果良好。然而，对于卷积神经网络来说，类似贡献的假设不再成立。感受野位于图像边界附近的大量隐藏单元很少被打开，因此与同一层内的其他隐藏单元具有非常不同的统计数据。我们认为需要进一步的研究来使层规范化在ConvNets中良好地工作。
+由此产生的预算分配。图3显示了用AdaLoRA微调的DeBERTaV3基的每个增量矩阵的结果秩。我们发现，AdaLoRA总是倾向于将更多预算分配给FFN和顶层。这种行为与我们在图1中给出的经验结论一致，即FFN模块和顶层的权重矩阵对模型性能更重要。因此，它验证了我们提出的重要性度量可以指导AdaLoRA专注于关键模块。同时，AdaLoRA生成的等级分布在不同的预算级别、任务和模型中是一致的。这意味着剩余参数的数量与b（T）成线性比例，因此我们可以调整b（T）来控制剩余参数。
 
-## 7 Conclusion 7结论
-In this paper, we introduced layer normalization to speed-up the training of neural networks. We provided a theoretical analysis that compared the invariance properties of layer normalization with batch normalization and weight normalization. We showed that layer normalization is invariant to per training-case feature shifting and scaling.
+Figure 3: The resulting rank of each incremental matrix when fine-tuning DeBERTaV3-base on MNLI with AdaLoRA. Here the x-axis is the layer index and the y-axis represents different types of adapted weight matrices. 
 
-在本文中，我们引入了层归一化来加快神经网络的训练。我们提供了一个理论分析，比较了层归一化、批量归一化和权重归一化的不变性。我们证明了层归一化对于每个训练情况的特征移位和缩放是不变的。
+图3：当使用AdaLoRA基于MNLI微调DeBERTaV3时，每个增量矩阵的结果秩。这里，x轴是层索引，y轴表示不同类型的自适应权重矩阵。
 
-Empirically, we showed that recurrent neural networks benefit the most from the proposed method especially for long sequences and small mini-batches.
+## 5 CONCLUSION 5结论
+We propose a parameter-efficient fine-tuning method – AdaLoRA that adaptively allocates the parameter budget according to importance scoring. In AdaLoRA, we parameterize the incremental updates of weight matrices in the form of singular value decomposition. Then, we dynamically allocate the parameter budget among incremental matrices by manipulating the singular values based on a new importance metric. Such an a pproach effectively improves the model performance and parameter efficiency. We conduct extensive experiments on natural language processing, question answering and natural language generation tasks. Results show that AdaLoRA outperforms existing approaches.
 
-经验表明，递归神经网络从所提出的方法中受益最大，尤其是对于长序列和小批量。
+我们提出了一种参数有效的微调方法——AdaLoRA，该方法根据重要性评分自适应地分配参数预算。在AdaLoRA中，我们以奇异值分解的形式对权重矩阵的增量更新进行参数化。然后，我们基于一个新的重要性度量，通过操纵奇异值，在增量矩阵之间动态分配参数预算。这种方法有效地提高了模型性能和参数效率。我们对自然语言处理、问题回答和自然语言生成任务进行了广泛的实验。结果表明，AdaLoRA优于现有方法。
 

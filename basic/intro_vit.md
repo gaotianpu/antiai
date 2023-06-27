@@ -2,6 +2,8 @@
 
 Transformer在NLP领域的成功经验，正在被研究人员移植到机器视觉领域。
 
+https://github.com/lucidrains/vit-pytorch/
+
 ## 1. ViT: [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](../paper/vit/ViT.md)
 
 ![Vit](../paper/images/vit/fig_1.png)<br/>

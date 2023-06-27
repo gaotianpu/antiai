@@ -63,7 +63,6 @@ Batch normalization has been previously extended to recurrent neural networks [L
 Amodei et al., 2015, Cooijmans et al., 2016]. The previous work [Cooijmans et al., 2016] suggests the best performance of recurrent batch normalization is obtained by keeping independent normalization statistics for each time-step. The authors show that initializing the gain parameter in the recurrent batch normalization layer to 0.1 makes significant difference in the final performance of the model. Our work is also related to weight normalization [Salimans and Kingma, 2016]. In weight normalization, instead of the variance, the L2 norm of the incoming weights is used to normalize the summed inputs to a neuron. Applying either weight normalization or batch normalization using expected statistics is equivalent to have a different parameterization of the original feed-forward neural network. Re-parameterization in the ReLU network was studied in the Pathnormalized SGD [Neyshabur et al., 2015]. Our proposed layer normalization method, however, is not a re-parameterization of the original neural network. The layer normalized model, thus, has different invariance properties than the other methods, that we will study in the following section. 
 
 ## 5 Analysis
-
 In this section, we investigate the invariance properties of different normalization schemes.
 
 ## 5.1 Invariance under weights and data transformations
@@ -128,40 +127,17 @@ Implicit learning rate reduction through the growth of the weight vector: Notice
 
 The curvature along the wi direction will change by a factor of 1 2 because the σi will also be twice as large. As a result, for the same parameter update in the normalized model, the norm of the weight vector effectively controls the learning rate for the weight vector. During learning, it is harder to change the orientation of the weight vector with large norm. The normalization methods, therefore, 5 0 50 100 150 200 250 300 iteration x 300 34 35 36 37 38 39 40 41 42 43 Image Retrieval (Validation)
 
-Order-Embedding + LN
 
-Order-Embedding (a) Recall@1 0 50 100 150 200 250 300 iteration x 300 71 72 73 74 75 76 77 78 Image Retrieval (Validation)
-
-Order-Embedding + LN
-
-Order-Embedding (b) Recall@5 0 50 100 150 200 250 300 iteration x 300 84 85 86 87 88 89 90 Image Retrieval (Validation)
-
-Order-Embedding + LN
-
-Order-Embedding (c) Recall@10
 
 Figure 1: Recall@K curves using order-embeddings with and without layer normalization.
 
-MSCOCO
 
-Caption Retrieval Image Retrieval
-
-Model R@1 R@5 R@10 Mean r R@1 R@5 R@10 Mean r
-
-Sym [Vendrov et al., 2016] 45.4 88.7 5.8 36.3 85.8 9.0
-
-OE [Vendrov et al., 2016] 46.7 88.9 5.7 37.9 85.9 8.1
-
-OE (ours) 46.6 79.3 89.1 5.2 37.8 73.6 85.7 7.9
-
-OE + LN 48.5 80.6 89.8 5.1 38.9 74.3 86.3 7.6
 
 Table 2: Average results across 5 test splits for caption and image retrieval. R@K is Recall@K (high is good). Mean r is the mean rank (low is good). Sym corresponds to the symmetric baseline while OE indicates order-embeddings. have an implicit “early stopping” effect on the weight vectors and help to stabilize learning towards convergence.
 
 Learning the magnitude of incoming weights: In normalized models, the magnitude of the incoming weights is explicitly parameterized by the gain parameters. We compare how the model output changes between updating the gain parameters in the normalized GLM and updating the magnitude of the equivalent weights under original parameterization during learning. The direction along the gain parameters in F¯ captures the geometry for the magnitude of the incoming weights. We show that Riemannian metric along the magnitude of the incoming weights for the standard GLM is scaled by the norm of its input, whereas learning the gain parameters for the batch normalized and layer normalized models depends only on the magnitude of the prediction error. Learning the magnitude of incoming weights in the normalized model is therefore, more robust to the scaling of the input and its parameters than in the standard model. See Appendix for detailed derivations. 
 
 ## 6 Experimental results
-
 We perform experiments with layer normalization on 6 tasks, with a focus on recurrent neural networks: image-sentence ranking, question-answering, contextual language modelling, generative modelling, handwriting sequence generation and MNIST classification. Unless otherwise noted, the default initialization of layer normalization is to set the adaptive gains to 1 and the biases to 0 in the experiments.
 
 ## 6.1 Order embeddings of images and language
@@ -191,15 +167,7 @@ Skip-thoughts [Kiros et al., 2015] is a generalization of the skip-gram model [M
 
 Figure 3: Performance of skip-thought vectors with and without layer normalization on downstream tasks as a function of training iterations. The original lines are the reported results in [Kiros et al., 2015]. Plots with error use 10-fold cross validation. Best seen in color.
 
-Method SICK(r) SICK(ρ) SICK(MSE) MR CR SUBJ MPQA
 
-Original [Kiros et al., 2015] 0.848 0.778 0.287 75.5 79.3 92.1 86.9
-
-Ours 0.842 0.767 0.298 77.3 81.8 92.6 87.9
-
-Ours + LN 0.854 0.785 0.277 79.5 82.6 93.4 89.0
-
-Ours + LN † 0.858 0.788 0.270 79.4 83.1 93.7 89.3
 
 Table 3: Skip-thoughts results. The first two evaluation columns indicate Pearson and Spearman correlation, the third is mean squared error and the remaining indicate classification accuracy. Higher is better for all evaluations except MSE. Our models were trained for 1M iterations with the exception of (†) which was trained for 1 month (approximately 1.7M iterations) encoded with a encoder RNN and decoder RNNs are used to predict the surrounding sentences.
 
@@ -213,17 +181,7 @@ However, we found that provided CNMeM 5 is used, there was no significant differ
 
 The experimental results are illustrated in Figure 3. We observe that applying layer normalization results both in speedup over the baseline as well as better final results after 1M iterations are performed as shown in Table 3. We also let the model with layer normalization train for a total of a month, resulting in further performance gains across all but one task. We note that the performance 4 https://github.com/ryankiros/skip-thoughts 5 https://github.com/NVIDIA/cnmem 8
 
-Pearson x 100 MSE x 100 Accuracy 100 101 102 103
 
-Updates x 200 −900 −800 −700 −600 −500 −400 −300 −200 −100 0
-
-Baseline test
-
-Baseline train
-
-LN test
-
-LN train
 
 Figure 5: Handwriting sequence generation model negative log likelihood with and without layer normalization. The models are trained with mini-batch size of 8 and sequence length of 500, differences between the original reported results and ours are likely due to the fact that the publicly available code does not condition at each timestep of the decoder, where the original model does.
 
@@ -233,9 +191,7 @@ Figure 4: DRAW model test negative log likelihood with and without layer normali
 
 We also experimented with the generative modeling on the
 
-MNIST dataset. Deep Recurrent Attention Writer (DRAW) [Gregor et al., 2015] has previously achieved the state-of-theart performance on modeling the distribution of MNIST digits. The model uses a differential attention mechanism and a recurrent neural network to sequentially generate pieces of an image. We evaluate the effect of layer normalization on a DRAW model using 64 glimpses and 256 LSTM hidden units. The model is trained with the default setting of Adam [Kingma and Ba, 2014] optimizer and the minibatch size of
-
-128. Previous publications on binarized MNIST have used various training protocols to generate their datasets. In this experiment, we used the fixed binarization from Larochelle and Murray [2011]. The dataset has been split into 50,000 training, 10,000 validation and 10,000 test images.
+MNIST dataset. Deep Recurrent Attention Writer (DRAW) [Gregor et al., 2015] has previously achieved the state-of-theart performance on modeling the distribution of MNIST digits. The model uses a differential attention mechanism and a recurrent neural network to sequentially generate pieces of an image. We evaluate the effect of layer normalization on a DRAW model using 64 glimpses and 256 LSTM hidden units. The model is trained with the default setting of Adam [Kingma and Ba, 2014] optimizer and the minibatch size of 128. Previous publications on binarized MNIST have used various training protocols to generate their datasets. In this experiment, we used the fixed binarization from Larochelle and Murray [2011]. The dataset has been split into 50,000 training, 10,000 validation and 10,000 test images.
 
 Figure 4 shows the test variational bound for the first 100 epoch. It highlights the speedup benefit of applying layer normalization that the layer normalized DRAW converges almost twice as fast than the baseline model.
 
@@ -248,51 +204,8 @@ IAM-OnDB consists of handwritten lines collected from 221 different writers. Whe
 
 We used the same model architecture as in Section (5.2) of Graves [2013]. The model architecture consists of three hidden layers of 400 LSTM cells, which produce 20 bivariate Gaussian mixture components at the output layer, and a size 3 input layer. The character sequence was encoded with one-hot vectors, and hence the window vectors were size 57. A mixture of 10 Gaussian functions was used for the window parameters, requiring a size 30 parameter vector. The total number of weights was increased to approximately 3.7M. The model is trained using mini-batches of size 8 and the Adam [Kingma and Ba, 2014] optimizer.
 
-The combination of small mini-batch size and very long sequences makes it important to have very stable hidden dynamics. Figure 5 shows that layer normalization converges to a comparable log likelihood as the baseline model but is much faster. 9
+The combination of small mini-batch size and very long sequences makes it important to have very stable hidden dynamics. Figure 5 shows that layer normalization converges to a comparable log likelihood as the baseline model but is much faster. 
 
-Negative Log Likelihood Test Variational Bound 0 10 20 30 40 50 60
-
-Epoch 10 -7 10 -6 10 -5 10 -4 10 -3 10 -2 10 -1 10 0
-
-BatchNorm bz128
-
-Baseline bz128
-
-LayerNorm bz128 0 10 20 30 40 50 60
-
-Epoch
-
-## 0.005
-## 0.010
-## 0.015
-## 0.020
-## 0.025
-BatchNorm bz128
-
-Baseline bz128
-
-LayerNorm bz128 0 10 20 30 40 50 60
-
-Epoch 10 -7 10 -6 10 -5 10 -4 10 -3 10 -2 10 -1 10 0
-
-LayerNorm bz4
-
-Baseline bz4
-
-BatchNorm bz4 0 10 20 30 40 50 60
-
-Epoch
-
-## 0.005
-## 0.010
-## 0.015
-## 0.020
-## 0.025
-LayerNorm bz4
-
-Baseline bz4
-
-BatchNorm bz4
 
 Figure 6: Permutation invariant MNIST 784-1000-1000-10 model negative log likelihood and test error with layer normalization and batch normalization. (Left) The models are trained with batchsize of 128. (Right) The models are trained with batch-size of 4.
 

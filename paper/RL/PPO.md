@@ -1,5 +1,5 @@
 # Proximal Policy Optimization Algorithms
-PPO-近端策略优化算法 2017.7  https://openai-public.s3-us-west-2.amazonaws.com/blog/2017-07/ppo/ppo-arxiv.pdf
+PPO-近端策略优化算法 2017.7.20  https://arxiv.org/abs/1707.06347
 
 ## 阅读笔记
 * https://spinningup.openai.com/en/latest/algorithms/ppo.html
@@ -52,7 +52,7 @@ where $π_θ$ is a stochastic policy and $\hat{A}_t$ is an estimator of the adva
 $a_t$ action, $s_t$ state,
 -->
 
-$L^{PG}(θ) = \hat{E}_t [ log π_θ(a_t | s_t)\hat{E}_t ] . $ (2)
+$L^{PG}(θ) = \hat{E}_t [ log π_θ(a_t | s_t)\hat{A}_t ] . $ (2)
 
 While it is appealing to perform multiple steps of optimization on this loss $L^{PG}$ using the same trajectory, doing so is not well-justified, and empirically it often leads to destructively large policy updates (see Section 6.1; results are not shown but were similar or worse than the “no clipping or penalty” setting).
 
@@ -82,7 +82,7 @@ The theory justifying TRPO actually suggests using a penalty instead of a constr
 
 证明 TRPO 合理的理论实际上建议使用惩罚而不是约束，即解决无约束优化问题
 
-$maximize θ$ $\hat{E}_t\Bigg[ \frac{π_θ(a_t | s_t)}{π_{θ_{old}}(a_t | s_t)}\hat{A}_t − β KL\Big[π_{θ_{old}}(· | s_t), π_θ(· | s_t)\Big] \Bigg] $ (5) 
+$maximize_θ$ $\hat{E}_t\Bigg[ \frac{π_θ(a_t | s_t)}{π_{θ_{old}}(a_t | s_t)}\hat{A}_t − β KL\Big[π_{θ_{old}}(· | s_t), π_θ(· | s_t)\Big] \Bigg] $ (5) 
 
 for some coefficient β. This follows from the fact that a certain surrogate objective (which computes the max KL over states instead of the mean) forms a lower bound (i.e., a pessimistic bound) on the performance of the policy π. TRPO uses a hard constraint rather than a penalty because it is hard to choose a single value of β that performs well across different problems—or even within a single problem, where the the characteristics change over the course of learning. Hence, to achieve our goal of a first-order algorithm that emulates the monotonic improvement of TRPO, experiments show that it is not sufficient to simply choose a fixed penalty coefficient β and optimize the penalized objective Equation (5) with SGD; additional modifications are required. 
 
@@ -103,7 +103,7 @@ The main objective we propose is the following:
 
 我们提出的主要目标如下：
 
-$ L^{CPI} (θ) = \hat{E}_t \Big[ min\bigg( r_t(θ)\hat{A}_t, clip(r_t(θ), 1 − \epsilon, 1 + \epsilon )\hat{A}_t \bigg) \Big] $ (7) 
+$ L^{CLIP} (θ) = \hat{E}_t \Big[ min\bigg( r_t(θ)\hat{A}_t, clip(r_t(θ), 1 − \epsilon, 1 + \epsilon )\hat{A}_t \bigg) \Big] $ (7) 
 
 where epsilon is a hyperparameter, say, $\epsilon$ = 0.2. The motivation for this objective is as follows. The first term inside the min is $L^{CPI}$ . The second term, $clip(r_t(θ), 1−\epsilon, 1+\epsilon )\hat{A}_t$ , modifies the surrogate objective by clipping the probability ratio, which removes the incentive for moving $r_t$ outside of the interval [1 − $\epsilon$, 1 + $\epsilon$ ]. Finally, we take the minimum of the clipped and unclipped objective, so the final objective is a lower bound (i.e., a pessimistic bound) on the unclipped objective. With this scheme, we only ignore the change in probability ratio when it would make the objective improve, and we include it when it makes the objective worse. Note that $L^{CLIP} (θ) = L^{CPI} (θ)$ to first order around $θ_{old}$ (i.e., where r = 1), however, they become different as θ moves away from$θ_{old}$. Figure 1 plots a single term (i.e., a single t) in $L^{CLIP}$ ; note that the probability ratio r is clipped at 1 − $\epsilon$ or 1 + $\epsilon$ depending on whether the advantage is positive or negative. 
 

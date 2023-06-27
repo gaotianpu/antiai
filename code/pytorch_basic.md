@@ -1,5 +1,19 @@
 # pytorch 
 
+## 张量初始化
+fill_()
+
+new()
+
+ones_like
+
+## 张量变形
+squeeze()
+unsqueeze()
+
+view()
+
+
 ## math
 1. torch.exp()
 
@@ -23,23 +37,15 @@ max()
 log()
 sigmoid()
 
+clamp()
+
 ##
 
-clamp()
 gather()
-
-squeeze()
-unsqueeze()
-
-view()
-
-new()
-
-ones_like
 
 pad()
 
-fill_()
+
 
 cat()
 

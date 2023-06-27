@@ -8,16 +8,16 @@ MAGNETO 2022.10.12 https://arxiv.org/abs/2210.06423
 ## Abstract
 A big convergence of model architectures across language, vision, speech, and multimodal is emerging. However, under the same name “Transformers”, the above areas use different implementations for better performance, e.g., Post-LayerNorm for BERT, and Pre-LayerNorm for GPT and vision Transformers. We call for the development of Foundation Transformer for true general-purpose modeling, which serves as a go-to architecture for various tasks and modalities with guaranteed training stability. In this work, we introduce a Transformer variant, named MAGNETO, to fulfill the goal. Specifically, we propose Sub-LayerNorm for good expressivity, and the initialization strategy theoretically derived from DeepNet (Wang et al., 2022a) for stable scaling up. Extensive experiments demonstrate its superior performance and better stability than the de facto Transformer variants designed for various applications, including language modeling (i.e., BERT, and GPT), machine translation, vision pretraining (i.e., BEiT), speech recognition, and multimodal pretraining (i.e., BEiT-3). https://github.com/microsoft/unilm
 
-跨语言、视觉、语音和多模态的模型架构正在出现大融合。 然而，在同一个名称“Transformers”下，上述领域使用不同的实现来获得更好的性能，例如，BERT 的 Post-LayerNorm，以及 GPT 和视觉 Transformers 的 Pre-LayerNorm。 我们呼吁开发 基础Transformer 以实现真正的通用建模，它可以作为各种任务和模式的首选架构，并保证训练的稳定性。 在这项工作中，我们引入了一个名为 MAGNETO 的 Transformer 变体来实现这一目标。 具体来说，我们提出了 Sub-LayerNorm 以获得良好的表达能力，并提出了理论上源自 DeepNet (Wang et al., 2022a) 的初始化策略以实现稳定的放大。 广泛的实验证明了它比为各种应用设计的事实上的 Transformer 变体更优越的性能和更好的稳定性，包括语言建模(即 BERT 和 GPT)、机器翻译、视觉预训练(即 BEiT)、语音识别和多模态预训练( 即 BEiT-3)。 https://github.com/microsoft/unilm
-
-![Figure 1](../images/MAGNETO/fig_1.png)<br/>
-Figure 1: Top: the architectures of SOTA models across language, vision, speech, and multimodal. Bottom: the proposed Foundation Transformer uses Sub-LN and theoretically derived initialization. 
-图 1：上图：跨语言、视觉、语音和多模态的 SOTA 模型架构。 底部：提出的基础Transformer 使用 Sub-LN 和 理论派生的初始化。 
+跨语言、视觉、语音和多模态的模型架构正在出现大融合。 然而，在同一个名称“Transformers”下，上述领域使用不同的实现来获得更好的性能，例如，BERT 的 Post-LayerNorm，以及 GPT 和视觉 Transformers 的 Pre-LayerNorm。 我们呼吁开发 基础Transformer 以实现真正的通用建模，它可以作为各种任务和模式的首选架构，并保证训练的稳定性。 在这项工作中，我们引入了一个名为 MAGNETO 的 Transformer 变体来实现这一目标。 具体来说，我们提出了 Sub-LayerNorm 以获得良好的表达能力，并提出了理论上源自 DeepNet (Wang et al., 2022a) 的初始化策略以实现稳定的放大。 广泛的实验证明了它比为各种应用设计的事实上的 Transformer 变体更优越的性能和更好的稳定性，包括语言建模(即 BERT 和 GPT)、机器翻译、视觉预训练(即 BEiT)、语音识别和多模态预训练( 即 BEiT-3)。 https://github.com/microsoft/unilm 
 
 ## 1 Introduction
 Recent years have witnessed a big convergence of model architectures across language, vision, speech, and multimodal. Specifically, starting from the natural language processing, Transformers (Vaswani et al., 2017) have become the de facto standard for various areas, including computer vision (Dosovitskiy et al., 2021), speech (Zhang et al., 2020b), and multimodal (Kim et al., 2021; Wang et al., 2022b). Transformers fully leverage the parallelism advantage of GPU hardware and large-scale data. It is appealing that we can use the same network architecture for a broad range of applications. So the pretrained models can be seamlessly reused with the shared implementation and hardware optimization. Moreover, general-purpose modeling is important to multimodal models, as different modalities can be jointly encoded and fused by one model.
 
 近年来，我们见证了跨语言、视觉、语音和多模态的模型架构的大融合。 具体来说，从自然语言处理开始，Transformers(Vaswani et al., 2017)已经成为各个领域的事实标准，包括计算机视觉(Dosovitskiy et al., 2021)、语音(Zhang et al., 2020b)、 和多模态(Kim et al., 2021; Wang et al., 2022b)。 Transformers 充分利用了 GPU 硬件和大规模数据的并行优势。 我们可以将相同的网络架构用于广泛的应用程序，这很有吸引力。 因此，预训练模型可以通过共享实现和硬件优化无缝重用。 此外，通用建模对于多模态模型很重要，因为不同的模态可以由一个模型联合编码和融合。
+
+![Figure 1](../images/MAGNETO/fig_1.png)<br/>
+Figure 1: Top: the architectures of SOTA models across language, vision, speech, and multimodal. Bottom: the proposed Foundation Transformer uses Sub-LN and theoretically derived initialization. 
+图 1：上图：跨语言、视觉、语音和多模态的 SOTA 模型架构。 底部：提出的基础Transformer 使用 Sub-LN 和 理论派生的初始化。
 
 However, despite using the same name “Transformers”, there are significant differences in the implementation of the architectures for different tasks. Figure 1 summarizes the architectures for state-of-the-art models that are widely used in various communities. For instance, some models (e.g.,GPT, and ViT) adopt Pre-LayerNorm (Pre-LN) Transformers, while others use Post-LayerNorm (Post-LN) variants (e.g., BERT, and machine translation) for better performance. Rather than directly using the same architecture, we need to compare two Transformer variants on the specific tasks or modalities to determine the backbone, which is ineffective for model development. More importantly, considering multimodal models, the optimal Transformer variants are usually different for input modalities. For the example of BEiT-3 (Wang et al., 2022b) vision-language pretraining, using Post-LN is sub-optimal for vision encoding while Pre-LN is sub-optimal for the language part. The true convergence of multimodal pretraining requires a unified architecture that performs well across tasks and modalities. In addition, a pain point of Transformer architectures is training stability, especially for large-scale models. We usually need significant efforts to tune hyperparameters or babysit training processes.
 
@@ -35,15 +35,15 @@ In this work, we introduce MAGNETO as an implementation of Foundation Transforme
 <!-- TL;DR, too long; didn’t read"的缩写，意思是文章太长了，读不下去了。它通常用于总结一篇文章或博客文章. -->
 Figure 1 illustrates the overview of the MAGNETO architecture. There are two key improvements in terms of modeling. First, compared to the Pre-LN variant, Sub-LN introduces another LayerNorm inside each sublayer (i.e., multi-head self-attention, and feed-forward network): one before the input projection, and the other before the output projection. Second, we use the initialization with the theoretical derivation from DeepNet (Wang et al., 2022a), which fundamentally improves the training stability, allowing the model to be scaled up to massive sizes without pain.
 
-图 1 说明了 MAGNETO 架构的概览。 在建模方面有两个关键改进。 首先，与 Pre-LN 变体相比，Sub-LN 在每个子层(即多头自注意力和前馈网络)中引入了另一个 LayerNorm：一个在输入投影之前，另一个在输出投影之前。 其次，我们使用 DeepNet 的理论推导进行初始化(Wang et al., 2022a)，这从根本上提高了训练的稳定性，使模型可以毫无痛苦地扩展到大规模。
-
-As shown in Figure 2, we present the implementation of MAGNETO. There are only lines of code changes on top of the vanilla Transformer architecture. Notably, following the derivation from DeepNet, the weights of query projection and key projection are not scaled during initialization. Besides, there is only one LayerNorm inside the cross-attention for the encoder-decoder architecture and we do not scale the initialized weights of cross-attention. 
-
-如图 2 所示，我们展示了 MAGNETO 的实现。 在普通的 Transformer 架构之上只有几行代码更改。 值得注意的是，在从 DeepNet 推导之后，query 投影 和 key 投影 的权重在初始化期间没有缩放。 此外，编码器-解码器架构的交叉注意力内部只有一个 LayerNorm，我们没有缩放交叉注意力的初始化权重。
+图1 说明了 MAGNETO 架构的概览。 在建模方面有两个关键改进。 首先，与 Pre-LN 变体相比，Sub-LN 在每个子层(即多头自注意力和前馈网络)中引入了另一个 LayerNorm：一个在输入投影之前，另一个在输出投影之前。 其次，我们使用 DeepNet 的理论推导进行初始化(Wang et al., 2022a)，这从根本上提高了训练的稳定性，使模型可以毫无痛苦地扩展到大规模。
 
 ![Figure 2](../images/MAGNETO/fig_2.png)<br/>
 Figure 2: Top left: pseudocode of Sub-LN. We take Xavier initialization (Glorot and Bengio, 2010) as an example, and it can be replaced with other standard initialization. Notice that γ is a constant. Top right: parameters of Sub-LN for different architectures (N-layer encoder, M-layer decoder). Bottom: the layout of Sub-LN for different architectures.
 图 2：左上角：Sub-LN 的伪代码。 我们以 Xavier 初始化(Glorot 和 Bengio，2010)为例，它可以用其他标准初始化来代替。 请注意，γ 是一个常数。 右上：不同架构的 Sub-LN 参数(N-层 编码器，M-层 解码器)。 底部：Sub-LN 针对不同架构的布局。
+
+As shown in Figure 2, we present the implementation of MAGNETO. There are only lines of code changes on top of the vanilla Transformer architecture. Notably, following the derivation from DeepNet, the weights of query projection and key projection are not scaled during initialization. Besides, there is only one LayerNorm inside the cross-attention for the encoder-decoder architecture and we do not scale the initialized weights of cross-attention. 
+
+如图 2 所示，我们展示了 MAGNETO 的实现。 在普通的 Transformer 架构之上只有几行代码更改。 值得注意的是，在从 DeepNet 推导之后，query 投影 和 key 投影 的权重在初始化期间没有缩放。 此外，编码器-解码器架构的交叉注意力内部只有一个 LayerNorm，我们没有缩放交叉注意力的初始化权重。
 
 ## 3 MAGNETO: A Foundation Transformer
 ### 3.1 Architecture: Sub-LayerNorm
@@ -53,15 +53,15 @@ Vanilla Transformers are based on either Pre-LayerNorm (Pre-LN) structures or Po
 
 For the multihead attentions, the layer normalization modules are before the qkv projection and the output projection, which can be formulated as:
 
-对于多头注意力，层归一化模块在qkv投影和输出投影之前，可以公式化为：
+对于多头注意力，层归一化模块在qkv投影之前和输出投影，可以公式化为：
 
 $Q, K, V = W^QLN(x), W^KLN(x), W^VLN(x)$ (1)
 
 $MSA(x) = x + W^OLN(Attention(Q, K, V ))$ (2) 
 
-where $W^Q, W^K, W^V , and W^O$ are the parameters of the multihead self-attention. Similarly, for the feed-forward network, the layer normalization modules are before the input projection and the output projection, which are written as:
+where $W^Q, W^K, W^V$ , and $W^O$ are the parameters of the multihead self-attention. Similarly, for the feed-forward network, the layer normalization modules are before the input projection and the output projection, which are written as:
 
-其中$W^Q, W^K, W^V$, 和$W^O$是多头自注意的参数。类似地，对于前馈网络，层归一化模块在输入投影和输出投影之前，它们被写为：
+其中$W^Q, W^K, W^V$, 和 $W^O$是多头自注意的参数。类似地，对于前馈网络，层归一化模块在输入投影和输出投影之前，它们被写为：
 
 $FC_1(x) = W^1LN(x)$ (3)
 

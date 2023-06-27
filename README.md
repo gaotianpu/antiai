@@ -14,7 +14,7 @@
 ## 一、整体概览
 分层 | 说明 
 --- | --- 
-5 - 具体任务 | 微调 -> [提示学习](./basic/Prompt_Learning.md) -> 人机对齐([Chat形式](./paper/nlp/gpt_InstructGPT.md) -> [GUI形式](./paper/Multimodal/Segment_Anything.md))
+5 - 具体任务 | 微调 -> 人机对齐([Chat形式](./paper/nlp/gpt_InstructGPT.md) -> [GUI形式](./paper/Multimodal/Segment_Anything.md)) -> [提示学习](./basic/Prompt_Learning.md) 
 4 - 各类模态 | [自然语言](./paper/nlp/README.md)、[图像](./paper/cnn/README.md) 、音频、[视频](./paper/video/README.md)、雷达、传感器等 -> [多模态融合](./paper/Multimodal/README.md)
 3 - 训练范式 | 特定任务全监督 -> 自监督预训练(掩码自动编码，生成式自回归、[对比学习](./basic/contrastive_learning.md)) 
 2 - 模型架构 | SVM/GBDT/[MLP](./basic/mlp.md) -> [RNN](./paper/nlp/rnn.md)([LSTM](./paper/nlp/lstm.md)/[GRU](./paper/nlp/gru.md)), [CNN](./paper/cnn/README.md) -> [Transformers](./paper/nlp/transformer.md) -> ? ([MLP-mixer](./paper/mlp-mixer.md))
@@ -32,7 +32,7 @@
 
 ## 二、基础组件
 1. [标量、向量、矩阵、张量](./basic/vector.md)
-    * 具体事物、现象，文本，图片，音频等的数学表述
+    * 具体事物、现象，文本，图片，音频等的向量化表示
 
 2. [线性回归 Linear regression](./basic/linear_regression.md)
     * 回归问题，预测连续值，线性函数，随机初始化，均方误差损失，梯度下降/上升，优化方法：随机/小批量随机
@@ -42,16 +42,21 @@
 
 4. [多层感知机 MLP(Multilayer Perceptron)](./basic/mlp.md)
     * 也叫：前馈神经网络 FFN（feedforward neural network）
-    * 线性+非线性的深度堆叠可以模拟各种多项式 [Polynomial Regression As an Alternative to Neural Nets](https://arxiv.org/abs/1806.06850)。像欧几里得能够只用直尺(线性)和圆规(非线性)就能推导出200多个几何定律一样的奇妙。
+    * 线性+非线性的深度堆叠可以模拟各种多项式 [Polynomial Regression As an Alternative to Neural Nets](https://arxiv.org/abs/1806.06850)。
     * 深度网络训练过程中的梯度消失/爆炸问题会导致训练的崩塌、不收敛： [激活函数](./basic/Activation.md)，[归一化策略](./basic/Normalization.md)
     * 数据集划分：训练集、验证集、测试集; 欠拟合/过拟合，偏差/方差，泛化能力是终极;  
     * 过拟合 -> [正则化策略](./basic/regularization.md)：复杂度惩罚, dropout, 早停等
     * 隐藏层的研究： 梯度变化情况; 梯度消失侦测; 可视化等 
 
 5. [激活函数 Activation functions](./basic/Activation.md)
+    * 纯线性函数的堆叠仍然还是线性函数，而线性+非线性的深度堆叠可以模拟各种多项式。像欧几里得能够只用直尺(线性)和圆规(非线性)就能推导出200多个几何定律一样的奇妙。
+
 6. [归一化 Normalization](./basic/Normalization.md) 
+
 7. [损失函数和评估指标 Loss & Metric](./basic/Loss_metric.md)
+
 8. [优化器和学习率 Optimizer & learning rate](./basic/Optimizer.md)
+
 9. [正则化 Regularization](./basic/regularization.md) 
     * 防止过拟合，在超大数据集面前，过拟合似乎不是个事儿
 
@@ -64,7 +69,7 @@
 5. 极简架构的尝试：[MLP-mixer](./paper/mlp-mixer.md), 未来是否还有更好的，能够替代Transformers的架构？
 
 
-## 四、Transformers
+## 四、[Transformers](./basic/intro_transformer.md)
 1. 自然语言 [Attention Is All You Need](./paper/nlp/transformer.md) 
 2. 视觉 ViT [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](./paper/vit/ViT.md)
 3. 多模态的改进：[MAGNETO:post/pre/sub-LN](./paper/Multimodal/MAGNETO.md), [BEiT-3,不同模态，不同的FFN](./paper/Multimodal/BEiT_v3.md)
@@ -101,22 +106,25 @@
 * 对比学习最早基于CNN架构，在视觉领域取得成功，后来OpenAI的CLIP将其引入多模领域；对比学习替代强化学习PPO的思路？
 
 
-## 六、微调、提示学习、RLHF
+## 六、微调、RLHF、提示学习
 1. 微调 fine-tune
     * [Parameter-Efficient Fine-Tuning (PEFT)](https://github.com/huggingface/peft) 各种微调技术集成
     * [LoRA, Low-Rank Adaptation of LLM](https://github.com/microsoft/LoRA)，插件式的微调
+    * [AdaLoRA:Adaptive Budget Allocation for Parameter-Efficient Fine-Tuning](./paper/AdaLoRA.md)
     * [QLoRA: Efficient Finetuning of Quantized LLMs](./paper/QLoRA.md)
-2. [提示学习 Prompt Learning](./basic/Prompt_Learning.md) 
-    * Chain-of-Thought，思维链，让ai将思维过程展示出来
+2. RLHF 基于人类反馈的强化学习
+    * [InstructGPT](./paper/nlp/gpt_InstructGPT.md) 2022.3.4
+    * [Learning to summarize from human feedback](./paper/nlp/summarize_HF.md) 2020.9.2
+    * [PPO](./paper/RL/PPO.md) 2017.7.20
+    * [SELF-INSTRUCT](./paper/self-Instruct.md)  基于LLM自动生成各种提示任务
+    * [Principle-Driven Self-Alignment](./paper/Dromedary.md)
+3. [提示学习 Prompt Learning](./basic/Prompt_Learning.md) 
+    * [Chain-of-Thought](./paper/nlp/CoT.md)，思维链，让ai将思维过程展示出来
     * Self-Consistency，自洽性，
     * system/user/assistant, 在同一个大模型基础上做到对话时千人千面？面对不同人，呈现不同的性格？ 看OpenAI的prompt教程，可以给对话指定个背景。
-3. [对话形式](./paper/thinking_chatGPT.md) 
-    * [InstructGPT](./paper/nlp/gpt_InstructGPT.md)
-    * [SELF-INSTRUCT](./paper/self-Instruct.md)  基于LLM自动生成各种提示任务
-    * [Principle-Driven Self-Alignment](./paper/Dromedary.md) 
-    * 基于AI的对话形式很了不起，但判断可能还是像PC早期的DOS等命令行形式那样(命令行+管道的形式，自动化脚本任务)，最终会出现基于AI的GUI交互形式，普通人似乎更能接受。
-4. 图形界面交互对齐： 
-    * [Segment Anything](./paper/Multimodal/Segment_Anything.md)   
+4. 图形界面交互对齐
+    * [Segment Anything](./paper/Multimodal/Segment_Anything.md)
+    * 基于AI的对话形式很了不起，但判断可能还是像PC早期的DOS等命令行形式那样(命令行+管道的形式，自动化脚本任务)，最终会出现基于AI的GUI交互形式，普通人似乎更能接受。   
 
 
 ## 七、工程实践
