@@ -2,6 +2,9 @@
 通过掩码缩放语言图像预训练 2022.12.1 https://arxiv.org/abs/2212.00794 https://github.com/facebookresearch/flip
 
 ## 阅读笔记
+* 图像分块部分掩码，训练效率高，也起到数据增广正则的能力
+* 先用掩码率高的预训练，再掩码率低的接着训练？
+* 不使用对比学习，而纯生成式的，是否也可以？
 
 
 ## Abstract
@@ -12,7 +15,7 @@ We present Fast Language-Image Pre-training (FLIP), a simple and more efficient 
 ## 1. Introduction
 Language-supervised visual pre-training, e.g., CLIP [52], has been established as a simple yet powerful methodology for learning representations. Pre-trained CLIP models stand out for their remarkable versatility: they have strong zeroshot transferability [52]; they demonstrate unprecedented quality in text-to-image generation (e.g., [53, 55]); the pretrained encoder can improve multimodal and even unimodal visual tasks. Like the role played by supervised pre-training a decade ago [40], language-supervised visual pre-training is new fuel empowering various tasks today.
 
-语言监督的视觉预训练，例如CLIP[52]，已经被确立为一种简单而强大的学习表征的方法。经过预训练的CLIP模型因其非凡的多功能性而脱颖而出：它们具有强大的零样本可迁移性[52];它们在文本到图像生成方面表现出前所未有的质量(例如，[53，55]);经过预训练的编码器可以改善多模态甚至单模态的视觉任务。就像十年前监督预训练[40]所扮演的角色一样，语言监督视觉预训练是当今各种任务的新燃料。
+语言监督的视觉预训练，例如CLIP[52]，已经被确立为一种简单而强大的表征学习方法。经过预训练的CLIP模型因其非凡的多功能性而脱颖而出：它们具有强大的零样本可迁移性[52];它们在文本到图像生成方面表现出前所未有的质量(例如，[53，55]);经过预训练的编码器可以改善多模态甚至单模态的视觉任务。就像十年前监督预训练[40]所扮演的角色一样，语言监督视觉预训练是当今各种任务的新动力。
 
 Unlike classical supervised learning with a pre-defined label set, natural language provides richer forms of supervision, e.g., on objects, scenes, actions, context, and their relations, at multiple levels of granularity. Due to the complex nature of vision plus language, large-scale training is essential for the capability of language-supervised models. For example, the original CLIP models [52] were trained on 400 million data for 32 epochs—which amount to 10,000 ImageNet [16] epochs, taking thousands of GPU-days [52, 36]. Even using high-end infrastructures, the wall-clock training time is still a major bottleneck hindering explorations on scaling vision-language learning.
 
@@ -30,7 +33,7 @@ We present Fast Language-Image Pre-training (FLIP), a simple method for efficien
 
 By removing 50%-75% patches of a training image, our method reduces computation by 2-4×; it also allows using 2-4× larger batches with little extra memory cost, which boost accuracy thanks to the behavior of contrastive learning [30, 11]. As summarized in Fig. 1, FLIP trains >3× faster in wall-clock time for reaching similar accuracy as its CLIP counterpart; with the same number of epochs, FLIP reaches higher accuracy than its CLIP counterpart while still being 2-3× faster.
 
-通过去除训练图像的50%-75%的分块，我们的方法将计算量减少了2-4倍;它还允许使用2-4倍的大批量，而几乎没有额外的内存成本，由于对比学习的行为，这提高了准确性[30，11]。如图1所示，FLIP在挂钟时间内训练速度快3倍以上，以达到与CLIP类似的精度;在相同周期数的情况下，FLIP达到了比CLIP更高的精度，同时仍然快2-3倍。
+通过去除训练图像的50%-75%的分块，我们的方法将计算量减少了2-4倍;它还允许使用2-4倍的大批量，而几乎没有额外的内存成本，由于对比学习的行为，这提高了准确性[30，11]。如图1所示，FLIP在挂钟时间内训练速度快3倍以上，以达到与CLIP类似的精度; 在相同周期数的情况下，FLIP达到了比CLIP更高的精度，同时仍然快2-3倍。
 
 We show that FLIP is a competitive alternative to CLIP on various downstream tasks. Pre-trained on the same LAION-400M dataset [56], FLIP dominantly outperforms its CLIP counterparts (OpenCLIP [36] and our own reproduction), as evaluated on a large variety of downstream datasets and transfer scenarios. These comparisons suggest that FLIP can readily enjoy the faster training speed while still providing accuracy gains.
 
@@ -49,14 +52,15 @@ Denoising Autoencoders [63] with masking noise [64] were proposed as an unsuperv
 The Masked Autoencoder (MAE) method [29] further takes advantage of masking to reduce training time and memory. MAE sparsely applies the ViT encoder [20] to visible content. It also observes that a high masking ratio is beneficial for accuracy. The MAE design has been applied to videos [61, 22], point clouds [49], graphs [59, 9, 32], audio [4, 47, 13, 35], visual control [70, 57], vision-language [23, 41, 31, 19], and other modalities [5].
 
 掩码自动编码器(MAE)方法[29]进一步利用掩码来减少训练时间和内存。MAE稀疏地将ViT编码器[20]应用于可见内容。它还观察到，高掩码比对于精度是有益的。MAE设计已应用于视频[61，22]、点云[49]、图形[59，9，32]、音频[4，47，13，35]、视觉控制[70，57]、视觉语言[23，41，31，19]和其他模态[5]。
+<!-- 点云[49],视觉控制[70，57] -->
 
 Our work is related to MAE and its vision-language extensions [23, 41, 31, 19]. However, our focus is on the scaling aspect enabled by the sparse computation; we address the challenge of large-scale CLIP training [52], while previous works [23, 41, 31, 19] are limited in terms of scale.
 
-我们的工作与MAE及其视觉语言扩展有关[23，41，31，19]。然而，我们的重点是通过稀疏计算实现的缩放方面;我们解决了大规模CLIP训练的挑战[52]，而之前的工作[23，41，31，19]在规模方面是有限的。
+我们的工作与MAE及其视觉语言扩展有关[23，41，31，19]。然而，我们的重点是通过稀疏计算实现的缩放方面; 我们解决了大规模CLIP训练的挑战[52]，而之前的工作[23，41，31，19]在规模方面是有限的。
 
 Our method does not perform reconstruction and is not a form of autoencoding. Speeding up training by masking is studied in [69] for self-supervised contrastive learning, e.g., for MoCo [30] or BYOL [27], but its accuracy could be limited by the scaling behavior of image-only contrastive learning.
 
-我们的方法不执行重建，也不是一种自动编码形式。[69]中研究了通过掩蔽来加速训练，用于自监督对比学习，例如MoCo[30]或BYOL[27]，但其准确性可能受到仅图像对比学习的缩放行为的限制。
+我们的方法不执行重建，也不是一种自动编码形式。[69]中研究了通过掩码来加速训练，用于自监督对比学习，例如MoCo[30]或BYOL[27]，但其准确性可能受到仅图像对比学习的缩放行为的限制。
 
 ### Language-supervised learning. 语言监督学习
 In the past years, CLIP [52] and related works (e.g., [37, 51]) have popularized learning visual representations with language supervision. CLIP is a form of contrastive learning [28] by comparing image-text sample pairs. Beyond contrastive learning, generative learning methods have been explored [17, 65, 2, 74], optionally combined with contrastive losses [74]. Our method focuses on the CLIP method, while we hope it can be extended to generative methods in the future.
@@ -70,7 +74,7 @@ In a nutshell, our method simply masks out the input data in CLIP [52] training 
 
 ![Figure 2](../images/FLIP/fig_2.png)</br>
 Figure 2. Our FLIP architecture. Following CLIP [52], we perform contrastive learning on pairs of image and text samples. We randomly mask out image patches with a high masking ratio and encode only the visible patches. We do not perform reconstruction of masked image content. 
-图2:我们的FLIP架构。在CLIP[52]之后，我们对成对的图像和文本样本进行对比学习。我们随机屏蔽掉具有高掩码率的图像分块，并仅对可见分块进行编码。我们不执行掩码图像内容的重建。
+图2:我们的FLIP架构。在CLIP[52]之后，我们对成对的图像和文本样本进行对比学习。我们随机掩码掉高比例的图像分块，并仅对可见分块进行编码。我们不执行掩码图像内容的重建。
 
 In our scenario, the benefit of masking is on wisely spending computation. Intuitively, this leads to a tradeoff between how densely we encode a sample against how many samples we compare as the learning signal. By introducing masking, we can: (i) learn from more image-text pairs under the same wall-clock training time, and (ii) have a contrastive objective over a larger batch under the same memory constraint. We show by experiments that for both aspects, our method is at an advantage in the trade-off. Next we introduce the key components of our method.
 
@@ -82,7 +86,7 @@ Image masking.  We adopt the Vision Transformer (ViT) [20] as the image encoder.
 
 Text masking. Optionally, we perform text masking in the same way as image masking. We mask out a portion of the text tokens and apply the encoder only to the visible tokens, as in [29]. This is unlike BERT [18] that replaces them with a learned mask token. Such sparse computation can reduce the text encoding cost. However, as the text encoder is smaller [52], speeding it up does not lead to a better overall trade-off. We study text masking for ablation only.
 
-文本掩码。可选地，我们以与图像掩码相同的方式执行文本掩码。我们掩码了一部分文本令牌，并仅将编码器应用于可见令牌，如[29]所示。这与BERT[18]不同，后者将它们替换为学习的掩码令牌。这样的稀疏计算可以降低文本编码成本。然而，由于文本编码器较小[52]，因此加快速度并不能带来更好的整体权衡。我们只研究消融时的文本掩码。
+文本掩码。可选地，我们以与图像掩码相同的方式执行文本掩码。我们掩码了一部分文本令牌，并仅将编码器应用于可见令牌，如[29]所示。这与BERT[18]不同，后者将它们替换为学习的掩码令牌。这样的稀疏计算可以降低文本编码成本。然而，由于文本编码器较小[52]，因此加快速度并不能带来更好的整体权衡。我们只研究消融时的文本掩码。 <!--文本掩码的思路，长篇文章阅读理解，摘要总结？-->
 
 Objective. The image/text encoders are trained to minimize a contrastive loss [48]. The negative sample pairs for contrastive learning consist of other samples in the same batch [11]. It has been observed that a large number of negative samples is critical for self-supervised contrastive learning on images [30, 11]. This property is more prominent in language-supervised learning.
 
@@ -98,7 +102,7 @@ Unmasking. While the encoder is pre-trained on masked images, it can be directly
 
 To close the distribution gap caused by masking, we can set the masking ratio as 0% and continue pre-training for a small number of steps. This unmasking tuning strategy produces a more favorable accuracy/time trade-off.
 
-为了缩小掩码造成的分布差距，我们可以将掩码率设置为0%，并继续进行少量步骤的预训练。这种揭开面纱的调整策略产生了更有利的准确性/时间权衡。
+为了缩小掩码造成的分布差距，我们可以将掩码率设置为0%，并继续进行少量步骤的预训练。这种不掩码的调整策略产生了更有利的准确性/时间权衡。
 
 ### 3.1. Implementation
 Our implementation follows CLIP [52] and OpenCLIP [36], with a few modifications we describe in the following. Hyper-parameters are in the appendix.
@@ -178,20 +182,20 @@ By default, we apply our models on intact images at inference-time, similar to [
 
 Table 1d reports that if using masking at inference time, the accuracy drops by a lot (e.g., 7.3%). This drop can be partially caused by information loss at inference, so we also compare with ensembling multiple masked views [10], where the views are complementary to each other and put together cover all patches. Ensembling reduces the gap (Table 1d), but still lags behind the simple full-view inference.
 
-表1d报告称，如果在推理时使用掩码，精度会下降很多(例如，7.3%)。这种下降可能部分是由推理时的信息丢失引起的，因此我们也将其与多个掩码视图进行比较[10]，其中视图相互补充，放在一起覆盖所有分块。镶嵌减少了差距(表1d)，但仍落后于简单的全视图推断。
+表1d报告称，如果在推理时使用掩码，精度会下降很多(例如，7.3%)。这种下降可能部分是由推理时的信息丢失引起的，因此我们也将其与多个掩码视图进行比较[10]，其中视图相互补充，放在一起覆盖所有分块。集成减少了差距(表1d)，但仍落后于简单的全视图推断。
 
 #### Unmasked tuning. 无掩码微调
 Our ablation experiments thus far do not involve unmasked tuning. Table 1e reports the results of unmasked tuning for extra 0.32 epoch on the pre-training dataset. It increases accuracy by 1.3% at the high masking ratio of 75%, suggesting that tuning can effectively reduce the distribution gap between pre-training and inference.
 
 到目前为止，我们的消融实验不涉及无掩码微调。表1e报告了在预训练数据集上针对额外0.32历元的未掩码微调的结果。在75%的高掩码率下，它将精度提高了1.3%，这表明调整可以有效地减少预训练和推理之间的分布差距。
 
-Fig. 3 plots the trade-off affected by unmasked tuning (solid vs. dashed). Unmasked tuning leads to a more desirable trade-off for 75% masking; it has a comparable tradeoff for 50% masking but improves final accuracy.
-
-图3绘制了受未掩码微调影响的权衡(实线与虚线)。无掩码微调导致75%掩码的更理想的折衷;它对于50%的掩码具有可比较的折衷，但提高了最终精度。
-
 ![Figure 3](../images/FLIP/fig_3.png)</br>
 Figure 3. Accuracy vs. training time trade-off in detail. The setting follows Table 1a. Training is for 6.4, 12.8, or 32 epochs, for each masking ratio. Unmasked tuning, if applied, is for 0.32 epoch. All are benchmarked in 256 TPU-v3 cores. Zero-shot accuracy is on IN-1K validation. The model is ViT-L/16. Our method speeds up training and increases accuracy.
 图3。准确度与训练时间的详细权衡。设置如下表1a所示。对于每个掩码率，训练是针对6.4、12.8或32个周期。如果应用无掩码调整，则为0.32历元。所有这些都以256个TPU-v3核心为基准。零样本精度取决于IN-1K验证。模型为ViT-L/16。我们的方法加快了训练速度并提高了准确性。
+
+Fig. 3 plots the trade-off affected by unmasked tuning (solid vs. dashed). Unmasked tuning leads to a more desirable trade-off for 75% masking; it has a comparable tradeoff for 50% masking but improves final accuracy.
+
+图3绘制了受未掩码微调影响的权衡(实线与虚线)。无掩码微调导致75%掩码的更理想的折衷; 它对于50%的掩码具有可比较的折衷，但提高了最终精度。
 
 #### Reconstruction. 重建
 In Table 1f we investigate adding a reconstruction loss function. The reconstruction head follows the design in MAE [29]: it has a small decoder and reconstructs normalized image pixels. The reconstruction loss is added to the contrastive loss.
@@ -229,7 +233,7 @@ We consider the following CLIP baselines:
 
 The original CLIP [52] was trained on a private dataset, so a direct comparison with it should reflect the effect of data, not just methods. OpenCLIP [36] is a faithful reproduction of CLIP yet trained on a public dataset that we can use, so it is a good reference for us to isolate the effect of dataset differences. Our CLIP reproduction further helps isolate other implementation subtleties and allows us to pinpoint the effect of the FLIP method.
 
-最初的CLIP[52]是在私人数据集上训练的，因此与它的直接比较应该反映数据的效果，而不仅仅是方法。OpenCLIP[36]是CLIP的忠实复制，但在我们可以使用的公共数据集上进行训练，因此它是我们隔离数据集差异影响的良好参考。我们的CLIP复制进一步有助于隔离其他实现细节，并使我们能够精确定位FLIP方法的效果。
+最初的CLIP[52]是在私有数据集上训练的，因此与它的直接比较应该反映数据的效果，而不仅仅是方法。OpenCLIP[36]是CLIP的忠实复制，但在我们可以使用的公共数据集上进行训练，因此它是我们隔离数据集差异影响的良好参考。我们的CLIP复制进一步有助于隔离其他实现细节，并使我们能够精确定位FLIP方法的效果。
 
 For all tasks studied in this subsection, we compare with all these CLIP baselines. This allows us to better understand the influence of the data and of the methods.
 
@@ -307,7 +311,7 @@ Table 6. Zero-shot robustness evaluation, compared with various CLIP baselines. 
 
 Discounting the influence of pre-training data, our FLIP training has clearly better robustness than its CLIP counter parts in all cases. We hypothesize that masking as a form of noise and regularization can improve robustness.
 
-考虑到预训练数据的影响，我们的FLIP训练在所有情况下都明显比其CLIP计数器部分具有更好的稳健性。我们假设掩蔽作为噪声和正则化的一种形式可以提高稳健性。
+考虑到预训练数据的影响，我们的FLIP训练在所有情况下都明显比其CLIP计数器部分具有更好的稳健性。我们假设掩码作为噪声和正则化的一种形式可以提高稳健性。
 
 #### Image Captioning. 图像标题
 See Table 7 for the captioning performance on COCO [42] and nocaps [1]. Our captioning implementation follows the cross-entropy training baseline in [7]. Unlike classification in which only a classifier layer is added after pre-training, here the fine-tuning model has a newly initialized captioner (detailed in appendix). In this task, FLIP outperforms the original CLIP checkpoint in several metrics. Compared to our CLIP baseline, which is pretrained on the same data, FLIP also shows a clear gain, especially in BLEU-4 and CIDEr metrics.

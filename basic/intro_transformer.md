@@ -263,7 +263,12 @@ x = x + self._ff_block(self.norm3(x))
 # 注意这个 x = x + ... , 把encoder的输出和target等结合起来的方式。
 ```
 
-### 4.2 只使用编码器架构，双向注意力
+pytorch实现：
+* https://pytorch.org/docs/stable/generated/torch.nn.Transformer.html 
+* https://pytorch.org/docs/stable/generated/torch.nn.TransformerDecoder.html 
+* https://pytorch.org/docs/stable/generated/torch.nn.TransformerDecoderLayer.html #forword有参数接收来自encoder的输出向量。
+
+### 4.2 双向注意力编码
 代表：[BERT](../paper/nlp/bert.md)
 
 ![BERT的预训练和微调过程](../paper/images/bert/fig_1.png)<br/>
@@ -274,7 +279,7 @@ BERT预训练：
 2. 构造两个句子对，头部增加一个[cls]令牌用于，中间用[sep]令牌分割，是真实的上下句，用Label=1表示，随机句子用Label=0表示
 3. 训练目标有2个：预测被掩码的token，以及是否为相邻的下一句([cls]令牌过交叉熵函数预测是否为下一句)。
 
-### 4.3 只使用解码器架构，单向因果注意力
+### 4.3 单向(因果)注意力编码
 代表：[GPT-1](../paper/nlp/gpt.md)
 
 ![GPT的预训练和微调过程](../paper/images/gpt_1/fig_1.png)<br/>
@@ -285,6 +290,9 @@ GPT预训练：
 2. 通过附加一个线性分类头，用于有监督的预测分类。
 3. 下游任务统一到预训练模型中。在GPT-2中作者提出：自然语言提供了一种灵活的方式来将任务、输入和输出指定为单一的序列符号。基于这种思路，可以将所有的NLP任务都看成是对单一序列的处理。范式从预训练+下游各种适配微调，变成了，统一通用的预训练+下游的提示学习。
 
+pytorch实现：(双向和单向区别在于forward()中的is_causal参数)
+* https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoder.html
+* https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html
 
 ## 5. 进阶
 ### 5.1. 训练时的稳定性

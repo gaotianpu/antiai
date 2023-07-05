@@ -1,334 +1,348 @@
-# Adaptive Budget Allocation for Parameter-Efficient Fine-Tuning 用于参数有效微调的自适应预算分配
-## Abstract 摘要
-Fine-tuning large pre-trained language models on downstream tasks has become an important paradigm in NLP. However, common practice fine-tunes all of the parameters in a pre-trained model, which becomes prohibitive when a large number of downstream tasks are present. Therefore, many fine-tuning methods are proposed to learn incremental updates of pre-trained weights in a parameter efficient way, e.g., low-rank increments. These methods often evenly distribute the budget of incremental updates across all pre-trained weight matrices, and overlook the varying importance of different weight parameters. As a consequence, the finetuning performance is suboptimal. To bridge this gap, we propose AdaLoRA, which adaptively allocates the parameter budget among weight matrices according to their importance score. In particular, AdaLoRA parameterizes the incremental updates in the form of singular value decomposition. Such a novel approach allows us to effectively prune the singular values of unimportant updates, which is essentially to reduce their parameter budget but circumvent intensive exact SVD computations. We conduct extensive experiments with several pre-trained models on natural language processing, question answering, and natural language generation to validate the effectiveness of AdaLoRA. Results demonstrate that AdaLoRA manifests notable improvement over baselines, especially in the low budget settings. Our code is publicly available at https://github.com/QingruZhang/AdaLoRA.
+# BLIP: Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation BLIP：统一视觉语言理解和生成的引导语言图像预训练
+## 1. Introduction 1。介绍
+Vision-language pre-training has recently received tremendous success on various multimodal downstream tasks. However, existing methods have two major limitations: 
 
-在下游任务上微调大型预先训练的语言模型已经成为NLP中的一个重要范例。然而，通常的实践对预训练模型中的所有参数进行微调，当存在大量下游任务时，这变得令人望而却步。因此，提出了许多微调方法来以参数有效的方式学习预训练权重的增量更新，例如，低秩增量。这些方法通常将增量更新的预算均匀分布在所有预先训练的权重矩阵中，并忽略了不同权重参数的不同重要性。因此，微调性能是次优的。为了弥补这一差距，我们提出了AdaLoRA，它根据权重矩阵的重要性得分在权重矩阵之间自适应地分配参数预算。特别地，AdaLoRA以奇异值分解的形式对增量更新进行参数化。这种新颖的方法使我们能够有效地修剪不重要更新的奇异值，这本质上是为了减少它们的参数预算，但避免密集的精确SVD计算。我们在自然语言处理、问答和自然语言生成方面对几个预先训练的模型进行了广泛的实验，以验证AdaLoRA的有效性。结果表明，AdaLoRA比基线有显著改善，尤其是在低预算环境中。我们的代码可在https://github.com/QingruZhang/AdaLoRA.
+视觉语言预训练最近在各种多模式下游任务上取得了巨大成功。然而，现有方法有两个主要局限性：
 
-## 1 Introduction 1简介
-Pre-trained language models (PLMs) have manifested superior performance in various natural language processing tasks (Devlin et al., 2019; Liu et al., 2019; He et al., 2021b; Radford et al., 2019; Brown et al., 2020). The most common way to adapt pre-trained models to down-stream tasks is to fine-tune all the parameters (full fine-tuning, Qiu et al. (2020); Raffel et al. (2020)). However, pre-trained models typically incurs large memory footprint. For example, BERT model (Devlin et al., 2019) consists up to 300 million parameters; T5 (Raffel et al., 2020) comprises up to 11 billion parameters and GPT-3 (Brown et al., 2020) contains up to 175 billion parameters. When building a NLP system upon these pre-trained models, we usually handle multiple tasks that arrive simultaneously (Radford et al., 2019). Given a large number of down-stream tasks, full fine-tuning requires that each task maintains a separated copy of large models. The resulting memory consumption is prohibitively expensive.
+(1) Model perspective: most methods either adopt an encoder-based model (Radford et al., 2021; Li et al., 2021a), or an encoder-decoder (Cho et al., 2021; Wang et al., 2021) model. However, encoder-based models are less straightforward to directly transfer to text generation tasks (e.g. image captioning), whereas encoder-decoder models have not been successfully adopted for image-text retrieval tasks. 
 
-预训练语言模型（PLM）在各种自然语言处理任务中表现出优异的性能（Devlin et al.，2019；刘等人，2019；何等人，2021b；Radford等人，2019年；Brown等人，2020）。使预先训练的模型适应下游任务的最常见方法是对所有参数进行微调（完全微调，Qiu et al.（2020）；Raffel等人（2020））。然而，预先训练的模型通常会占用大量内存。例如，BERT模型（Devlin et al.，2019）由多达3亿个参数组成；T5（Raffel等人，2020）包含多达110亿个参数，GPT-3（Brown等人，2020年）包含多达1750亿个参数。当在这些预先训练的模型上构建NLP系统时，我们通常会处理同时到达的多个任务（Radford et al.，2019）。给定大量的下游任务，完全的微调需要每个任务维护一个大型模型的独立副本。由此产生的内存消耗非常昂贵。
+（1） 模型视角：大多数方法要么采用基于编码器的模型（Radford等人，2021；李等人，2021a），要么采用编码器-解码器（Cho等人，2021，王等人，2021）模型。然而，基于编码器的模型不太容易直接转移到文本生成任务（例如，图像字幕），而编码器-解码器模型尚未成功用于图像文本检索任务。
 
-To address this issue, researchers have proposed two main lines of research to reduce the fine-tuning parameters, while maintaining or even improving the performance of PLMs. Specifically, one line of research focuses on adding small neural modules to PLMs and fine-tune only these modules for each task – the base model is kept frozen and shared across tasks. In this way, only a small number of task-specific parameters are introduced and updated, greatly enhancing the practicality of large models. For example, adapter tuning (Houlsby et al., 2019; Rebuffi et al., 2017; Pfeiffer et al., 2020; He et al., 2022) inserts small neural modules called adapters between the layers of the base model. Prefix tuning (Li & Liang, 2021) and prompt tuning (Lester et al., 2021) attach additional trainable prefix tokens to the input or hidden layers of the base model. These methods have shown to achieve comparable performance to full fine-tuning, while only updating less than 1% of the original model parameters, significantly releasing the memory consumption.
+(2) Data perspective: most state-of-the-art methods (e.g., CLIP (Radford et al., 2021), ALBEF (Li et al., 2021a), SimVLM (Wang et al., 2021)) pre-train on image-text pairs collected from the web. Despite the performance gain obtained by scaling up the dataset, our paper shows that the noisy web text is suboptimal for vision-language learning.
 
-为了解决这个问题，研究人员提出了两条主要的研究路线，以减少微调参数，同时保持甚至提高PLM的性能。具体而言，有一条研究路线侧重于将小型神经模块添加到PLM中，并为每个任务仅微调这些模块——基本模型保持冻结并在任务之间共享。这样，只引入和更新了少量特定任务的参数，大大增强了大型模型的实用性。例如，适配器调整（Houlsby等人，2019；Rebuffi等人，2017；Pfeiffer等人，2020；He等人，2022）在基础模型的层之间插入称为适配器的小型神经模块。前缀调整（Li&Liang，2021）和提示调整（Lester et al.，2021）将额外的可训练前缀标记附加到基础模型的输入层或隐藏层。这些方法已经证明可以实现与完全微调相当的性能，同时只更新不到1%的原始模型参数，显著释放了内存消耗。
+（2） 数据透视：大多数最先进的方法（例如，CLIP（Radford et al.，2021）、ALBEF（Li et al.，2021a）、SimVLM（Wang et al.，2022））对从网络收集的图像-文本对进行预训练。尽管通过放大数据集获得了性能增益，但我们的论文表明，噪声网络文本对于视觉语言学习来说是次优的。
 
-Figure 1: Given the total trainable parameters as 0.28M, we apply LoRA only to selected weight matrices (left) or selected layers (right) of DeBERTaV3-base and compare the fine-tuning performance on MNLI-m. Figure 1a: we only fine-tune a selected type of weight matrix of every transformer layer, including query/key/value projection (Wq, Wk, Wv), output projection (Wo) in the self-attention, and two weight matrices (Wf1 , Wf2 ) in two-layer FFNs. In Figure 1b, we apply LoRA to every weight matrix of the selected layers.
+Figure 1. We use a Captioner (Cap) to generate synthetic captions for web images, and a Filter (Filt) to remove noisy captions. 
 
-图1：给定0.28M的总可训练参数，我们仅将LoRA应用于DeBERTaV3基础的选定权重矩阵（左）或选定层（右），并比较MNLI-m上的微调性能。图1a：我们只微调每个变换器层的选定类型的权重矩阵，包括自注意中的查询/键/值投影（Wq，Wk，Wv）、输出投影（Wo）和两层FFN中的两个权重矩阵（Wf1，Wf2）。在图1b中，我们将LoRA应用于所选层的每个权重矩阵。
+图1。我们使用Capitator（Cap）为网络图像生成合成字幕，并使用Filter（Filt）删除有噪声的字幕。
 
-Another line of research proposes to model the incremental update of the pre-trained weights in a parameter-efficient way, without modifying the model architecture (Zaken et al., 2021; Guo et al., 2020; Hu et al., 2022). Given a pre-trained weight matrix1 W(0), for example, diff pruning (Guo et al., 2020) models its incremental update ∆ as a sparse matrix. Diff pruning initializes ∆ as the same dimension as W(0) and then prunes ∆ element-wise based on the magnitude of the entries. As such, diff pruning can increase the parameter efficiency substantially by adaptively retaining important updates and pruning unimportant ones. Nonetheless, diff pruning has several limitations. First, it relies on low-level implementation to speed up the computation of unstructured sparse matrices, which is not well supported by existing deep learning frameworks. Therefore, we have to store ∆ as a dense matrix during training. Second, it needs to update every entry of ∆ with their gradients and then prune them. This results in similar computational cost as full fine-tuning (Guo et al., 2020).
+To this end, we propose BLIP: Bootstrapping LanguageImage Pre-training for unified vision-language understanding and generation. BLIP is a new VLP framework which enables a wider range of downstream tasks than existing methods. It introduces two contributions from the model and data perspective, respectively: 
 
-另一条研究路线提出以参数有效的方式对预训练权重的增量更新进行建模，而不修改模型架构（Zaken等人，2021；郭等人，2020；胡等人，2022）。例如，给定预先训练的权重矩阵1 W（0），diff修剪（Guo et al.，2020）将其增量更新∆建模为稀疏矩阵。Diff修剪将∆初始化为与W（0）相同的维度，然后根据条目的大小逐元素修剪∆。因此，diff修剪可以通过自适应地保留重要更新和修剪不重要的更新来显著提高参数效率。尽管如此，差异修剪有几个局限性。首先，它依赖于底层实现来加快非结构化稀疏矩阵的计算，而现有的深度学习框架并没有很好地支持这一点。因此，在训练过程中，我们必须将∆存储为密集矩阵。其次，它需要用它们的梯度更新∆的每个条目，然后对它们进行修剪。这导致了与完全微调类似的计算成本（Guo et al.，2020）。
+为此，我们提出了BLIP：用于统一视觉语言理解和生成的Bootstrapping LanguageImage预训练。BLIP是一种新的VLP框架，它能够实现比现有方法更广泛的下游任务。它分别从模型和数据的角度介绍了两个贡献：
 
-To overcome these drawbacks, Hu et al. (2022) propose a method named LoRA, which parameterizes ∆ as a low-rank matrix by the product of two much smaller matrices:
+(a) Multimodal mixture of Encoder-Decoder (MED): a new model architecture for effective multi-task pre-training and flexible transfer learning. An MED can operate either as a unimodal encoder, or an image-grounded text encoder, or an image-grounded text decoder. The model is jointly pre-trained with three vision-language objectives: imagetext contrastive learning, image-text matching, and imageconditioned language modeling. 
 
-为了克服这些缺点，Hu等人（2022）提出了一种名为LoRA的方法，该方法通过两个小得多的矩阵的乘积将∆参数化为低秩矩阵：
+（a） 编码器-解码器的多模式混合（MED）：一种用于有效的多任务预训练和灵活迁移学习的新模型架构。MED可以作为单峰编码器、基于图像的文本编码器或基于图像的文字解码器来操作。该模型与三个视觉语言目标联合预训练：图像文本对比学习、图像文本匹配和图像条件语言建模。
 
-W = W(0) + ∆ = W(0) + BA, (1)
+(b) Captioning and Filtering (CapFilt): a new dataset boostrapping method for learning from noisy image-text pairs. We finetune a pre-trained MED into two modules: a captioner to produce synthetic captions given web images, and a filter to remove noisy captions from both the original web texts and the synthetic texts.
 
-W=W（0）+∆=W（O）+BA，（1）
+（b） 字幕和过滤（CapFilt）：一种新的数据集增强方法，用于从噪声图像-文本对中学习。我们将预先训练的MED微调为两个模块：一个是生成给定网络图像的合成字幕的字幕器，另一个是从原始网络文本和合成文本中去除噪声字幕的过滤器。
 
-where W(0) , ∆ ∈ R d1×d2 , A ∈ R r×d2 and B ∈ R d1×r with r  {d1, d2}. During fine-tuning, only A and B are updated. The rank r is chosen to be much smaller than the dimension of W (e.g., r = 8 when d1 = d2 = 1024). With less than 0.5% additional trainable parameters, the training overhead can be reduced up to 70%, compared to full fine-tuning. However, LoRA achieves comparable or even better performance than full fine-tuning (Hu et al., 2022). Meanwhile, the product of two samll matrices is more friendly to implement and deploy than unstructured sparse matrices in diff pruning.
+We perform extensive experiments and analysis, and make the following key observations. 
 
-其中W（0），∆∈R d1×d2，A∈R R×d2和B∈R d1×R与R{d1，d2}。在微调期间，仅更新A和B。秩r被选择为比W的维度小得多（例如，当d1＝d2＝1024时，r＝8）。在不到0.5%的额外可训练参数的情况下，与完全微调相比，训练开销可以减少多达70%。然而，LoRA实现了与完全微调相当甚至更好的性能（Hu et al.，2022）。同时，在diff修剪中，两个samll矩阵的乘积比非结构化稀疏矩阵更易于实现和部署。
+我们进行了广泛的实验和分析，并做出了以下关键观察。
 
-LoRA still has limitations as it prespecifies the rank r of each incremental matrix ∆ identical. This ignores the fact that the importance of weight matrices varies significantly across modules and layers when fine-tuning pre-trained models. To illustrate this point, we present an concrete example in Figure 1. We compare the performance of LoRA when fine-tuning specific modules or layers with the same number of trainable parameters. Figure 1a shows that fine-tuning feed-forward networks (FFN) achieves better performance than self-attention modules. In addition, Figure 1b demonstrates that weight matrices in top layers are more important than those in bottom layers.
+* We show that the captioner and the filter work together to achieve substantial performance improvement on various downstream tasks by bootstrapping the captions. We also find that more diverse captions yield larger gains. 
 
-LoRA仍然有局限性，因为它预先指定了每个增量矩阵∆的秩r相同。这忽略了这样一个事实，即当微调预先训练的模型时，权重矩阵的重要性在模块和层之间变化很大。为了说明这一点，我们在图1中给出了一个具体的例子。当使用相同数量的可训练参数微调特定模块或层时，我们比较了LoRA的性能。图1a显示，微调前馈网络（FFN）比自注意模块实现了更好的性能。此外，图1b表明，顶层的权重矩阵比底层的权重矩阵更重要。
+*我们展示了字幕器和过滤器协同工作，通过引导字幕在各种下游任务上实现了显著的性能改进。我们还发现，更多样化的字幕会带来更大的收益。
 
-Adding more trainable parameters to the critical weight matrices can lead to better model performance. In contrast, adding more parameters to those less important weight matrices yields very marginal gains or even hurt model performance. Given the parameter budget, i.e., the number of total trainable parameters, we always prefer to allocate more parameters to those important modules. Distributing the budget evenly to all weight matrices/layers, like LoRA and other methods (e.g., adapter and prefix tuning), often gives suboptimal performance. To this end, a natural question is:
+* BLIP achieves state-of-the-art performance on a wide range of vision-language tasks, including image-text retrieval, image captioning, visual question answering, visual reasoning, and visual dialog. We also achieve state-ofthe-art zero-shot performance when directly transferring our models to two video-language tasks: text-to-video retrieval and videoQA.
 
-将更多可训练的参数添加到临界权重矩阵可以导致更好的模型性能。相反，在那些不太重要的权重矩阵中添加更多的参数会产生非常边际的收益，甚至损害模型性能。考虑到参数预算，即总可训练参数的数量，我们总是倾向于为那些重要的模块分配更多的参数。将预算平均分配到所有权重矩阵/层，如LoRA和其他方法（例如，适配器和前缀调整），通常会产生次优性能。为此，一个自然的问题是：
+*BLIP在广泛的视觉语言任务中实现了最先进的性能，包括图像文本检索、图像字幕、视觉问答、视觉推理和视觉对话。当我们将模型直接传输到两个视频语言任务：文本到视频检索和视频质量保证时，我们还实现了最先进的零样本性能。
 
-How can we allocate the parameter budget adaptively according to importance of modules to improve the performance of parameter-efficient fine-tuning? 
+Figure 2. Pre-training model architecture and objectives of BLIP (same parameters have the same color). We propose multimodal mixture of encoder-decoder, a unified vision-language model which can operate in one of the three functionalities: (1) Unimodal encoder is trained with an image-text contrastive (ITC) loss to align the vision and language representations. (2) Image-grounded text encoder uses additional cross-attention layers to model vision-language interactions, and is trained with a image-text matching (ITM) loss to distinguish between positive and negative image-text pairs. (3) Image-grounded text decoder replaces the bi-directional self-attention layers with causal self-attention layers, and shares the same cross-attention layers and feed forward networks as the encoder. The decoder is trained with a language modeling (LM) loss to generate captions given images. 
 
-如何根据模块的重要性自适应地分配参数预算，以提高参数高效微调的性能？
+图2:BLIP的预训练模型架构和目标（相同的参数具有相同的颜色）。我们提出了编码器-解码器的多模式混合，这是一个统一的视觉语言模型，可以在三个功能之一中操作：（1）用图像-文本对比（ITC）损失来训练单模式编码器，以对齐视觉和语言表示。（2） 基于图像的文本编码器使用额外的交叉注意力层来建模视觉-语言交互，并使用图像-文本匹配（ITM）损失进行训练，以区分正面和负面的图像-文本对。（3） 基于图像的文本解码器用因果自注意层取代了双向自注意层，并与编码器共享相同的交叉注意层和前馈网络。解码器使用语言建模（LM）损失进行训练，以生成给定图像的字幕。
 
-1Unless specified otherwise, we use W(0) to denote any pre-trained weight matrix. 
+## 2. Related Work 2。相关工作
+### 2.1. Vision-language Pre-training 2.1、。视觉语言预培训
+Vision-language pre-training (VLP) aims to improve performance of downstream vision and language tasks by pretraining the model on large-scale image-text pairs. Due to the prohibitive expense of acquiring human-annotated texts, most methods (Chen et al., 2020; Li et al., 2020; 2021a; Wang et al., 2021; Radford et al., 2021) use image and alt-text pairs crawled from the web (Sharma et al., 2018; Changpinyo et al., 2021; Jia et al., 2021), Despite the use of simple rule-based filters, noise is still prevalent in the web texts. However, the negative impact of the noise has been largely overlooked, shadowed by the performance gain obtained from scaling up the dataset. Our paper shows that the noisy web texts are suboptimal for vision-language learning, and proposes CapFilt that utilizes web datasets in a more effective way.
 
-1除非另有规定，否则我们使用W（0）来表示任何预先训练的权重矩阵。
+视觉语言预训练（VLP）旨在通过在大规模图像-文本对上预训练模型来提高下游视觉和语言任务的性能。由于获取人工注释文本的费用过高，大多数方法（Chen et al.，2020；李等人，2020；2021a；王等人，2021；Radford等人，2021）使用从网络上抓取的图像和alt文本对（Sharma et al.，2018；Changpinyo et al.，2021；贾等，2021），尽管使用了简单的基于规则的过滤器，但噪声在网络文本中仍然普遍存在。然而，噪声的负面影响在很大程度上被忽视了，因为通过放大数据集获得的性能增益掩盖了这一点。我们的论文表明，有噪声的网络文本对于视觉语言学习来说是次优的，并提出了以更有效的方式利用网络数据集的CapFilt。
 
-To answer this question, we propose a new method – AdaLoRA (Adaptive Low-Rank Adaptation), which dynamically allocates the parameter budget among weight matrices during LoRA-alike finetuning. Specifically, AdaLoRA adjusts the rank of incremental matrices to control their budget. Critical incremental matrices are assigned with high rank such that they can capture more fine-grained and task-specific information. Less importance ones are pruned to have lower rank to prevent overfitting and save the computational budget. There are some methods to control the rank of matrices in the existing literature of matrix approximation (Cai et al., 2010; Koltchinskii et al., 2011; Toh & Yun, 2010). Most of them directly compute singular value decomposition (SVD) of a matrix and then truncate the smallest singular values. Such an operation can manipulate the rank explicitly and, more importantly, minimize the difference between the resulting matrix and the original matrix. However, for fine-tuning large models, it becomes prohibitively expensive to iteratively apply SVD for a large number of high-dimensional weight matrices. Therefore, instead of computing SVD exactly, we parameterize ∆ as ∆ = PΛQ to mimic SVD. The diagonal matrix Λ contains singular values while the orthogonal matrices P and Q represent left/right singular vectors of ∆. To regularize the orthogonality of P and Q, an additional penalty is added to training loss. Such a parameterization avoids the intensive computations of SVD. Besides, another advantage is that we only need to drop the unimportant singular values while the singular vectors are maintained. This preserves the possibility of future recovery and stabilizes the training. See a detailed comparison to LoRA in Section 3.
+There have been many attempts to unify various vision and language tasks into a single framework (Zhou et al., 2020; Cho et al., 2021; Wang et al., 2021). The biggest challenge is to design model architectures that can perform both understanding-based tasks (e.g. image-text retrieval) and generation-based tasks (e.g. image captioning). Neither encoder-based models (Li et al., 2021a;b; Radford et al., 2021) nor encoder-decoder models (Cho et al., 2021; Wang et al., 2021) can excel at both types of tasks, whereas a single unified encoder-decoder (Zhou et al., 2020) also limits the model’s capability. Our proposed multimodal mixture of encoder-decoder model offers more flexibility and better performance on a wide range of downstream tasks, in the meantime keeping the pre-training simple and efficient.
 
-为了回答这个问题，我们提出了一种新的方法——AdaLoRA（自适应低秩自适应），该方法在类似LoRA的微调过程中在权重矩阵之间动态分配参数预算。具体而言，AdaLoRA调整增量矩阵的秩以控制其预算。关键增量矩阵具有较高的秩，因此它们可以捕获更细粒度和特定于任务的信息。不太重要的被修剪为具有较低的秩，以防止过拟合并节省计算预算。在现有的矩阵近似文献中，有一些控制矩阵秩的方法（Cai et al.，2010；Koltchinski et al.，2011；Toh&Yun，2010）。它们大多直接计算矩阵的奇异值分解（SVD），然后截断最小的奇异值。这样的操作可以显式地操纵秩，更重要的是，最小化结果矩阵和原始矩阵之间的差异。然而，对于微调大型模型，迭代地将SVD应用于大量高维权重矩阵会变得非常昂贵。因此，我们不是精确计算SVD，而是将∆参数化为∆=P∧Q，以模拟SVD。对角矩阵∧包含奇异值，而正交矩阵P和Q表示∆的左/右奇异向量。为了正则化P和Q的正交性，在训练损失中添加了额外的惩罚。这样的参数化避免了SVD的密集计算。此外，另一个优点是，我们只需要在保持奇异向量的同时删除不重要的奇异值。这保留了未来恢复的可能性，并稳定了训练。参见第3节中与LoRA的详细比较。
+已经有许多尝试将各种视觉和语言任务统一到一个单一的框架中（Zhou et al.，2020；Cho et al.，2021；王等人，2021）。最大的挑战是设计既能执行基于理解的任务（例如图像文本检索）又能执行基于生成的任务（如图像字幕）的模型架构。基于编码器的模型（Li et al.，2021a；b；Radford等人，2021）和编码器-解码器模型（Cho et al.，2021；Wang et al.，2022）都不能胜任这两种类型的任务，而单一的统一编码器-解码器（Zhou et al.，2020）也限制了模型的能力。我们提出的编码器-解码器的多模式混合模型在广泛的下游任务上提供了更大的灵活性和更好的性能，同时保持了预训练的简单和高效。
 
-Based on our SVD parameterization, AdaLoRA dynamically adjusts the rank of ∆ = P V Q by importance scoring. Specifically, we divide the incremental matrix PΛQ into triplets, where each triplet Gi contains the i-th singular value and the corresponding singular vectors. To quantify the importance of triplets, we propose a novel importance metric, which takes account of the contribution of every entry in Gi to the model performance (Sanh et al., 2020; Liang et al., 2021; Zhang et al., 2022). Triplets with low importance scores are granted low priority and hence the singular values are zeroed out. Triplets with high importance are retained for fine-tuning. Moreover, we also propose a global budget scheduler to facilitate the training. In particular, we start from an initial parameter budget, which is slightly higher than the final budget, and then gradually reduce it until matching the target. Such a scheduler can improve the training stability and model performance. Please see Section 3 for a detailed description of our importance metric and budget scheduler.
+### 2.2. Knowledge Distillation 2.2。知识提炼
+Knowledge distillation (KD) (Hinton et al., 2015) aims to improve the performance of a student model by distilling knowledge from a teacher model. Self-distillation is a special case of KD where the teacher and student have equal sizes. It has been shown to be effective for image classi- fication (Xie et al., 2020), and recently for VLP (Li et al., 2021a). Different from mostly existing KD methods which simply enforce the student to have the same class predictions as the teacher, our proposed CapFilt can be interpreted as a more effective way to perform KD in the context of VLP, where the captioner distills its knowledge through semantically-rich synthetic captions, and the filter distills its knowledge by removing noisy captions.
 
-基于我们的SVD参数化，AdaLoRA通过重要性评分动态调整∆=P V Q的等级。具体来说，我们将增量矩阵P∧Q划分为三元组，其中每个三元组Gi包含第i个奇异值和相应的奇异向量。为了量化三元组的重要性，我们提出了一种新的重要性度量，该度量考虑了Gi中每个条目对模型性能的贡献（Sanh et al.，2020；梁等人，2021；张等人，2022）。具有低重要性分数的三元组被授予低优先级，因此奇异值被清零。保留具有高度重要性的三元组进行微调。此外，我们还提出了一个全球预算调度器，以促进培训。特别是，我们从一个初始参数预算开始，该预算略高于最终预算，然后逐渐减少，直到达到目标。这样的调度器可以提高训练稳定性和模型性能。请参阅第3节，了解我们的重要性度量和预算计划的详细描述。
+知识提取（KD）（Hinton et al.，2015）旨在通过从教师模型中提取知识来提高学生模型的性能。自我升华是KD的一个特殊情况，教师和学生的尺寸相等。它已被证明对图像分类有效（Xie et al.，2020），最近对VLP有效（Li et al.，2021a）。与大多数现有的KD方法不同，这些方法只是强制学生与老师进行相同的课堂预测，我们提出的CapFilt可以被解释为在VLP背景下执行KD的一种更有效的方法，其中字幕者通过语义丰富的合成字幕提取其知识，滤波器通过去除噪声字幕提取其信息。
 
-We conduct extensive experiments on a wide range of tasks and models to demonstrate the effectiveness of AdaLoRA. Specifically, we evaluate the performance using DeBERTaV3-base (He et al., 2021a) on natural language understanding (GLUE, Wang et al. (2019)) and question answering (SQuADv1, Rajpurkar et al. (2016) and SQuADv2, Rajpurkar et al. (2018)) datasets. We also apply our methods to BART-large (Lewis et al., 2019) and evaluate the performance on natural language generation (XSum, Narayan et al. (2018) and CNN/DailyMail, Hermann et al. (2015)) tasks. We show AdaLoRA consistently outperforms the baseline, especially under low budget settings. For example, with less than 0.1% trainable parameters of full fine-tuning, AdaLoRA achieves a 1.2% F1 improvement on the SQuAD2.0 dataset compared with state-of-the-art approaches. 
+### 2.3. Data Augmentation 2.3。数据扩充
+While data augmentation (DA) has been widely adopted in computer vision (Shorten & Khoshgoftaar, 2019), DA for language tasks is less straightforward. Recently, generative language models have been used to synthesize examples for various NLP tasks (Kumar et al., 2020; Anaby-Tavor et al., 2020; Puri et al., 2020; Yang et al., 2020). Different from these methods which focus on the low-resource language-only tasks, our method demonstrates the advantage of synthetic captions in large-scale vision-language pre-training.
 
-我们在广泛的任务和模型上进行了广泛的实验，以证明AdaLoRA的有效性。具体而言，我们使用DeBERTaV3基础（He et al.，2021a）评估自然语言理解（GLUE，Wang et al.（2019））和问答（SQuADv1，Rajpurkar et al.（2016）和SQuADv2，Rajpurka et al.（2018））数据集的性能。我们还将我们的方法应用于BART大型（Lewis et al.，2019），并评估自然语言生成（XSum，Narayan et al.（2018）和CNN/DaylyMail，Hermann et al.（2015））任务的性能。我们发现AdaLoRA始终优于基线，尤其是在低预算环境下。例如，与最先进的方法相比，AdaLoRA在SQuAD2.0数据集上实现了1.2%的F1改进，完全微调的可训练参数不到0.1%。
+虽然数据增强（DA）已在计算机视觉中被广泛采用（Shorten&Khoshgoftaar，2019），但用于语言任务的DA并不那么简单。最近，生成语言模型已被用于合成各种NLP任务的示例（Kumar等人，2020；Anaby-Tavor等人，2020年；Puri等人，2020，Yang等人，2020）。与这些只关注低资源语言任务的方法不同，我们的方法展示了合成字幕在大规模视觉语言预训练中的优势。
 
-## 2 BACKGROUND 2背景
-Transformer-based Models. A typical transformer model consists of L stacked blocks, where each block contains two submodules: a multi-head attention (MHA) and a fully connected FFN. Given the input sequence X ∈ R n×d , MHA performs the attention function in parallel h heads:
+## 3. Method 3。方法
+We propose BLIP, a unified VLP framework to learn from noisy image-text pairs. This section first introduces our new model architecture MED and its pre-training objectives, and then delineates CapFilt for dataset bootstrapping.
 
-基于变压器的模型。典型的变压器模型由L个堆叠块组成，其中每个块包含两个子模块：多头注意力（MHA）和全连接FFN。给定输入序列X∈Rn×d，MHA在平行h头中执行注意函数：
+我们提出了BLIP，这是一个统一的VLP框架，用于从噪声图像-文本对中学习。本节首先介绍了我们的新模型架构MED及其预训练目标，然后描述了用于数据集自举的CapFilt。
 
-MHA (X) = Concat(head1, ..., headh)Wo, headi = Softmax  XWqi (XWki ) > / p dh  XWvi , 
+### 3.1. Model Architecture 3.1、。模型体系结构
+We employ a visual transformer (Dosovitskiy et al., 2021) as our image encoder, which divides an input image into patches and encodes them as a sequence of embeddings, with an additional [CLS] token to represent the global image feature. Compared to using pre-trained object detectors for visual feature extraction (Chen et al., 2020), using a ViT is more computation-friendly and has been adopted by the more recent methods (Li et al., 2021a; Kim et al., 2021).
 
-MHA（X）=Concat（head1，…，headh）Wo，headi=Softmax XWqi（XWki）>/p dh XWvi，
+我们使用视觉转换器（Dosovitskiy et al.，2021）作为我们的图像编码器，它将输入图像划分为块，并将其编码为嵌入序列，并使用额外的[CLS]标记来表示全局图像特征。与使用预先训练的对象检测器进行视觉特征提取相比（Chen et al.，2020），使用ViT更便于计算，并且已被最近的方法所采用（Li et al.，2021a；Kim et al.，2021）。
 
-where Wo ∈ R d×d is an output projection and Wqi , Wki , Wvi ∈ R d×dh are query, key and value projections of head i. dh is typically set to d/h. The other important module is a FFN which consists of two linear transformations with a ReLU activation in between: FFN(X) = ReLU(XWf1 + b1)Wf2 + b2, where Wf1 ∈ R d×dm and Wf2 ∈ R dm×d . Finally, a residual connection is used followed by a layer normalization (Ba et al., 2016).
+In order to pre-train a unified model with both understanding and generation capabilities, we propose multimodal mixture of encoder-decoder (MED), a multi-task model which can operate in one of the three functionalities: (1) Unimodal encoder, which separately encodes image and text. The text encoder is the same as BERT (Devlin et al., 2019), where a [CLS] token is appended to the beginning of the text input to summarize the sentence. (2) Image-grounded text encoder, which injects visual information by inserting one additional cross-attention (CA) layer between the self-attention (SA) layer and the feed forward network (FFN) for each transformer block of the text encoder. A task-specific [Encode] token is appended to the text, and the output embedding of [Encode] is used as the multimodal representation of the image-text pair. (3) Image-grounded text decoder, which replaces the bidirectional self-attention layers in the image-grounded text encoder with causal self-attention layers. A [Decode] token is used to signal the beginning of a sequence, and an end-of-sequence token is used to signal its end.
 
-其中Wo∈RD×d是输出投影，Wqi，Wki，Wvi∈RD？dh是头i的查询、键和值投影。dh通常设置为d/h。另一个重要的模块是FFN，它由两个线性变换组成，ReLU激活介于两者之间：FFN（X）=ReLU（XWf1+b1）Wf2+b2，其中Wf1∈Rd×dm和Wf2∈Rdm×d。最后，使用残差连接，然后进行层归一化（Ba等人，2016）。
+为了预训练一个具有理解和生成能力的统一模型，我们提出了编码器-解码器的多模式混合（MED），这是一个多任务模型，可以在三个功能之一中操作：（1）单模式编码器，它分别对图像和文本进行编码。文本编码器与BERT（Devlin et al.，2019）相同，其中[CLS]标记被附加到文本输入的开头以总结句子。（2） 基于图像的文本编码器，通过在自注意（SA）层和文本编码器的每个变换器块的前馈网络（FFN）之间插入一个额外的交叉注意（CA）层来注入视觉信息。特定于任务的[Encode]令牌被附加到文本，并且[Encode'的输出嵌入被用作图像-文本对的多模式表示。（3） 以图像为基础的文本解码器，它用因果自注意层取代了基于图像的文本编码器中的双向自注意层。[解码]令牌用于发出序列开始的信号，序列结束令牌用于发出其结束的信号。
 
-Low Rank Adaptation. LoRA (Hu et al., 2022) models the incremental update of the pre-trained weights by the product of two small matrices. For h = W(0)x, the modified forward pass is: h = W(0)x + ∆x = W(0)x + BAx, (2) where W(0) , ∆ ∈ R d1×d2 , A ∈ R r×d2 and B ∈ R d1×r with r  {d1, d2}. A typically adopts a random Gaussion initialization while B is initialized with zero to have ∆ = 0 at the beginning of training. We further denote Ai∗ as the i-th row of A, B∗i as the i-th column of B, and Gi = {Ai∗, B∗i} as the i-th doublet. Hu et al. (2022) only apply LoRA to query and value projections (i.e, Wq and Wv) in the MHAs. He et al. (2022) extend it to weight matrices of FFNs (i.e, Wf1 and Wf2 ), leading to the performance improvement . Meanwhile, they propose a unified view of various efficient tuning methods including adapter tuning, prefix tuning and LoRA. 
+### 3.2. Pre-training Objectives 3.2、。培训前目标
+We jointly optimize three objectives during pre-training, with two understanding-based objectives and one generationbased objective. Each image-text pair only requires one forward pass through the computational-heavier visual transformer, and three forward passes through the text transformer, where different functionalities are activated to compute the three losses as delineated below.
 
-低阶自适应。LoRA（Hu et al.，2022）通过两个小矩阵的乘积对预先训练的权重的增量更新进行建模。对于h=W（0）x，修改后的前向行程为：h=W（0）x+∆x=W（O）x+BAx，（2）其中W（0，∆∈R d1×d2，A∈R R×d2和B∈R d1×R与R｛d1，d2｝。A通常采用随机高斯初始化，而B在训练开始时用零初始化为∆=0。我们进一步将Ai*表示为A的第i行，B*i表示为B的第i列，Gi={Ai*，B*i}表示为第i个二重集。Hu等人（2022）仅将LoRA应用于MHA中的查询和价值预测（即Wq和Wv）。He等人（2022）将其扩展到FFN的权重矩阵（即Wf1和Wf2），从而提高了性能。同时，他们提出了各种高效调优方法的统一观点，包括适配器调优、前缀调优和LoRA。
+我们在预培训期间共同优化了三个目标，其中两个基于理解的目标和一个基于生成的目标。每个图像-文本对只需要一次正向通过计算较重的视觉转换器，并且三次正向通过文本转换器，其中激活不同的功能来计算如下所述的三个损失。
 
-## 3 ADALORA METHOD 3阿达洛拉法
-Our method contains two important components: (i) SVD-based adaptation, which formulates the incremental matrices in the form of singular value decomposition; (ii) Importance-aware rank allocation, which prunes redundant singular values based on our newly-designed importance metric.
+Image-Text Contrastive Loss (ITC) activates the unimodal encoder. It aims to align the feature space of the visual transformer and the text transformer by encouraging positive image-text pairs to have similar representations in contrast to the negative pairs. It has been shown to be an effective objective for improving vision and language understanding (Radford et al., 2021; Li et al., 2021a). We follow the ITC loss by Li et al. (2021a), where a momentum encoder is introduced to produce features, and soft labels are created from the momentum encoder as training targets to account for the potential positives in the negative pairs.
 
-我们的方法包含两个重要组成部分：（i）基于奇异值分解的自适应，以奇异值分解形式表示增量矩阵；（ii）重要性感知秩分配，它基于我们新设计的重要性度量修剪冗余奇异值。
+图像-文本对比度损失（ITC）激活单峰编码器。它旨在通过鼓励正面图像-文本对与负面图像-文本配对具有相似的表示来对齐视觉转换器和文本转换器的特征空间。它已被证明是提高视力和语言理解的有效目标（Radford等人，2021；李等人，2021a）。我们遵循李等人的ITC损失。（2021a），其中引入动量编码器来产生特征，并从动量编码器中创建软标签作为训练目标，以说明负对中的潜在积极因素。
 
-## 3.1 SVD-BASED ADAPTATION 3.1基于SVD的自适应
-As mentioned in Section 1, we propose to parameterize the incremental updates of the pre-trained weight matrices in the form of singular value decomposition:
+Image-Text Matching Loss (ITM) activates the imagegrounded text encoder. It aims to learn image-text multimodal representation that captures the fine-grained alignment between vision and language. ITM is a binary classification task, where the model uses an ITM head (a linear layer) to predict whether an image-text pair is positive (matched) or negative (unmatched) given their multimodal feature. In order to find more informative negatives, we adopt the hard negative mining strategy by Li et al. (2021a), where negatives pairs with higher contrastive similarity in a batch are more likely to be selected to compute the loss.
 
-如第1节所述，我们建议以奇异值分解的形式对预先训练的权重矩阵的增量更新进行参数化：
+图像-文本匹配丢失（ITM）激活基于图像的文本编码器。它旨在学习图像-文本多模式表示，捕捉视觉和语言之间的细粒度对齐。ITM是一种二元分类任务，其中模型使用ITM头（线性层）来预测图像-文本对是正的（匹配的）还是负的（不匹配的），给定它们的多模式特征。为了找到更具信息性的底片，我们采用了李等人的硬底片挖掘策略。（2021a），其中一批中对比相似性较高的底片对更有可能被选择来计算损失。
 
-W = W(0) + ∆ = W(0) + PΛQ, (3) 
+Language Modeling Loss (LM) activates the imagegrounded text decoder, which aims to generate textual descriptions given an image. It optimizes a cross entropy loss which trains the model to maximize the likelihood of the text in an autoregressive manner. We apply a label smoothing of 0.1 when computing the loss. Compared to the MLM loss that has been widely-used for VLP, LM enables the model with the generalization capability to convert visual information into coherent captions.
 
-W=W（0）+∆=W（O）+P∧Q，（3）
+语言建模损失（LM）激活基于图像的文本解码器，该解码器旨在生成给定图像的文本描述。它优化了交叉熵损失，该损失训练模型以自回归方式最大化文本的可能性。我们在计算损失时应用0.1的标签平滑。与已广泛用于VLP的MLM损失相比，LM使该模型具有将视觉信息转换为连贯字幕的泛化能力。
 
-where P ∈ R d1×r and Q ∈ R r×d2 represent the left/right singular vectors of ∆ and the diagonal matrix Λ ∈ R r×r contains the singular values {λi}1≤i≤r with r  min(d1, d2). We further denote Gi = {P∗i , λi , Qi∗} as the triplet containing the i-th singular value and vectors. In practice, since Λ is diagonal, we only need to save it as a vector in R r . Λ is initialized with zero while P and Q adopt a random Gaussian initialization to ensure ∆ = 0 at the beginning of training. To enforce the orthogonality of P and Q, i.e., P > P = QQ> = I, we utilize the following regularizer2 :
+In order to perform efficient pre-training while leveraging multi-task learning, the text encoder and text decoder share all parameters except for the SA layers. The reason is that the differences between the encoding and decoding tasks are best captured by the SA layers. In particular, the encoder employs bi-directional self-attention to build representations for the current input tokens, while the decoder employs causal self-attention to predict next tokens. On the other hand, the embedding layers, CA layers and FFN function similarly between encoding and decoding tasks, therefore sharing these layers can improve training efficiency while benefiting from multi-task learning,
 
-其中P∈R d1×R和Q∈R R×d2表示∆的左/右奇异向量，对角矩阵∧∈R R×R包含奇异值{λi}1≤i≤R和R min（d1，d2）。我们进一步将Gi={P*i，λi，Qi*}表示为包含第i个奇异值和向量的三元组。在实践中，由于∧是对角的，我们只需要将其保存为R R中的向量。∧用零初始化，而P和Q采用随机高斯初始化，以确保在训练开始时∆=0。为了加强P和Q的正交性，即P>P=Q>=i，我们使用以下正则化2：
+为了在利用多任务学习的同时执行有效的预训练，文本编码器和文本解码器共享除SA层之外的所有参数。原因是编码和解码任务之间的差异最好由SA层来捕捉。特别地，编码器采用双向自注意来构建当前输入令牌的表示，而解码器采用因果自注意来预测下一个令牌。另一方面，嵌入层、CA层和FFN在编码和解码任务之间的功能相似，因此共享这些层可以提高训练效率，同时受益于多任务学习，
 
-R(P, Q) = k P > P − Ik 2 F + k QQ> − Ik 2 F . (4)
+### 3.3. CapFilt 3.3、。CapFilt公司
+Due to the prohibitive annotation cost, there exist a limited number of high-quality human-annotated image-text pairs {(Ih, Th)} (e.g., COCO (Lin et al., 2014)). Recent work (Li et al., 2021a; Wang et al., 2021) utilizes a much larger number of image and alt-text pairs {(Iw, Tw)} that are automatically collected from the web. However, the alt-texts often do not accurately describe the visual content of the images, making them a noisy signal that is suboptimal for learning vision-language alignment.
 
-R（P，Q）=k P>P−Ik 2 F+k QQ>−Ik 1 F。（4）
+由于高昂的注释成本，存在数量有限的高质量人类注释图像-文本对{（Ih，Th）}（例如，COCO（Lin et al.，2014））。最近的工作（Li et al.，2021a；Wang et al.，2021）利用了从网络自动收集的大量图像和替代文本对{（Iw，Tw）}。然而，alt文本通常不能准确地描述图像的视觉内容，这使得它们成为一个嘈杂的信号，对于学习视觉语言对齐来说是次优的。
 
-In our method, Λ is iteratively pruned to adjust the rank after each gradient decent step. As mentioned in Section 1, one can directly compute SVD for every ∆ to manipulate singular values. The computational complexity, however, is O(min(d1, d2)d1d2). It becomes extremely expensive to iteratively apply SVD for a large number of high-dimensional incremental matrices. In contrast, our parameterization avoids intensive SVD computation, greatly releasing the computational overhead.
+Figure 3. Learning framework of BLIP. We introduce a captioner to produce synthetic captions for web images, and a filter to remove noisy image-text pairs. The captioner and filter are initialized from the same pre-trained model and finetuned individually on a small-scale human-annotated dataset. The bootstrapped dataset is used to pre-train a new model.
 
-在我们的方法中，在每个梯度体面步骤之后，对∧进行迭代修剪以调整秩。如第1节所述，可以直接计算每个∆的SVD，以操纵奇异值。然而，计算复杂度是O（min（d1，d2）d1d2）。对于大量的高维增量矩阵迭代地应用SVD变得极其昂贵。相反，我们的参数化避免了密集的SVD计算，极大地释放了计算开销。
+图3。BLIP的学习框架。我们介绍了一种为网络图像生成合成字幕的字幕器，以及一种去除噪声图像-文本对的过滤器。字幕器和过滤器从相同的预训练模型初始化，并在小规模人工注释数据集上单独微调。自举数据集用于预训练新模型。
 
-We remark that one can also apply structured pruning to LoRA to control the rank (i.e., prune BA doublet-wise in (1)), whereas it has the following disadvantages. First, when a doublet is measured as unimportant, we have to prune all of its elements. It makes scarcely possible to reactivate the pruned doublets as their entries are all zeroed out and not trained. In contrast, AdaLoRA only masks out the singular values based on (3) while the singular vectors are always maintained. It preserves the potential of future recovery for the triplets dropped by mistake. Second, A and B of LoRA are not orthogonal, meaning the doublets can be dependent with each other. Discarding the doublets can incur larger variation from the original matrix than truncating the smallest singular values. Therefore, the incremental matrices are often altered dramatically after each step of rank allocation, which causes training instability and even hurts generalization. To demonstrate this point, we present an ablation study in Section 4.4, which compares AdaLoRA with structured pruning for LoRA.
+We propose Captioning and Filtering (CapFilt), a new method to improve the quality of the text corpus. Figure 3 gives an illustration of CapFilt. It introduces two modules: a captioner to generate captions given web images, and a filter to remove noisy image-text pairs. Both the captioner and the filter are initialized from the same pre-trained MED model, and finetuned individually on the COCO dataset. The finetuning is a lightweight procedure.
 
-我们注意到，也可以将结构化修剪应用于LoRA来控制秩（即，在（1）中对BA进行双修剪），但它有以下缺点。首先，当一个二重集被测量为不重要时，我们必须修剪它的所有元素。它几乎不可能重新激活修剪过的二重集，因为它们的条目都被归零并且没有经过训练。相反，AdaLoRA仅屏蔽基于（3）的奇异值，而奇异向量始终保持不变。它为错误掉落的三元组保留了未来恢复的潜力。其次，LoRA的A和B不是正交的，这意味着对偶可以相互依赖。与截断最小奇异值相比，丢弃二重集可能导致原始矩阵发生更大的变化。因此，在秩分配的每一步之后，增量矩阵往往会发生显著的变化，这会导致训练的不稳定性，甚至损害泛化能力。为了证明这一点，我们在第4.4节中介绍了一项消融研究，该研究将AdaLoRA与LoRA的结构化修剪进行了比较。
+我们提出了一种提高文本语料库质量的新方法CapFilt。图3给出了CapFilt的说明。它引入了两个模块：一个用于生成给定网络图像的字幕的字幕器，以及一个用于去除噪声图像-文本对的过滤器。字幕器和过滤器都是从相同的预训练MED模型初始化的，并在COCO数据集上单独微调。微调是一个轻量级的过程。
 
-## 3.2 IMPORTANCE-AWARE RANK ALLOCATION 3.2重要软件等级分配
-We apply the SVD-based adaptation (3) to every weight matrix including Wq, Wk, Wv, Wf1 and Wf2 of each transformer layer. In order to control the budget, we iteratively prune singular values in correspondence to their importance score during the training. For clear reference, we use k to index the incremental matrix, i.e., ∆k = PkΛkQk for k = 1, . . . , n, where n is the number of adapted weight matrices. We denote the i-th triplet of ∆k as Gk,i = {Pk,∗i , λk,i, Qk,i∗} and its importance score as Sk,i. We further denote the parameter sets P = {Pk} n k=1, E = {Λk} n k=1, Q = {Qk} n k=1 and training cost as C(P, E, Q). With the regularization (4), the training objective is given by L(P, E, Q) = C(P, E, Q) + γ P n k=1 R(Pk, Qk), where γ > 0 is the regularization coefficient. At the t-th step, we first take a stochastic gradient step to update P (t) k ,Λ (t) k and Q (t) k for k = 1, . . . , n. Specifically, for Λ (t) 
+Specifically, the captioner is an image-grounded text decoder. It is finetuned with the LM objective to decode texts given images. Given the web images Iw, the captioner generates synthetic captions Ts with one caption per image. The filter is an image-grounded text encoder. It is finetuned with the ITC and ITM objectives to learn whether a text matches an image. The filter removes noisy texts in both the original web texts Tw and the synthetic texts Ts, where a text is considered to be noisy if the ITM head predicts it as unmatched to the image. Finally, we combine the filtered image-text pairs with the human-annotated pairs to form a new dataset, which we use to pre-train a new model.
 
-我们将基于SVD的自适应（3）应用于每个权重矩阵，包括每个变换器层的Wq、Wk、Wv、Wf1和Wf2。为了控制预算，我们在训练过程中根据奇异值的重要性分数迭代修剪奇异值。为了便于参考，我们使用k来索引增量矩阵，即∆k=Pk∧kQk，k=1，n、 其中n是自适应权重矩阵的数目。我们将∆k的第i个三元组表示为Gk，i={Pk，*i，λk，i，Qk，i*}，其重要性得分表示为Sk，i。我们进一步将参数集P={Pk}n k=1，E={∧k}n k+1，Q={Qk}n k=1和训练成本表示为C（P，E，Q）。对于正则化（4），训练目标由L（P，E，Q）=C（P，E，Q）+γPNk=1R（Pk，Qk）给出，其中γ>0是正则化系数。在第t步，我们首先采取随机梯度步骤来更新P（t）k、∧（t）k和Q（t）k=1，n.具体而言，对于∧（t）
+具体地说，字幕器是一个基于图像的文本解码器。它与LM目标进行了微调，以解码给定图像的文本。给定网络图像Iw，字幕制作者生成每个图像具有一个字幕的合成字幕Ts。过滤器是一个基于图像的文本编码器。它与ITC和ITM目标进行了微调，以了解文本是否与图像匹配。过滤器去除原始网络文本Tw和合成文本Ts中的噪声文本，其中，如果ITM头预测文本与图像不匹配，则认为文本是噪声的。最后，我们将过滤后的图像-文本对与人类注释的对相结合，形成一个新的数据集，用于预训练新的模型。
 
-k ˜Λ (t) k = Λ(t) k − η∇Λk L(P (t) , E (t) , Q (t) ), (5) 
+## 4. Experiments and Discussions 4。实验与讨论
+In this section, we first introduce pre-training details. Then we provide a detailed experimental analysis on our method.
 
-k~∧（t）k=∧（t）k−ηŞ∧k L（P（t），E（t）、Q（t）），（5）
+在本节中，我们首先介绍培训前的细节。然后我们对我们的方法进行了详细的实验分析。
 
-2We present the experiments in Appendix G to verify the effectiveness of the regularization. 4
+### 4.1. Pre-training Details 4.1。培训前详细信息
+Our models are implemented in PyTorch (Paszke et al., 2019) and pre-trained on two 16-GPU nodes. The image transformer is initialized from ViT pre-trained on ImageNet (Touvron et al., 2020; Dosovitskiy et al., 2021), and the text transformer is initialized from BERTbase (Devlin et al., 2019). We explore two variants of ViTs: ViT-B/16 and ViT-L/16. Unless otherwise specified, all results reported in this paper as “BLIP” uses ViT-B. We pre-train the model for 20 epochs using a batch size of 2880 (ViT-B) / 2400 (ViT-L). We use AdamW (Loshchilov & Hutter, 2017) optimizer with a weight decay of 0.05. The learning rate is warmed-up to 3e-4 (ViT-B) / 2e-4 (ViT-L) and decayed linearly with a rate of 0.85. We take random image crops of resolution 224 × 224 during pre-training, and increase the image resolution to 384 × 384 during finetuning. We use the same pre-training dataset as Li et al. (2021a) with 14M images in total, including two human-annotated datasets (COCO and Visual Genome (Krishna et al., 2017)), and three web datasets (Conceptual Captions (Changpinyo et al., 2021), Conceptual 12M (Changpinyo et al., 2021), SBU captions (Ordonez et al., 2011)). We also experimented with an additional web dataset, LAION (Schuhmann et al., 2021), which contains 115M images with more noisy texts1 . More details about the datasets can be found in the appendix.
 
-2我们在附录G中介绍了实验，以验证正则化的有效性。4.
+我们的模型在PyTorch中实现（Paszke et al.，2019），并在两个16-GPU节点上进行预训练。图像转换器是从ImageNet上预训练的ViT初始化的（Touvron等人，2020；Dosovitskiy等人，2021），文本转换器是从BERTbase初始化的（Devlin等人，2019）。我们探索了ViT的两种变体：ViT-B/16和ViT-L/16。除非另有规定，否则本文中报告为“BLIP”的所有结果均使用ViT-B。我们使用2880（ViT-B）/2400（ViT-L）的批量大小对20个时期的模型进行预训练。我们使用AdamW（Loshchilov&Hutter，2017）优化器，权重衰减为0.05。学习速率被预热到3e-4（ViT-B）/2e-4（ViT-L），并且以0.85的速率线性衰减。在预训练期间，我们采用分辨率为224×224的随机图像裁剪，并在微调期间将图像分辨率提高到384×384。我们使用与李等人相同的预训练数据集。（2021a）共有14M张图像，包括两个人类注释数据集（COCO和视觉基因组（Krishna et al.，2017））和三个网络数据集（概念字幕（Changpinyo et al.，2021）、概念12M（Changpineyo et al.，2021）和SBU字幕（Ordonez et al.，2011））。我们还试验了一个额外的网络数据集LAION（Schuhmann et al.，2021），该数据集包含115M张带有更多噪声文本的图像1。有关数据集的更多详细信息，请参阅附录。
 
-where η > 0 is learning rate. Then, given importance score S (t) k , the singular values are pruned following
+### 4.2. Effect of CapFilt 4.2。CapFilt的影响
+In Table 1, we compare models pre-trained on different datasets to demonstrate the efficacy of CapFilt on downstream tasks, including image-text retrieval and image captioning with finetuned and zero-shot settings.
 
-其中η>0为学习率。然后，给定重要性得分S（t）k，奇异值被修剪如下
+在表1中，我们比较了不同数据集上预先训练的模型，以证明CapFilt在下游任务中的功效，包括图像文本检索和图像字幕，以及微调和零样本设置。
 
-Λ (t+1) k = T ( ˜Λ (t) k , S(t) k ), with T ( ˜Λ (t) k , S(t) k )ii =  ˜Λ (t) k,ii S (t) k,i is in the top-b (t) of S (t) , 0 otherwise, (6)
+When only the captioner or the filter is applied to the dataset with 14M images, performance improvement can be observed. When applied together, their effects compliment each other, leading to substantial improvements compared to using the original noisy web texts.
 
-∧（t+1）k=t（~∧（t）k，S（t）k），其中t（~Γ
+当仅将字幕或滤波器应用于具有14M个图像的数据集时，可以观察到性能的提高。当它们一起应用时，它们的效果相互补充，与使用原始嘈杂的网络文本相比，有了实质性的改进。
 
-where S (t) = {S (t) k,i}1≤k≤n,1≤i≤r contains the importance score of all triplets. Here b (t) is the budget of remaining singular values at the t-th step, which we explain more in Section 3.3. In this way, we leave more budget to the incremental matrices of higher priority by pruning the singular values of less important ones. In the sequel, we introduce several options to design the importance score.
+CapFilt can further boost performance with a larger dataset and a larger vision backbone, which verifies its scalability in both the data size and the model size. Furthermore, by using a large captioner and filter with ViT-L, performance of the base model can also be improved. 
 
-其中，S（t）={S（t）k，i}1≤k≤n，1≤i≤r包含所有三元组的重要性得分。这里，b（t）是第t步剩余奇异值的预算，我们在第3.3节中对此进行了更多解释。通过这种方式，我们通过修剪不太重要的矩阵的奇异值，将更多的预算留给优先级较高的增量矩阵。在续集中，我们介绍了几个选项来设计重要性分数。
+CapFilt可以通过更大的数据集和更大的视觉主干进一步提高性能，这验证了其在数据大小和模型大小方面的可扩展性。此外，通过使用带有ViT-L的大型字幕机和滤波器，还可以提高基本模型的性能。
 
-Magnitude of singular values is the most straightforward way to quantify the importance of every triplet, i.e., Sk,i = |λk,i|. In this way, only the least significant singular values are discarded. It minimizes the deviation from the original matrix and further stabilizes the training. Many existing methods use this criterion to control the rank of matrix (Cai et al., 2010; Koltchinskii et al., 2011; Toh & Yun, 2010). However, we remark that such a simple metric cannot properly quantify the contribution of parameters to model performance.
+1We only download images whose shorter edge is larger than 256 pixels from the original LAION400M. Due to the large size of LAION, we only use 1/5 of it each epoch during pre-training.
 
-奇异值的幅值是量化每个三元组重要性的最直接的方法，即Sk，i=|λk，i|。以这种方式，只丢弃最不重要的奇异值。它最大限度地减少了与原始矩阵的偏差，并进一步稳定了训练。许多现有的方法都使用这一标准来控制矩阵的秩（Cai et al.，2010；Koltchinski et al.，2011；Toh&Yun，2010）。然而，我们注意到，这样一个简单的度量不能正确地量化参数对模型性能的贡献。
+1我们只从原始LAION400M下载短边大于256像素的图像。由于LAION的大小很大，我们在预训练期间每个历元仅使用其1/5。
 
-Sensitivity-based importance is another option for importance scoring, which quantifies the sensitivity of parameters to the training loss (Molchanov et al., 2019; Sanh et al., 2020; Liang et al., 2021; Zhang et al., 2022). The prior work, however, leverages the sensitivity to quantify the importance of single entries and applies it for unstructured pruning that prunes weights element-wise. When it turns to our case, we have to design a new metric as the triplets are discarded group-wise. Every entry’s sensitivity ought to be considered and properly combined to quantify the overall contribution of the triplet to model performance. Therefore, we propose a newly-designed importance metric in account of both the singular value and vectors in triplet Gk,i:
+Table 1. Evaluation of the effect of the captioner (C) and filter (F) for dataset bootstrapping. Downstream tasks include image-text retrieval and image captioning with finetuning (FT) and zero-shot (ZS) settings. TR / IR@1: recall@1 for text retrieval / image retrieval. ✓B/L: captioner or filter uses ViT-B / ViT-L as vision backbone. 
 
-基于敏感性的重要性是重要性评分的另一种选择，它量化了参数对训练损失的敏感性（Molchanov等人，2019；Sanh等人，2020；梁等人，2021；张等人，2022）。然而，先前的工作利用敏感性来量化单个条目的重要性，并将其应用于按元素修剪权重的非结构化修剪。当谈到我们的情况时，我们必须设计一个新的度量，因为三元组是按组丢弃的。应该考虑每个条目的敏感性，并将其适当组合，以量化三元组对模型性能的总体贡献。因此，考虑到三元组Gk，i中的奇异值和向量，我们提出了一个新设计的重要性度量：
+表1。评估字幕器（C）和滤波器（F）对数据集自举的效果。下游任务包括图像-文本检索和带有微调（FT）和零样本（ZS）设置的图像字幕。转/分IR@1以下为：recall@1用于文本检索/图像检索。✓B/L：字幕或滤波器使用ViT-B/ViT-L作为视觉主干。
 
-Sk,i = s(λk,i) + 1 d1 d1 X j=1 s(Pk,ji) + 1 d2 d2 X j=1 s(Qk,ij ), (7) 
+Figure 4. Examples of the web text Tw and the synthetic text Ts. Green texts are accepted by the filter, whereas red texts are rejected.
 
-Sk，i=s（λk，i）+1 d1 d1 X j=1 s（Pk，ji）+1 d2 X j=1秒（Qk，ij），（7）
+图4。网络文本Tw和合成文本Ts的示例。绿色文本被过滤器接受，而红色文本被拒绝。
 
-where we calculate the mean importance of Pk,∗i and Qk,i∗ such that Sk,i does not scale with the number of parameters in Gk,i. Here s(·) is a specific importance function for single entries. We can adopt the sensitivity for s(·), which is defined as the magnitude of the gradient-weight product:
+Table 2. Comparison between beam search and nucleus sampling for synthetic caption generation. Models are pre-trained on 14M images.
 
-其中，我们计算Pk，*i和Qk，i*的平均重要性，使得Sk，i不随Gk，i中的参数数量而缩放。这里的s（·）是单个条目的特定重要性函数。我们可以采用s（·）的灵敏度，其定义为梯度权重乘积的大小：
+表2。用于合成字幕生成的波束搜索和核采样之间的比较。模型是在14M图像上预先训练的。
 
-I(wij ) = |wij∇wijL|, (8) 
+Table 3. Comparison between different parameter sharing strategies for the text encoder and decoder during
 
-I（wij）=|wijŞwijL|，（8）
+表3。不同参数共享策略下文本编码器和解码器的比较
 
-where wij is any trainable parameter. (8) essentially approximates the change in loss when a parameter is zeroed out. If the removal of a parameter has a large influence, then the model is sensitive to it and we should retain it (Molchanov et al., 2019; Liang et al., 2021; Zhang et al., 2022).
+In Figure 4, we show some example captions and their corresponding images, which qualitatively demonstrate the effect of the captioner to generate new textual descriptions, and the filter to remove noisy captions from both the original web texts and the synthetic texts. More examples can be found in the appendix.
 
-其中wij是任何可训练的参数。（8） 本质上近似于当参数被清零时损失的变化。如果参数的去除有很大的影响，那么模型对它很敏感，我们应该保留它（Molchanov et al.，2019；梁等人，2021；张等人，2022）。
+在图4中，我们展示了一些示例字幕及其相应的图像，这些图像定性地展示了字幕生成器生成新的文本描述的效果，以及从原始网络文本和合成文本中去除嘈杂字幕的过滤器。更多的例子可以在附录中找到。
 
-However, Zhang et al. (2022) point out that the sensitivity in (8) is not yet a reliable importance indicator. Such a score is estimated on the sampled mini batch. The stochastic sampling and complicated training dynamics incur high variability and large uncertainty for estimating the sensitivity with (8). Therefore, Zhang et al. (2022) propose to resolve this issue by sensitivity smoothing and uncertainty quantification:
+### 4.3. Diversity is Key for Synthetic Captions 4.3。多样性是合成字幕的关键
+In CapFilt, we employ nucleus sampling (Holtzman et al., 2020) to generate synthetic captions. Nucleus sampling is a stochastic decoding method, where each token is sampled from a set of tokens whose cumulative probability mass exceeds a threshold p (p = 0.9 in our experiments). In Table 2, we compare it with beam search, a deterministic decoding method which aims to generate captions with the highest probability. Nucleus sampling leads to evidently better performance, despite being more noisy as suggested by a higher noise ratio from the filter. We hypothesis that the reason is that nucleus sampling generates more diverse and surprising captions, which contain more new information that the model could benefit from. On the other hand, beam search tends to generate safe captions that are common in the dataset, hence offering less extra knowledge.
 
-然而，张等人（2022）指出，（8）中的敏感性还不是一个可靠的重要性指标。这样的分数是在采样的小批量上估计的。随机采样和复杂的训练动力学导致了用（8）估计灵敏度的高可变性和大的不确定性。因此，张等人（2022）提出通过灵敏度平滑和不确定性量化来解决这一问题：
+在CapFilt中，我们使用细胞核采样（Holtzman et al.，2020）来生成合成字幕。Nucleus采样是一种随机解码方法，其中每个令牌都是从累积概率质量超过阈值p（在我们的实验中p=0.9）的一组令牌中采样的。在表2中，我们将其与波束搜索进行了比较，波束搜索是一种确定性解码方法，旨在以最高概率生成字幕。Nucleus采样带来了明显更好的性能，尽管正如滤波器的更高噪声比所暗示的那样噪声更大。我们假设，原因是核心采样产生了更多多样和令人惊讶的标题，其中包含了更多新的信息，模型可以从中受益。另一方面，波束搜索倾向于生成数据集中常见的安全字幕，因此提供的额外知识较少。
 
-I (t) (wij ) =β1I (t−1)(wij ) + (1 − β1)I (t) (wij ) (9)
+### 4.4. Parameter Sharing and Decoupling 4.4、。参数共享与解耦
+During pre-training, the text encoder and decoder share all parameters except for the self-attention layers. In Table 3, we evaluate models pre-trained with different parameter sharing strategies, where pre-training is performed on the 14M images with web texts. As the result shows, sharing all layers except for SA leads to better performance compared to not sharing, while also reducing the model size thus improveing training efficiency. If the SA layers are shared, the model’s performance would degrade due to the conflict between the encoding task and the decoding task.
 
-I（t）（wij）=β1I（t−1）
+在预训练期间，除了自注意层之外，文本编码器和解码器共享所有参数。在表3中，我们评估了使用不同参数共享策略预训练的模型，其中预训练是在具有网络文本的14M图像上执行的。结果表明，与不共享相比，共享除SA之外的所有层可以获得更好的性能，同时也减少了模型大小，从而提高了训练效率。如果SA层是共享的，则由于编码任务和解码任务之间的冲突，模型的性能将降低。
 
-U (t) (wij ) =β2U (t−1)(wij ) + (1 − β2)  I (t) (wij ) − I (t) (wij )  , (10) 
+Table 4. Effect of sharing parameters between the captioner and filter. Models are pre-trained on 14M images.
 
-U（t）（wij）=β2U（t−1）（wij+（1−β2）I（t）
+表4。字幕和过滤器之间共享参数的效果。模型是在14M图像上预先训练的。
 
-where 0 < β1, β2 < 1. I (t) is the smoothed sensitivity by exponential moving average and U (t) is the uncertainty term quantified by the local variation between I (t) and I (t) . Then they define the importance as the product between I (t) and U (t) , which can be another option for s(·): 
+Table 5. Comparison with state-of-the-art image-text retrieval methods, finetuned on COCO and Flickr30K datasets. BLIPCapFilt-L pre-trains a model with ViT-B backbone using a dataset bootstrapped by captioner and filter with ViT-L.
 
-其中0<β1，β2<1。I（t）是通过指数移动平均平滑的灵敏度，而U（t）则是通过I（t。然后他们将重要性定义为I（t）和U（t）之间的乘积，这可以是s（·）的另一个选项：
+表5。与最先进的图像文本检索方法进行比较，在COCO和Flickr30K数据集上进行了微调。BLIPCapFilt-L使用字幕器引导的数据集和ViT-L过滤器，使用ViT-B主干预训练模型。
 
-s (t) (wij ) = I (t) (wij ) · U (t) (wij ). (11)
+Table 6. Zero-shot image-text retrieval results on Flickr30K. 
 
-s（t）（wij）=I（t）。（11）
+表6。Flickr30K上的零样本图像文本检索结果。
 
-We present a detailed ablation study in Section 4.4 to compare the performance of different importance metrics. We find the proposed metric (7) based on the sensitivity variant (11) generally performs best.
+During CapFilt, the captioner and the filter are end-to-end finetuned individually on COCO. In Table 4, we study the effect if the captioner and filter share parameters in the same way as pre-training. The performance on the downstream tasks decreases, which we mainly attribute to confirmation bias. Due to parameter sharing, noisy captions produced by the captioner are less likely to be filtered out by the filter, as indicated by the lower noise ratio (8% compared to 25%).
 
-我们在第4.4节中介绍了一项详细的消融研究，以比较不同重要性指标的性能。我们发现基于灵敏度变体（11）的所提出的度量（7）通常表现最好。
+在CapFilt期间，字幕器和滤波器在COCO上分别进行端到端微调。在表4中，我们研究了如果字幕和滤波器以与预训练相同的方式共享参数的效果。下游任务的性能下降，我们主要将其归因于确认偏差。由于参数共享，字幕制作者产生的噪声字幕不太可能被滤波器过滤掉，如较低的噪声比所示（8%与25%相比）。
 
-We summarize the detailed algorithm in Algorithm 1. 
+## 5. Comparison with State-of-the-arts 5。与现有技术的比较
+In this section, we compare BLIP to existing VLP methods on a wide range of vision-language downstream tasks2 . Next we briefly introduce each task and finetuning strategy. More details can be found in the appendix.
 
-我们在算法1中总结了详细的算法。
+在本节中，我们将BLIP与现有的VLP方法在广泛的视觉语言下游任务上进行比较2。接下来，我们将简要介绍每项任务和微调策略。更多细节见附录。
 
-Algorithm 1 AdaLoRA  
+2we omit SNLI-VE from the benchmark because its test data has been reported to be noisy (Do et al., 2020) 
 
-算法1 AdaLoRA
+2我们从基准中省略了SNLI-VE，因为据报道其测试数据有噪声（Do等人，2020）
 
-## 3.3 GLOBAL BUDGET SCHEDULER 3.3全球预算调度器
-As mentioned in Section 1, adjusting the rank is naturally to control the parameter budget in the context of low-rank adaptation. Hence we define the budget b (t) as the total rank of all incremental matrices, i.e., the number of total singular values. Recall that the budget allocation is iteratively conducted during the fine-tuning. To facilitate the training, we propose a global budget scheduler.
+### 5.1. Image-Text Retrieval 5.1。图像文本检索
+We evaluate BLIP for both image-to-text retrieval (TR) and text-to-image retrieval (IR) on COCO and Flickr30K (Plummer et al., 2015) datasets. We finetune the pre-trained model using ITC and ITM losses. To enable faster inference speed, we follow Li et al. (2021a) and first select k candidates based on the image-text feature similarity, and then rerank the selected candidates based on their pairwise ITM scores. We set k = 256 for COCO and k = 128 for Flickr30K.
 
-如第1节所述，在低秩自适应的背景下，调整秩自然是为了控制参数预算。因此，我们将预算b（t）定义为所有增量矩阵的总秩，即总奇异值的数量。回想一下，预算分配是在微调期间反复进行的。为了便于培训，我们提出了一个全局预算调度程序。
+我们在COCO和Flickr30K（Plummer et al.，2015）数据集上评估了图像到文本检索（TR）和文本到图像检索（IR）的BLIP。我们使用ITC和ITM损失来微调预先训练的模型。为了实现更快的推理速度，我们遵循李等人的方法。（2021a），首先根据图像-文本特征相似性选择k个候选者，然后根据所选候选者的成对ITM分数对其进行重新排序。我们为COCO设置k=256，为Flickr30K设置k=128。
 
-Specifically, we start from an initial budget b (0) that is slightly higher than the target budget b (T) (e.g., 1.5 times of b (T) ). We set the initial rank of each incremental matrix as r = b (0)/n. We warm up the training for ti steps, and then follow a cubic schedule to decrease the budget b (t) until it reaches b (T) . Finally, we fix the resulting budget distribution and fine-tune the model for tf steps. The exact equation for the budget schedule is presented in Appendix A. This allows AdaLoRA to explore the parameter space first and then focus on the most important weights later. 
+As shown in Table 5, BLIP achieves substantial performance improvement compared with existing methods. Using the same 14M pre-training images, BLIP outperforms the previous best model ALBEF by +2.7% in average recall@1 on COCO. We also perform zero-shot retrieval by directly transferring the model finetuned on COCO to Flickr30K. The result is shown in Table 6, where BLIP also outperforms existing methods by a large margin.
 
-具体地说，我们从初始预算b（0）开始，该预算略高于目标预算b（T）（例如，b（T）的1.5倍）。我们将每个增量矩阵的初始秩设置为r＝b（0）/n。我们为ti步的训练热身，然后遵循三次计划来减少预算b（t），直到它达到b（t）。最后，我们修复了由此产生的预算分布，并对tf步骤的模型进行了微调。预算时间表的精确方程如附录A所示。这使得AdaLoRA可以首先探索参数空间，然后再关注最重要的权重。
+如表5所示，与现有方法相比，BLIP实现了显著的性能改进。使用相同的14M预训练图像，BLIP平均比之前的最佳模型ALBEF高+2.7%recall@1关于COCO。我们还通过直接将COCO上微调的模型传输到Flickr30K来执行零样本检索。结果如表6所示，其中BLIP也在很大程度上优于现有方法。
 
-## 4 EXPERIMENTS 4个实验
-We implement AdaLoRA for fine-tuning DeBERTaV3-base (He et al., 2021a) and BART-large (Lewis et al., 2019). We evaluate the effectiveness of the proposed algorithm on natural language understanding (GLUE, Wang et al. (2019)), question answering (SQuADv1, Rajpurkar et al. (2016) and SQuADv2, Rajpurkar et al. (2018)), and natural language generation (XSum, Narayan et al. (2018) and CNN/DailyMail Hermann et al. (2015)). All the gains have passed significant tests with p < 0.05.
+### 5.2. Image Captioning 5.2、。图像字幕
+We consider two datasets for image captioning: NoCaps (Agrawal et al., 2019) and COCO, both evaluated using the model finetuned on COCO with the LM loss. Similar as Wang et al. (2021), we add a prompt “a picture of” at the beginning of each caption, which leads to slightly better results. As shown in Table 7, BLIP with 14M pretraining images substantially outperforms methods using a similar amount of pre-training data. BLIP with 129M images achieves competitive performance as LEMON with
 
-我们实现了AdaLoRA来微调DeBERTaV3碱基（He等人，2021a）和BART大（Lewis等人，2019）。我们评估了所提出的算法在自然语言理解（GLUE，Wang et al.（2019））、问题回答（SQuADv1，Rajpurkar et al.（2016）和SQuADv2，Rajpurka et al.（2018））和自然语言生成（XSum，Narayan等人（2018）和CNN/DailyMail-Hermann et al.（2015））方面的有效性。所有的收益都通过了显著的检验，p＜0.05。
+我们考虑了两个用于图像字幕的数据集：NoCaps（Agrawal et al.，2019）和COCO，这两个数据集都是使用在具有LM损失的COCO上微调的模型进行评估的。与王等人（2021）类似，我们在每个标题的开头添加了一个提示“图片”，这会带来稍微好一点的结果。如表7所示，具有14M预训练图像的BLIP显著优于使用类似量的预训练数据的方法。拥有129M张图像的BLIP实现了与LEMON一样具有竞争力的性能
 
-Implementation Details. We use PyTorch (Paszke et al., 2019) to implement all the algorithms. Our implementation is based on the publicly available Huggingface Transformers3 (Wolf et al., 2019) code-base. All the experiments are conducted on NVIDIA V100 GPUs.
+Table 7. Comparison with state-of-the-art image captioning methods on NoCaps and COCO Caption. All methods optimize the crossentropy loss during finetuning. C: CIDEr, S: SPICE, B@4: BLEU@4. BLIPCapFilt-L is pre-trained on a dataset bootstrapped by captioner and filter with ViT-L. VinVL† and LEMON† require an object detector pre-trained on 2.5M images with human-annotated bounding boxes and high resolution (800×1333) input images. SimVLMhuge uses 13× more training data and a larger vision backbone than ViT-L.
 
-实施细节。我们使用PyTorch（Paszke et al.，2019）来实现所有算法。我们的实现基于公开的Huggingface Transformers3（Wolf et al.，2019）代码库。所有实验都是在NVIDIA V100 GPU上进行的。
+表7。与NoCaps和COCO Caption上最先进的图像字幕方法的比较。所有方法都优化了微调过程中的交叉熵损失。C： CIDEr，S：SPICE，B@4以下为：BLEU@4.BLIPCapFilt-L是在由字幕机引导的数据集上预训练的，并使用ViT-L进行过滤。VinVL†和LEMON†需要在具有人类注释的边界框和高分辨率（800×1333）输入图像的2.5M图像上预训练对象检测器。SimVLMjuge使用的训练数据比ViT-L多13倍，视觉骨干更大。
 
-LoRA scales ∆x by α/r where α is a constant in r. As a result, the magnitude of output can be consistent given different r. It reduces the efforts of retuning learning rate when varying r. Typically α is set as 16 or 32 and never tuned (Hu et al., 2022; Yang & Hu, 2020). Following LoRA, we add the same scaling for (3) and fix α as LoRA. Besides, in Algorithm 1, we prune singular values every ∆T steps (e.g., ∆T = 100) such that the pruned triplets can still get updated within these intervals and possibly reactivated in future iterations.
+Figure 5. Model architecture for the downstream tasks. Q: question; C: caption; QA: question-answer pair. 200M images. Note that LEMON requires a computationalheavy pre-trained object detector and higher resolution (800×1333) input images, leading to substantially slower inference time than the detector-free BLIP which uses lower resolution (384×384) input images.
 
-LoRA用α/r来缩放∆x，其中α是r中的常数。因此，给定不同的r，输出的幅度可以是一致的。当r变化时，它减少了重新调整学习率的努力。通常，α被设置为16或32，并且从不调整（Hu et al.，2022；杨和胡，2020）。在LoRA之后，我们为（3）添加相同的缩放，并将α固定为LoRA。此外，在算法1中，我们每∆T步（例如∆T=100）修剪奇异值，这样修剪后的三元组仍然可以在这些间隔内更新，并可能在未来的迭代中重新激活。
+图5。下游任务的模型体系结构。Q： 问题；C： 标题；问答配对。2亿张图片。请注意，LEMON需要计算量大的预训练对象检测器和更高分辨率（800×1333）的输入图像，这导致推理时间比使用较低分辨率（384×384）输入图像的无检测器BLIP慢得多。
 
-Baselines. We compare
+### 5.3. Visual Question Answering (VQA) 5.3。视觉问答（VQA）
+VQA (Antol et al., 2015) requires the model to predict an answer given an image and a question. Instead of formulating VQA as a multi-answer classification task (Chen et al., 2020; Li et al., 2020), we follow Li et al. (2021a) and consider it as an answer generation task, which enables open-ended VQA. As shown in Figure 5(a), during finetuning, we rearrange the pre-trained model, where an image-question is first encoded into multimodal embeddings and then given to an answer decoder. The VQA model is finetuned with the LM loss using ground-truth answers as targets.
 
-基线。我们比较
+VQA（Antol等人，2015）要求模型在给定图像和问题的情况下预测答案。我们没有将VQA公式化为多答案分类任务（Chen et al.，2020；李等人，2020），而是遵循李等人（2021a），将其视为一个答案生成任务，从而实现开放式VQA。如图5（a）所示，在微调过程中，我们重新排列预先训练的模型，其中图像问题首先被编码为多模式嵌入，然后被提供给答案解码器。使用地面实况答案作为目标，利用LM损失对VQA模型进行微调。
 
-* Full fine-tuning is the most common approach for adaptation. During fine-tuning, the model is initialized with pre-trained weights and biases, and all model parameters undergo gradient updates. 
+Table 8. Comparison with state-of-the-art methods on VQA and NLVR2 . ALBEF performs an extra pre-training step for NLVR2 .SimVLM† uses 13× more training data and a larger vision backbone (ResNet+ViT) than BLIP.
 
-*全面微调是适应的最常见方法。在微调过程中，使用预先训练的权重和偏差初始化模型，并对所有模型参数进行梯度更新。
+表8。在VQA和NLVR2上与最先进的方法进行比较。ALBEF为NLVR2执行额外的预训练步骤。与BLIP相比，SimVLM†使用了13倍多的训练数据和更大的视觉骨干（ResNet+ViT）。
 
-* Bitfit (Zaken et al., 2021) is an effective parameter-efficient fine-tuning method. The method only fine-tunes bias vectors in the pre-trained model. 
+The results are shown in Table 8. Using 14M images, BLIP outperforms ALBEF by +1.64% on the test set. Using 129M images, BLIP achieves better performance than SimVLM which uses 13× more pre-training data and a larger vision backbone with an additional convolution stage.
 
-*Bitfit（Zaken et al.，2021）是一种有效的参数高效微调方法。该方法仅微调预训练模型中的偏差向量。
+结果如表8所示。使用1400万张图像，BLIP在测试集上的表现优于ALBEF+1.64%。使用129M张图像，BLIP比SimVLM获得了更好的性能，SimVLM使用了13倍多的预训练数据和更大的视觉主干和额外的卷积级。
 
-* Adapter tuning (Houlsby et al., 2019; Pfeiffer et al., 2020) inserts two-layer adapters between transformer blocks. We compare with two types of adapter. Houlsby adapter as proposed in Houlsby et al. (2019) is inserted between the self-attention module and the FFN module followed by a subsequent residual connection. Recently, Pfeiffer et al. (2020) propose a more efficient design with adapters only applied after FFN modules and LayerNorm modules (Ba et al., 2016), which we call Pfeiffer adapter. The number of trainable parameters is determined by the number of layers, the hidden dimension of adapters and the dimension of their inputs. 
+### 5.4. Natural Language Visual Reasoning (NLVR2) 5.4。自然语言视觉推理（NLVR2）
+NLVR2 (Suhr et al., 2019) asks the model to predict whether a sentence describes a pair of images. In order to enable reasoning over two images, we make a simple modification to our pre-trained model which leads to a more computationalefficient architecture than previous approaches (Li et al., 2021a; Wang et al., 2021). As shown in Figure 5(b), for each transformer block in the image-grounded text encoder, there exist two cross-attention layers to process the two input images, and their outputs are merged and fed to the FFN.
 
-*适配器调谐（Houlsby等人，2019；Pfeiffer等人，2020）在变压器块之间插入两层适配器。我们比较了两种类型的适配器。Houlsby等人提出的Houlsby适配器。（2019）插入自注意模块和FFN模块之间，然后是后续的剩余连接。最近，Pfeiffer等人（2020）提出了一种更有效的设计，其中适配器仅应用于FFN模块和LayerNorm模块之后（Ba et al.，2016），我们称之为Pfeiffr适配器。可训练参数的数量由层的数量、适配器的隐藏维度及其输入的维度决定。
+NLVR2（Suhr等人，2019）要求模型预测一个句子是否描述了一对图像。为了能够对两幅图像进行推理，我们对预先训练的模型进行了简单的修改，这导致了比以前的方法更具计算效率的架构（Li et al.，2021a；Wang等人，2021）。如图5（b）所示，对于基于图像的文本编码器中的每个变换器块，存在两个交叉关注层来处理两个输入图像，并且它们的输出被合并并馈送到FFN。
 
-* LoRA (Hu et al., 2022) is a state-of-the-art method for parameter-efficient fine-tuning. The method parameterizes incremental updates by two small matrices and only fine-tune them. The number of trainable parameter is controlled by the rank r and the number of adapted weight matrices n. Hu et al. (2022) apply LoRA to query and value projections only. In empirical, we find that applying LoRA to all weight matrices, i.e., Wq, Wk, Wv, Wf1 and Wf2 , can further improve its performance (Please see Appendix F). Hence, we compare with this generalized LoRA to maximize its performance. We use publicly available implementation 4 to run all the baselines. Please refer to Hu et al. (2022) and reference therein for details.
+Table 9. Comparison with state-of-the-art methods on VisDial v1.0 validation set. VD-ViLBERT† (Murahari et al., 2020) pre-trains ViLBERT (Lu et al., 2019) with additional VQA data. 
 
-*LoRA（Hu et al.，2022）是一种最先进的参数有效微调方法。该方法通过两个小矩阵对增量更新进行参数化，并且只对它们进行微调。可训练参数的数量由秩r和自适应权重矩阵的数量n控制。Hu等人（2022）仅将LoRA应用于查询和值投影。在经验中，我们发现将LoRA应用于所有权重矩阵，即Wq、Wk、Wv、Wf1和Wf2，可以进一步提高其性能（请参见附录F）。因此，我们将其与该广义LoRA进行比较，以最大限度地提高其性能。我们使用公开可用的实现4来运行所有基线。详情请参考Hu等人（2022）及其参考文献。
+表9。与VisDial v1.0验证集上最先进的方法进行比较。VD ViLBERT†（Murahari et al.，2020）用额外的VQA数据预训练ViLBERT（Lu et al.，2019）。
 
-3https://github.com/huggingface/transformers 
+The two CA layers are intialized from the same pre-trained weights. The merge layer performs simple average pooling in the first 6 layers of the encoder, and performs concatenation followed by a linear projection in layer 6-12. An MLP classifier is applied on the output embedding of the [Encode] token. As shown in Table 8, BLIP outperforms all existing methods except for ALBEF which performs an extra step of customized pre-training. Interestingly, performance on NLVR2 does not benefit much from additional web images, possibly due to the domain gap between web data and downstream data.
 
-3.https://github.com/huggingface/transformers
+两个CA层由相同的预训练权重初始化。合并层在编码器的前6层中执行简单的平均池化，并在层6-12中执行级联，然后进行线性投影。MLP分类器应用于[Encode]令牌的输出嵌入。如表8所示，除了ALBEF执行额外的定制预训练步骤外，BLIP优于所有现有方法。有趣的是，NLVR2的性能并没有从额外的网络图像中获得太多好处，这可能是由于网络数据和下游数据之间的域差距。
 
-Table 1: Results with DeBERTaV3-base on GLUE development set. The best results on each dataset are shown in bold. We report the average correlation for STS-B. Full FT, HAdapter and PAdapter represent full fine-tuning, Houlsby adapter, and Pfeiffer adapter respectively. We report mean of 5 runs using different random seeds.
+### 5.5. Visual Dialog (VisDial) 5.5、。视觉对话框（VisDial）
+VisDial (Das et al., 2017) extends VQA in a natural conversational setting, where the model needs to predict an answer not only based on the image-question pair, but also considering the dialog history and the image’s caption. We follow the discriminative setting where the model ranks a pool of answer candidates (Gan et al., 2019; Wang et al., 2020; Murahari et al., 2020). As shown in Figure 5(c), we concatenate image and caption embeddings, and pass them to the dialog encoder through cross-attention. The dialog encoder is trained with the ITM loss to discriminate whether the answer is true or false for a question, given the entire dialog history and the image-caption embeddings. As shown in Table 9, our method achieves state-of-the-art performance on VisDial v1.0 validation set.
 
-表1：基于GLUE发育集的DeBERTaV3结果。每个数据集的最佳结果以粗体显示。我们报告了STS-B的平均相关性。全FT、HAdapter和PAdapter分别代表全微调、Houlsby适配器和Pfeiffer适配器。我们报告了使用不同随机种子的5次运行的平均值。
+VisDial（Das et al.，2017）在自然对话环境中扩展了VQA，其中模型不仅需要基于图像问题对，还需要考虑对话历史和图像的标题来预测答案。我们遵循判别设置，其中模型对候选答案库进行排名（Gan et al.，2019；王等人，2020；Murahari等人，2020）。如图5（c）所示，我们将图像和字幕嵌入连接起来，并通过交叉关注将它们传递给对话框编码器。在给定整个对话历史和图像字幕嵌入的情况下，用ITM损失来训练对话编码器，以区分问题的答案是真是假。如表9所示，我们的方法在VisDial v1.0验证集上实现了最先进的性能。
 
-## 4.1 NATURAL LANGUAGE UNDERSTANDING 4.1自然语言理解
-Models and Datasets. We evaluate the fine-tuning performance of DeBERTaV3-base (He et al., 2021a) using the proposed algorithm. We conduct experiments on the General Language Understanding Evaluation (GLUE, Wang et al. 2019) benchmark. The benchmark includes two single-sentence classification tasks, three similarity and paraphrase tasks and four natural language inference tasks. Dataset details are summarized in Appendix B.
+### 5.6. Zero-shot Transfer to Video-Language Tasks 5.6。零样本传输到视频语言任务
+Our image-language model has strong generalization ability to video-language tasks. In Table 10 and Table 11, we perform zero-shot transfer to text-to-video retrieval and video question answering, where we directly evaluate the models trained on COCO-retrieval and VQA, respectively. To process video input, we uniformly sample n frames per video (n = 8 for retrieval and n = 16 for QA), and concatenate the frame features into a single sequence. Note that this simple approach ignores all temporal information.
 
-模型和数据集。我们使用所提出的算法评估了DeBERTaV3碱基（He et al.，2021a）的微调性能。我们在通用语言理解评估（GLUE，Wang et al.2019）基准上进行了实验。该基准包括两个单句分类任务、三个相似和转述任务以及四个自然语言推理任务。附录B中总结了数据集的详细信息。
+我们的图像语言模型对视频语言任务具有很强的泛化能力。在表10和表11中，我们执行了从零样本到文本到视频检索和视频问答的转换，其中我们分别直接评估了基于COCO-retrieval和VQA训练的模型。为了处理视频输入，我们对每个视频统一采样n帧（检索时n=8，QA时n=16），并将帧特征连接到单个序列中。请注意，这种简单的方法忽略了所有的时间信息。
 
-Implementation Details. DeBERTaV3-base consists of 183 millions parameters. We compare AdaLoRA with the baselines under different budget levels, for example, given the total trainable parameters as 0.3/0.6/1.2 million. In order to match the parameter budget, we select the hidden dimensions of adapters from {8, 16, 32, 64}, set the rank r of LoRA as {2, 4, 8}, and choose the final budget b (T) of AdaLoRA from {144, 288, 576}. Then we set b (0) as 1.5 times of b (T) for AdaLoRA and select the regularization coefficient γ from {0.1, 0.3, 0.5}. We set the exponential moving average parameters β1 and β2 as their default value 0.85. We select the learning rate from {5 × 10−5 , 8 × 10−5 , 1 × 10−4 , 2 × 10−4}. More details are presented in Appendix C.
+Table 10. Comparisons with state-of-the-art methods for text-tovideo retrieval on the 1k test split of the MSRVTT dataset.
 
-实施细节。DeBERTaV3基础由1.83亿个参数组成。例如，我们将AdaLoRA与不同预算水平下的基线进行了比较，假设总可训练参数为0.3/0.6/120万。为了匹配参数预算，我们从{8，16，32，64}中选择适配器的隐藏维度，将LoRA的秩r设置为{2，4，8}，并从{144288576}中选择AdaLoRA的最终预算b（T）。然后，我们将b（0）设置为AdaLoRA的b（T）的1.5倍，并从{0.1，0.3，0.5}中选择正则化系数γ。我们将指数移动平均参数β1和β2设置为它们的默认值0.85。我们从{5×10−5，8×10−5.1×10−4，2×10−4}中选择学习率。更多细节见附录C。
+表10。在MSRVTT数据集的1k测试分割上与最先进的文本到视频检索方法的比较。
 
-Main results. We compare AdaLoRA with the baseline methods under different budget settings. Table 1 shows experimental results on the GLUE development set. We see that AdaLoRA achieves better or on par performance compared with existing approaches on all datasets under all budget levels. For example, when the parameter budget is 0.3M, AdaLoRA achieves 87.36% accuracy on RTE, which is 1.8% higher than the best-performing baseline. Besides, AdaLoRA with extreme low budget can often perform better than the baselines with higher budget. For example, AdaLoRA achieve 70.04% Mcc. score on CoLA with 0.3M fine-tuning parameters, which is higher than all baseline methods with lager budget (e.g., 0.6M and 1.2M).
+Table 11. Comparisons with state-of-the-art methods for video question answering. We report top-1 test accuracy on two datasets.
 
-主要结果。我们将AdaLoRA与不同预算设置下的基线方法进行了比较。表1显示了GLUE开发套件的实验结果。我们看到，在所有预算水平下，与现有方法相比，AdaLoRA在所有数据集上都实现了更好或同等的性能。例如，当参数预算为0.3 M时，AdaLoRA在RTE上的准确率为87.36%，比性能最佳的基线高1.8%。此外，预算极低的AdaLoRA通常比预算较高的基线表现更好。例如，AdaLoRA实现了70.04%Mcc。CoLA的得分为0.3 M微调参数，高于所有预算较大的基线方法（如0.6 M和1.2 M）。
+表11。与最先进的视频问答方法的比较。我们在两个数据集上报告了排名前1的测试准确性。
 
-## 4.2 QUESTION ANSWERING 4.2问答
-Models and Datasets. We evaluate performance of the proposed algorithm on two question answering (QA) datasets: SQuAD v1.1 (Rajpurkar et al., 2016) and SQuADv2.0 (Rajpurkar et al., 2018), where we use AdaLoRA to fine-tune DeBERTaV3-base. These tasks are treated as a sequence labeling problem, where we predict the probability of each token being the start and end of the answer span. Dataset details can be found in Appendix D.
+Despite the domain difference and lack of temporal modeling, our models achieve state-of-the-art performance on both video-language tasks. For text-to-video retrieval, zeroshot BLIP even outperforms models finetuned on the target video dataset by +12.4% in recall@1. Further performance improvement can be achieved if the BLIP model is used to initialize a video-language model with temporal modeling (e.g. replace our ViT with a TimeSformer (Bertasius et al., 2021)) and finetuned on video data.
 
-模型和数据集。我们在两个问答（QA）数据集上评估了所提出算法的性能：SQuAD v1.1（Rajpurkar et al.，2016）和SQuADv2.0（Rajpurka et al.，2018），其中我们使用AdaLoRA来微调DeBERTaV3基础。这些任务被视为序列标记问题，我们预测每个令牌成为答案跨度的开始和结束的概率。数据集详细信息见附录D。
+尽管存在领域差异和缺乏时间建模，但我们的模型在两个视频语言任务上都实现了最先进的性能。对于文本到视频检索，零镜头BLIP甚至比在目标视频数据集上微调的模型高出+12.4%recall@1.如果使用BLIP模型来初始化具有时间建模的视频语言模型（例如，用TimeSformer代替我们的ViT（Bertasius et al.，2021））并对视频数据进行微调，则可以实现进一步的性能改进。
 
-4https://github.com/microsoft/LoRA 
+## 6. Additional Ablation Study 6。附加消融研究
+In this section, we provide additional ablation experiments on CapFilt.
 
-4.https://github.com/microsoft/LoRA
+在本节中，我们提供了关于CapFilt的额外消融实验。
 
-Table 2: Results with DeBERTaV3-base on SQuAD v1.1 and SQuADv2.0. Here # Params is the number of trainable parameters relative to that in full fine-tuning. We report EM/F1. The best results in each setting are shown in bold.
+Improvement with CapFilt is not due to longer training. Since the bootstrapped dataset contains more texts than the original dataset, training for the same number of epochs takes longer with the bootstrapped dataset. To verify that the effectiveness of CapFilt is not due to longer training, we replicate the web text in the original dataset so that it has the same number of training samples per epoch as the bootstrapped dataset. As shown in Table 12, longer training using the noisy web texts does not improve performance.
 
-表2：基于SQuAD v1.1和SQuADv2.0的DeBERTaV3结果。这里，#Params是相对于完全微调中的可训练参数的数量。我们报告EM/F1。每个设置中的最佳结果以粗体显示。
+CapFilt的改进并不是因为更长的训练时间。由于自举数据集包含的文本比原始数据集多，因此使用自举数据集中训练相同数量的历元需要更长的时间。为了验证CapFilt的有效性不是由于更长的训练，我们在原始数据集中复制网络文本，使其每个历元具有与自举数据集相同数量的训练样本。如表12所示，使用嘈杂的网络文本进行更长时间的训练并不能提高性能。
 
-Implementation Details. We compare AdaLoRA with the baseline methods under different parameter budgets. That is we have the number of trainable parameters as 0.08%/0.16%/0.32%/0.65% of total pre-trained parameters. To match the budget requirements, we select the hidden dimensions of adapters from {4, 8, 16, 32, 64}, set the rank r of LoRA as {1, 2, 4, 8} and choose the final total rank b (T) of AdaLoRA from {72, 144, 288, 576}. We set the batch size as 16. We use AdamW (Loshchilov & Hutter, 2019) as the optimizer and we set the learning rate as 1 × 10−3 for AdaLoRA. Please refer to Appendix D for more details.
+A new model should be trained on the bootstrapped dataset. The bootstrapped dataset is used to pre-train a new model. We investigate the effect of continue training from the previous pre-trained model, using the bootstrapped dataset. Table 13 hows that continue training does not help. This observation agrees with the common practice in knowledge distillation, where the student model cannot be initialized from the teacher.
 
-实施细节。我们将AdaLoRA与基线方法在不同参数预算下进行了比较。也就是说，我们的可训练参数的数量为总预训练参数的0.08%/0.16%/0.32%/0.65%。为了匹配预算要求，我们从{4，8，16，32，64}中选择适配器的隐藏维度，将LoRA的秩r设置为{1，2，4，8}，并从{72144288576}中选择AdaLoRA的最终总秩b（T）。我们将批量大小设置为16。我们使用AdamW（Loshchilov&Hutter，2019）作为优化器，并将AdaLoRA的学习率设置为1×10−3。有关更多详细信息，请参阅附录D。
+应该在引导的数据集上训练一个新的模型。自举数据集用于预训练新模型。我们使用自举数据集研究了先前预训练模型中继续训练的效果。表13显示继续培训没有帮助。这一观察结果与知识提炼中的常见做法一致，即学生模型不能从老师那里初始化。
 
-Main Results. Table 2 summarizes experimental results when we fine-tune DeBERTaV3-base under 4 different budget settings: 0.08%, 0.16%, 0.32% and 0.65% of total pre-trained parameters. From the result, we see that AdaLoRA consistently outperforms existing approaches under all the budget levels in term of two evaluation metrics: exact match (EM) and F1. Notice that the performance of Houlsby adapter and Pfeiffer adapter are notably decreased when we reduce the parameter budget. In contrast, our method shows the consistent performance under different budget levels. For example, AdaLoRA achieves 88.7% F1 on SQuADv2.0 with the smallest budget 0.08%. It is close to its performance under the high budget and it is also 1.2% higher than the best-performing baseline.
+Table 12. The original web texts are replicated to have the same number of samples per epoch as the bootstrapped dataset. Results verify that the improvement from CapFilt is not due to longer training time.
 
-主要结果。表2总结了当我们在4种不同的预算设置下微调DeBERTaV3基础时的实验结果：0.08%、0.16%、0.32%和0.65%的总预训练参数。从结果中，我们可以看出，在所有预算水平下，AdaLoRA在两个评估指标方面始终优于现有方法：精确匹配（EM）和F1。请注意，当我们减少参数预算时，Houlsby适配器和Pfeiffer适配器的性能显著降低。相比之下，我们的方法显示了在不同预算水平下的一致性能。例如，AdaLoRA在SQuADv2.0上以0.08%的最小预算实现了88.7%的F1成绩。这接近其在高预算下的表现，也比表现最好的基线高出1.2%。
+表12。原始网络文本被复制为每个历元具有与自举数据集相同数量的样本。结果证实，CapFilt的改进并非由于训练时间的延长。
 
-## 4.3 NATURAL LANGUAGE GENERATION 4.3自然语言生成
-Table 3: Results with BART-large on XSum and CNN/DailyMail. Here # Params is the number of trainable parameters relative to that in full fine-tuning. We report R-1/2/L. The best results are shown in bold.
+Table 13. Continue training the pre-trained model offers less gain compared to training a new model with the bootstrapped dataset. 
 
-表3：XSum和CNN/DaylyMail上BART大的结果。这里，#Params是相对于完全微调中的可训练参数的数量。我们报告R-1/2/L。最佳结果以粗体显示。
+表13。与使用自举数据集训练新模型相比，继续训练预先训练的模型提供的增益较小。
 
-Models and Datasets. To provide a comparison with the state-of-the-art in natural language generation (NLG) tasks, we apply AdaLoRA to fine-tune a BART-large model (Lewis et al., 2019). We evaluate model performance on two datasets: XSum (Narayan et al., 2018) and CNN/DailyMail (Hermann et al., 2015).
+## 
+We propose BLIP, a new VLP framework with stateof-the-art performance on a wide range of downstream vision-language tasks, including understanding-based and generation-based tasks. BLIP pre-trains a multimodal mixture of encoder-decoder model using a dataset bootstrapped from large-scale noisy image-text pairs by injecting diverse synthetic captions and removing noisy captions. Our bootstrapped dataset are released to facilitate future visionlanguage research.
 
-模型和数据集。为了与最先进的自然语言生成（NLG）任务进行比较，我们将AdaLoRA应用于BART大型模型的微调（Lewis et al.，2019）。我们在两个数据集上评估了模型性能：XSum（Narayan et al.，2018）和CNN/DaylyMail（Hermann et al.，2015）。
+我们提出了BLIP，这是一种新的VLP框架，在广泛的下游视觉语言任务上具有最先进的性能，包括基于理解和基于生成的任务。BLIP使用从大规模噪声图像-文本对中引导的数据集，通过注入不同的合成字幕和去除噪声字幕，预训练编码器-解码器模型的多模式混合。我们发布了自启动的数据集，以促进未来的视觉语言研究。
 
-Implementation Details. Similarly as DeBERTav3-base, we apply low-rank/SVD-based adaptation to every weight matrix of both encoder and decoder layers. We report ROUGE 1/2/L scores (R-1/2/L, Lin (2004)). We set the training epochs as 15. For XSum, we set the beam length as 8 and batch size as 64. For CNN/DailyMail, we set the beam length as 4 and batch size as 32. Please see Appendix E for the detailed configuration.
+There are a few potential directions that can further enhance the performance of BLIP: (1) Multiple rounds of dataset bootstrapping; (2) Generate multiple synthetic captions per image to further enlarge the pre-training corpus; (3) Model ensemble by training multiple different captioners and filters and combining their forces in CapFilt. We hope that our paper motivates future work to focus on making improvements in both the model aspect and the data aspect, the bread and butter of vision-language research.
 
-实施细节。类似于DeBERTav3基础，我们将基于低秩/SVD的自适应应用于编码器和解码器层的每个权重矩阵。我们报告了ROUGE 1/2/L评分（R-1/2/L，Lin（2004））。我们将训练时期定为15年。对于XSum，我们将光束长度设置为8，批量大小设置为64。对于美国有线电视新闻网/每日邮报，我们将波束长度设置为4，批量大小设置为32。详细配置请参见附录E。
+有几个潜在的方向可以进一步提高BLIP的性能：（1）多轮数据集自举；（2） 为每张图像生成多个合成字幕，以进一步放大预训练语料库；（3） 通过训练多个不同的字幕和滤镜，并在CapFilt中结合它们的力量，建立合奏模型。我们希望我们的论文能激励未来的工作集中在模型方面和数据方面进行改进，这是视觉语言研究的主要内容。
 
-Main Results. Experimental results are summarized in Table 3, where we compare the fine-tuning performance under four budget levels: the number of trainable parameters is 0.13%, 0.26%, 1.10% and 2.20% of total pre-trained parameters. We see that AdaLoRA achieves better or on par performance compared with the baseline on both datasets (XSum and CNN/DailyMail) under all the budget levels. For example, AdaLoRA achieves 21.13 R-2 score when budget level is 1.10%, compared with 19.89 for LoRA.
+## References 参考文献
+### A. Downstream Task Details A.下游任务详细信息
+Table 14 shows the hyperparameters that we use for finetuning on the downstream vision-language tasks. All tasks uses AdamW optimizer with a weight decay of 0.05 and a cosine learning rate schedule. We use an image resolution of 384 × 384, except for VQA where we follow Wang et al. (2021) and use 480 × 480 images. Next we delineate the dataset details.
 
-主要结果。实验结果总结在表3中，我们比较了四个预算水平下的微调性能：可训练参数的数量分别为预训练参数总数的0.13%、0.26%、1.10%和2.20%。我们看到，在所有预算水平下，与两个数据集（XSum和CNN/DaylyMail）的基线相比，AdaLoRA实现了更好或不相上下的性能。例如，当预算水平为1.10%时，AdaLoRA的R-2得分为21.13，而LoRA的得分为19.89。
+表14显示了我们用于对下游视觉语言任务进行微调的超参数。所有任务都使用权重衰减为0.05的AdamW优化器和余弦学习率计划。我们使用384×384的图像分辨率，除了VQA，我们遵循王等人的做法。（2021）并使用480×480的图像。接下来我们描述数据集的细节。
 
-## 4.4 ANALYSIS 4.4分析
-Different budget levels. Figure 2 illustrates experimental results of fine-tuning DeBERTaV3-base under different budget levels. We see that on all the three datasets (MNLI-m, SQuADv2.0 and XSum), AdaLoRA achieves consistent performance improvement under all the budget levels compared with the baseline. The performance gain is more significant when increasing the budget for the XSum task, suggesting a high budget can help NLG tasks. Note that on the MNLI and SQuADv2.0 datasets, the performance of AdaLoRA under low budget levels (≤ 1%) can match the results of high budget settings. For example, AdaLoRA achieves 88.78% F1 on SQuADv2.0 when the budget is 0.16%. It is close to the performance (88.89% F1) of the highest budget (4.65%) with a more significant gain over the baseline.
+Image-Text Retrieval. We use the Karpathy split (Karpathy & Li, 2015) for both COCO and Flickr30K. COCO contains 113/5k/5k images for train/validation/test, and Flickr30K contains 29k/1k/1k images for train/validation/test.
 
-不同的预算水平。图2显示了在不同预算水平下微调DeBERTaV3基础的实验结果。我们看到，在所有三个数据集（MNLI-m、SQuADv2.0和XSum）上，与基线相比，AdaLoRA在所有预算级别下都实现了一致的性能改进。当增加XSum任务的预算时，性能增益更显著，这表明高预算可以帮助NLG任务。请注意，在MNLI和SQuADv2.0数据集上，AdaLoRA在低预算水平（≤1%）下的性能可以与高预算设置的结果相匹配。例如，当预算为0.16%时，AdaLoRA在SQuADv2.0上实现了88.78%的F1。它接近最高预算（4.65%）的性能（88.89%F1），比基线有更显著的增益。
+图像文本检索。我们对COCO和Flickr30K使用Karpathy分裂（Karpathy&Li，2015）。COCO包含用于训练/验证/测试的113/5k/5k图像，Flickr30K包含用于训练或验证/测试中的29k/1k/1k图像。
 
-Figure 2: Fine-tuning performance under different budget levels. We compare AdaLoRA with the generalized LoRA that applies to every weight matrix.
+Image Captioning. We finetune on COCO’s Karpathy train split, and evaluate on COCO’s Karpathy test split and NoCaps validation split. During inference, we use beam search with a beam size of 3, and set the maximum generation length as 20.
 
-图2：在不同预算水平下对性能进行微调。我们将AdaLoRA与适用于每个权重矩阵的广义LoRA进行了比较。
+图像字幕。我们对COCO的Karpathy训练分裂进行了微调，并评估了COCO的Karpathy测试分裂和NoCaps验证分裂。在推理过程中，我们使用波束大小为3的波束搜索，并将最大生成长度设置为20。
 
-Comparison to low-rank parameterization. As mentioned in Section 3.1, one can alternatively prune LoRA doublet-wise to conduct the rank allocation. In this case, the doublets are zeroed out entirely, raising the barrier to reactivate them. It can cause training instability and hurt the generalization when some crucial doublets are pruned by mistake. In Table 4, we compare AdaLoRA with pruning LoRA on three datasets (SST-2, RTE, and CoLA) to illustrate this point. We apply the same importance score, budget scheduler and training setups as Section 4.1 for pruning LoRA. We can see that AdaLoRA outperforms pruning LoRA on all the datasets under all the budget levels.
+VQA. We experiment with the VQA2.0 dataset (Goyal et al., 2017), which contains 83k/41k/81k images for training/validation/test. Following Li et al. (2021a), we use both training and validation splits for training, and include additional training samples from Visual Genome. During inference on VQA, we use the decoder to rank the 3,128 candidate answers (Li et al., 2021a; Kim et al., 2018).
 
-与低秩参数化的比较。如第3.1节所述，可以选择性地修剪LoRA二重集以进行秩分配。在这种情况下，二重态被完全归零，从而提高了重新激活它们的屏障。当一些关键的对偶被错误地修剪时，它会导致训练的不稳定性，并损害泛化能力。在表4中，我们在三个数据集（SST-2、RTE和CoLA）上比较了AdaLoRA和修剪LoRA，以说明这一点。我们应用与第4.1节相同的重要性分数、预算调度器和训练设置来修剪LoRA。我们可以看到，在所有预算级别下，AdaLoRA在所有数据集上都优于修剪LoRA。
+VQA。我们对VQA2.0数据集（Goyal et al.，2017）进行了实验，该数据集包含83k/41k/81k个用于训练/验证/测试的图像。继李等人（2021a）之后，我们使用训练和验证分割进行训练，并包括来自视觉基因组的额外训练样本。在对VQA进行推理期间，我们使用解码器对3128个候选答案进行排序（Li等人，2021a；Kim等人，2018）。
 
-Table 4: We present two ablation studies in this table: (i) Comparison between AdaLoRA and structured pruning on LoRA. (ii) Comparison of different importance metrics for AdaLoRA.
+NLVR2 . We conduct experiment on the official split (Suhr et al., 2019).
 
-表4：我们在该表中介绍了两项消融研究：（i）AdaLoRA和LoRA结构化修剪之间的比较。（ii）AdaLoRA不同重要性指标的比较。
+NLVR2。我们对官方分裂进行了实验（Suhr et al.，2019）。
 
-Variants of the importance score. Recall that in AdaLoRA, the importance score is defined by the sensitivity and uncertainty of every entry in the triplet (7). In Table 4, we examine two variants of the importance score: (i) changing s(·) in (7) to sensitivity-only; (ii) directly defining Si as |λi |. From the results, we can see that the proposed importance score generally performs best. The other two variants can degenerate the model performance up to 0.9%.
+VisDial. We finetune on the training split of VisDial v1.0 and evaluate on its validation set.
 
-重要性分数的变体。回想一下，在AdaLoRA中，重要性得分是由三元组中每个条目的敏感性和不确定性定义的（7）。在表4中，我们检查了重要性评分的两种变体：（i）将（7）中的s（·）改为仅敏感性；（ii）直接将Si定义为|λi|。从结果中可以看出，所提出的重要性评分通常表现最好。其他两种变体可以使模型性能退化高达0.9%。
+VisDial。我们对VisDial v1.0的训练部分进行了微调，并对其验证集进行了评估。
 
-The role of two components. We remark that both two components of our method - SVD adaptation and adaptive budget allocation, play vital roles for the performance gain. To demonstrate it, we compare AdaLoRA with the following variants: (i) SVD-LoRA: fine-tuning only with the proposed SVD-based adaptation in (3) and (4); (ii) LoRAregu: LoRA with orthogonal regularization (4) on A and B; (iii) AdaLoRAγ = 0: AdaLoRA without orthogonal regularization (4). Table 5 present the results when fine-tuning DeBERTaVe-base on SST-2 and MNLI. We can see that fine-tuning only with SVD adaptation shows an improvement over LoRA but cannot match the performance of AdaLoRA. Meanwhile, without SVD orthogonal regularization, the performance of AdaLoRA can degenerate. These results validate that both components contribute to the model performance.
+Table 14. Finetuning hyperparameters for downstream tasks.
 
-两个组成部分的作用。我们注意到，我们的方法的两个组成部分——SVD自适应和自适应预算分配，对性能增益起着至关重要的作用。为了证明这一点，我们将AdaLoRA与以下变体进行了比较：（i）SVD-LoRA：仅与（3）和（4）中提出的基于SVD的自适应进行微调；（ii）LoRAregu:A和B上具有正交正则化（4）的LoRA；（iii）阿达洛拉γ=0：没有正交正则化的阿达洛拉（4）。表5给出了在SST-2和MNLI基础上微调DeBERTaVe时的结果。我们可以看到，仅使用SVD自适应的微调显示出对LoRA的改进，但无法与AdaLoRA的性能相匹配。同时，如果没有SVD正交正则化，AdaLoRA的性能可能会退化。这些结果验证了这两个组件对模型性能的贡献。
+表14。微调下游任务的超参数。
 
-Table 5: We present ablation studies about SVD-based adaptation, orthogonal regularization, and budget allocation in this table. For MNLI, we report the average score of m/mm acc.
+### B. Additional Examples of Synthetic Captions B.合成字幕的其他示例
+In Figure 6, we show additional examples of images and texts where the web captions are filtered out, and the synthetic captions are kept as clean training samples.
 
-表5：我们在该表中介绍了关于基于SVD的自适应、正交正则化和预算分配的消融研究。对于MNLI，我们报告了根据。
+在图6中，我们展示了图像和文本的其他示例，其中网络字幕被过滤掉，合成字幕被保留为干净的训练样本。
 
-The resulting budget distribution. Figure 3 shows the resulting rank of each incremental matrix of DeBERTaV3-base fine-tuned with AdaLoRA. We find that AdaLoRA always prefers to allocating more budget to FFNs and top layers. Such behavior aligns with our empirical conclusions presented in Figure 1 that weight matrices of FFN moduels and top layers are more important for model performance. Hence, it validates that our proposed importance metric can guide AdaLoRA to focus on crucial modules. Meanwhile, the rank distribution generated by AdaLoRA is consistent across different budget levels, tasks and models. It means the number of remaining parameters is linearly scaled with b (T) and hence we can tune b (T) to control the remaining parameters. 
+### C. Pre-training Dataset Details C.预训练数据集详细信息
+Table 15 shows the statistics of the pre-training datasets.
 
-由此产生的预算分配。图3显示了用AdaLoRA微调的DeBERTaV3基的每个增量矩阵的结果秩。我们发现，AdaLoRA总是倾向于将更多预算分配给FFN和顶层。这种行为与我们在图1中给出的经验结论一致，即FFN模块和顶层的权重矩阵对模型性能更重要。因此，它验证了我们提出的重要性度量可以指导AdaLoRA专注于关键模块。同时，AdaLoRA生成的等级分布在不同的预算级别、任务和模型中是一致的。这意味着剩余参数的数量与b（T）成线性比例，因此我们可以调整b（T）来控制剩余参数。
+表15显示了预训练数据集的统计数据。
 
-Figure 3: The resulting rank of each incremental matrix when fine-tuning DeBERTaV3-base on MNLI with AdaLoRA. Here the x-axis is the layer index and the y-axis represents different types of adapted weight matrices. 
+Table 15. Statistics of the pre-training datasets. �!: “a week spent at our rented beach house in
 
-图3：当使用AdaLoRA基于MNLI微调DeBERTaV3时，每个增量矩阵的结果秩。这里，x轴是层索引，y轴表示不同类型的自适应权重矩阵。
+表15。预训练数据集的统计信息。�!: “在我们租来的海滨别墅度过了一周
 
-## 5 CONCLUSION 5结论
-We propose a parameter-efficient fine-tuning method – AdaLoRA that adaptively allocates the parameter budget according to importance scoring. In AdaLoRA, we parameterize the incremental updates of weight matrices in the form of singular value decomposition. Then, we dynamically allocate the parameter budget among incremental matrices by manipulating the singular values based on a new importance metric. Such an a pproach effectively improves the model performance and parameter efficiency. We conduct extensive experiments on natural language processing, question answering and natural language generation tasks. Results show that AdaLoRA outperforms existing approaches.
+Figure 6. Examples of the web text Tw and the synthetic text Ts. Green texts are accepted by the filter, whereas red texts are rejected.
 
-我们提出了一种参数有效的微调方法——AdaLoRA，该方法根据重要性评分自适应地分配参数预算。在AdaLoRA中，我们以奇异值分解的形式对权重矩阵的增量更新进行参数化。然后，我们基于一个新的重要性度量，通过操纵奇异值，在增量矩阵之间动态分配参数预算。这种方法有效地提高了模型性能和参数效率。我们对自然语言处理、问题回答和自然语言生成任务进行了广泛的实验。结果表明，AdaLoRA优于现有方法。
+图6。网络文本Tw和合成文本Ts的示例。绿色文本被过滤器接受，而红色文本被拒绝。
 

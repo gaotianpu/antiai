@@ -21,6 +21,7 @@
 * [BERT](../paper/nlp/bert.md) 2018-10-11
 * [GPT-2](../paper/nlp/gpt_2.md) 2019.2.14
 * [GPT-3](../paper/nlp/gpt_3.md) 2020.5.28
+* [Learning to summarize from human feedback](../paper/nlp/summarize_HF.md) 2020.9.2
 * [InstructGPT](../paper/nlp/gpt_InstructGPT.md) 2022.3.4
 
 起初，GPT-1和BERT两条技术路线的差距不大，都还是预训练模型+下游任务微调的思路。而到了GPT-2,论文提出：自然语言提供了一种灵活的方式来将任务、输入和输出指定为单一的序列符号。可以将所有的NLP任务都看成是对单一序列的处理，这样预训练出来的模型将会更通用，下游任务甚至不需要微调就能很好的适配。到了后续的GPT-3更是在预训练大模型的加持下，下游任务无需微调，直接基于提示就能完成。可以说这两篇论文直接拉开了以BERT为代表的完型填空和以GPT为代表的生成式模型的差距。
@@ -35,6 +36,7 @@
 
 当范式迁移到通用大规模预训练模型+提示学习后，新的挑战就变成了,如何收集训练更丰富多样的任务？ 首先，GPT-2，GPT-3不断的扩大训练语料的规模，争取能做到几乎全网覆盖。第二，OpenAI将GPT-3以API的方式提供给普通用户，通过收集普通用户使用API时的真实提示文本，完善训练语料，这种机制叫数据飞轮，用的人越多，数据越丰富，基于此训练迭代的模型就更优秀。
 
+https://github.com/microsoft/DeepSpeed
 
 ```python
 # GPT 训练时的前馈网络代码。 源：https://github.com/karpathy/minGPT/blob/master/mingpt/model.py
@@ -106,12 +108,15 @@ GPT在实际的推理阶段，token是一个个生成，直到达到指定的长
 ![InstructGPT](../paper/images/InstructGPT/fig_2.png)<br/>
 图1：InstructGPT的三个步骤：(1)监督微调(SFT)，(2)奖励模型(RM)训练，(3)通过该奖励模型上的近端策略优化(PPO)进行强化学习。蓝色箭头表示该数据用于训练我们的一个模型。在步骤2中，框A-D是我们的模型中的样本，由标注人员进行排名。
 
-第一步的监督微调，比较容易理解，就是普通的fine-tune过程。目前有一种偷懒的方式，拿着chatGPT的提示和生成内容用于自己的模型监督训练，效果很好。监督微调潜力很大，尤其在一些互联网未涵盖的专业领域知识，雇佣专业人才撰写高质量的提示响应内容很重要。
+### 3.1 第一步，监督微调
+比较容易理解，就是普通的fine-tune过程。目前有一种偷懒的方式，拿着chatGPT的提示和生成内容用于自己的模型监督训练，效果很好。监督微调潜力很大，尤其在一些互联网未涵盖的专业领域知识，雇佣专业人才撰写高质量的提示响应内容很重要。
 
-第二步的奖励模型，参考以下开源实现，输入是一段文本(提示+生成内容)，输出是一个得分，用于衡量生成质量的好坏。损失函数有两种实现方式：LogSigLoss和LogExpLoss，分别拿两个输出得分作比较计算误差值。
+### 3.2 第二步，奖励模型
+参考以下开源实现，输入是一段文本(提示+生成内容)，输出是一个得分，用于衡量生成质量的好坏。损失函数有两种实现方式：LogSigLoss和LogExpLoss，拿同一个提示下生成的两个输出得分作比较计算误差值。
 
-```python
-# chatGPT的开源实现：
+以下代码来自：https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat，chatGPT的开源实现。
+
+```python 
 # 源： https://github.com/hpcaitech/ColossalAI/blob/main/applications/Chat/coati/models/base/reward_model.py
 class RewardModel(LoRAModule):
     """
@@ -139,11 +144,37 @@ class RewardModel(LoRAModule):
         else:
             self.value_head = nn.Linear(model.config.n_embd, 1) # 1,
 
-    def forward(self, sequences: torch.LongTensor, attention_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
+    def forward(self, sequences: torch.LongTensor, 
+            attention_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
         outputs = self.model(sequences, attention_mask=attention_mask)
         last_hidden_states = outputs['last_hidden_state']
-        values = self.value_head(last_hidden_states)[:, :-1]
+        values = self.value_head(last_hidden_states)[:, :-1] #取最优一个token的值
         value = values.mean(dim=1).squeeze(1)    # ensure shape is (Batch) 
+        return value
+
+# critic's forward, RLHF中评估模型的forward
+class Critic(LoRAModule):
+    # 这里把__init__()代码省略，为了重点区分RewardModel和Critic模型的forward()的异同 
+    # def __init__(self, ...
+
+    # 注意跟上面RewardModel的做对比，上面的输出形状(Batch), 这个是（Batch,Actions)
+    def forward(self, sequences: torch.LongTensor,
+            action_mask: Optional[torch.Tensor] = None, #多了这个
+            attention_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
+        outputs = self.model(sequences, attention_mask=attention_mask)
+        last_hidden_states = outputs['last_hidden_state']
+
+        values = self.value_head(last_hidden_states).squeeze(-1)
+
+        if action_mask is not None and self.use_action_mask:
+            num_actions = action_mask.size(1)
+            prompt_mask = attention_mask[:, :-num_actions]
+            values = values[:, :-num_actions]
+            value = masked_mean(values, prompt_mask, dim=1)
+            return value
+
+        values = values[:, :-1]
+        value = values.mean(dim=1)
         return value
 
 # 源： https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/loss.py
@@ -151,9 +182,10 @@ class LogSigLoss(nn.Module):
     """
     Pairwise Loss for Reward Model
     Details: https://arxiv.org/abs/2203.02155 
-    InstructGPT: Training language models to follow instructions with human feedback . 式子-1 的实现
+    Title:   InstructGPT: Training language models to follow instructions with human feedback . 式子-1 的实现
+    chosen_reward，人类认为是好的生成；reject_reward，不好的内容
+    y = -ln(1/(1+e**(-x))), x=(chosen_reward - reject_reward)
     """
-
     def forward(self, chosen_reward: torch.Tensor, reject_reward: torch.Tensor) -> torch.Tensor:
         probs = torch.sigmoid(chosen_reward - reject_reward)
         log_probs = torch.log(probs)
@@ -164,21 +196,28 @@ class LogExpLoss(nn.Module):
     """
     Pairwise Loss for Reward Model
     Details: https://arxiv.org/abs/2204.05862
-    Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback
+    Title:   Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback
+    从函数的形态上看，二者没有任何差别，LogExpLoss是LogSigLoss的简写, https://www.geogebra.org/graphing/ndfwrejz
+    y = ln(1 + e**(-x) ),  x=(chosen_reward - reject_reward)
     """
-
     def forward(self, chosen_reward: torch.Tensor, reject_reward: torch.Tensor) -> torch.Tensor:
         loss = torch.log(1 + torch.exp(reject_reward - chosen_reward)).mean()
         return loss
 
 ```
 
-第三步引入了强化学习，显得有点特别。为什么要引入强化学习呢？ 强化学习的使用场景，通常是一个agent连续做多个动作后，期望总得分最大。而我们可以将GPT每次生成的单个token作为一个动作，所有的token全部生成完后，评估一个整体的得分。
+### 3.3 第三步，强化学习
+为什么要引入强化学习呢？ 强化学习的使用场景，通常是一个agent连续做多个action后，期望总得分最大。我们可以将GPT每次生成的单个token作为一个action(动作)，所有的token全部生成完后意味着一串连续的actions的结束，评估一个整体的得分。
 
 ![RHLF](../paper/images/InstructGPT/fig_note_1.png)<br/>
-RHLF 流程示意图
+图2：RHLF 流程示意图
 
-预训练模型输出同一个prompt下的k个输出，这k个输出经过评估模型产出value值。
+#### 3.3.1 整体流程
+划重点：
+1. PPOTrainer, 生成语言模型被初始化为2类实例：1. actor，RLHF训练过程中，模型参数会更新；2.initial_model，训练过程中参数不会被更新，二者都会提供生成每个tokens（对应RL概念中的actions）的概率值，需要对比二者的差值，计算出参数更新后的actor与initial_model的相对优势。
+2. PPOTrainer, 奖励模型 reward_model，训练过程中参数不会被更新，产出的是个标量值, 代表的是一个完整输出的整体奖励得分；critic源自reward_model，但实现上有差异，它返回的是一个向量，即生成的每个tokens(对应RL中的actions概念)的奖励值。详细的差异可以再看看上面代码中RewardModel,Critic的forward()函数。
+3. fit -> _make_experience(),  根据prompts，通过生成语言模型, 生成相应的响应输出，以及各种概率分布，奖励得分等。3.3.2节会详细展开内部的代码逻辑。
+4. fit -> training_step(), 计算actor和critic的loss，实现梯度更新。3.3.3节会详细展开内部的代码逻辑。
 
 ```python
 # https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/examples/train_prompts.py
@@ -190,7 +229,7 @@ trainer = PPOTrainer(
     initial_model, # GPTActor(pretrained=args.pretrain) 初始模型 
     actor_optim, # 优化器
     critic_optim,
-    kl_coef=args.kl_coef, # KL散度
+    kl_coef=args.kl_coef, # KL散度系数
     ptx_coef=args.ptx_coef, # 为防止模型在基础通用任务上退化，考虑预训练的预测token的损失值权重
     max_epochs=args.max_epochs,
     train_batch_size=args.train_batch_size,
@@ -203,7 +242,7 @@ trainer = PPOTrainer(
     eos_token_id=tokenizer.eos_token_id, #结尾token
 )
 
-trainer.fit(prompt_dataloader=prompt_dataloader, 
+trainer.fit(prompt_dataloader=prompt_dataloader, #prompt数据集
     pretrain_dataloader=pretrain_dataloader, #预训练的数据集，过gpt模型获取原始任务(预测下一个token)产生的loss,用于防止退化。
     num_episodes=args.num_episodes,
     max_timesteps=args.max_timesteps,
@@ -211,60 +250,18 @@ trainer.fit(prompt_dataloader=prompt_dataloader,
 
 # trainer.fit() 展开，部分工程代码被省略
 # https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/trainer/ppo.py
-for episode in range(num_episodes): 
-    for timestep in tqdm(range(max_timesteps),
+for episode in range(num_episodes): #迭代周期
+    # 每个周期最大迭代次数
+    for timestep in tqdm(range(max_timesteps),  
                             desc=f'Episode [{episode+1}/{num_episodes}]',
                             disable=not is_rank_0()):
         time += 1
-        prompts = next(iter(self.prompt_dataloader)) # 遍历prompt数据集，
-        experience = self._make_experience(prompts) # 根据prompts，过GPT语言模型, 生成对应的k个输出.
+        prompts = next(iter(self.prompt_dataloader)) # 遍历prompt数据集
+        experience = self._make_experience(prompts) # 根据prompts，过GPT语言模型, 生成对应的输出.
         self.replay_buffer.append(experience)
-        if time % update_timesteps == 0: 
+        if time % update_timesteps == 0: # 小批次的
             self._learn() # 梯度更新
             self.replay_buffer.clear()
-
-# _make_experience 展开
-# 源： https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/experience_maker/naive.py
-def make_experience(self, input_ids: torch.Tensor, **generate_kwargs) -> Experience:
-    self.actor.eval()
-    self.critic.eval()
-    self.initial_model.eval()
-    self.reward_model.eval()
-
-    # 使用actor生成输出
-    # https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/generation.py
-    # sequences prompt+生成的内容
-    # attention_mask: 非pad_token_id的
-    # action_mask: 生成的、非eos的token
-    sequences, attention_mask, action_mask = generate_with_actor(self.actor,
-                                                                    input_ids,
-                                                                    return_action_mask=True,
-                                                                    **generate_kwargs)
-    num_actions = action_mask.size(1)
-
-    # 计算actor的得分
-    actor_output = self.actor(sequences, attention_mask)
-    action_log_probs = calc_action_log_probs(actor_output, sequences, num_actions) 
-
-    # 计算初始模型的得分，与Actor不一样，初始模型在RL期间参数不更新，
-    base_model_output = self.initial_model(sequences, attention_mask)
-    base_action_log_probs = calc_action_log_probs(base_model_output, sequences, num_actions) 
-    
-    # 评估模型的value值
-    value = self.critic(sequences, action_mask, attention_mask)
-    
-    # 过奖励模型，获得奖励分数(标量，shape is (B))。与critic不一样，初始的奖励模型在RL期间参数不更新，
-    r = self.reward_model(sequences, attention_mask)
-
-    reward = compute_reward(r, self.kl_coef, action_log_probs, base_action_log_probs, action_mask=action_mask)
-
-    advantage = reward - value #初始的奖励模型得分 - RL中评估模型的得分
-
-    # TODO(ver217): maybe normalize adv
-    if advantage.ndim == 1:
-        advantage = advantage.unsqueeze(-1)
-
-    return Experience(sequences, action_log_probs, value, reward, advantage, attention_mask, action_mask)
 
 # _learn展开，同样干掉一些与主体逻辑无关的工程代码
 def _learn(self):
@@ -280,53 +277,57 @@ def _learn(self):
             for experience in pbar:
                 metrics = self.training_step(experience) #
                 pbar.set_postfix(metrics) 
+```
+
+
+#### 3.3.2 _make_experience() 展开
+根据prompts，通过生成语言模型actor, 生成相应的响应输出。根据生成内容，计算actor,initial_model对应的action的概率分布；
+根据reward_model计算整体奖励得分，以及根据critic计算每个action的平均得分。
+
+```python
+# 源： https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/experience_maker/naive.py
+def make_experience(self, input_ids: torch.Tensor, **generate_kwargs) -> Experience:
+    self.actor.eval()
+    self.critic.eval()
+    self.initial_model.eval()
+    self.reward_model.eval()
+
+    # 使用actor生成输出
+    # https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/generation.py
+    # sequencess: prompt + 生成 的 token ids
+    # attention_mask: 非pad_token_id的
+    # action_mask: 生成的、非eos的token
+    sequences, attention_mask, action_mask = generate_with_actor(self.actor,
+                                                    input_ids,
+                                                    return_action_mask=True,
+                                                    **generate_kwargs)
+    num_actions = action_mask.size(1)
+
+    # 计算actor的得分
+    actor_output = self.actor(sequences, attention_mask)
+    action_log_probs = calc_action_log_probs(actor_output, sequences, num_actions) 
+
+    # 计算初始模型的得分, 与self.actor不一样，初始模型在RL期间参数不更新，
+    base_model_output = self.initial_model(sequences, attention_mask)
+    base_action_log_probs = calc_action_log_probs(base_model_output, sequences, num_actions) 
     
-def training_step(self, experience: Experience) -> Dict[str, float]:
-    self.actor.train()
-    self.critic.train()
+    # 过奖励模型，获得奖励分数(标量，shape is (Batch))。
+    # 与self.critic不一样，初始的奖励模型在RL期间参数不更新
+    r = self.reward_model(sequences, attention_mask)
+    reward = compute_reward(r, self.kl_coef, action_log_probs, base_action_log_probs, action_mask=action_mask)
 
-    # policy loss
-    num_actions = experience.action_mask.size(1)
-    actor_output = self.actor(experience.sequences, attention_mask=experience.attention_mask)
-    action_log_probs = calc_action_log_probs(actor_output, experience.sequences, num_actions)
-    # actor_loss_fn = PolicyLoss()
-    actor_loss = self.actor_loss_fn(action_log_probs,
-                                    experience.action_log_probs,
-                                    experience.advantages,
-                                    action_mask=experience.action_mask)
+    # 评估模型的value值 shape is (Batch,num_actions)
+    value = self.critic(sequences, action_mask, attention_mask)
 
-    # ptx loss
-    if self.ptx_coef != 0:
-        batch = next(iter(self.pretrain_dataloader)) #预训练数据，防止基础能力倒退
-        batch = to_device(batch, self.device)
-        ptx_log_probs = self.actor(batch['input_ids'],
-                                    attention_mask=batch['attention_mask'])['logits']
-        # ptx_loss_fn = GPTLMLoss()
-        ptx_loss = self.ptx_loss_fn(ptx_log_probs, batch['labels'])
-        actor_loss = ptx_loss * self.ptx_coef + actor_loss * (1 - self.ptx_coef)
+    advantage = reward - value # 初始的奖励模型得分 - RL中评估模型的得分
 
-    self.strategy.backward(actor_loss, self.actor, self.actor_optim)
-    self.strategy.optimizer_step(self.actor_optim)
-    self.actor_optim.zero_grad()
+    # TODO(ver217): maybe normalize adv
+    if advantage.ndim == 1:
+        advantage = advantage.unsqueeze(-1)
 
-    # value loss
-    values = self.critic(experience.sequences,
-                            action_mask=experience.action_mask,
-                            attention_mask=experience.attention_mask)
-    # critic_loss_fn = ValueLoss()
-    critic_loss = self.critic_loss_fn(values,
-                                        experience.values,
-                                        experience.reward,
-                                        action_mask=experience.action_mask)
-    critic_loss = critic_loss * self.vf_coef
+    return Experience(sequences, action_log_probs, value, reward, advantage, attention_mask, action_mask)
 
-    self.strategy.backward(critic_loss, self.critic, self.critic_optim)
-    self.strategy.optimizer_step(self.critic_optim)
-    self.critic_optim.zero_grad()
-
-    return {'reward': experience.reward.mean().item()}
-
-# 其他： https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/utils.py
+# https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/utils.py
 def log_probs_from_logits(logits: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
     log_probs = F.log_softmax(logits, dim=-1)
     log_probs_labels = log_probs.gather(dim=-1, index=labels.unsqueeze(-1))
@@ -387,35 +388,64 @@ def compute_reward(r: Union[torch.Tensor, float],
                    action_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
     if kl_coef <= 0.0:
         return r
+    # 计算actor产生的actions概率分布，相对于基础模型(RL过程中参数不更新)产生的分布之间的KL散度
     kl = compute_approx_kl(log_probs, log_probs_base, action_mask=action_mask)
+    # 由于actor在RL过程中有更新，原始的奖励值需要扣除这部分变化带来的额外奖励值，得到最终的奖励值
     reward = r - kl_coef * kl
     return reward
+
 ```
 
-``` python
-# 源： https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/loss.py
-# actor_loss_fn
-class PolicyLoss(nn.Module):
-    """
-    Policy Loss for PPO
-    """
-    def __init__(self, clip_eps: float = 0.2) -> None:
-        super().__init__()
-        self.clip_eps = clip_eps
+#### 3.3.3 training_step()展开
+计算actor和critic的损失值。
 
-    def forward(self,
-                log_probs: torch.Tensor,
-                old_log_probs: torch.Tensor,
-                advantages: torch.Tensor,
-                action_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
-        ratio = (log_probs - old_log_probs).exp()
-        surr1 = ratio * advantages
-        surr2 = ratio.clamp(1 - self.clip_eps, 1 + self.clip_eps) * advantages
-        loss = -torch.min(surr1, surr2)
-        if action_mask is not None:
-            loss = masked_mean(loss, action_mask)
-        loss = loss.mean()
-        return loss
+```python
+def training_step(self, experience: Experience) -> Dict[str, float]:
+    self.actor.train()
+    self.critic.train()
+
+    # policy loss
+    num_actions = experience.action_mask.size(1)
+    actor_output = self.actor(experience.sequences, attention_mask=experience.attention_mask)
+    action_log_probs = calc_action_log_probs(actor_output, experience.sequences, num_actions)
+    # actor_loss_fn = PolicyLoss()
+    actor_loss = self.actor_loss_fn(action_log_probs, #new
+                                    experience.action_log_probs, #old
+                                    experience.advantages,
+                                    action_mask=experience.action_mask)
+
+    # ptx loss
+    if self.ptx_coef != 0:
+        batch = next(iter(self.pretrain_dataloader)) #预训练数据，防止基础能力倒退
+        batch = to_device(batch, self.device)
+        ptx_log_probs = self.actor(batch['input_ids'],
+                                    attention_mask=batch['attention_mask'])['logits']
+        # ptx_loss_fn = GPTLMLoss()
+        ptx_loss = self.ptx_loss_fn(ptx_log_probs, batch['labels'])
+        actor_loss = ptx_loss * self.ptx_coef + actor_loss * (1 - self.ptx_coef)
+
+    self.strategy.backward(actor_loss, self.actor, self.actor_optim)
+    self.strategy.optimizer_step(self.actor_optim)
+    self.actor_optim.zero_grad()
+
+    # value loss
+    values = self.critic(experience.sequences,
+                            action_mask=experience.action_mask,
+                            attention_mask=experience.attention_mask)
+    # critic_loss_fn = ValueLoss()
+    critic_loss = self.critic_loss_fn(values, #new
+                                        experience.values, #old
+                                        experience.reward,
+                                        action_mask=experience.action_mask)
+    critic_loss = critic_loss * self.vf_coef
+
+    self.strategy.backward(critic_loss, self.critic, self.critic_optim)
+    self.strategy.optimizer_step(self.critic_optim)
+    self.critic_optim.zero_grad()
+
+    return {'reward': experience.reward.mean().item()}
+
+# 源： https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/loss.py
 
 # ptx_loss_fn
 class GPTLMLoss(nn.Module):
@@ -432,11 +462,30 @@ class GPTLMLoss(nn.Module):
         # Flatten the tokens
         return self.loss(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
 
-```
+# actor_loss_fn
+class PolicyLoss(nn.Module):
+    """
+    Policy Loss for PPO
+    """
+    def __init__(self, clip_eps: float = 0.2) -> None:
+        super().__init__()
+        self.clip_eps = clip_eps
 
+    def forward(self,
+                log_probs: torch.Tensor,
+                old_log_probs: torch.Tensor,
+                advantages: torch.Tensor,
+                action_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
+        ratio = (log_probs - old_log_probs).exp()
+        surr1 = ratio * advantages # kl散度
+        surr2 = ratio.clamp(1 - self.clip_eps, 1 + self.clip_eps) * advantages #梯度剪裁
+        loss = -torch.min(surr1, surr2) #取二者最小的
+        if action_mask is not None:
+            loss = masked_mean(loss, action_mask)
+        loss = loss.mean()
+        return loss
 
-```python
-# 源： https://github.com/hpcaitech/ColossalAI/tree/main/applications/Chat/coati/models/loss.py
+# critic_loss_fn
 class ValueLoss(nn.Module):
     """
     Value Loss for PPO
@@ -447,9 +496,10 @@ class ValueLoss(nn.Module):
 
     def forward(self,
                 values: torch.Tensor, #新值，评估模型Critic给出
-                old_values: torch.Tensor, #旧值
+                old_values: torch.Tensor, # 旧值
                 reward: torch.Tensor, # RewardModel给出的奖励值
                 action_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
+        # 用各种手段保证每次更新的梯度不要太大
         # clamp：y_i = min(max(x_i,min_value_i),max_value_i), 把x固定在[min,max]之间
         values_clipped = old_values + (values - old_values).clamp(-self.clip_eps, self.clip_eps)
         surr1 = (values_clipped - reward)**2
@@ -459,4 +509,7 @@ class ValueLoss(nn.Module):
         return 0.5 * loss
 
 ```
+
+
+
 

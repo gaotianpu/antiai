@@ -1,267 +1,178 @@
-A GLOBAL BUDGET SCHEDULE
-As mentioned in Section 3.3, we propose a global budget scheduler to gradually decrease the budget
-b
-(t)
-following a cubic schedule. The detailed equation is given as follows:
-b
-(t) =
-
-
-
-b
-(0) 0 ≤ t < ti
-b
-(T) +
-￾ b
-(0) − b
-(T)
-
- 1 −
-t−ti−tf
-T −ti−tf
-
-3
-ti ≤ t < T − tf
-b
-(T) o.w.
-. (12)
-B GLUE DATASET STATISTICS
-We present the dataset statistics of GLUE (Wang et al., 2019) in the following table.
-Table 6: Summary of the GLUE benchmark.
-Corpus Task #Train #Dev #Test #Label Metrics
-Single-Sentence Classification (GLUE)
-CoLA Acceptability 8.5k 1k 1k 2 Matthews corr
-SST Sentiment 67k 872 1.8k 2 Accuracy
-Pairwise Text Classification (GLUE)
-MNLI NLI 393k 20k 20k 3 Accuracy
-RTE NLI 2.5k 276 3k 2 Accuracy
-QQP Paraphrase 364k 40k 391k 2 Accuracy/F1
-MRPC Paraphrase 3.7k 408 1.7k 2 Accuracy/F1
-QNLI QA/NLI 108k 5.7k 5.7k 2 Accuracy
-Text Similarity (GLUE)
-STS-B Similarity 7k 1.5k 1.4k 1 Pearson/Spearman corr
-C NATURAL LANGUAGE UNDERSTANDING
-C.1 BUDGET CONFIGURATION
-For each budget level, we tune the final budget b
-(T)
-for AdaLoRA, the rank r for LoRA, the hidden
-dimension d for two adapters to match the budget requirements.
-Table 7: Detailed budget setup for GLUE benchmark.
-# Params Houlsby Adapter (d) Pfeiffer Adapter (d) LoRA (r) AdaLoRA (b
-(T )
-)
-1.2M 32 64 8 576
-0.6M 16 32 4 288
-0.3M 8 16 2 144
-Alternatively, we can also set the final average rank r¯
-(T) = b
-(T)/n for AdaLoRA to control the
-budget, which is set as 2, 4, and 8 given the final budget as 144, 288, and 576 respectively. Then we
-select the initial rank r from {4, 6, 12} for the final average rank {2, 4, 8} respectively.
-C.2 TRAINING DETAILS
-We tune the learning rate from {8 × 10−5
-, 5 × 10−5
-, 3 × 10−5
-, 1 × 10−4
-, 3 × 10−4
-, 5 × 10−4
-, 8 ×
-10−4
-, 1 × 10−3} and pick the best learning rate for every method. For each dataset, the batch size is
-set as identical for every method.
-14
-Published as a conference paper at ICLR 2023
-Table 8: Hyper-parameter setup of AdaLoRA for GLUE benchmark.
-Dataset learning rate batch size # epochs γ ti ∆T tf
-MNLI 5 × 10−4
-32 7 0.1 8000 100 50000
-RTE 1.2 × 10−3
-32 50 0.3 600 1 1800
-QNLI 1.2 × 10−3
-32 5 0.1 2000 100 8000
-MRPC 1 × 10−3
-32 30 0.1 600 1 1800
-QQP 5 × 10−4
-32 5 0.1 8000 100 25000
-SST-2 8 × 10−4
-32 24 0.1 6000 100 22000
-CoLA 5 × 10−4
-32 25 0.5 800 10 3500
-STS-B 2.2 × 10−3
-32 25 0.1 800 10 2000
-D QUESTION ANSWERING
-D.1 BUDGET CONFIGURATION
-Given the budget, we control the trainable parameters for each method as the following table.
-Table 9: Detailed budget setup for question answering.
-# Params Houlsby Adapter Pfeiffer Adapter LoRA AdaLoRA
-d d r b(T )
-/r¯
-(T )
-/r
-0.65% 32 64 8 576 / 8 / 12
-0.32% 16 32 4 288 / 4 / 6
-0.16% 8 16 2 144 / 2 / 4
-0.08% 4 8 1 72 / 1 / 2
-D.2 TRAINING DETAILS
-We set the batch size as 16. We select the learning rate from {8 × 10−5
-, 5 × 10−5
-, 3 × 10−5
-, 1 ×
-10−4
-, 3 × 10−4
-, 5 × 10−4
-, 8 × 10−4
-, 1 × 10−3} and pick the best-performing learning rate for every
-method. The configuration of AdaLoRA is listed in the following table.
-Table 10: Hyper-parameter setup of AdaLoRA for question answering tasks.
-Dataset learning rate batch size # epochs γ ti ∆T tf
-SQuADv1.1 1 × 10−3
-16 10 0.1 5000 100 25000
-SQuADv2.0 1 × 10−3
-16 12 0.1 5000 100 50000
-D.3 DATASET
-The statistics of question answering datasets are summarized in Table 11.
-Table 11: Statistics of the SQuAD dataset.
-# Train # Validation
-SQuAD v1.1 87,599 10,570
-SQuAD v2.0 130,319 11,873
-E NATURAL LANGUAGE GENERATION
-E.1 BUDGET CONFIGURATION
-Given the budget, we control the trainable parameters for each method as the following table.
-15
-Published as a conference paper at ICLR 2023
-Table 12: Detailed budget setup for summarization tasks.
-# Params Houlsby Adapter Pfeiffer Adapter LoRA AdaLoRA
-d d r b(T )
-/r¯
-(T )
-/r
-0.65% 32 64 8 576 / 8 / 12
-0.32% 16 32 4 288 / 4 / 6
-0.16% 8 16 2 144 / 2 / 4
-0.08% 4 8 1 72 / 1 / 2
-E.2 TRAINING DETAILS
-We set the batch size as 16. We select the learning rate from {8 × 10−5
-, 5 × 10−5
-, 3 × 10−5
-, 1 ×
-10−4
-, 3 × 10−4
-, 5 × 10−4
-, 8 × 10−4
-, 1 × 10−3} and pick the best-performing learning rate for every
-method. The configuration of AdaLoRA is listed in the following table.
-Table 13: Hyper-parameter setup of AdaLoRA for summarization tasks.
-Dataset learning rate batch size # epochs γ ti ∆T tf
-XSum 5 × 10−4
-64 25 0.1 6000 100 50000
-CNN/DailyMail 5 × 10−4
-32 15 0.1 5000 100 85000
-F ABLATION STUDY FOR LORA
-As mentioned in Section 4, we find that the performance of LoRA can be further improved when
-applying it to every weight matrix, compared to fine-tuning Wq and Wv only (Hu et al., 2022). This
-observation aligns with the empirical results of He et al. (2022). In Table 14, we follow the same
-training configuration as Section 4.1 and present an ablation study to illustrate this point.
-Table 14: We compare the fine-tuning performance when apply LoRA to every weight matrix or
-Wq, Wv only. The parameter budget is fixed as 0.3M. We report accuracy for QQP and MRPC,
-accuracy(m) for MNLI, and average correlation for STS-B.
-MNLI QQP CoLA RTE QNLI SST-2 MRPC STS-B
-LoRA (Wq, Wk) 89.80 90.48 67.04 83.75 93.69 94.84 90.20 91.05
-LoRA (all) 90.30 91.61 68.71 85.56 94.31 94.95 90.44 91.68
-G ORTHOGONAL REGULARIZATION
-To verify the effectiveness of (4), we plot k P
-> P − Ik
-2
-F
-and k QQ> − Ik
-2
-F
-to show whether P and Q
-are regularized to be orthogonal. We fine-tune a DeBERTaV3-base model on SST-2 with AdaLoRA
-and follow the same training configuration as Section 4.1. We set γ as 0.1 and plot the two terms
-along the training horizon. From Figure 4, we can see that two regularization terms can be optimized
-to a very small value (e.g., 0.001) at the beginning of training. Therefore, both P and Q can be
-enforced to be orthogonal quickly during the initial warm-up of AdaLoRA. It ensures that the triplets
-are not dependent with each other.
-H COMPARISON OF TRAINING COST
-We compare the training cost between AdaLoRA and LoRA in the following table. We use two
-methods to fine-tune DeBERTaV3-base on a single NVIDIA V100 GPU. We do training only and set
-hyperparameters, e.g., batch size and training epochs, the same as in Section 4.
-Table 15 shows that MARVEL incurs 11% additional training time on MNLI and 16% on SQuADv2
-under different budgets. The memory footprint of two methods are quite close. Such results
-demonstrate that MARVEL does not incur significant training overheads. The reason behind is that
-16
-Published as a conference paper at ICLR 2023
-0 20000 40000
-Iterations
-10−4
-10−3
-10−2
-10−1
-100
-(a) P of Wo at the first layer.
-0 20000 40000
-Iterations
-10−4
-10−3
-10−2
-10−1
-100
-(b) Q of Wo at the first layer.
-0 20000 40000
-Iterations
-10−4
-10−3
-10−2
-10−1
-100
-(c) P of Wf2
-at the first layer.
-0 20000 40000
-Iterations
-10−4
-10−3
-10−2
-10−1
-(d) Q of Wf2
-at the first layer
-Figure 4: We plot the k P
-> P − Ik
-2
-F
-and k QQ> − Ik
-2
-F when fine-tuning DeBERTaV3-base on SST-2.
-Table 15: Comparison of practical training cost between AdaLoRA and LoRA.
-Dataset # Param Method GPU Mem Time/epoch
-MNLI
-0.08% LoRA 11.094 GB 105 min
-AdaLoRA 11.104 GB 116 min
-0.16% LoRA 11.098 GB 105 min
-AdaLoRA 11.110 GB 117 min
-0.65% LoRA 11.128 GB 105 min
-AdaLoRA 11.188 GB 117 min
-SST-2
-0.08% LoRA 13.138 GB 60 min
-AdaLoRA 13.148 GB 71 min
-0.16% LoRA 13.142 GB 61 min
-AdaLoRA 13.164 GB 71 min
-0.65% LoRA 13.170 GB 61 min
-AdaLoRA 13.226 GB 71 min
-we only evaluate the importance score for small incremental matrices PΛQ. Their total number of
-parameters is usually less than 1% of pre-trained weights. Therefore, it does not lead to significant
-computational cost to update the importance scores of these well-structured small matrices, compared
-to forward-backward pass of full model.
-17
-> ||P
-P
-−
-I||2F
-> ||QQ −
-I||2F
-> ||P
-P
-−
-I||2F
-> ||QQ −
-I||2F
+* Agrawal, H., Anderson, P., Desai, K., Wang, Y., Chen, X.,
+Jain, R., Johnson, M., Batra, D., Parikh, D., and Lee, S.
+nocaps: novel object captioning at scale. In ICCV, pp.
+8947–8956, 2019.
+* Anaby-Tavor, A., Carmeli, B., Goldbraich, E., Kantor, A.,
+Kour, G., Shlomov, S., Tepper, N., and Zwerdling, N. Do
+not have enough data? deep learning to the rescue! In
+AAAI, pp. 7383–7390, 2020.
+* Antol, S., Agrawal, A., Lu, J., Mitchell, M., Batra, D.,
+Zitnick, C. L., and Parikh, D. VQA: visual question
+answering. In ICCV, pp. 2425–2433, 2015.
+* Bain, M., Nagrani, A., Varol, G., and Zisserman, A. Frozen
+in time: A joint video and image encoder for end-to-end
+retrieval. In ICCV, 2021.
+* Bertasius, G., Wang, H., and Torresani, L. Is space-time
+attention all you need for video understanding? In ICML,
+2021.
+* Changpinyo, S., Sharma, P., Ding, N., and Soricut, R. Con￾ceptual 12M: Pushing web-scale image-text pre-training
+to recognize long-tail visual concepts. In CVPR, 2021.
+* Chen, Y., Li, L., Yu, L., Kholy, A. E., Ahmed, F., Gan, Z.,
+Cheng, Y., and Liu, J. UNITER: universal image-text
+representation learning. In ECCV, volume 12375, pp. 104–120, 2020.
+* Cho, J., Lei, J., Tan, H., and Bansal, M. Unifying vision￾and-language tasks via text generation. arXiv preprint
+arXiv:2102.02779, 2021.
+* Das, A., Kottur, S., Gupta, K., Singh, A., Yadav, D., Moura,
+J. M. F., Parikh, D., and Batra, D. Visual dialog. In CVPR,
+pp. 1080–1089, 2017.
+* Devlin, J., Chang, M., Lee, K., and Toutanova, K. BERT:
+pre-training of deep bidirectional transformers for lan￾guage understanding. In Burstein, J., Doran, C., and
+Solorio, T. (eds.), NAACL, pp. 4171–4186, 2019.
+* Do, V., Camburu, O.-M., Akata, Z., and Lukasiewicz, T. e￾snli-ve: Corrected visual-textual entailment with natural
+language explanations. arXiv preprint arXiv:2004.03744,
+2020.
+* Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn,
+D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer,
+M., Heigold, G., Gelly, S., Uszkoreit, J., and Houlsby, N. An image is worth 16x16 words: Transformers for image
+recognition at scale. In ICLR, 2021.
+Fan, C., Zhang, X., Zhang, S., Wang, W., Zhang, C., and
+Huang, H. Heterogeneous memory enhanced multimodal
+attention model for video question answering. In CVPR,
+pp. 1999–2007, 2019.
+* Gan, Z., Cheng, Y., Kholy, A. E., Li, L., Liu, J., and Gao, J. Multi-step reasoning via recurrent dual attention for vi￾sual dialog. In Korhonen, A., Traum, D. R., and M`arquez,
+L. (eds.), ACL, pp. 6463–6474, 2019.
+* Gan, Z., Chen, Y., Li, L., Zhu, C., Cheng, Y., and Liu, J.  Large-scale adversarial training for vision-and-language
+representation learning. In Larochelle, H., Ranzato, M.,
+Hadsell, R., Balcan, M., and Lin, H. (eds.), NeurIPS,
+2020.
+* Goyal, Y., Khot, T., Summers-Stay, D., Batra, D., and
+Parikh, D. Making the V in VQA matter: Elevating the
+role of image understanding in visual question answering. In CVPR, pp. 6325–6334, 2017.
+* Hinton, G., Vinyals, O., and Dean, J. Distilling
+the knowledge in a neural network. arXiv preprint
+arXiv:1503.02531, 2015.
+* Holtzman, A., Buys, J., Du, L., Forbes, M., and Choi, Y. The curious case of neural text degeneration. In ICLR,
+2020.
+* Hu, X., Gan, Z., Wang, J., Yang, Z., Liu, Z., Lu, Y., and
+Wang, L. Scaling up vision-language pre-training for
+image captioning, 2021.
+* Jia, C., Yang, Y., Xia, Y., Chen, Y.-T., Parekh, Z., Pham,
+H., Le, Q. V., Sung, Y., Li, Z., and Duerig, T. Scaling up
+visual and vision-language representation learning with
+noisy text supervision. arXiv preprint arXiv:2102.05918,
+2021.
+* Karpathy, A. and Li, F. Deep visual-semantic alignments for
+generating image descriptions. In CVPR, pp. 3128–3137,
+2015.
+* Kim, J., Jun, J., and Zhang, B. Bilinear attention networks. In Bengio, S., Wallach, H. M., Larochelle, H., Grauman,
+K., Cesa-Bianchi, N., and Garnett, R. (eds.), NIPS, pp. 1571–1581, 2018.
+* Kim, W., Son, B., and Kim, I. Vilt: Vision-and-language
+transformer without convolution or region supervision. arXiv preprint arXiv:2102.03334, 2021.
+* Krishna, R., Zhu, Y., Groth, O., Johnson, J., Hata, K.,
+Kravitz, J., Chen, S., Kalantidis, Y., Li, L., Shamma,
+D. A., Bernstein, M. S., and Fei-Fei, L. Visual genome:
+Connecting language and vision using crowdsourced
+dense image annotations. IJCV, 123(1):32–73, 2017.
+* Kumar, V., Choudhary, A., and Cho, E. Data augmentation
+using pre-trained transformer models. arXiv preprint
+arXiv:2003.02245, 2020.
+* Le, T. M., Le, V., Venkatesh, S., and Tran, T. Hierarchical
+conditional relation networks for video question answer￾ing. In CVPR, pp. 9972–9981, 2020.
+* Lei, J., Li, L., Zhou, L., Gan, Z., Berg, T. L., Bansal, M.,
+and Liu, J. Less is more: Clipbert for video-and-language
+learning via sparse sampling. In CVPR, pp. 7331–7341,
+2021.
+* Li, J., Selvaraju, R. R., Gotmare, A. D., Joty, S., Xiong,
+C., and Hoi, S. Align before fuse: Vision and language
+representation learning with momentum distillation. In
+NeurIPS, 2021a.
+* Li, W., Gao, C., Niu, G., Xiao, X., Liu, H., Liu, J., Wu,
+H., and Wang, H. UNIMO: towards unified-modal un￾derstanding and generation via cross-modal contrastive
+learning. In Zong, C., Xia, F., Li, W., and Navigli, R.(eds.), ACL, pp. 2592–2607, 2021b.
+* Li, X., Yin, X., Li, C., Zhang, P., Hu, X., Zhang, L., Wang,
+L., Hu, H., Dong, L., Wei, F., Choi, Y., and Gao, J. Oscar:
+Object-semantics aligned pre-training for vision-language
+tasks. In ECCV, pp. 121–137, 2020.
+* Lin, T., Maire, M., Belongie, S. J., Hays, J., Perona, P.,
+Ramanan, D., Doll´ar, P., and Zitnick, C. L. Microsoft
+COCO: common objects in context. In Fleet, D. J., Pajdla,
+T., Schiele, B., and Tuytelaars, T. (eds.), ECCV, volume
+8693, pp. 740–755, 2014.
+* Loshchilov, I. and Hutter, F. Decoupled weight decay regu￾larization. arXiv preprint arXiv:1711.05101, 2017.
+* Lu, J., Batra, D., Parikh, D., and Lee, S. Vilbert: Pretraining
+task-agnostic visiolinguistic representations for vision￾and-language tasks. In Wallach, H. M., Larochelle, H.,
+Beygelzimer, A., d’Alch´e-Buc, F., Fox, E. B., and Garnett,
+R. (eds.), NeurIPS, pp. 13–23, 2019.
+* Miech, A., Alayrac, J.-B., Smaira, L., Laptev, I., Sivic, J.,
+and Zisserman, A. End-to-end learning of visual repre￾sentations from uncurated instructional videos. In CVPR,
+pp. 9879–9889, 2020.
+* Murahari, V., Batra, D., Parikh, D., and Das, A. Large-scale
+pretraining for visual dialog: A simple state-of-the-art
+baseline. In Vedaldi, A., Bischof, H., Brox, T., and Frahm,
+J. (eds.), ECCV, pp. 336–352, 2020.
+* Ordonez, V., Kulkarni, G., and Berg, T. L. Im2text: Describ￾ing images using 1 million captioned photographs. In
+Shawe-Taylor, J., Zemel, R. S., Bartlett, P. L., Pereira, F. C. N., and Weinberger, K. Q. (eds.), NIPS, pp. 1143–1151,
+2011.
+Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J.,
+Chanan, G., Killeen, T., Lin, Z., Gimelshein, N., Antiga,
+L., et al. Pytorch: An imperative style, high-performance
+deep learning library. NeurIPS, 32:8026–8037, 2019.
+* Patrick, M., Huang, P.-Y., Asano, Y., Metze, F., Hauptmann,
+A. G., Henriques, J. F., and Vedaldi, A. Support-set
+bottlenecks for video-text representation learning. In
+ICLR, 2021.
+* Plummer, B. A., Wang, L., Cervantes, C. M., Caicedo, J. C.,
+Hockenmaier, J., and Lazebnik, S. Flickr30k entities:
+Collecting region-to-phrase correspondences for richer
+image-to-sentence models. In ICCV, pp. 2641–2649,
+2015.
+* Puri, R., Spring, R., Shoeybi, M., Patwary, M., and Catan￾zaro, B. Training question answering models from syn￾thetic data. In Webber, B., Cohn, T., He, Y., and Liu, Y. (eds.), EMNLP, pp. 5811–5826, 2020.
+* Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G.,
+Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark, J.,
+et al. Learning transferable visual models from natural
+language supervision. arXiv preprint arXiv:2103.00020,
+2021.
+* Schuhmann, C., Vencu, R., Beaumont, R., Kaczmarczyk,
+R., Mullis, C., Katta, A., Coombes, T., Jitsev, J., and
+Komatsuzaki, A. Laion-400m: Open dataset of clip-
+filtered 400 million image-text pairs. arXiv preprint
+arXiv:2111.02114, 2021.
+* Sharma, P., Ding, N., Goodman, S., and Soricut, R. Con￾ceptual captions: A cleaned, hypernymed, image alt-text
+dataset for automatic image captioning. In Gurevych, I. and Miyao, Y. (eds.), ACL, pp. 2556–2565, 2018.
+* Shorten, C. and Khoshgoftaar, T. M. A survey on image
+data augmentation for deep learning. J. Big Data, 6:60,
+2019.
+* Suhr, A., Zhou, S., Zhang, A., Zhang, I., Bai, H., and
+Artzi, Y. A corpus for reasoning about natural language
+grounded in photographs. In Korhonen, A., Traum, D. R.,
+and M`arquez, L. (eds.), ACL, pp. 6418–6428, 2019.
+* Touvron, H., Cord, M., Douze, M., Massa, F., Sablayrolles,
+A., and J´egou, H. Training data-efficient image trans￾formers & distillation through attention. arXiv preprint
+arXiv:2012.12877, 2020.
+* Wang, Y., Joty, S. R., Lyu, M. R., King, I., Xiong, C., and
+Hoi, S. C. H. VD-BERT: A unified vision and dialog
+transformer with BERT. In Webber, B., Cohn, T., He, Y.,
+and Liu, Y. (eds.), EMNLP, pp. 3325–3338, 2020.
+* Wang, Z., Yu, J., Yu, A. W., Dai, Z., Tsvetkov, Y., and Cao,
+Y. Simvlm: Simple visual language model pretraining
+with weak supervision. arXiv preprint arXiv:2108.10904,
+2021.
+* Xie, Q., Luong, M., Hovy, E. H., and Le, Q. V. Self-training
+with noisy student improves imagenet classification. In
+CVPR, pp. 10684–10695, 2020.
+* Xu, H., Ghosh, G., Huang, P.-Y., Okhonko, D., Aghajanyan,
+A., Metze, F., Zettlemoyer, L., and Feichtenhofer, C.
+* Videoclip: Contrastive pre-training for zero-shot video￾text understanding. In EMNLP, pp. 6787–6800, 2021.
+* Yang, A., Miech, A., Sivic, J., Laptev, I., and Schmid, C. Just ask: Learning to answer questions from millions of
+narrated videos. In ICCV, pp. 1686–1697, 2021.
+* Yang, Y., Malaviya, C., Fernandez, J., Swayamdipta, S.,
+Bras, R. L., Wang, J., Bhagavatula, C., Choi, Y., and
+Downey, D. G-daug: Generative data augmentation for
+commonsense reasoning. In Cohn, T., He, Y., and Liu, Y. (eds.), EMNLP Findings, pp. 1008–1025, 2020.
+* Zhang, P., Li, X., Hu, X., Yang, J., Zhang, L., Wang, L.,
+Choi, Y., and Gao, J. Vinvl: Making visual representa￾tions matter in vision-language models. arXiv preprint
+arXiv:2101.00529, 2021.
+* Zhou, L., Palangi, H., Zhang, L., Hu, H., Corso, J. J., and
+Gao, J. Unified vision-language pre-training for image
+captioning and VQA. In AAAI, pp. 13041–13049, 2020.
+* Zhu, L. and Yang, Y. Actbert: Learning global-local video￾text representations. In CVPR, pp. 8746–8755, 2020. 
