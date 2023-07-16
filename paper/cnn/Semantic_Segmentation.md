@@ -1,4 +1,5 @@
 # 语义分割
+
 * 数据集: Pascal Voc, Cityscapes, MSCOCO
 * 评估指标: 像素精度(pixel accuracy), 平均像素精度(mean pixel accuracy), 平均交并比(Mean Intersection over Union), 权频交并比(Frequency Weight Intersection over Union)
 * 思路: 滑窗、候选区域、编码器-解码器、

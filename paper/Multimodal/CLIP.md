@@ -187,6 +187,7 @@ In computer vision, zero-shot learning usually refers to the study of generalizi
 To our knowledge, Visual N-Grams (Li et al., 2017) first studied zero-shot transfer to existing image classification datasets in the manner described above. It is also the only other work we are aware of that has studied zero-shot transfer to standard image classification datasets using a generically pre-trained model and serves as the best reference point for contextualizing CLIP. Their approach learns the parameters of a dictionary of 142,806 visual n-grams (spanning 1- to 5- grams) and optimizes these n-grams using a differential version of Jelinek-Mercer smoothing to maximize the probability of all text n-grams for a given image. In order to perform zero-shot transfer, they first convert the text of each of the dataset’s class names into its n-gram representation and then compute its probability according to their model, predicting the one with the highest score.
 
 据我们所知, Visual N-Grams (Li et al., 2017) 首先以上述方式研究了对现有图像分类数据集的零样本迁移。 这也是我们所知道的唯一一项使用通用预训练模型研究零样本迁移到标准图像分类数据集的工作, 并作为上下文化 CLIP 的最佳参考点。 他们的方法学习了包含 142,806 个视觉 n-gram (跨越 1-5-gram)的字典的参数, 并使用差分版本的 Jelinek-Mercer 平滑优化这些 n-gram, 以最大化所有文本 n-gram 的概率 给定的图像。 为了执行零样本迁移, 他们首先将每个数据集类名的文本转换为其 n-gram 表示, 然后根据他们的模型计算其概率, 预测得分最高的那个。
+<!-- 差分版本的 Jelinek-Mercer 平滑优化 -->
 
 Our focus on studying zero-shot transfer as an evaluation of task learning is inspired by work demonstrating task learning in the field of NLP. To our knowledge Liu et al. (2018) first identified task learning as an “unexpected side-effect” when a language model trained to generate Wikipedia articles learned to reliably transliterate names between languages. While GPT-1 (Radford et al., 2018) focused on pretraining as a transfer learning method to improve supervised fine-tuning, it also included an ablation study demonstrating that the performance of four heuristic zero-shot transfer methods improved steadily over the course of pre-training, without any supervised adaption. This analysis served as the basis for GPT-2 (Radford et al., 2019) which focused exclusively on studying the task-learning capabilities of language models via zero-shot transfer.
 
@@ -206,7 +207,7 @@ In Table 1 we compare Visual N-Grams to CLIP. The best CLIP model improves accur
 
 | | aYahoo | ImageNet | SUN |
 | --- | --- | --- | --- |
-Visual | N-Grams | 72.4 | 11.5 | 23.0
+Visual N-Grams | 72.4 | 11.5 | 23.0
 CLIP | 98.4 | 76.2 | 58.5
 
 Table 1. Comparing CLIP to prior zero-shot transfer image classi- fication results. CLIP improves performance on all three datasets by a large amount. This improvement reflects many differences in the 4 years since the development of Visual N-Grams (Li et al., 2017).
