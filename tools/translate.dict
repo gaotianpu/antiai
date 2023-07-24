@@ -50,6 +50,7 @@ inductive biases | 归纳偏见 | 归纳偏差
 inductive biases | 感应偏见 | 归纳偏差
 inductive biases | 感应偏置 | 归纳偏差
 wall-clock | 墙上的时钟 | 挂钟
+|预先训练|预训练
 robustness | 鲁棒 | 稳健
 evaluation | 评价 | 评估
 augmentations | 增强 | 增广

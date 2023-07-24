@@ -1,348 +1,292 @@
-# BLIP: Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation BLIP：统一视觉语言理解和生成的引导语言图像预训练
-## 1. Introduction 1。介绍
-Vision-language pre-training has recently received tremendous success on various multimodal downstream tasks. However, existing methods have two major limitations: 
+# TrOCR: Transformer-based Optical Character Recognition with Pre-trained Models TrOCR：
+基于变换器的预训练模型的光学字符识别
 
-视觉语言预训练最近在各种多模式下游任务上取得了巨大成功。然而，现有方法有两个主要局限性：
+## Abstract 摘要
+Text recognition is a long-standing research problem for document digitalization. Existing approaches are usually built based on CNN for image understanding and RNN for charlevel text generation. In addition, another language model is usually needed to improve the overall accuracy as a postprocessing step. In this paper, we propose an end-to-end text recognition approach with pre-trained image Transformer and text Transformer models, namely TrOCR, which leverages the Transformer architecture for both image understanding and wordpiece-level text generation. The TrOCR model is simple but effective, and can be pre-trained with large-scale synthetic data and fine-tuned with human-labeled datasets. Experiments show that the TrOCR model outperforms the current state-of-the-art models on the printed, handwritten and scene text recognition tasks. The TrOCR models and code are publicly available at https://aka.ms/trocr.
 
-(1) Model perspective: most methods either adopt an encoder-based model (Radford et al., 2021; Li et al., 2021a), or an encoder-decoder (Cho et al., 2021; Wang et al., 2021) model. However, encoder-based models are less straightforward to directly transfer to text generation tasks (e.g. image captioning), whereas encoder-decoder models have not been successfully adopted for image-text retrieval tasks. 
+文本识别是文档数字化中一个长期存在的研究问题。现有的方法通常基于用于图像理解的CNN和用于charlevel文本生成的RNN。此外，作为后处理步骤，通常需要另一种语言模型来提高整体准确性。在本文中，我们提出了一种端到端的文本识别方法，该方法具有预先训练的图像转换器和文本转换器模型，即TrOCR，它利用转换器架构来进行图像理解和分词级别的文本生成。TrOCR模型简单但有效，可以使用大规模合成数据进行预训练，并使用人类标记的数据集进行微调。实验表明，TrOCR模型在打印、手写和场景文本识别任务上优于当前最先进的模型。TrOCR模型和代码可在https://aka.ms/trocr.
 
-（1） 模型视角：大多数方法要么采用基于编码器的模型（Radford等人，2021；李等人，2021a），要么采用编码器-解码器（Cho等人，2021，王等人，2021）模型。然而，基于编码器的模型不太容易直接转移到文本生成任务（例如，图像字幕），而编码器-解码器模型尚未成功用于图像文本检索任务。
+## Introduction 引言
+Optical Character Recognition (OCR) is the electronic or mechanical conversion of images of typed, handwritten or printed text into machine-encoded text, whether from a scanned document, a photo of a document, a scene photo or from subtitle text superimposed on an image. Typically, an OCR system includes two main modules: a text detection module and a text recognition module. Text detection aims to localize all text blocks within the text image, either at word-level or textline-level. The text detection task is usually considered as an object detection problem where conventional object detection models such as YoLOv5 and DBNet (Liao et al. 2019) can be applied. Meanwhile, text recognition aims to understand the text image content and transcribe the visual signals into natural language tokens. The text recognition task is usually framed as an encoderdecoder problem where existing methods leveraged CNNbased encoder for image understanding and RNN-based decoder for text generation. In this paper, we focus on the text recognition task for document images and leave text detection as the future work.
 
-(2) Data perspective: most state-of-the-art methods (e.g., CLIP (Radford et al., 2021), ALBEF (Li et al., 2021a), SimVLM (Wang et al., 2021)) pre-train on image-text pairs collected from the web. Despite the performance gain obtained by scaling up the dataset, our paper shows that the noisy web text is suboptimal for vision-language learning.
+光学字符识别（OCR）是将打字、手写或打印文本的图像电子或机械转换为机器编码文本，无论是从扫描文档、文档照片、场景照片还是从叠加在图像上的字幕文本。通常，OCR系统包括两个主要模块：文本检测模块和文本识别模块。文本检测旨在定位文本图像中的所有文本块，无论是在单词级别还是在文本行级别。文本检测任务通常被认为是一个对象检测问题，其中可以应用传统的对象检测模型，如YoLOv5和DBNet（Liao et al.2019）。同时，文本识别旨在理解文本图像内容，并将视觉信号转录为自然语言表征。文本识别任务通常被定义为编码器-编码器问题，其中现有的方法利用基于CNN的编码器来理解图像，利用基于RNN的解码器来生成文本。在本文中，我们专注于文档图像的文本识别任务，并将文本检测作为未来的工作。
 
-（2） 数据透视：大多数最先进的方法（例如，CLIP（Radford et al.，2021）、ALBEF（Li et al.，2021a）、SimVLM（Wang et al.，2022））对从网络收集的图像-文本对进行预训练。尽管通过放大数据集获得了性能增益，但我们的论文表明，噪声网络文本对于视觉语言学习来说是次优的。
+Recent progress in text recognition (Diaz et al. 2021) has witnessed the significant improvements by taking advantage of the Transformer (Vaswani et al. 2017) architec- *Work done during internship at Microsoft Research Asia. tures. However, existing methods are still based on CNNs as the backbone, where the self-attention is built on top of CNN backbones as encoders to understand the text image.
 
-Figure 1. We use a Captioner (Cap) to generate synthetic captions for web images, and a Filter (Filt) to remove noisy captions. 
+文本识别的最新进展（Diaz等人，2021）见证了利用Transformer（Vaswani等人，2017）architec-*在微软亚洲研究院实习期间所做的工作的显著改进。图尔斯。然而，现有的方法仍然是基于CNN作为主干，其中自我关注建立在作为编码器的CNN主干之上，以理解文本图像。
 
-图1。我们使用Capitator（Cap）为网络图像生成合成字幕，并使用Filter（Filt）删除有噪声的字幕。
+For decoders, Connectionist Temporal Classification (CTC) (Graves et al. 2006) is usually used compounded with an external language model on the character-level to improve the overall accuracy. Despite the great success achieved by the hybrid encoder/decoder method, there is still a lot of room to improve with pre-trained CV and NLP models: 1) the network parameters in existing methods are trained from scratch with synthetic/human-labeled datasets, leaving large-scale pre-trained models unexplored. 2) as image Transformers become more and more popular (Dosovitskiy et al. 2021; Touvron et al. 2021), especially the recent selfsupervised image pre-training (Bao, Dong, and Wei 2021), it is straightforward to investigate whether pre-trained image Transformers can replace CNN backbones, meanwhile exploiting the pre-trained image Transformers to work together with the pre-trained text Transformers in a single framework on the text recognition task.
 
-To this end, we propose BLIP: Bootstrapping LanguageImage Pre-training for unified vision-language understanding and generation. BLIP is a new VLP framework which enables a wider range of downstream tasks than existing methods. It introduces two contributions from the model and data perspective, respectively: 
+对于解码器，连接主义时间分类（CTC）（Graves等人，2006）通常与字符级别的外部语言模型结合使用，以提高整体准确性。尽管混合编码器/解码器方法取得了巨大成功，但预训练的CV和NLP模型仍有很大的改进空间：1）现有方法中的网络参数是用合成/人类标记的数据集从头开始训练的，而大规模的预训练模型尚未探索。2） 随着图像转换器越来越流行（Dosovitskiy et al.2021；Touvron et al.2011），特别是最近的自我监督图像预训练（Bao，Dong，and Wei 2021），很容易研究预训练的图像转换器是否可以取代CNN骨干，同时利用预先训练的图像转换器与预先训练的文本转换器在一个单一的框架中协同工作完成文本识别任务。
 
-为此，我们提出了BLIP：用于统一视觉语言理解和生成的Bootstrapping LanguageImage预训练。BLIP是一种新的VLP框架，它能够实现比现有方法更广泛的下游任务。它分别从模型和数据的角度介绍了两个贡献：
+To this end, we propose TrOCR, an end-to-end Transformer-based OCR model for text recognition with pre-trained CV and NLP models, which is shown in Figure 1. Distinct from the existing text recognition models, TrOCR is a simple but effective model which does not use the CNN as the backbone. Instead, following (Dosovitskiy et al. 2021), it first resizes the input text image into 384×384 and then the image is split into a sequence of 16×16 patches which are used as the input to image Transformers. Standard Transformer architecture with the self-attention mechanism is leveraged on both encoder and decoder parts, where wordpiece units are generated as the recognized text from the input image. To effectively train the TrOCR model, the encoder can be initialized with pre-trained ViT-style models (Dosovitskiy et al. 2021; Touvron et al. 2021; Bao, Dong, and Wei 2021) while the decoder can be initialized with pre-trained BERT-style models (Devlin et al. 2019; Liu et al. 2019; Dong et al. 2019; Wang et al. 2020b), respectively. Therefore, the advantage of TrOCR is three-fold.
 
-(a) Multimodal mixture of Encoder-Decoder (MED): a new model architecture for effective multi-task pre-training and flexible transfer learning. An MED can operate either as a unimodal encoder, or an image-grounded text encoder, or an image-grounded text decoder. The model is jointly pre-trained with three vision-language objectives: imagetext contrastive learning, image-text matching, and imageconditioned language modeling. 
+为此，我们提出了TrOCR，这是一种基于Transformer的端到端OCR模型，用于使用预先训练的CV和NLP模型进行文本识别，如图1所示。与现有的文本识别模型不同，TrOCR是一种简单而有效的模型，它不使用CNN作为主干。相反，接下来（Dosovitskiy等人，2021），它首先将输入的文本图像调整为384×384的大小，然后将图像分割为16×16个补丁的序列，这些补丁用作图像转换器的输入。具有自注意机制的标准Transformer架构在编码器和解码器部分都得到了利用，其中字片单元被生成为来自输入图像的已识别文本。为了有效地训练TrOCR模型，编码器可以用预先训练的ViT风格模型初始化（Dosovitskiy等人2021；Touvron等人2021；Bao、Dong和Wei 2021），而解码器可以用预先培训的BERT风格模型来初始化（Devlin等人2019；刘等人2019；Dong等人2019；王等人2020b）。因此，TrOCR的优点有三个方面。
 
-（a） 编码器-解码器的多模式混合（MED）：一种用于有效的多任务预训练和灵活迁移学习的新模型架构。MED可以作为单峰编码器、基于图像的文本编码器或基于图像的文字解码器来操作。该模型与三个视觉语言目标联合预训练：图像文本对比学习、图像文本匹配和图像条件语言建模。
+First, TrOCR uses the pre-trained image Transformer and text Transformer models, which take advantages of largescale unlabeled data for image understanding and language modeling, with no need for an external language model. Second, TrOCR does not require any convolutional network for the backbone and does not introduce any image-specific inductive biases, which makes the model very easy to implement and maintain. Finally, experiment results on OCR benchmark datasets show that the TrOCR can achieve stateof-the-art results on printed, handwritten and scene text image datasets without any complex pre/post-processing steps. Furthermore, we can easily extend the TrOCR for multilingual text recognition with minimum efforts, where just leveraging multilingual pre-trained models in the decoderside and expand the dictionary.
 
-(b) Captioning and Filtering (CapFilt): a new dataset boostrapping method for learning from noisy image-text pairs. We finetune a pre-trained MED into two modules: a captioner to produce synthetic captions given web images, and a filter to remove noisy captions from both the original web texts and the synthetic texts.
+首先，TrOCR使用预先训练的图像转换器和文本转换器模型，它们利用大规模未标记数据进行图像理解和语言建模，而不需要外部语言模型。其次，TrOCR不需要任何卷积网络作为主干，也不引入任何图像特定的归纳偏差，这使得模型非常容易实现和维护。最后，在OCR基准数据集上的实验结果表明，TrOCR可以在打印、手写和场景文本图像数据集上实现最先进的结果，而无需任何复杂的前/后处理步骤。此外，我们可以毫不费力地将TrOCR扩展到多语言文本识别，只需在解码器中利用多语言预先训练的模型并扩展字典。
 
-（b） 字幕和过滤（CapFilt）：一种新的数据集增强方法，用于从噪声图像-文本对中学习。我们将预先训练的MED微调为两个模块：一个是生成给定网络图像的合成字幕的字幕器，另一个是从原始网络文本和合成文本中去除噪声字幕的过滤器。
+Figure 1: The architecture of TrOCR, where an encoder-decoder model is designed with a pre-trained image Transformer as the encoder and a pre-trained text Transformer as the decoder. 
 
-We perform extensive experiments and analysis, and make the following key observations. 
+图1:TrOCR的体系结构，其中编码器-解码器模型设计为以预训练的图像转换器作为编码器，以预先训练的文本转换器作为解码器。
 
-我们进行了广泛的实验和分析，并做出了以下关键观察。
+The contributions of this paper are summarized as follows:
 
-* We show that the captioner and the filter work together to achieve substantial performance improvement on various downstream tasks by bootstrapping the captions. We also find that more diverse captions yield larger gains. 
+本文的贡献总结如下：
 
-*我们展示了字幕器和过滤器协同工作，通过引导字幕在各种下游任务上实现了显著的性能改进。我们还发现，更多样化的字幕会带来更大的收益。
+1. We propose TrOCR, an end-to-end Transformer-based OCR model for text recognition with pre-trained CV and NLP models. To the best of our knowledge, this is the first work that jointly leverages pre-trained image and text Transformers for the text recognition task in OCR.
 
-* BLIP achieves state-of-the-art performance on a wide range of vision-language tasks, including image-text retrieval, image captioning, visual question answering, visual reasoning, and visual dialog. We also achieve state-ofthe-art zero-shot performance when directly transferring our models to two video-language tasks: text-to-video retrieval and videoQA.
+1.我们提出了TrOCR，这是一种基于Transformer的端到端OCR模型，用于具有预先训练的CV和NLP模型的文本识别。据我们所知，这是第一项联合利用预先训练的图像和文本转换器进行OCR中的文本识别任务的工作。
 
-*BLIP在广泛的视觉语言任务中实现了最先进的性能，包括图像文本检索、图像字幕、视觉问答、视觉推理和视觉对话。当我们将模型直接传输到两个视频语言任务：文本到视频检索和视频质量保证时，我们还实现了最先进的零样本性能。
+2. TrOCR achieves state-of-the-art results with a standard Transformer-based encoder-decoder model, which is convolution free and does not rely on any complex pre/post-processing steps.
 
-Figure 2. Pre-training model architecture and objectives of BLIP (same parameters have the same color). We propose multimodal mixture of encoder-decoder, a unified vision-language model which can operate in one of the three functionalities: (1) Unimodal encoder is trained with an image-text contrastive (ITC) loss to align the vision and language representations. (2) Image-grounded text encoder uses additional cross-attention layers to model vision-language interactions, and is trained with a image-text matching (ITM) loss to distinguish between positive and negative image-text pairs. (3) Image-grounded text decoder replaces the bi-directional self-attention layers with causal self-attention layers, and shares the same cross-attention layers and feed forward networks as the encoder. The decoder is trained with a language modeling (LM) loss to generate captions given images. 
+2.TrOCR使用标准的基于Transformer的编码器-解码器模型实现了最先进的结果，该模型无卷积，不依赖于任何复杂的前/后处理步骤。
 
-图2:BLIP的预训练模型架构和目标（相同的参数具有相同的颜色）。我们提出了编码器-解码器的多模式混合，这是一个统一的视觉语言模型，可以在三个功能之一中操作：（1）用图像-文本对比（ITC）损失来训练单模式编码器，以对齐视觉和语言表示。（2） 基于图像的文本编码器使用额外的交叉注意力层来建模视觉-语言交互，并使用图像-文本匹配（ITM）损失进行训练，以区分正面和负面的图像-文本对。（3） 基于图像的文本解码器用因果自注意层取代了双向自注意层，并与编码器共享相同的交叉注意层和前馈网络。解码器使用语言建模（LM）损失进行训练，以生成给定图像的字幕。
+3. The TrOCR models and code are publicly available at https://aka.ms/trocr.
 
-## 2. Related Work 2。相关工作
-### 2.1. Vision-language Pre-training 2.1、。视觉语言预培训
-Vision-language pre-training (VLP) aims to improve performance of downstream vision and language tasks by pretraining the model on large-scale image-text pairs. Due to the prohibitive expense of acquiring human-annotated texts, most methods (Chen et al., 2020; Li et al., 2020; 2021a; Wang et al., 2021; Radford et al., 2021) use image and alt-text pairs crawled from the web (Sharma et al., 2018; Changpinyo et al., 2021; Jia et al., 2021), Despite the use of simple rule-based filters, noise is still prevalent in the web texts. However, the negative impact of the noise has been largely overlooked, shadowed by the performance gain obtained from scaling up the dataset. Our paper shows that the noisy web texts are suboptimal for vision-language learning, and proposes CapFilt that utilizes web datasets in a more effective way.
+3.TrOCR模型和代码可在https://aka.ms/trocr.
 
-视觉语言预训练（VLP）旨在通过在大规模图像-文本对上预训练模型来提高下游视觉和语言任务的性能。由于获取人工注释文本的费用过高，大多数方法（Chen et al.，2020；李等人，2020；2021a；王等人，2021；Radford等人，2021）使用从网络上抓取的图像和alt文本对（Sharma et al.，2018；Changpinyo et al.，2021；贾等，2021），尽管使用了简单的基于规则的过滤器，但噪声在网络文本中仍然普遍存在。然而，噪声的负面影响在很大程度上被忽视了，因为通过放大数据集获得的性能增益掩盖了这一点。我们的论文表明，有噪声的网络文本对于视觉语言学习来说是次优的，并提出了以更有效的方式利用网络数据集的CapFilt。
+## TrOCR 转换OCR
+### Model Architecture 模型体系结构
+TrOCR is built up with the Transformer architecture, including an image Transformer for extracting the visual features and a text Transformer for language modeling. We adopt the vanilla Transformer encoder-decoder structure in TrOCR. The encoder is designed to obtain the representation of the image patches and the decoder is to generate the wordpiece sequence with the guidance of the visual features and previous predictions.
 
-There have been many attempts to unify various vision and language tasks into a single framework (Zhou et al., 2020; Cho et al., 2021; Wang et al., 2021). The biggest challenge is to design model architectures that can perform both understanding-based tasks (e.g. image-text retrieval) and generation-based tasks (e.g. image captioning). Neither encoder-based models (Li et al., 2021a;b; Radford et al., 2021) nor encoder-decoder models (Cho et al., 2021; Wang et al., 2021) can excel at both types of tasks, whereas a single unified encoder-decoder (Zhou et al., 2020) also limits the model’s capability. Our proposed multimodal mixture of encoder-decoder model offers more flexibility and better performance on a wide range of downstream tasks, in the meantime keeping the pre-training simple and efficient.
+TrOCR是使用Transformer架构构建的，包括用于提取视觉特征的图像Transformer和用于语言建模的文本Transformer。我们在TrOCR中采用了香草变压器编码器-解码器结构。编码器被设计为获得图像块的表示，解码器在视觉特征和先前预测的指导下生成单词序列。
 
-已经有许多尝试将各种视觉和语言任务统一到一个单一的框架中（Zhou et al.，2020；Cho et al.，2021；王等人，2021）。最大的挑战是设计既能执行基于理解的任务（例如图像文本检索）又能执行基于生成的任务（如图像字幕）的模型架构。基于编码器的模型（Li et al.，2021a；b；Radford等人，2021）和编码器-解码器模型（Cho et al.，2021；Wang et al.，2022）都不能胜任这两种类型的任务，而单一的统一编码器-解码器（Zhou et al.，2020）也限制了模型的能力。我们提出的编码器-解码器的多模式混合模型在广泛的下游任务上提供了更大的灵活性和更好的性能，同时保持了预训练的简单和高效。
+#### Encoder  编码器
+The encoder receives an input image ximg ∈ < 3×H0×W0 , and resizes it to a fixed size (H, W). Since the Transformer encoder cannot process the raw images unless they are a sequence of input tokens, the encoder decomposes the input image into a batch of N = HW/P2 foursquare patches with a fixed size of (P, P), while the width W and the height H of the resized image are guaranteed to be divisible by the patch size P. Subsequently, the patches are flattened into vectors and linearly projected to D-dimensional vectors, aka the patch embeddings. D is the hidden size of the Transformer through all of its layers.
 
-### 2.2. Knowledge Distillation 2.2。知识提炼
-Knowledge distillation (KD) (Hinton et al., 2015) aims to improve the performance of a student model by distilling knowledge from a teacher model. Self-distillation is a special case of KD where the teacher and student have equal sizes. It has been shown to be effective for image classi- fication (Xie et al., 2020), and recently for VLP (Li et al., 2021a). Different from mostly existing KD methods which simply enforce the student to have the same class predictions as the teacher, our proposed CapFilt can be interpreted as a more effective way to perform KD in the context of VLP, where the captioner distills its knowledge through semantically-rich synthetic captions, and the filter distills its knowledge by removing noisy captions.
+编码器接收输入图像ximg∈<3×H0×W0，并将其调整为固定大小（H，W）。由于Transformer编码器不能处理原始图像，除非它们是输入令牌序列，因此编码器将输入图像分解为一批具有固定大小（P，P）的N＝HW/P2四方形块，同时保证调整大小的图像的宽度W和高度H可被块大小P整除。随后，补丁被展平为向量并线性投影为D维向量，也就是补丁嵌入。D是Transformer在其所有层中隐藏的大小。
 
-知识提取（KD）（Hinton et al.，2015）旨在通过从教师模型中提取知识来提高学生模型的性能。自我升华是KD的一个特殊情况，教师和学生的尺寸相等。它已被证明对图像分类有效（Xie et al.，2020），最近对VLP有效（Li et al.，2021a）。与大多数现有的KD方法不同，这些方法只是强制学生与老师进行相同的课堂预测，我们提出的CapFilt可以被解释为在VLP背景下执行KD的一种更有效的方法，其中字幕者通过语义丰富的合成字幕提取其知识，滤波器通过去除噪声字幕提取其信息。
+Similar to ViT (Dosovitskiy et al. 2021) and DeiT (Touvron et al. 2021), we keep the special token “[CLS]” that is usually used for image classification tasks. The “[CLS]” token brings together all the information from all the patch embeddings and represents the whole image. Meanwhile, we also keep the distillation token in the input sequence when using the DeiT pre-trained models for encoder initialization, which allows the model to learn from the teacher model. The patch embeddings and two special tokens are given learnable 1D position embeddings according to their absolute positions.
 
-### 2.3. Data Augmentation 2.3。数据扩充
-While data augmentation (DA) has been widely adopted in computer vision (Shorten & Khoshgoftaar, 2019), DA for language tasks is less straightforward. Recently, generative language models have been used to synthesize examples for various NLP tasks (Kumar et al., 2020; Anaby-Tavor et al., 2020; Puri et al., 2020; Yang et al., 2020). Different from these methods which focus on the low-resource language-only tasks, our method demonstrates the advantage of synthetic captions in large-scale vision-language pre-training.
+类似于ViT（Dosovitskiy et al.2021）和DeiT（Touvron et al.2011），我们保留了通常用于图像分类任务的特殊标记“[CLS]”。“[CLS]”标记将来自所有补丁嵌入的所有信息汇集在一起，并表示整个图像。同时，当使用DeiT预训练模型进行编码器初始化时，我们还将提取令牌保留在输入序列中，这允许模型从教师模型中学习。根据补丁嵌入和两个特殊令牌的绝对位置，它们被赋予可学习的1D位置嵌入。
 
-虽然数据增强（DA）已在计算机视觉中被广泛采用（Shorten&Khoshgoftaar，2019），但用于语言任务的DA并不那么简单。最近，生成语言模型已被用于合成各种NLP任务的示例（Kumar等人，2020；Anaby-Tavor等人，2020年；Puri等人，2020，Yang等人，2020）。与这些只关注低资源语言任务的方法不同，我们的方法展示了合成字幕在大规模视觉语言预训练中的优势。
+Unlike the features extracted by the CNN-like network, the Transformer models have no image-specific inductive biases and process the image as a sequence of patches, which makes the model easier to pay different attention to either the whole image or the independent patches.
 
-## 3. Method 3。方法
-We propose BLIP, a unified VLP framework to learn from noisy image-text pairs. This section first introduces our new model architecture MED and its pre-training objectives, and then delineates CapFilt for dataset bootstrapping.
+与类CNN网络提取的特征不同，Transformer模型没有图像特定的归纳偏差，并将图像处理为一系列补丁，这使得模型更容易对整个图像或独立补丁给予不同的关注。
 
-我们提出了BLIP，这是一个统一的VLP框架，用于从噪声图像-文本对中学习。本节首先介绍了我们的新模型架构MED及其预训练目标，然后描述了用于数据集自举的CapFilt。
+#### Decoder  解码器
+We use the original Transformer decoder for TrOCR. The standard Transformer decoder also has a stack of identical layers, which have similar structures to the layers in the encoder, except that the decoder inserts the “encoder-decoder attention” between the multi-head selfattention and feed-forward network to distribute different attention on the output of the encoder. In the encoder-decoder attention module, the keys and values come from the en- coder output, while the queries come from the decoder input. In addition, the decoder leverages the attention masking in the self-attention to prevent itself from getting more information during training than prediction. Based on the fact that the output of the decoder will right shift one place from the input of the decoder, the attention mask needs to ensure the output for the position i can only pay attention to the previous output, which is the input on the positions less than i: 
 
-### 3.1. Model Architecture 3.1、。模型体系结构
-We employ a visual transformer (Dosovitskiy et al., 2021) as our image encoder, which divides an input image into patches and encodes them as a sequence of embeddings, with an additional [CLS] token to represent the global image feature. Compared to using pre-trained object detectors for visual feature extraction (Chen et al., 2020), using a ViT is more computation-friendly and has been adopted by the more recent methods (Li et al., 2021a; Kim et al., 2021).
+我们使用原始的Transformer解码器进行TrOCR。标准Transformer解码器也有一堆相同的层，这些层与编码器中的层具有相似的结构，只是解码器在多头自注意和前馈网络之间插入“编码器-解码器注意”，以在编码器的输出上分配不同的注意。在编码器-解码器注意力模块中，键和值来自编码器的输出，而查询来自解码器的输入。此外，解码器利用自注意中的注意掩蔽来防止自己在训练期间获得比预测更多的信息。基于解码器的输出将从解码器的输入右移一位的事实，注意力掩码需要确保位置i的输出只能关注前一个输出，即小于i的位置上的输入：
 
-我们使用视觉转换器（Dosovitskiy et al.，2021）作为我们的图像编码器，它将输入图像划分为块，并将其编码为嵌入序列，并使用额外的[CLS]标记来表示全局图像特征。与使用预先训练的对象检测器进行视觉特征提取相比（Chen et al.，2020），使用ViT更便于计算，并且已被最近的方法所采用（Li et al.，2021a；Kim et al.，2021）。
+hi = P roj(Emb(T okeni)) σ(hij ) = e hij P V k=1 e hik for j = 1, 2, . . . , V
 
-In order to pre-train a unified model with both understanding and generation capabilities, we propose multimodal mixture of encoder-decoder (MED), a multi-task model which can operate in one of the three functionalities: (1) Unimodal encoder, which separately encodes image and text. The text encoder is the same as BERT (Devlin et al., 2019), where a [CLS] token is appended to the beginning of the text input to summarize the sentence. (2) Image-grounded text encoder, which injects visual information by inserting one additional cross-attention (CA) layer between the self-attention (SA) layer and the feed forward network (FFN) for each transformer block of the text encoder. A task-specific [Encode] token is appended to the text, and the output embedding of [Encode] is used as the multimodal representation of the image-text pair. (3) Image-grounded text decoder, which replaces the bidirectional self-attention layers in the image-grounded text encoder with causal self-attention layers. A [Decode] token is used to signal the beginning of a sequence, and an end-of-sequence token is used to signal its end.
+hi=P roj（Emb（T okeni））σ（hij）=e hij P V k=1 e hik对于j=1，2，五、
 
-为了预训练一个具有理解和生成能力的统一模型，我们提出了编码器-解码器的多模式混合（MED），这是一个多任务模型，可以在三个功能之一中操作：（1）单模式编码器，它分别对图像和文本进行编码。文本编码器与BERT（Devlin et al.，2019）相同，其中[CLS]标记被附加到文本输入的开头以总结句子。（2） 基于图像的文本编码器，通过在自注意（SA）层和文本编码器的每个变换器块的前馈网络（FFN）之间插入一个额外的交叉注意（CA）层来注入视觉信息。特定于任务的[Encode]令牌被附加到文本，并且[Encode'的输出嵌入被用作图像-文本对的多模式表示。（3） 以图像为基础的文本解码器，它用因果自注意层取代了基于图像的文本编码器中的双向自注意层。[解码]令牌用于发出序列开始的信号，序列结束令牌用于发出其结束的信号。
+The hidden states from the decoder are projected by a linear layer from the model dimension to the dimension of the vocabulary size V , while the probabilities over the vocabulary are calculated on that by the softmax function. We use beam search to get the final output.
 
-### 3.2. Pre-training Objectives 3.2、。培训前目标
-We jointly optimize three objectives during pre-training, with two understanding-based objectives and one generationbased objective. Each image-text pair only requires one forward pass through the computational-heavier visual transformer, and three forward passes through the text transformer, where different functionalities are activated to compute the three losses as delineated below.
+解码器的隐藏状态由线性层从模型维度投影到词汇表大小V的维度，而词汇表上的概率由softmax函数计算。我们使用波束搜索来获得最终输出。
 
-我们在预培训期间共同优化了三个目标，其中两个基于理解的目标和一个基于生成的目标。每个图像-文本对只需要一次正向通过计算较重的视觉转换器，并且三次正向通过文本转换器，其中激活不同的功能来计算如下所述的三个损失。
+### Model Initialization 模型初始化
+Both the encoder and the decoder are initialized by the public models pre-trained on large-scale labeled and unlabeled datasets.
 
-Image-Text Contrastive Loss (ITC) activates the unimodal encoder. It aims to align the feature space of the visual transformer and the text transformer by encouraging positive image-text pairs to have similar representations in contrast to the negative pairs. It has been shown to be an effective objective for improving vision and language understanding (Radford et al., 2021; Li et al., 2021a). We follow the ITC loss by Li et al. (2021a), where a momentum encoder is introduced to produce features, and soft labels are created from the momentum encoder as training targets to account for the potential positives in the negative pairs.
+编码器和解码器都是由在大规模标记和未标记数据集上预先训练的公共模型初始化的。
 
-图像-文本对比度损失（ITC）激活单峰编码器。它旨在通过鼓励正面图像-文本对与负面图像-文本配对具有相似的表示来对齐视觉转换器和文本转换器的特征空间。它已被证明是提高视力和语言理解的有效目标（Radford等人，2021；李等人，2021a）。我们遵循李等人的ITC损失。（2021a），其中引入动量编码器来产生特征，并从动量编码器中创建软标签作为训练目标，以说明负对中的潜在积极因素。
+#### Encoder Initialization  编码器初始化
+The DeiT (Touvron et al. 2021) and BEiT (Bao, Dong, and Wei 2021) models are used for the encoder initialization in the TrOCR models. DeiT trains the image Transformer with ImageNet (Deng et al. 2009) as the sole training set. The authors try different hyperparameters and data augmentation to make the model dataefficient. Moreover, they distill the knowledge of a strong image classifier to a distilled token in the initial embedding, which leads to a competitive result compared to the CNNbased models.
 
-Image-Text Matching Loss (ITM) activates the imagegrounded text encoder. It aims to learn image-text multimodal representation that captures the fine-grained alignment between vision and language. ITM is a binary classification task, where the model uses an ITM head (a linear layer) to predict whether an image-text pair is positive (matched) or negative (unmatched) given their multimodal feature. In order to find more informative negatives, we adopt the hard negative mining strategy by Li et al. (2021a), where negatives pairs with higher contrastive similarity in a batch are more likely to be selected to compute the loss.
+DeiT（Touvron等人，2021）和BEiT（Bao，Dong和Wei 2021）模型用于TrOCR模型中的编码器初始化。DeiT使用ImageNet（Deng等人，2009）作为唯一的训练集来训练图像转换器。作者尝试使用不同的超参数和数据扩充来提高模型的数据效率。此外，他们在初始嵌入中将强图像分类器的知识提取为提取的令牌，这导致了与基于CNN的模型相比具有竞争力的结果。
 
-图像-文本匹配丢失（ITM）激活基于图像的文本编码器。它旨在学习图像-文本多模式表示，捕捉视觉和语言之间的细粒度对齐。ITM是一种二元分类任务，其中模型使用ITM头（线性层）来预测图像-文本对是正的（匹配的）还是负的（不匹配的），给定它们的多模式特征。为了找到更具信息性的底片，我们采用了李等人的硬底片挖掘策略。（2021a），其中一批中对比相似性较高的底片对更有可能被选择来计算损失。
+Referring to the Masked Language Model pre-training task, BEiT proposes the Masked Image Modeling task to pre-train the image Transformer. Each image will be converted to two views: image patches and visual tokens. They tokenize the original image into visual tokens by the latent codes of discrete VAE (Ramesh et al. 2021), randomly mask some image patches, and make the model recover the original visual tokens. The structure of BEiT is the same as the image Transformer and lacks the distilled token when compared with DeiT.
 
-Language Modeling Loss (LM) activates the imagegrounded text decoder, which aims to generate textual descriptions given an image. It optimizes a cross entropy loss which trains the model to maximize the likelihood of the text in an autoregressive manner. We apply a label smoothing of 0.1 when computing the loss. Compared to the MLM loss that has been widely-used for VLP, LM enables the model with the generalization capability to convert visual information into coherent captions.
+参考掩蔽语言模型预训练任务，BEiT提出了掩蔽图像建模任务来预训练图像转换器。每个图像将转换为两个视图：图像补丁和视觉标记。他们通过离散VAE的潜在代码将原始图像标记为视觉标记（Ramesh等人，2021），随机屏蔽一些图像补丁，并使模型恢复原始视觉标记。BEiT的结构与图像转换器相同，并且与DeiT相比缺少提取的令牌。
 
-语言建模损失（LM）激活基于图像的文本解码器，该解码器旨在生成给定图像的文本描述。它优化了交叉熵损失，该损失训练模型以自回归方式最大化文本的可能性。我们在计算损失时应用0.1的标签平滑。与已广泛用于VLP的MLM损失相比，LM使该模型具有将视觉信息转换为连贯字幕的泛化能力。
+#### Decoder Initialization  解码器初始化
+We use the RoBERTa (Liu et al. 2019) models and the MiniLM (Wang et al. 2020b) models to initialize the decoder. Generally, RoBERTa is a replication study of (Devlin et al. 2019) that carefully measures the impact of many key hyperparameters and training data size. Based on BERT, they remove the next sentence prediction objective and dynamically change the masking pattern of the Masked Language Model.
 
-In order to perform efficient pre-training while leveraging multi-task learning, the text encoder and text decoder share all parameters except for the SA layers. The reason is that the differences between the encoding and decoding tasks are best captured by the SA layers. In particular, the encoder employs bi-directional self-attention to build representations for the current input tokens, while the decoder employs causal self-attention to predict next tokens. On the other hand, the embedding layers, CA layers and FFN function similarly between encoding and decoding tasks, therefore sharing these layers can improve training efficiency while benefiting from multi-task learning,
+我们使用RoBERTa（Liu等人，2019）模型和MiniLM（Wang等人，2020b）模型来初始化解码器。一般来说，RoBERTa是（Devlin等人，2019）的一项复制研究，它仔细测量了许多关键超参数和训练数据大小的影响。基于BERT，他们去除了下一句预测目标，并动态地改变了掩蔽语言模型的掩蔽模式。
 
-为了在利用多任务学习的同时执行有效的预训练，文本编码器和文本解码器共享除SA层之外的所有参数。原因是编码和解码任务之间的差异最好由SA层来捕捉。特别地，编码器采用双向自注意来构建当前输入令牌的表示，而解码器采用因果自注意来预测下一个令牌。另一方面，嵌入层、CA层和FFN在编码和解码任务之间的功能相似，因此共享这些层可以提高训练效率，同时受益于多任务学习，
+The MiniLM are compressed models of the large pretrained Transformer models while retaining 99% performance. Instead of using the soft target probabilities of masked language modeling predictions or intermediate representations of the teacher models to guide the training of the student models in the previous work. The MiniLM models are trained by distilling the self-attention module of the last Transformer layer of the teacher models and introducing a teacher assistant to assist with the distillation.
 
-### 3.3. CapFilt 3.3、。CapFilt公司
-Due to the prohibitive annotation cost, there exist a limited number of high-quality human-annotated image-text pairs {(Ih, Th)} (e.g., COCO (Lin et al., 2014)). Recent work (Li et al., 2021a; Wang et al., 2021) utilizes a much larger number of image and alt-text pairs {(Iw, Tw)} that are automatically collected from the web. However, the alt-texts often do not accurately describe the visual content of the images, making them a noisy signal that is suboptimal for learning vision-language alignment.
+MiniLM是大型预训练变压器模型的压缩模型，同时保持99%的性能。而不是在先前的工作中使用掩蔽语言建模预测的软目标概率或教师模型的中间表示来指导学生模型的训练。MiniLM模型是通过提取教师模型的最后一个Transformer层的自注意模块并引入教师助理来帮助提取来训练的。
 
-由于高昂的注释成本，存在数量有限的高质量人类注释图像-文本对{（Ih，Th）}（例如，COCO（Lin et al.，2014））。最近的工作（Li et al.，2021a；Wang et al.，2021）利用了从网络自动收集的大量图像和替代文本对{（Iw，Tw）}。然而，alt文本通常不能准确地描述图像的视觉内容，这使得它们成为一个嘈杂的信号，对于学习视觉语言对齐来说是次优的。
+When loading the above models to the decoders, the structures do not precisely match since both of them are only the encoder of the Transformer architecture. For example, the encoder-decoder attention layers are absent in these models. To address this, we initialize the decoders with the RoBERTa and MiniLM models by manually setting the corresponding parameter mapping, and the absent parameters are randomly initialized.
 
-Figure 3. Learning framework of BLIP. We introduce a captioner to produce synthetic captions for web images, and a filter to remove noisy image-text pairs. The captioner and filter are initialized from the same pre-trained model and finetuned individually on a small-scale human-annotated dataset. The bootstrapped dataset is used to pre-train a new model.
+当将上述模型加载到解码器时，结构并不精确匹配，因为它们都只是Transformer架构的编码器。例如，在这些模型中不存在编码器-解码器注意力层。为了解决这一问题，我们通过手动设置相应的参数映射，用RoBERTa和MiniLM模型初始化解码器，并随机初始化缺失的参数。
 
-图3。BLIP的学习框架。我们介绍了一种为网络图像生成合成字幕的字幕器，以及一种去除噪声图像-文本对的过滤器。字幕器和过滤器从相同的预训练模型初始化，并在小规模人工注释数据集上单独微调。自举数据集用于预训练新模型。
+### Task Pipeline 任务管道
+In this work, the pipeline of the text recognition task is that given the textline images, the model extracts the visual features and predicts the wordpiece tokens relying on the image and the context generated before. The sequence of ground truth tokens is followed by an “[EOS]” token, which indicates the end of a sentence. During training, we shift the sequence backward by one place and add the “[BOS]” token to the beginning indicating the start of generation. The shifted ground truth sequence is fed into the decoder, and the output of that is supervised by the original ground truth sequence with the cross-entropy loss. For inference, the decoder starts from the “[BOS]” token to predict the output iteratively while continuously taking the newly generated output as the next input.
 
-We propose Captioning and Filtering (CapFilt), a new method to improve the quality of the text corpus. Figure 3 gives an illustration of CapFilt. It introduces two modules: a captioner to generate captions given web images, and a filter to remove noisy image-text pairs. Both the captioner and the filter are initialized from the same pre-trained MED model, and finetuned individually on the COCO dataset. The finetuning is a lightweight procedure.
+在这项工作中，文本识别任务的管道是，给定文本行图像，模型提取视觉特征，并根据之前生成的图像和上下文预测单词标记。地面实况标记的序列后面跟着一个“[EOS]”标记，表示句子的结尾。在训练过程中，我们将序列向后移动一位，并在开头添加“[BOS]”标记，指示生成的开始。移位的地面实况序列被馈送到解码器，并且其输出由具有交叉熵损失的原始地面实况序列监督。为了进行推理，解码器从“[BOS]”令牌开始迭代预测输出，同时连续地将新生成的输出作为下一个输入。
 
-我们提出了一种提高文本语料库质量的新方法CapFilt。图3给出了CapFilt的说明。它引入了两个模块：一个用于生成给定网络图像的字幕的字幕器，以及一个用于去除噪声图像-文本对的过滤器。字幕器和过滤器都是从相同的预训练MED模型初始化的，并在COCO数据集上单独微调。微调是一个轻量级的过程。
+### Pre-training 预培训
+We use the text recognition task for the pre-training phase, since this task can make the models learn the knowledge of both the visual feature extraction and the language model. The pre-training process is divided into two stages that differ by the used dataset. In the first stage, we synthesize a largescale dataset consisting of hundreds of millions of printed textline images and pre-train the TrOCR models on that. In the second stage, we build two relatively small datasets corresponding to printed and handwritten downstream tasks, containing millions of textline images each. We use the existed and widely adopted synthetic scene text datasets for the scene text recognition task. Subsequently, we pre-train separate models on these task-specific datasets in the second stage, all initialized by the first-stage model.
 
-Specifically, the captioner is an image-grounded text decoder. It is finetuned with the LM objective to decode texts given images. Given the web images Iw, the captioner generates synthetic captions Ts with one caption per image. The filter is an image-grounded text encoder. It is finetuned with the ITC and ITM objectives to learn whether a text matches an image. The filter removes noisy texts in both the original web texts Tw and the synthetic texts Ts, where a text is considered to be noisy if the ITM head predicts it as unmatched to the image. Finally, we combine the filtered image-text pairs with the human-annotated pairs to form a new dataset, which we use to pre-train a new model.
+我们在预训练阶段使用文本识别任务，因为该任务可以使模型学习视觉特征提取和语言模型的知识。预训练过程分为两个阶段，这两个阶段因使用的数据集而异。在第一阶段，我们合成了一个由数亿打印文本行图像组成的大规模数据集，并在此基础上预训练TrOCR模型。在第二阶段，我们构建了两个相对较小的数据集，分别对应于打印和手写的下游任务，每个数据集包含数百万个文本行图像。我们使用现有的和广泛采用的合成场景文本数据集进行场景文本识别任务。随后，我们在第二阶段中在这些特定于任务的数据集上预训练单独的模型，所有模型都由第一阶段模型初始化。
 
-具体地说，字幕器是一个基于图像的文本解码器。它与LM目标进行了微调，以解码给定图像的文本。给定网络图像Iw，字幕制作者生成每个图像具有一个字幕的合成字幕Ts。过滤器是一个基于图像的文本编码器。它与ITC和ITM目标进行了微调，以了解文本是否与图像匹配。过滤器去除原始网络文本Tw和合成文本Ts中的噪声文本，其中，如果ITM头预测文本与图像不匹配，则认为文本是噪声的。最后，我们将过滤后的图像-文本对与人类注释的对相结合，形成一个新的数据集，用于预训练新的模型。
+### Fine-tuning 微调
+Except for the experiments regarding scene text recognition, the pre-trained TrOCR models are fine-tuned on the downstream text recognition tasks. The outputs of the TrOCR models are based on Byte Pair Encoding (BPE) (Sennrich, Haddow, and Birch 2015) and SentencePiece (Kudo and Richardson 2018) and do not rely on any task-related vocabularies.
 
-## 4. Experiments and Discussions 4。实验与讨论
-In this section, we first introduce pre-training details. Then we provide a detailed experimental analysis on our method.
+除了关于场景文本识别的实验外，预训练的TrOCR模型在下游文本识别任务上进行了微调。TrOCR模型的输出基于字节对编码（BPE）（Sennrich、Haddow和Birch 2015）和句子片段（Kudo和Richardson 2018），不依赖于任何与任务相关的词汇。
 
-在本节中，我们首先介绍培训前的细节。然后我们对我们的方法进行了详细的实验分析。
+### Data Augmentation 数据扩充
+We leverage data augmentation to enhance the variety of the pre-training and fine-tuning data. Six kinds of image transformations plus keeping the original are taken for printed and handwritten datasets, which are random rotation (-10 to 10 degrees), Gaussian blurring, image dilation, image erosion, downscaling, and underlining. We randomly decide which image transformation to take with equal possibilities for each sample. For scene text datasets, RandAugment (Cubuk et al. 2020) is applied following (Atienza 2021), and the augmentation types include inversion, curving, blur, noise, distortion, rotation, etc.
 
-### 4.1. Pre-training Details 4.1。培训前详细信息
-Our models are implemented in PyTorch (Paszke et al., 2019) and pre-trained on two 16-GPU nodes. The image transformer is initialized from ViT pre-trained on ImageNet (Touvron et al., 2020; Dosovitskiy et al., 2021), and the text transformer is initialized from BERTbase (Devlin et al., 2019). We explore two variants of ViTs: ViT-B/16 and ViT-L/16. Unless otherwise specified, all results reported in this paper as “BLIP” uses ViT-B. We pre-train the model for 20 epochs using a batch size of 2880 (ViT-B) / 2400 (ViT-L). We use AdamW (Loshchilov & Hutter, 2017) optimizer with a weight decay of 0.05. The learning rate is warmed-up to 3e-4 (ViT-B) / 2e-4 (ViT-L) and decayed linearly with a rate of 0.85. We take random image crops of resolution 224 × 224 during pre-training, and increase the image resolution to 384 × 384 during finetuning. We use the same pre-training dataset as Li et al. (2021a) with 14M images in total, including two human-annotated datasets (COCO and Visual Genome (Krishna et al., 2017)), and three web datasets (Conceptual Captions (Changpinyo et al., 2021), Conceptual 12M (Changpinyo et al., 2021), SBU captions (Ordonez et al., 2011)). We also experimented with an additional web dataset, LAION (Schuhmann et al., 2021), which contains 115M images with more noisy texts1 . More details about the datasets can be found in the appendix.
+我们利用数据扩充来增强预训练和微调数据的多样性。打印和手写数据集采用了六种图像转换加上保持原始，即随机旋转（-10到10度）、高斯模糊、图像膨胀、图像侵蚀、缩小和下划线。我们随机决定对每个样本进行相同可能性的图像变换。对于场景文本数据集，RandAugment（Cubuk et al.2020）应用如下（Atienza 2021），增强类型包括反转、弯曲、模糊、噪声、失真、旋转等。
 
-我们的模型在PyTorch中实现（Paszke et al.，2019），并在两个16-GPU节点上进行预训练。图像转换器是从ImageNet上预训练的ViT初始化的（Touvron等人，2020；Dosovitskiy等人，2021），文本转换器是从BERTbase初始化的（Devlin等人，2019）。我们探索了ViT的两种变体：ViT-B/16和ViT-L/16。除非另有规定，否则本文中报告为“BLIP”的所有结果均使用ViT-B。我们使用2880（ViT-B）/2400（ViT-L）的批量大小对20个时期的模型进行预训练。我们使用AdamW（Loshchilov&Hutter，2017）优化器，权重衰减为0.05。学习速率被预热到3e-4（ViT-B）/2e-4（ViT-L），并且以0.85的速率线性衰减。在预训练期间，我们采用分辨率为224×224的随机图像裁剪，并在微调期间将图像分辨率提高到384×384。我们使用与李等人相同的预训练数据集。（2021a）共有14M张图像，包括两个人类注释数据集（COCO和视觉基因组（Krishna et al.，2017））和三个网络数据集（概念字幕（Changpinyo et al.，2021）、概念12M（Changpineyo et al.，2021）和SBU字幕（Ordonez et al.，2011））。我们还试验了一个额外的网络数据集LAION（Schuhmann et al.，2021），该数据集包含115M张带有更多噪声文本的图像1。有关数据集的更多详细信息，请参阅附录。
+Table 1: Ablation study on the SROIE dataset, where all the models are trained using the SROIE dataset only.
 
-### 4.2. Effect of CapFilt 4.2。CapFilt的影响
-In Table 1, we compare models pre-trained on different datasets to demonstrate the efficacy of CapFilt on downstream tasks, including image-text retrieval and image captioning with finetuned and zero-shot settings.
+表1:SROIE数据集上的消融研究，其中所有模型仅使用SROIE数据集进行训练。
 
-在表1中，我们比较了不同数据集上预先训练的模型，以证明CapFilt在下游任务中的功效，包括图像文本检索和图像字幕，以及微调和零样本设置。
+Table 2: Ablation study of pretrained model initialization, data augmentation and two stages of pre-training on the SROIE dataset. 
 
-When only the captioner or the filter is applied to the dataset with 14M images, performance improvement can be observed. When applied together, their effects compliment each other, leading to substantial improvements compared to using the original noisy web texts.
+表2：SROIE数据集上预训练模型初始化、数据扩充和两个阶段预训练的消融研究。
 
-当仅将字幕或滤波器应用于具有14M个图像的数据集时，可以观察到性能的提高。当它们一起应用时，它们的效果相互补充，与使用原始嘈杂的网络文本相比，有了实质性的改进。
+## Experiments 实验
+### Data 数据
+#### Pre-training Dataset  预训练数据集
+To build a large-scale high-quality dataset, we sample two million document pages from the publicly available PDF files on the Internet. Since the PDF files are digital-born, we can get pretty printed textline images by converting them into page images and extracting the textlines with their cropped images. In total, the first-stage pre-training dataset contains 684M textlines.
 
-CapFilt can further boost performance with a larger dataset and a larger vision backbone, which verifies its scalability in both the data size and the model size. Furthermore, by using a large captioner and filter with ViT-L, performance of the base model can also be improved. 
+为了构建一个大规模的高质量数据集，我们从互联网上公开的PDF文件中抽取了200万个文档页面。由于PDF文件是数字生成的，我们可以通过将它们转换为页面图像并用裁剪后的图像提取文本线来获得漂亮的打印文本线图像。总的来说，第一阶段的预训练数据集包含684M个文本行。
 
-CapFilt可以通过更大的数据集和更大的视觉主干进一步提高性能，这验证了其在数据大小和模型大小方面的可扩展性。此外，通过使用带有ViT-L的大型字幕机和滤波器，还可以提高基本模型的性能。
+We use 5,427 handwritten fonts1 to synthesize handwritten textline images by the TRDG2 , an open-source text recognition data generator. The text used for generation is crawled from random pages of Wikipedia. The handwritten dataset for the second-stage pre-training consists of 17.9M textlines, including IIIT-HWS dataset (Krishnan and Jawahar 2016). In addition, we collect around 53K receipt images in the real world and recognize the text on them by commercial OCR engines. According to the results, we crop the textlines by their coordinates and rectify them into normalized images. We also use TRDG to synthesize 1M printed textline images with two receipt fonts and the builtin printed fonts. In total, the printed dataset consists of 3.3M textlines. The second-stage pre-training data for the scene text recognition are MJSynth (MJ) (Jaderberg et al. 2014) and SynthText (ST) (Gupta, Vedaldi, and Zisserman 2016), totaling about 16M text images.
 
-1We only download images whose shorter edge is larger than 256 pixels from the original LAION400M. Due to the large size of LAION, we only use 1/5 of it each epoch during pre-training.
+我们使用5427个手写字体1，通过开源文本识别数据生成器TRDG2合成手写文本行图像。用于生成的文本是从维基百科的随机页面中抓取的。第二阶段预训练的手写数据集由179M个文本行组成，包括IIIT-HWS数据集（Krishnan和Jawahar，2016）。此外，我们在现实世界中收集了大约53K张收据图像，并通过商业OCR引擎识别上面的文本。根据结果，我们根据文本线的坐标对其进行裁剪，并将其校正为归一化图像。我们还使用TRDG来合成具有两种收据字体和内置打印字体的1M打印文本行图像。总的来说，打印的数据集由330万条文本行组成。用于场景文本识别的第二阶段预训练数据是MJSynth（MJ）（Jaderberg等人，2014）和SynthText（ST）（Gupta、Vedaldi和Zisserman，2016），总计约1600万个文本图像。
 
-1我们只从原始LAION400M下载短边大于256像素的图像。由于LAION的大小很大，我们在预训练期间每个历元仅使用其1/5。
+1 The fonts are obtained from https://fonts.google.com/?category=Handwriting and https:// www.1001fonts.com/handwritten-fonts.html. 
 
-Table 1. Evaluation of the effect of the captioner (C) and filter (F) for dataset bootstrapping. Downstream tasks include image-text retrieval and image captioning with finetuning (FT) and zero-shot (ZS) settings. TR / IR@1: recall@1 for text retrieval / image retrieval. ✓B/L: captioner or filter uses ViT-B / ViT-L as vision backbone. 
+1字体来自https://fonts.google.com/?category=Handwriting以及https://www.1001fonts.com/handwritten-fonts.html。
 
-表1。评估字幕器（C）和滤波器（F）对数据集自举的效果。下游任务包括图像-文本检索和带有微调（FT）和零样本（ZS）设置的图像字幕。转/分IR@1以下为：recall@1用于文本检索/图像检索。✓B/L：字幕或滤波器使用ViT-B/ViT-L作为视觉主干。
+2 https://github.com/Belval/TextRecognitionDataGenerator 
 
-Figure 4. Examples of the web text Tw and the synthetic text Ts. Green texts are accepted by the filter, whereas red texts are rejected.
+2.https://github.com/Belval/TextRecognitionDataGenerator
 
-图4。网络文本Tw和合成文本Ts的示例。绿色文本被过滤器接受，而红色文本被拒绝。
+#### Benchmarks  基准
+The SROIE (Scanned Receipts OCR and Information Extraction) dataset (Task 2) focuses on text recognition in receipt images. There are 626 receipt images and 361 receipt images in the training and test sets of SROIE. Since the text detection task is not included in this work, we use cropped images of the textlines for evaluation, which are obtained by cropping the whole receipt images according to the ground truth bounding boxes.
 
-Table 2. Comparison between beam search and nucleus sampling for synthetic caption generation. Models are pre-trained on 14M images.
+SROIE（扫描收据OCR和信息提取）数据集（任务2）专注于收据图像中的文本识别。SROIE的训练集和测试集中分别有626张和361张收据图像。由于文本检测任务不包括在这项工作中，我们使用文本行的裁剪图像进行评估，这些图像是通过根据基本事实边界框裁剪整个收据图像而获得的。
 
-表2。用于合成字幕生成的波束搜索和核采样之间的比较。模型是在14M图像上预先训练的。
+The IAM Handwriting Database is composed of handwritten English text, which is the most popular dataset for handwritten text recognition. We use the Aachen’s partition of the dataset3 : 6,161 lines from 747 forms in the train set, 966 lines from 115 forms in the validation set and 2,915 lines from 336 forms in the test set.
 
-Table 3. Comparison between different parameter sharing strategies for the text encoder and decoder during
+IAM手写数据库由手写英文文本组成，是最流行的手写文本识别数据集。我们使用了数据集3的亚琛划分：列车集中747个表格中的6161行，验证集中115个表格的966行，测试集中336个表格的2915行。
 
-表3。不同参数共享策略下文本编码器和解码器的比较
+Recognizing scene text images is more challenging than printed text images, as many images in the wild suffer from blur, occlusion, or low-resolution problems. Here we leverage some widely-used benchmarks, including IIIT5K-3000 (Mishra, Alahari, and Jawahar 2012), SVT-647 (Wang, Babenko, and Belongie 2011), IC13-857, IC13-1015 (Karatzas et al. 2013), IC15-1811, IC15-2077 (Karatzas et al. 2015), SVTP-645 (Phan et al. 2013), and CT80-288 (Risnumawan et al. 2014) to evaluate the capacity of the proposed TrOCR.
 
-In Figure 4, we show some example captions and their corresponding images, which qualitatively demonstrate the effect of the captioner to generate new textual descriptions, and the filter to remove noisy captions from both the original web texts and the synthetic texts. More examples can be found in the appendix.
+识别场景文本图像比打印文本图像更具挑战性，因为野外的许多图像都存在模糊、遮挡或低分辨率问题。在这里，我们利用了一些广泛使用的基准，包括IIIT5K-3000（Mishra、Alahari和Jawahar，2012年）、SVT-647（Wang、Babenko和Belongie，2011年）、IC13-857、IC13-1015（Karatzas et al.2013）、IC15-1811、IC15-2077（Karatza等人，2015）、SVTP-645（Phan等人，2013）和CT80-288（Risnumawan等人，2014）来评估拟议的TrOCR的能力。
 
-在图4中，我们展示了一些示例字幕及其相应的图像，这些图像定性地展示了字幕生成器生成新的文本描述的效果，以及从原始网络文本和合成文本中去除嘈杂字幕的过滤器。更多的例子可以在附录中找到。
+Table 3: Evaluation results (word-level Precision, Recall, F1) on the SROIE dataset, where the baselines come from the SROIE leaderboard (https://rrc.cvc.uab.es/?ch= 13&com=evaluation&task=2).
 
-### 4.3. Diversity is Key for Synthetic Captions 4.3。多样性是合成字幕的关键
-In CapFilt, we employ nucleus sampling (Holtzman et al., 2020) to generate synthetic captions. Nucleus sampling is a stochastic decoding method, where each token is sampled from a set of tokens whose cumulative probability mass exceeds a threshold p (p = 0.9 in our experiments). In Table 2, we compare it with beam search, a deterministic decoding method which aims to generate captions with the highest probability. Nucleus sampling leads to evidently better performance, despite being more noisy as suggested by a higher noise ratio from the filter. We hypothesis that the reason is that nucleus sampling generates more diverse and surprising captions, which contain more new information that the model could benefit from. On the other hand, beam search tends to generate safe captions that are common in the dataset, hence offering less extra knowledge.
+表3：SROIE数据集的评估结果（单词级精度、回忆、F1），其中基线来自SROIE排行榜(https://rrc.cvc.uab.es/?ch=13=com=评估&任务=2）。
 
-在CapFilt中，我们使用细胞核采样（Holtzman et al.，2020）来生成合成字幕。Nucleus采样是一种随机解码方法，其中每个令牌都是从累积概率质量超过阈值p（在我们的实验中p=0.9）的一组令牌中采样的。在表2中，我们将其与波束搜索进行了比较，波束搜索是一种确定性解码方法，旨在以最高概率生成字幕。Nucleus采样带来了明显更好的性能，尽管正如滤波器的更高噪声比所暗示的那样噪声更大。我们假设，原因是核心采样产生了更多多样和令人惊讶的标题，其中包含了更多新的信息，模型可以从中受益。另一方面，波束搜索倾向于生成数据集中常见的安全字幕，因此提供的额外知识较少。
+### Settings 设置
+The TrOCR models are built upon the Fairseq (Ott et al. 2019) which is a popular sequence modeling toolkit. For the model initialization, the DeiT models are implemented and initialized by the code and the pre-trained models from the timm library (Wightman 2019) while the BEiT models and the MiniLM models are from the UniLM’s official repository4 . The RoBERTa models come from the corresponding page in the Fairseq GitHub repository. We use 32 V100 GPUs with the memory of 32GBs for pre-training and 8 V100 GPUs for fine-tuning. For all the models, the batch size is set to 2,048 and the learning rate is 5e-5. We use the BPE and sentencepiece tokenizer from Fairseq to tokenize the textlines to wordpieces.
 
-### 4.4. Parameter Sharing and Decoupling 4.4、。参数共享与解耦
-During pre-training, the text encoder and decoder share all parameters except for the self-attention layers. In Table 3, we evaluate models pre-trained with different parameter sharing strategies, where pre-training is performed on the 14M images with web texts. As the result shows, sharing all layers except for SA leads to better performance compared to not sharing, while also reducing the model size thus improveing training efficiency. If the SA layers are shared, the model’s performance would degrade due to the conflict between the encoding task and the decoding task.
+TrOCR模型建立在Fairseq（Ott等人，2019）的基础上，Fairseq是一个流行的序列建模工具包。对于模型初始化，DeiT模型由来自timm库（Wightman 2019）的代码和预训练模型实现和初始化，而BEiT模型和MiniLM模型来自UniLM的官方存储库4。RoBERTa模型来自FairseqGitHub存储库中的相应页面。我们使用32个具有32GB内存的V100GPU进行预训练，使用8个V100GPU用于微调。对于所有模型，批量大小设置为2048，学习率为5e-5。我们使用Fairseq中的BPE和句子片段标记器将文本行标记为单词片段。
 
-在预训练期间，除了自注意层之外，文本编码器和解码器共享所有参数。在表3中，我们评估了使用不同参数共享策略预训练的模型，其中预训练是在具有网络文本的14M图像上执行的。结果表明，与不共享相比，共享除SA之外的所有层可以获得更好的性能，同时也减少了模型大小，从而提高了训练效率。如果SA层是共享的，则由于编码任务和解码任务之间的冲突，模型的性能将降低。
+3 https://github.com/jpuigcerver/Laia/tree/master/egs/iam 
 
-Table 4. Effect of sharing parameters between the captioner and filter. Models are pre-trained on 14M images.
+3.https://github.com/jpuigcerver/Laia/tree/master/egs/iam
 
-表4。字幕和过滤器之间共享参数的效果。模型是在14M图像上预先训练的。
+4 https://github.com/microsoft/unilm
 
-Table 5. Comparison with state-of-the-art image-text retrieval methods, finetuned on COCO and Flickr30K datasets. BLIPCapFilt-L pre-trains a model with ViT-B backbone using a dataset bootstrapped by captioner and filter with ViT-L.
+4.https://github.com/microsoft/unilm
 
-表5。与最先进的图像文本检索方法进行比较，在COCO和Flickr30K数据集上进行了微调。BLIPCapFilt-L使用字幕器引导的数据集和ViT-L过滤器，使用ViT-B主干预训练模型。
+We employ the 384×384 resolution and 16×16 patch size for DeiT and BEiT encoders. The DeiTSMALL has 12 layers with 384 hidden sizes and 6 heads. Both the DeiTBASE and the BEiTBASE have 12 layers with 768 hidden sizes and 12 heads while the BEiTLARGE has 24 layers with 1024 hidden sizes and 16 heads. We use 6 layers, 256 hidden sizes and 8 attention heads for the small decoders, 512 hidden sizes for the base decoders and 12 layers, 1,024 hidden sizes and 16 heads for the large decoders. For this task, we only use the last half of all layers from the corresponding RoBERTa model, which are the last 6 layers for the RoBERTaBASE and the last 12 layers for the RoBERTaLARGE. The beam size is set to 10 for TrOCR models.
 
-Table 6. Zero-shot image-text retrieval results on Flickr30K. 
+我们为DeiT和BEiT编码器采用384×384分辨率和16×16补丁大小。DeiTSMALL有12层，384个隐藏尺寸和6个头。DeiTBASE和BEiTBASE都有12层768隐藏尺寸和12个头，而BEiTLARGE有24层1024隐藏尺寸和16个头。我们对小型解码器使用6层、256个隐藏大小和8个注意头，对基本解码器使用512个隐藏大小，对大型解码器使用12层、1024个隐藏大小、16个注意头。对于这项任务，我们只使用相应RoBERTa模型中所有层的最后一半，即RoBERTaBASE的最后6层和RoBERTaLARGE的最后12层。对于TrOCR模型，光束大小设置为10。
 
-表6。Flickr30K上的零样本图像文本检索结果。
+We take the CRNN model (Shi, Bai, and Yao 2016) as the baseline model. The CRNN model is composed of convolutional layers for image feature extraction, recurrent layers for sequence modeling and the final frame label prediction, and a transcription layer to translate the frame predictions to the final label sequence. To address the character alignment issue, they use the CTC loss to train the CRNN model. For a long time, the CRNN model is the dominant paradigm for text recognition. We use the PyTorch implementation5 and initialized the parameters by the provided pre-trained model.
 
-During CapFilt, the captioner and the filter are end-to-end finetuned individually on COCO. In Table 4, we study the effect if the captioner and filter share parameters in the same way as pre-training. The performance on the downstream tasks decreases, which we mainly attribute to confirmation bias. Due to parameter sharing, noisy captions produced by the captioner are less likely to be filtered out by the filter, as indicated by the lower noise ratio (8% compared to 25%).
+我们以CRNN模型（Shi，Bai，and Yao 2016）作为基线模型。CRNN模型由用于图像特征提取的卷积层、用于序列建模和最终帧标签预测的递归层以及用于将帧预测转换为最终标签序列的转录层组成。为了解决字符对齐问题，他们使用CTC损失来训练CRNN模型。长期以来，CRNN模型是文本识别的主导范式。我们使用PyTorch实现5，并通过提供的预训练模型初始化参数。
 
-在CapFilt期间，字幕器和滤波器在COCO上分别进行端到端微调。在表4中，我们研究了如果字幕和滤波器以与预训练相同的方式共享参数的效果。下游任务的性能下降，我们主要将其归因于确认偏差。由于参数共享，字幕制作者产生的噪声字幕不太可能被滤波器过滤掉，如较低的噪声比所示（8%与25%相比）。
+### Evaluation Metrics 评估指标
+The SROIE dataset is evaluated using the word-level precision, recall and f1 score. If repeated words appear in the ground truth, they are also supposed to appear in the prediction. The precision, recall and f1 score are described as:
 
-## 5. Comparison with State-of-the-arts 5。与现有技术的比较
-In this section, we compare BLIP to existing VLP methods on a wide range of vision-language downstream tasks2 . Next we briefly introduce each task and finetuning strategy. More details can be found in the appendix.
+SROIE数据集使用单词级精度、召回率和f1分数进行评估。如果重复的单词出现在基本事实中，它们也应该出现在预测中。精确度、召回率和f1分数描述如下：
 
-在本节中，我们将BLIP与现有的VLP方法在广泛的视觉语言下游任务上进行比较2。接下来，我们将简要介绍每项任务和微调策略。更多细节见附录。
+P recision = Correct matches The number of the detected words
 
-2we omit SNLI-VE from the benchmark because its test data has been reported to be noisy (Do et al., 2020) 
+P recision=正确匹配检测到的单词数
 
-2我们从基准中省略了SNLI-VE，因为据报道其测试数据有噪声（Do等人，2020）
+Recall = Correct matches The number of the ground truth words
 
-### 5.1. Image-Text Retrieval 5.1。图像文本检索
-We evaluate BLIP for both image-to-text retrieval (TR) and text-to-image retrieval (IR) on COCO and Flickr30K (Plummer et al., 2015) datasets. We finetune the pre-trained model using ITC and ITM losses. To enable faster inference speed, we follow Li et al. (2021a) and first select k candidates based on the image-text feature similarity, and then rerank the selected candidates based on their pairwise ITM scores. We set k = 256 for COCO and k = 128 for Flickr30K.
+Recall=正确匹配基本事实单词的数量
 
-我们在COCO和Flickr30K（Plummer et al.，2015）数据集上评估了图像到文本检索（TR）和文本到图像检索（IR）的BLIP。我们使用ITC和ITM损失来微调预先训练的模型。为了实现更快的推理速度，我们遵循李等人的方法。（2021a），首先根据图像-文本特征相似性选择k个候选者，然后根据所选候选者的成对ITM分数对其进行重新排序。我们为COCO设置k=256，为Flickr30K设置k=128。
+F1 = 2 × Precision × Recall Precision + Recall .
 
-As shown in Table 5, BLIP achieves substantial performance improvement compared with existing methods. Using the same 14M pre-training images, BLIP outperforms the previous best model ALBEF by +2.7% in average recall@1 on COCO. We also perform zero-shot retrieval by directly transferring the model finetuned on COCO to Flickr30K. The result is shown in Table 6, where BLIP also outperforms existing methods by a large margin.
+F1=2×精度×召回精度+召回。
 
-如表5所示，与现有方法相比，BLIP实现了显著的性能改进。使用相同的14M预训练图像，BLIP平均比之前的最佳模型ALBEF高+2.7%recall@1关于COCO。我们还通过直接将COCO上微调的模型传输到Flickr30K来执行零样本检索。结果如表6所示，其中BLIP也在很大程度上优于现有方法。
+The IAM dataset is evaluated by the case-sensitive Character Error Rate (CER). The scene text datasets are evaluated by the Word Accuracy. For fair comparison, we filter the final output string to suit the popular 36-character charset (lowercase alphanumeric) in this task.
 
-### 5.2. Image Captioning 5.2、。图像字幕
-We consider two datasets for image captioning: NoCaps (Agrawal et al., 2019) and COCO, both evaluated using the model finetuned on COCO with the LM loss. Similar as Wang et al. (2021), we add a prompt “a picture of” at the beginning of each caption, which leads to slightly better results. As shown in Table 7, BLIP with 14M pretraining images substantially outperforms methods using a similar amount of pre-training data. BLIP with 129M images achieves competitive performance as LEMON with
+IAM数据集通过区分大小写的字符错误率（CER）进行评估。场景文本数据集由单词准确性评估。为了进行公平的比较，我们过滤最终的输出字符串，以适应此任务中流行的36个字符的字符集（小写字母数字）。
 
-我们考虑了两个用于图像字幕的数据集：NoCaps（Agrawal et al.，2019）和COCO，这两个数据集都是使用在具有LM损失的COCO上微调的模型进行评估的。与王等人（2021）类似，我们在每个标题的开头添加了一个提示“图片”，这会带来稍微好一点的结果。如表7所示，具有14M预训练图像的BLIP显著优于使用类似量的预训练数据的方法。拥有129M张图像的BLIP实现了与LEMON一样具有竞争力的性能
+### Results 结果
+#### Architecture Comparison  架构比较
+We compare different combinations of the encoder and decoder to find the best settings.
 
-Table 7. Comparison with state-of-the-art image captioning methods on NoCaps and COCO Caption. All methods optimize the crossentropy loss during finetuning. C: CIDEr, S: SPICE, B@4: BLEU@4. BLIPCapFilt-L is pre-trained on a dataset bootstrapped by captioner and filter with ViT-L. VinVL† and LEMON† require an object detector pre-trained on 2.5M images with human-annotated bounding boxes and high resolution (800×1333) input images. SimVLMhuge uses 13× more training data and a larger vision backbone than ViT-L.
+我们比较编码器和解码器的不同组合以找到最佳设置。
 
-表7。与NoCaps和COCO Caption上最先进的图像字幕方法的比较。所有方法都优化了微调过程中的交叉熵损失。C： CIDEr，S：SPICE，B@4以下为：BLEU@4.BLIPCapFilt-L是在由字幕机引导的数据集上预训练的，并使用ViT-L进行过滤。VinVL†和LEMON†需要在具有人类注释的边界框和高分辨率（800×1333）输入图像的2.5M图像上预训练对象检测器。SimVLMjuge使用的训练数据比ViT-L多13倍，视觉骨干更大。
+For encoders, we compare DeiT, BEiT and the ResNet-50 network. Both the DeiT and BEiT are the base models in their original papers. For decoders, we compare the base decoders initialized by RoBERTaBASE and the large decoders initialized by RoBERTaLARGE. For further comparison, we also evaluate the CRNN baseline model and the Tesseract OCR in this section, while the latter is an open-source OCR Engine using the LSTM network. 
 
-Figure 5. Model architecture for the downstream tasks. Q: question; C: caption; QA: question-answer pair. 200M images. Note that LEMON requires a computationalheavy pre-trained object detector and higher resolution (800×1333) input images, leading to substantially slower inference time than the detector-free BLIP which uses lower resolution (384×384) input images.
+对于编码器，我们比较了DeiT、BEiT和ResNet-50网络。DeiT和BEiT都是他们原始论文中的基本模型。对于解码器，我们比较了由RoBERTaBASE初始化的基本解码器和由RoBERTaLARGE初始化的大型解码器。为了进一步比较，我们还在本节中评估了CRNN基线模型和Tesseract OCR，而后者是使用LSTM网络的开源OCR引擎。
 
-图5。下游任务的模型体系结构。Q： 问题；C： 标题；问答配对。2亿张图片。请注意，LEMON需要计算量大的预训练对象检测器和更高分辨率（800×1333）的输入图像，这导致推理时间比使用较低分辨率（384×384）输入图像的无检测器BLIP慢得多。
+5 https://github.com/meijieru/crnn.pytorch
 
-### 5.3. Visual Question Answering (VQA) 5.3。视觉问答（VQA）
-VQA (Antol et al., 2015) requires the model to predict an answer given an image and a question. Instead of formulating VQA as a multi-answer classification task (Chen et al., 2020; Li et al., 2020), we follow Li et al. (2021a) and consider it as an answer generation task, which enables open-ended VQA. As shown in Figure 5(a), during finetuning, we rearrange the pre-trained model, where an image-question is first encoded into multimodal embeddings and then given to an answer decoder. The VQA model is finetuned with the LM loss using ground-truth answers as targets.
+5.https://github.com/meijieru/crnn.pytorch
 
-VQA（Antol等人，2015）要求模型在给定图像和问题的情况下预测答案。我们没有将VQA公式化为多答案分类任务（Chen et al.，2020；李等人，2020），而是遵循李等人（2021a），将其视为一个答案生成任务，从而实现开放式VQA。如图5（a）所示，在微调过程中，我们重新排列预先训练的模型，其中图像问题首先被编码为多模式嵌入，然后被提供给答案解码器。使用地面实况答案作为目标，利用LM损失对VQA模型进行微调。
+Table 1 shows the results of combined models. From the results, we observe that the BEiT encoders show the best performance among the three types of encoders while the best decoders are the RoBERTaLARGE decoders. Apparently, the pre-trained models on the vision task improve the performance of text recognition models, and the pure Transformer models are better than the CRNN models and the Tesseract on this task. According to the results, we mainly use three settings on the subsequent experiments: TrOCRSMALL (total parameters=62M) consists of the encoder of DeiTSMALL and the decoder of MiniLM, TrOCRBASE (total parameters=334M) consists of the encoder of BEiTBASE and the decoder of RoBERTaLARGE, TrOCRLARGE (total parameters=558M) consists of the encoder of BEiTLARGE and the decoder of RoBERTaLARGE. In Table 2, we have also done some ablation experiments to verify the effect of pre-trained model initialization, data augmentation, and two stages of pre-training. All of them have great improvements to the TrOCR models.
 
-Table 8. Comparison with state-of-the-art methods on VQA and NLVR2 . ALBEF performs an extra pre-training step for NLVR2 .SimVLM† uses 13× more training data and a larger vision backbone (ResNet+ViT) than BLIP.
+表1显示了组合模型的结果。从结果中，我们观察到，在三种类型的编码器中，BEiT编码器表现出最好的性能，而最好的解码器是RoBERTaLARGE解码器。显然，在视觉任务上预先训练的模型提高了文本识别模型的性能，并且纯Transformer模型在该任务上优于CRNN模型和Tesseract模型。根据结果，我们在随后的实验中主要使用了三种设置：TrOCRSMALL（总参数=62M）由DeiTSMALL的编码器和MiniLM的解码器组成，TrOCRBASE（总参数=334M）由BEiTBASE的编码器和RoBERTaLARGE的解码器组成。在表2中，我们还进行了一些消融实验，以验证预训练模型初始化、数据扩充和两个阶段的预训练的效果。所有这些都对TrOCR模型有很大的改进。
 
-表8。在VQA和NLVR2上与最先进的方法进行比较。ALBEF为NLVR2执行额外的预训练步骤。与BLIP相比，SimVLM†使用了13倍多的训练数据和更大的视觉骨干（ResNet+ViT）。
+#### SROIE Task 2 SROIE任务2
+Table 3 shows the results of the TrOCR models and the current SOTA methods on the leaderboard of the SROIE dataset. To capture the visual information, all of these baselines leverage CNN-based networks as the feature extractors while the TrOCR models use the image Transformer to embed the information from the image patches. For language modeling, MSO Lab (Sang and Cuong 2019) and CLOVA OCR (Sang and Cuong 2019) use LSTM layers and H&H Lab (Shi, Bai, and Yao 2016) use GRU layers while the TrOCR models use the Transformer decoder with a pure attention mechanism. According to the results, the TrOCR models outperform the existing SOTA models with pure Transformer structures. It is also confirmed that Transformer-based text recognition models get competitive performance compared to CNN-based networks in visual feature extraction and RNN-based networks in language modeling on this task without any complex pre/post-process steps.
 
-The results are shown in Table 8. Using 14M images, BLIP outperforms ALBEF by +1.64% on the test set. Using 129M images, BLIP achieves better performance than SimVLM which uses 13× more pre-training data and a larger vision backbone with an additional convolution stage.
+表3显示了SROIE数据集排行榜上的TrOCR模型和当前SOTA方法的结果。为了捕获视觉信息，所有这些基线都利用基于CNN的网络作为特征提取器，而TrOCR模型使用图像转换器来嵌入图像补丁中的信息。对于语言建模，MSO实验室（Sang and Cuong 2019）和CLOVA OCR（Sang和Cuong 2019年）使用LSTM层，H&H实验室（Shi，Bai和Yao 2016）使用GRU层，而TrOCR模型使用具有纯注意力机制的Transformer解码器。根据结果，TrOCR模型优于具有纯Transformer结构的现有SOTA模型。在没有任何复杂的前/后处理步骤的情况下，基于Transformer的文本识别模型在视觉特征提取方面与基于CNN的网络和基于RNN的网络在该任务的语言建模方面相比具有竞争力。
 
-结果如表8所示。使用1400万张图像，BLIP在测试集上的表现优于ALBEF+1.64%。使用129M张图像，BLIP比SimVLM获得了更好的性能，SimVLM使用了13倍多的预训练数据和更大的视觉主干和额外的卷积级。
+#### IAM Handwriting Database  IAM手写数据库
+Table 4 shows the results of the TrOCR models and the existing methods on the IAM Handwriting Database. According to the results, the methods with CTC decoders show good performance on this task and the external LM will result in a significant reduction in CER. By comparing the methods (Bluche and Messina 2017) with the TrOCR models, the TrOCRLARGE achieves a better result, which indicates that the Transformer decoder is more competitive than the CTC decoder in text recognition and has enough ability for language modeling instead of relying on an external LM. Most of the methods use sequence models in their encoders after the CNN-based backbone except the FCN encoders in (Wang et al. 2020a), which leads to a significant improvement on CER. Instead of relying on the features from the CNN-based backbone, the TrOCR models using the information from the image patches get similar and even better results, illustrating that the Transformer structures are competent to extract visual features well after pre-training. From the experiment results, the TrOCR models exceed all the methods which only use synthetic/IAM as the sole training set with pure Transformer structures and 
 
-### 5.4. Natural Language Visual Reasoning (NLVR2) 5.4。自然语言视觉推理（NLVR2）
-NLVR2 (Suhr et al., 2019) asks the model to predict whether a sentence describes a pair of images. In order to enable reasoning over two images, we make a simple modification to our pre-trained model which leads to a more computationalefficient architecture than previous approaches (Li et al., 2021a; Wang et al., 2021). As shown in Figure 5(b), for each transformer block in the image-grounded text encoder, there exist two cross-attention layers to process the two input images, and their outputs are merged and fed to the FFN.
+表4显示了IAM手写数据库上的TrOCR模型和现有方法的结果。根据结果，使用CTC解码器的方法在该任务上表现出良好的性能，并且外部LM将显著降低CER。通过将这些方法（Bluche和Messina 2017）与TrOCR模型进行比较，TrOCRLARGE获得了更好的结果，这表明Transformer解码器在文本识别方面比CTC解码器更有竞争力，并且具有足够的语言建模能力，而不是依赖于外部LM。除了（Wang等人，2020a）中的FCN编码器之外，大多数方法在基于CNN的主干之后的编码器中使用序列模型，这导致了CER的显著改进。使用来自图像补丁的信息的TrOCR模型获得了类似甚至更好的结果，而不是依赖于来自基于CNN的主干的特征，这表明Transformer结构能够在预训练后很好地提取视觉特征。从实验结果来看，TrOCR模型超过了仅使用合成/IAM作为纯Transformer结构的唯一训练集的所有方法，并且
 
-NLVR2（Suhr等人，2019）要求模型预测一个句子是否描述了一对图像。为了能够对两幅图像进行推理，我们对预先训练的模型进行了简单的修改，这导致了比以前的方法更具计算效率的架构（Li et al.，2021a；Wang等人，2021）。如图5（b）所示，对于基于图像的文本编码器中的每个变换器块，存在两个交叉关注层来处理两个输入图像，并且它们的输出被合并并馈送到FFN。
+Table 4: Evaluation results (CER) on the IAM Handwriting dataset.
 
-Table 9. Comparison with state-of-the-art methods on VisDial v1.0 validation set. VD-ViLBERT† (Murahari et al., 2020) pre-trains ViLBERT (Lu et al., 2019) with additional VQA data. 
+表4：IAM手写数据集的评估结果（CER）。
 
-表9。与VisDial v1.0验证集上最先进的方法进行比较。VD ViLBERT†（Murahari et al.，2020）用额外的VQA数据预训练ViLBERT（Lu et al.，2019）。
+Table 5: Inference time on the IAM Handwriting dataset. achieve a new state-of-the-art CER of 2.89. Without leveraging any extra human-labeled data, TrOCR even gets comparable results with the methods in (Diaz et al. 2021) using the additional internal human-labeled dataset.
 
-The two CA layers are intialized from the same pre-trained weights. The merge layer performs simple average pooling in the first 6 layers of the encoder, and performs concatenation followed by a linear projection in layer 6-12. An MLP classifier is applied on the output embedding of the [Encode] token. As shown in Table 8, BLIP outperforms all existing methods except for ALBEF which performs an extra step of customized pre-training. Interestingly, performance on NLVR2 does not benefit much from additional web images, possibly due to the domain gap between web data and downstream data.
+表5:IAM手写数据集上的推断时间。实现了2.89的最先进的CER。在没有利用任何额外的人类标记数据的情况下，TrOCR甚至可以使用额外的内部人类标记数据集获得与（Diaz等人，2021）中的方法相当的结果。
 
-两个CA层由相同的预训练权重初始化。合并层在编码器的前6层中执行简单的平均池化，并在层6-12中执行级联，然后进行线性投影。MLP分类器应用于[Encode]令牌的输出嵌入。如表8所示，除了ALBEF执行额外的定制预训练步骤外，BLIP优于所有现有方法。有趣的是，NLVR2的性能并没有从额外的网络图像中获得太多好处，这可能是由于网络数据和下游数据之间的域差距。
+#### Scene Text Datasets  场景文本数据集
+In Table 6, we compare the TrOCRBASE and TrOCRLARGE models of fine-tuning with synthetic data only and fine-tuning with synthetic data and benchmark datasets (the training sets of IC13, IC15, IIIT5K, SVT) to the popular and recent SOTA methods. Compared to all, the TrOCR models establish five new SOTA results of eight experiments while getting comparable results on the rest. Our model underperforms on the IIIT5K dataset, and we find some scene text sample images contain symbols, but the ground truth does not. It is inconsistent with the behavior in our pre-training data (retaining symbols in ground truth), causing the model to tend still to process symbols. There are two kinds of mistakes: outputting symbols but truncating the output in advance to ensure that the number of wordpieces is consistent with the ground truth, or identifying symbols as similar characters.
 
-### 5.5. Visual Dialog (VisDial) 5.5、。视觉对话框（VisDial）
-VisDial (Das et al., 2017) extends VQA in a natural conversational setting, where the model needs to predict an answer not only based on the image-question pair, but also considering the dialog history and the image’s caption. We follow the discriminative setting where the model ranks a pool of answer candidates (Gan et al., 2019; Wang et al., 2020; Murahari et al., 2020). As shown in Figure 5(c), we concatenate image and caption embeddings, and pass them to the dialog encoder through cross-attention. The dialog encoder is trained with the ITM loss to discriminate whether the answer is true or false for a question, given the entire dialog history and the image-caption embeddings. As shown in Table 9, our method achieves state-of-the-art performance on VisDial v1.0 validation set.
+在表6中，我们将仅使用合成数据进行微调以及使用合成数据和基准数据集（IC13、IC15、IIIT5K、SVT的训练集）进行微调的TrOCRBASE和TrOCRLARGE模型与流行的和最近的SOTA方法进行了比较。与所有实验相比，TrOCR模型建立了八个实验的五个新的SOTA结果，而在其他实验中获得了可比较的结果。我们的模型在IIIT5K数据集上表现不佳，我们发现一些场景文本样本图像包含符号，但事实并非如此。它与我们的预训练数据中的行为不一致（在基本事实中保留符号），导致模型仍然倾向于处理符号。有两种错误：输出符号但提前截断输出以确保单词的数量与基本事实一致，或者将符号识别为相似字符。
 
-VisDial（Das et al.，2017）在自然对话环境中扩展了VQA，其中模型不仅需要基于图像问题对，还需要考虑对话历史和图像的标题来预测答案。我们遵循判别设置，其中模型对候选答案库进行排名（Gan et al.，2019；王等人，2020；Murahari等人，2020）。如图5（c）所示，我们将图像和字幕嵌入连接起来，并通过交叉关注将它们传递给对话框编码器。在给定整个对话历史和图像字幕嵌入的情况下，用ITM损失来训练对话编码器，以区分问题的答案是真是假。如表9所示，我们的方法在VisDial v1.0验证集上实现了最先进的性能。
+#### Inference Speed  推理速度
+Table 5 shows the inference speed of different settings TrOCR models on the IAM Handwriting Database. We can conclude that there is no significant margin in inference speed between the base models and the large models. In contrast, the small model shows comparable results for printed and handwriting text recognition even though the number of parameters is an order of magnitude smaller and the inference speed is as twice as fast. The low number of parameters and high inference speed means fewer computational resources and user waiting time, making it more suitable for deployment in industrial applications.
 
-### 5.6. Zero-shot Transfer to Video-Language Tasks 5.6。零样本传输到视频语言任务
-Our image-language model has strong generalization ability to video-language tasks. In Table 10 and Table 11, we perform zero-shot transfer to text-to-video retrieval and video question answering, where we directly evaluate the models trained on COCO-retrieval and VQA, respectively. To process video input, we uniformly sample n frames per video (n = 8 for retrieval and n = 16 for QA), and concatenate the frame features into a single sequence. Note that this simple approach ignores all temporal information.
+表5显示了IAM手写数据库上不同设置的TrOCR模型的推理速度。我们可以得出结论，在基本模型和大型模型之间，推理速度没有显著的差距。相比之下，尽管参数数量少了一个数量级，推理速度是原来的两倍，但小模型在打印和手写文本识别方面显示出了可比较的结果。低参数数量和高推理速度意味着更少的计算资源和用户等待时间，使其更适合在工业应用中部署。
 
-我们的图像语言模型对视频语言任务具有很强的泛化能力。在表10和表11中，我们执行了从零样本到文本到视频检索和视频问答的转换，其中我们分别直接评估了基于COCO-retrieval和VQA训练的模型。为了处理视频输入，我们对每个视频统一采样n帧（检索时n=8，QA时n=16），并将帧特征连接到单个序列中。请注意，这种简单的方法忽略了所有的时间信息。
+## Related Work 相关工作
+### Scene Text Recognition 场景文本识别
+For text recognition, the most popular approaches are usually based on the CTC-based models. (Shi, Bai, and Yao 2016) proposed the standard CRNN, an end-to-end architecture combined by CNN and RNN. The convolutional layers are used to extract the visual features and convert them to sequence by concatenating the columns, while the recurrent layers predict the per-frame labels. They use a CTC decoding strategy to remove the repeated symbols and all the blanks from the labels to achieve the final prediction. (Su and Lu 2014) used the Histogram of Oriented Gradient (HOG) features extracted from the image patches in the same column of the input image, instead of the features from the CNN network. A BiLSTM is then trained for labeling the sequential data with the CTC technique to find the best match. (Gao et al. 2019) extracted the feature by the densely connected network incorporating the residual attention block and capture the contextual information and sequential dependency by the CNN network. They compute the probability distribution on the output of the CNN network instead of using an RNN network to model them. After that, CTC translates the probability distributions into the final label sequence.
 
-Table 10. Comparisons with state-of-the-art methods for text-tovideo retrieval on the 1k test split of the MSRVTT dataset.
+对于文本识别，最流行的方法通常是基于CTC的模型。（施，白，姚2016）提出了标准的CRNN，一种由CNN和RNN结合的端到端架构。卷积层用于提取视觉特征，并通过连接列将其转换为序列，而递归层则预测每帧标签。他们使用CTC解码策略来去除标签中的重复符号和所有空白，以实现最终预测。（Su和Lu 2014）使用了从输入图像的同一列中的图像块中提取的定向梯度直方图（HOG）特征，而不是来自CNN网络的特征。然后训练BiLSTM，用CTC技术标记序列数据，以找到最佳匹配。（Gao et al.2019）通过结合剩余注意力块的密集连接网络提取特征，并通过CNN网络捕获上下文信息和顺序依赖性。他们计算CNN网络输出的概率分布，而不是使用RNN网络对其进行建模。然后，CTC将概率分布转换为最终的标签序列。
 
-表10。在MSRVTT数据集的1k测试分割上与最先进的文本到视频检索方法的比较。
+The Sequence-to-Sequence models (Zhang et al. 2020b; Wang et al. 2019; Sheng, Chen, and Xu 2019; Bleeker and de Rijke 2019; Lee et al. 2020; Atienza 2021) are gradually attracting more attention, especially after the advent of the Transformer architecture (Vaswani et al. 2017). SaHAN (Zhang et al. 2020b), standing for the scale-aware hierarchical attention network, are proposed to address the character scale-variation issue. The authors use the FPN network and the CRNN models as the encoder as well as a hierarchical attention decoder to retain the multi-scale features. (Wang et al. 2019) extracted a sequence of visual features from the input images by the CNN with attention module and BiLSTM. The decoder is composed of the proposed Gated Cascade Attention Module (GCAM) and generates the target characters from the feature sequence extracted by the encoder. For the Transformer models, (Sheng, Chen, and Xu 2019) first applied the Transformer to Scene Text Recognition. Since the input of the Transformer architecture is required to be a sequence, a CNN-based modality-transform block is employed to transform 2D input images to 1D sequences. (Bleeker and de Rijke 2019) added a direction embedding to the input of the decoder for the bidirectional text decoding with a single decoder, while (Lee et al. 2020) utilized the two-dimensional dynamic positional embedding to keep the spatial structures of the intermediate feature maps for recognizing texts with arbitrary arrangements and large inter-character spacing. (Yu et al. 2020) proposed semantic reasoning networks to replace RNN-like structures for more accurate text recognition. (Atienza 2021) only used the image Transformer without text Transformer for the text recognition in a non-autoregressive way.
 
-Table 11. Comparisons with state-of-the-art methods for video question answering. We report top-1 test accuracy on two datasets.
+序列到序列模型（Zhang et al.2020b；Wang et al.2019；Sheng，Chen和Xu 2019；Bleeker和de Rijke 2019；Lee et al.2020；Atienza 2021）正逐渐吸引更多的关注，尤其是在Transformer架构出现之后（Vaswani et al.2017）。SaHAN（Zhang et al.2020b），代表尺度感知的层次注意力网络，被提出来解决字符尺度变化问题。作者使用FPN网络和CRNN模型作为编码器和层次注意力解码器来保留多尺度特征。（Wang et al.2019）通过具有注意力模块和BiLSTM的CNN从输入图像中提取了一系列视觉特征。解码器由所提出的门控级联注意模块（GCAM）组成，并根据编码器提取的特征序列生成目标字符。对于Transformer模型，（Sheng，Chen，and Xu 2019）首次将Transformer应用于场景文本识别。由于Transformer架构的输入需要是序列，因此采用基于CNN的模态变换块来将2D输入图像变换为1D序列。（Bleeker和de Rijke 2019）在解码器的输入端添加了方向嵌入，用于使用单个解码器进行双向文本解码，而（Lee等人2020）利用二维动态位置嵌入来保持中间特征图的空间结构，用于识别具有任意排列和大字符间间距的文本。（Yu et al.2020）提出了语义推理网络来取代类RNN结构，以实现更准确的文本识别。（Atienza 2021）仅使用图像转换器而不使用文本转换器以非自回归的方式进行文本识别。
 
-表11。与最先进的视频问答方法的比较。我们在两个数据集上报告了排名前1的测试准确性。
+Table 6: Word accuracy on the six benchmark datasets (36-char), where “Syn” indicates the model using synthetic data only and “Syn+Benchmark” indicates the model using synthetic data and benchmark datasets.
 
-Despite the domain difference and lack of temporal modeling, our models achieve state-of-the-art performance on both video-language tasks. For text-to-video retrieval, zeroshot BLIP even outperforms models finetuned on the target video dataset by +12.4% in recall@1. Further performance improvement can be achieved if the BLIP model is used to initialize a video-language model with temporal modeling (e.g. replace our ViT with a TimeSformer (Bertasius et al., 2021)) and finetuned on video data.
+表6：六个基准数据集（36个字符）的单词准确性，其中“Syn”表示仅使用合成数据的模型，“Syn+benchmark”表示使用合成数据和基准数据集的模型。
 
-尽管存在领域差异和缺乏时间建模，但我们的模型在两个视频语言任务上都实现了最先进的性能。对于文本到视频检索，零镜头BLIP甚至比在目标视频数据集上微调的模型高出+12.4%recall@1.如果使用BLIP模型来初始化具有时间建模的视频语言模型（例如，用TimeSformer代替我们的ViT（Bertasius et al.，2021））并对视频数据进行微调，则可以实现进一步的性能改进。
+The texts in natural images may appear in irregular shapes caused by perspective distortion. (Shi et al. 2016; Baek et al. 2019; Litman et al. 2020; Shi et al. 2018; Zhan and Lu 2019) addressed this problem by processing the input images with an initial rectification step. For example, thin-plate spline transformation (Shi et al. 2016; Baek et al. 2019; Litman et al. 2020; Shi et al. 2018) is applied to find a smooth spline interpolation between a set of fiducial points and normalize the text region to a predefined rectangle, while (Zhan and Lu 2019) proposed an iterative rectification network to model the middle line of scene texts as well as the orientation and boundary of textlines. (Baek et al. 2019; Diaz et al. 2021) proposed universal architectures for comparing different recognition models.
 
-## 6. Additional Ablation Study 6。附加消融研究
-In this section, we provide additional ablation experiments on CapFilt.
+自然图像中的文本可能由于透视失真而呈现出不规则的形状。（Shi等人2016；Baek等人2019；Litman等人2020；Shi等人2018；Zhan和Lu 2019）通过用初始校正步骤处理输入图像来解决这个问题。例如，薄板样条变换（Shi等人2016；Baek等人2019；Litman等人2020；Shi等人2018）被应用于寻找一组基准点之间的平滑样条插值，并将文本区域归一化为预定义的矩形，而（詹和鲁2019）提出了一种迭代校正网络来对场景文本的中线以及文本线的方向和边界进行建模。（Baek等人2019；Diaz等人2021）提出了用于比较不同识别模型的通用架构。
 
-在本节中，我们提供了关于CapFilt的额外消融实验。
+### Handwritten Text Recognition  手写文本识别
+(Memon et al. 2020) gave a systematic literature review about the modern methods for handwriting recognition. Various attention mechanisms and positional encodings are compared in the (Michael et al. 2019) to address the alignment between the input and output sequence. The combination of RNN encoders (mostly LSTM) and CTC decoders (Bluche and Messina 2017; Graves and Schmidhuber 2008; Pham et al. 2014) took a large part in the related works for a long time. Besides, (Graves and Schmidhuber 2008; Voigtlaender, Doetsch, and Ney 2016; Puigcerver 2017) have also tried multidimensional LSTM encoders. Similar to the scene text recognition, the seq2seq methods and the scheme for attention decoding have been verified in (Michael et al. 2019; Kang et al. 2020; Chowdhury and Vig 2018; Bluche 2016). (Ingle et al. 2019) addressed the problems in building a large-scale system.
 
-Improvement with CapFilt is not due to longer training. Since the bootstrapped dataset contains more texts than the original dataset, training for the same number of epochs takes longer with the bootstrapped dataset. To verify that the effectiveness of CapFilt is not due to longer training, we replicate the web text in the original dataset so that it has the same number of training samples per epoch as the bootstrapped dataset. As shown in Table 12, longer training using the noisy web texts does not improve performance.
+（Memon等人，2020）对现代手写识别方法进行了系统的文献综述。在（Michael等人，2019）中比较了各种注意力机制和位置编码，以解决输入和输出序列之间的对齐问题。RNN编码器（主要是LSTM）和CTC解码器的组合（Bluche和Messina 2017；Graves和Schmidhuber 2008；Pham等人2014）在很长一段时间内参与了相关工作。此外，（Graves和Schmidhuber 2008；Voigtlander、Doetsch和Ney 2016；Puigcerver 2017）也尝试了多维LSTM编码器。与场景文本识别类似，seq2seq方法和注意力解码方案已在中得到验证（Michael等人，2019；Kang等人2020；Chowdhury和Vig 2018；Bluche 2016）。（Ingle等人，2019）解决了建立大规模系统的问题。
 
-CapFilt的改进并不是因为更长的训练时间。由于自举数据集包含的文本比原始数据集多，因此使用自举数据集中训练相同数量的历元需要更长的时间。为了验证CapFilt的有效性不是由于更长的训练，我们在原始数据集中复制网络文本，使其每个历元具有与自举数据集相同数量的训练样本。如表12所示，使用嘈杂的网络文本进行更长时间的训练并不能提高性能。
+## Conclusion 结论
+In this paper, we present TrOCR, an end-to-end Transformer-based OCR model for text recognition with pre-trained models. Distinct from existing approaches,
 
-A new model should be trained on the bootstrapped dataset. The bootstrapped dataset is used to pre-train a new model. We investigate the effect of continue training from the previous pre-trained model, using the bootstrapped dataset. Table 13 hows that continue training does not help. This observation agrees with the common practice in knowledge distillation, where the student model cannot be initialized from the teacher.
+在本文中，我们提出了TrOCR，这是一种基于Transformer的端到端OCR模型，用于预训练模型的文本识别。与现有方法不同，
 
-应该在引导的数据集上训练一个新的模型。自举数据集用于预训练新模型。我们使用自举数据集研究了先前预训练模型中继续训练的效果。表13显示继续培训没有帮助。这一观察结果与知识提炼中的常见做法一致，即学生模型不能从老师那里初始化。
+TrOCR does not rely on the conventional CNN models for image understanding. Instead, it leverages an image Transformer model as the visual encoder and a text Transformer model as the textual decoder. Moreover, we use the wordpiece as the basic unit for the recognized output instead of the character-based methods, which saves the computational cost introduced by the additional language modeling. Experiment results show that TrOCR achieves state-of-the-art results on printed, handwritten and scene text recognition with just a simple encoder-decoder model, without any post-processing steps.
 
-Table 12. The original web texts are replicated to have the same number of samples per epoch as the bootstrapped dataset. Results verify that the improvement from CapFilt is not due to longer training time.
-
-表12。原始网络文本被复制为每个历元具有与自举数据集相同数量的样本。结果证实，CapFilt的改进并非由于训练时间的延长。
-
-Table 13. Continue training the pre-trained model offers less gain compared to training a new model with the bootstrapped dataset. 
-
-表13。与使用自举数据集训练新模型相比，继续训练预先训练的模型提供的增益较小。
-
-## 
-We propose BLIP, a new VLP framework with stateof-the-art performance on a wide range of downstream vision-language tasks, including understanding-based and generation-based tasks. BLIP pre-trains a multimodal mixture of encoder-decoder model using a dataset bootstrapped from large-scale noisy image-text pairs by injecting diverse synthetic captions and removing noisy captions. Our bootstrapped dataset are released to facilitate future visionlanguage research.
-
-我们提出了BLIP，这是一种新的VLP框架，在广泛的下游视觉语言任务上具有最先进的性能，包括基于理解和基于生成的任务。BLIP使用从大规模噪声图像-文本对中引导的数据集，通过注入不同的合成字幕和去除噪声字幕，预训练编码器-解码器模型的多模式混合。我们发布了自启动的数据集，以促进未来的视觉语言研究。
-
-There are a few potential directions that can further enhance the performance of BLIP: (1) Multiple rounds of dataset bootstrapping; (2) Generate multiple synthetic captions per image to further enlarge the pre-training corpus; (3) Model ensemble by training multiple different captioners and filters and combining their forces in CapFilt. We hope that our paper motivates future work to focus on making improvements in both the model aspect and the data aspect, the bread and butter of vision-language research.
-
-有几个潜在的方向可以进一步提高BLIP的性能：（1）多轮数据集自举；（2） 为每张图像生成多个合成字幕，以进一步放大预训练语料库；（3） 通过训练多个不同的字幕和滤镜，并在CapFilt中结合它们的力量，建立合奏模型。我们希望我们的论文能激励未来的工作集中在模型方面和数据方面进行改进，这是视觉语言研究的主要内容。
-
-## References 参考文献
-### A. Downstream Task Details A.下游任务详细信息
-Table 14 shows the hyperparameters that we use for finetuning on the downstream vision-language tasks. All tasks uses AdamW optimizer with a weight decay of 0.05 and a cosine learning rate schedule. We use an image resolution of 384 × 384, except for VQA where we follow Wang et al. (2021) and use 480 × 480 images. Next we delineate the dataset details.
-
-表14显示了我们用于对下游视觉语言任务进行微调的超参数。所有任务都使用权重衰减为0.05的AdamW优化器和余弦学习率计划。我们使用384×384的图像分辨率，除了VQA，我们遵循王等人的做法。（2021）并使用480×480的图像。接下来我们描述数据集的细节。
-
-Image-Text Retrieval. We use the Karpathy split (Karpathy & Li, 2015) for both COCO and Flickr30K. COCO contains 113/5k/5k images for train/validation/test, and Flickr30K contains 29k/1k/1k images for train/validation/test.
-
-图像文本检索。我们对COCO和Flickr30K使用Karpathy分裂（Karpathy&Li，2015）。COCO包含用于训练/验证/测试的113/5k/5k图像，Flickr30K包含用于训练或验证/测试中的29k/1k/1k图像。
-
-Image Captioning. We finetune on COCO’s Karpathy train split, and evaluate on COCO’s Karpathy test split and NoCaps validation split. During inference, we use beam search with a beam size of 3, and set the maximum generation length as 20.
-
-图像字幕。我们对COCO的Karpathy训练分裂进行了微调，并评估了COCO的Karpathy测试分裂和NoCaps验证分裂。在推理过程中，我们使用波束大小为3的波束搜索，并将最大生成长度设置为20。
-
-VQA. We experiment with the VQA2.0 dataset (Goyal et al., 2017), which contains 83k/41k/81k images for training/validation/test. Following Li et al. (2021a), we use both training and validation splits for training, and include additional training samples from Visual Genome. During inference on VQA, we use the decoder to rank the 3,128 candidate answers (Li et al., 2021a; Kim et al., 2018).
-
-VQA。我们对VQA2.0数据集（Goyal et al.，2017）进行了实验，该数据集包含83k/41k/81k个用于训练/验证/测试的图像。继李等人（2021a）之后，我们使用训练和验证分割进行训练，并包括来自视觉基因组的额外训练样本。在对VQA进行推理期间，我们使用解码器对3128个候选答案进行排序（Li等人，2021a；Kim等人，2018）。
-
-NLVR2 . We conduct experiment on the official split (Suhr et al., 2019).
-
-NLVR2。我们对官方分裂进行了实验（Suhr et al.，2019）。
-
-VisDial. We finetune on the training split of VisDial v1.0 and evaluate on its validation set.
-
-VisDial。我们对VisDial v1.0的训练部分进行了微调，并对其验证集进行了评估。
-
-Table 14. Finetuning hyperparameters for downstream tasks.
-
-表14。微调下游任务的超参数。
-
-### B. Additional Examples of Synthetic Captions B.合成字幕的其他示例
-In Figure 6, we show additional examples of images and texts where the web captions are filtered out, and the synthetic captions are kept as clean training samples.
-
-在图6中，我们展示了图像和文本的其他示例，其中网络字幕被过滤掉，合成字幕被保留为干净的训练样本。
-
-### C. Pre-training Dataset Details C.预训练数据集详细信息
-Table 15 shows the statistics of the pre-training datasets.
-
-表15显示了预训练数据集的统计数据。
-
-Table 15. Statistics of the pre-training datasets. �!: “a week spent at our rented beach house in
-
-表15。预训练数据集的统计信息。�!: “在我们租来的海滨别墅度过了一周
-
-Figure 6. Examples of the web text Tw and the synthetic text Ts. Green texts are accepted by the filter, whereas red texts are rejected.
-
-图6。网络文本Tw和合成文本Ts的示例。绿色文本被过滤器接受，而红色文本被拒绝。
+TrOCR不依赖于传统的CNN模型来进行图像理解。相反，它利用图像转换器模型作为视觉编码器，利用文本转换器模型作为文本解码器。此外，我们使用分词作为识别输出的基本单元，而不是基于字符的方法，这节省了额外的语言建模带来的计算成本。实验结果表明，TrOCR只需一个简单的编码器-解码器模型，就可以在打印、手写和场景文本识别方面获得最先进的结果，而无需任何后处理步骤。
 

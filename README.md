@@ -74,13 +74,20 @@
 2. 视觉 ViT [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](./paper/vit/ViT.md)
 3. 多模态的改进：[MAGNETO:post/pre/sub-LN](./paper/Multimodal/MAGNETO.md), [BEiT-3,不同模态，不同的FFN](./paper/Multimodal/BEiT_v3.md)
 4. 训练时的稳定性: [DeepNet:初始化+梯度裁剪](./paper/Multimodal/DeepNet.md), [深度神经网络初始化 Xavier_init](./paper/Xavier_init.md)
-5. 输入长度可外推: [XPos](./paper/nlp/XPOS.md), [ALibi](./paper/nlp/Alibi.md), [RoPE](./paper/nlp/RoFormer.md)
+5. 输入长度: 
+    * [XPos](./paper/nlp/XPOS.md)
+    * [ALibi](./paper/nlp/Alibi.md) 
+    * [RoPE](./paper/nlp/RoFormer.md)
+    * [LongNet](./paper/nlp/LongNet.md)
 6. [MegaByte](./paper/MegaByte.md)
     * 多模输入更统一：文本、图像、视频，都当成一串连续字节输入；
     * 可以处理超长字节串；
     * 并行生成，多快好省。 并行分块(多token)生成，是不是意味着RLHF就没用了？
     * [Bytes Are All You Need: Transformers Operating Directly On File Bytes](https://arxiv.org/abs/2306.00238)
-6. 稀疏专家模型：[调研](./paper/Sparse_Expert_review.md), [X-MoE](./paper/X-MoE.md), [SwitchT](./paper/Switch_Transformers.md)
+6. 稀疏专家模型：
+    * [调研](./paper/Sparse_Expert_review.md)
+    * [X-MoE](./paper/X-MoE.md)
+    * [SwitchT](./paper/Switch_Transformers.md)
 7. 开源的基础架构：[TorchScale](./paper/Multimodal/TorchScale.md) 
 
 
