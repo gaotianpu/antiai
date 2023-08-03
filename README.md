@@ -73,6 +73,7 @@
 1. 自然语言 [Attention Is All You Need](./paper/nlp/transformer.md) 
 2. 视觉 ViT [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](./paper/vit/ViT.md)
 3. 多模态的改进：[MAGNETO:post/pre/sub-LN](./paper/Multimodal/MAGNETO.md), [BEiT-3,不同模态，不同的FFN](./paper/Multimodal/BEiT_v3.md)
+    * https://zhuanlan.zhihu.com/p/157490738 softmax是必须的吗？
 4. 训练时的稳定性: [DeepNet:初始化+梯度裁剪](./paper/Multimodal/DeepNet.md), [深度神经网络初始化 Xavier_init](./paper/Xavier_init.md)
 5. 输入长度: 
     * [XPos](./paper/nlp/XPOS.md)
