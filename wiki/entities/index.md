@@ -4,6 +4,7 @@
 
 ### 人物
 - [[kaiming_he]] — 何恺明（ResNet / MAE / Mask R-CNN）
+- [[jeff_dean]] — Jeff Dean（Google AI 系统架构）
 
 ### 组织
 - [[deepseek_ai]] — AI 研究实验室
