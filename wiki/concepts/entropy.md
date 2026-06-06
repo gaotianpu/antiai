@@ -3,7 +3,7 @@ id: entropy
 type: concept
 tags: ["machine-learning", "theoretical", "information-theory"]
 aliases: ["熵", "信息熵", "entropy"]
-related_nodes: [information_theory, loss_function, kl_divergence, mutual_information]
+related_nodes: [information_theory, loss_function, kl_divergence, mutual_information, cross_entropy]
 ---
 
 # Entropy（熵）

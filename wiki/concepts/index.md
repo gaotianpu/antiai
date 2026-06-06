@@ -14,6 +14,7 @@
 - [[bayesian_inference]] — 贝叶斯推断：MLE vs MAP / 后验估计与正则化
 - [[information_theory]] — 信息论：熵/交叉熵/KL散度/互信息
 - [[entropy]] — 熵：不确定性度量 / 交叉熵 / 困惑度
+- [[cross_entropy]] — 交叉熵：分类损失的核心 / CE = H(p) + D_KL / MLE 等价性
 - [[kl_divergence]] — KL 散度：分布差异度量 / VAE / 蒸馏 / RLHF
 - [[mutual_information]] — 互信息：依赖度量 / InfoNCE / 表示学习
 - [[optimization_fundamentals]] — 优化基础：凸与非凸/鞍点/约束优化

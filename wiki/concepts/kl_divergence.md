@@ -3,7 +3,7 @@ id: kl_divergence
 type: concept
 tags: ["machine-learning", "theoretical", "information-theory"]
 aliases: ["KL散度", "相对熵", "Kullback-Leibler", "relative entropy"]
-related_nodes: [information_theory, entropy, loss_function, reinforcement_learning_from_human_feedback, mutual_information]
+related_nodes: [information_theory, entropy, loss_function, reinforcement_learning_from_human_feedback, mutual_information, cross_entropy]
 ---
 
 # KL Divergence（KL 散度）
