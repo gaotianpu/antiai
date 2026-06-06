@@ -1,5 +1,13 @@
 # 概念索引
 
+## 数学基础
+- [[math_for_deep_learning]] — 深度学习数学基础：五大子领域总览
+- [[linear_algebra]] — 线性代数：向量/矩阵/特征分解/SVD
+- [[calculus]] — 微积分：导数/链式法则/梯度/二阶优化
+- [[probability_statistics]] — 概率与统计：分布/MLE/MAP/贝叶斯推断
+- [[information_theory]] — 信息论：熵/交叉熵/KL散度/互信息
+- [[optimization_fundamentals]] — 优化基础：凸与非凸/鞍点/约束优化
+
 ## 模型架构
 - [[attention_mechanism]] — 注意力机制：动态聚焦输入关键部分
 - [[attention_variants]] — 注意力变体：多头/因果/高效注意力的分类
