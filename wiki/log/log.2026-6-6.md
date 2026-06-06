@@ -31,3 +31,11 @@ type: log
   ERNIE × 3 / cpt-txt
 - BART.md / Marian.md 为空文件，跳过
 - 索引重写为完整版（按年份排序，去重）
+
+## [05:40] Ingest: Multimodal + ViT 论文 32 篇
+- 新建 Source: CLIP / BLIP / DALL-E 2 / GLIDE / Imagen / SAM / BEiT v3 / DeepNet / FLIP
+  Kosmos-1 / MAGNETO / MetaLM / OpenCLIP / SegGPT / TorchScale / TrOCR
+  ViT / ViTDet / MAE / iGPT / BEiT / BEiT 2 / DeiT / DiT / MoCo v3 / SwinT
+  ViTDet_Benchmarking / ViT_derivatives / iBOT / simpleViT / vit_jpeg
+- 规整: NewBeer.md 内链路径（./nlp/ → ../raw/nlp/ 等）
+- 索引: 已去重
