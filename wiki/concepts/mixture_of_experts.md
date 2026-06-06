@@ -3,7 +3,7 @@ id: mixture_of_experts
 type: concept
 tags: [machine-learning, theoretical]
 aliases: [MoE, 混合专家, 稀疏专家, Sparse MoE]
-related_nodes: [sparse_expert_review_2022, cheng_2026_engram, conditional_memory, sparsity_allocation]
+related_nodes: [sparse_expert_review_2022, cheng_2026_engram, conditional_memory, sparsity_allocation, fedus_2021_switch, chi_2022_xmoe]
 last_verified: 2026-06-06
 ---
 
@@ -20,9 +20,12 @@ last_verified: 2026-06-06
 ## 关键发展
 - Shazeer et al. (2017) — 首次将 MoE 引入神经网络
 - GShard (Lepikhin 2020) — 分布式 MoE 训练框架
-- Switch Transformer (Fedus 2022) — 简化为单专家路由
+- Switch Transformer (Fedus 2021) — 简化为单专家路由
+- X-MoE (Chi 2022) — 发现 MoE 表示坍塌问题并提出专家多样化正则化
 - DeepSeek MoE (Dai 2024) — 细粒度专家分割 + 共享专家
 
 ## 来源
 - [[sparse_expert_review_2022]] — 稀疏专家模型综述
+- [[fedus_2021_switch]] — Switch Transformer：简化 MoE 路由为单专家
+- [[chi_2022_xmoe]] — X-MoE：MoE 表示坍塌分析与专家多样化
 - [[cheng_2026_engram]] — 条件记忆作为 MoE 的互补轴
