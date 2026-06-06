@@ -14,3 +14,8 @@ type: log
 - 新建 Entity: [[openai]], [[google]]
 - 更新 Index: sources/index.md, concepts/index.md, entities/index.md
 - 双向链接: 已同步
+
+## [04:45] Ingest: BERT 变体系列（9 篇）
+- 新建 Source: electra / macbert / roberta / roberta_wwm / spanbert / structbert / tinybert / mobilebert / bert_wwm
+- ALBERT.md 为空文件，跳过
+- 更新 Index: sources/index.md

@@ -13,6 +13,21 @@
 - [[radford_2019_gpt2]] — Language Models are Unsupervised Multitask Learners（GPT-2 零样本迁移）
 - [[raffel_2019_t5]] — Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer（T5 统一框架）
 
+## 2021
+- [[roberta_wwm_2021]] — RoBERTa-wwm-ext Fine-Tuning for Chinese Text Classification（RoBERTa 全词掩码中文版）
+
+## 2020
+- [[electra_2020_electra]] — ELECTRA: Pre-training Text Encoders as Discriminators Rather Than Generators（RTD 鉴别器预训练）
+- [[macbert_2020_macbert]] — Revisiting Pre-Trained Models for Chinese Natural Language Processing（MacBERT 中文预训练）
+- [[mobilebert_2020_mobilebert]] — MobileBERT: a Compact Task-Agnostic BERT for Resource-Limited Devices（移动端 BERT）
+
+## 2019
+- [[bert_wwm_2019]] — Pre-Training with Whole Word Masking for Chinese BERT（全词掩码中文 BERT）
+- [[liu_2019_roberta]] — RoBERTa: A Robustly Optimized BERT Pretraining Approach（RoBERTa 预训练优化）
+- [[spanbert_2019_spanbert]] — SpanBERT: Improving Pre-training by Representing and Predicting Spans（Span 级预训练）
+- [[structbert_2019_structbert]] — StructBERT: Incorporating Language Structures into Pre-training（语言结构预训练）
+- [[tinybert_2019_tinybert]] — TinyBERT: Distilling BERT for Natural Language Understanding（BERT 知识蒸馏）
+
 ## 2018
 - [[devlin_2018_bert]] — BERT: Pre-training of Deep Bidirectional Transformers（双向预训练）
 - [[radford_2018_gpt]] — Improving Language Understanding by Generative Pre-Training（GPT-1 预训练）
