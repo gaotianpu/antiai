@@ -138,10 +138,10 @@ grep -n '^### ' "$RAW_DIR/${ARXIV_ID}.md"  # H3：可选
 通用标题修复：
 
 ```bash
-python tools/pdf2md_fix.py < "$RAW_DIR/${ARXIV_ID}.md" > tmp.md && mv tmp.md "$RAW_DIR/${ARXIV_ID}.md"
+python scripts/pdf2md_fix.py < "$RAW_DIR/${ARXIV_ID}.md" > tmp.md && mv tmp.md "$RAW_DIR/${ARXIV_ID}.md"
 ```
 
-`tools/pdf2md_fix.py` 自动识别章节号并标注层级，修复 References/Abstract 标题，过滤引用条目误识别。后续发现可复用的转换修复逻辑追加到该文件。
+`scripts/pdf2md_fix.py` 自动识别章节号并标注层级，修复 References/Abstract 标题，过滤引用条目误识别。后续发现可复用的转换修复逻辑追加到该文件。
 
 ### 3.6 代码块修复
 
