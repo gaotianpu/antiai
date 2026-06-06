@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Ofir Press et al. | **机构**: Meta | 相关: [[attention_mechanism]]
 - **概述**: 提出 ALiBi 位置编码方案，通过线性偏置实现长度外推
+- **新颖概念**: [[alibi_position_encoding]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

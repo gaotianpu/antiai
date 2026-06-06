@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: 综述 | 相关: [[attention_mechanism]]
 - **概述**: 视觉 Transformer 变体综述
+- **新颖概念**: —
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

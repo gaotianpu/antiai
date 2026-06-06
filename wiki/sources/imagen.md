@@ -15,6 +15,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Google | 相关: [[attention_mechanism]]
 - **概述**: 文本到图像的逼真扩散模型
+- **新颖概念**: [[cascaded_diffusion]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

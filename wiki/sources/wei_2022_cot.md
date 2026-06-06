@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Conference | **作者**: Jason Wei et al. | **机构**: Google | 相关: [[attention_mechanism]]
 - **概述**: 提出思维链提示（CoT）方法，通过在提示中加入中间推理步骤大幅提升大模型推理能力
+- **新颖概念**: [[chain_of_thought]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 - **局限/意义**: -

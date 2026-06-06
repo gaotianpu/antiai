@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Alec Radford et al. | **机构**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 对比语言-图像预训练，零样本迁移到下游视觉任务
+- **新颖概念**: [[contrastive_language_image_pretraining]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

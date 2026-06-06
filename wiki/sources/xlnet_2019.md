@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Zhilin Yang et al. | **机构**: Google | 相关: [[attention_mechanism]]
 - **概述**: 广义自回归预训练，结合自回归和自编码优势，排列语言建模
+- **新颖概念**: [[permutation_language_modeling]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

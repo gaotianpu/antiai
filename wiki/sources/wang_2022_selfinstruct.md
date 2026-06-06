@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2022 | **作者**: Yizhong Wang et al. | **机构**: University of Washington
 - **概述**: 提出 Self-Instruct 方法，让 LLM 自我生成指令数据指导自身微调，大幅降低人工标注成本。
+- **新颖概念**: [[self_instruct]], [[instruction_tuning]]
 - **关键要点**: 1. 种子指令集 + LLM 自生成扩展 2. 指令多样性过滤 3. 自生成数据微调效果匹敌人工标注
 - **方法/发现**: 175 个种子指令 → LLM 生成更多指令 → 过滤 → SFT 微调
 - **局限/意义**: 成为 Alpaca/Vicuna 等指令微调数据生成的底层方法

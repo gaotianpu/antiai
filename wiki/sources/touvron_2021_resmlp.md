@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv:2105.03404 | NeurIPS 2021 | **作者**: Hugo Touvron et al. | **机构**: Facebook AI Research
 - **概述**: 完全基于 MLP 的图像分类架构，无需自注意力机制
+- **新颖概念**: [[mlp_only_architecture]]
 - **关键要点**: 1. 纯 MLP 残差网络（线性层 + 两层前馈网络交替） 2. 依赖强数据增广和蒸馏策略 3. 支持自监督训练
 - **方法/发现**: 在 ImageNet 上取得与 CNN/Transformer 竞争的精度-复杂度权衡
 - **局限/意义**: 对数据增广和蒸馏依赖强；但证明了 MLP 在视觉任务中的潜力，推动 MLP-Mixer 等后续工作

@@ -15,6 +15,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Community | 相关: [[attention_mechanism]]
 - **概述**: CLIP 的开源复现
+- **新颖概念**: —
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

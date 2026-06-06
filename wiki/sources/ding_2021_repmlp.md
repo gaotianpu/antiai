@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2021 | **作者**: Xiaohan Ding et al. | **机构**: Tsinghua University | 相关: [[tolstikhin_2021_mlpmixer]]
 - **概述**: 将卷积重参数化为全连接层，在训练时使用卷积结构，推理时等效为 MLP。
+- **新颖概念**: [[structural_reparameterization]]
 - **关键要点**: 1. 训练时卷积 → 推理时 MLP 2. 重参数化 3. 兼顾 CNN 的局部先验和 MLP 的高效推理
 - **方法/发现**: 结构重参数化技术，训练和推理使用不同等价结构
 - **局限/意义**: 将重参数化思想引入 MLP-like 架构

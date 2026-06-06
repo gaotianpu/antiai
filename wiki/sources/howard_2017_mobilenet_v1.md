@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv:1704.04861 | CVPR 2017 | **作者**: Andrew Howard et al. | **机构**: Google
 - **概述**: 提出深度可分离卷积构建高效移动端 CNN
+- **新颖概念**: [[depthwise_separable_convolution]]
 - **关键要点**: 1. 深度可分离卷积（depthwise + pointwise）大幅降低计算量 2. 宽度乘数（Width Multiplier）和分辨率乘数 3. 在算力-精度权衡上树立基线
 - **方法/发现**: 深度可分离卷积比标准卷积减少 8-9 倍计算量，精度仅有小幅下降
 - **局限/意义**: depthwise 卷积实际推理效率受限于底层实现；但奠定了移动端 CNN 的基本范式

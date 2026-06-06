@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: 微软 | 相关: [[attention_mechanism]]
 - **概述**: 向量量化视觉标记器的掩码图像建模
+- **新颖概念**: [[vector_quantized_tokenizer]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

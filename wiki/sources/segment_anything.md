@@ -15,6 +15,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Meta | 相关: [[attention_mechanism]]
 - **概述**: 可提示分割一切的目标分割基础模型（SAM）
+- **新颖概念**: [[promptable_segmentation]], [[foundation_model]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

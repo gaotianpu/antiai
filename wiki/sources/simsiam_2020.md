@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Xinlei Chen et al. | **机构**: Meta | 相关: [[attention_mechanism]]
 - **概述**: 提出 SimSiam，无需负样本、无需动量编码器的简单孪生网络自监督学习方法
+- **新颖概念**: [[siamese_network]], [[stop_gradient]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Conference | 2022 | **作者**: Long Ouyang et al. | **机构**: OpenAI | 相关: [[reinforcement_learning_from_human_feedback]]
 - **概述**: 使用人类反馈强化学习（RLHF）微调 GPT-3，使模型更好地遵循用户指令，降低有害和不实输出。
+- **新颖概念**: [[reinforcement_learning_from_human_feedback]], [[instruction_tuning]]
 - **关键要点**: 1. 监督微调（SFT）→ 奖励模型（RM）→ PPO 强化学习 2. 1.3B InstructGPT 优于 175B GPT-3 3. 对齐研究的基础范式
 - **方法/发现**: InstructGPT 在有用性和真实性上显著优于 GPT-3，编造减少
 - **局限/意义**: 依赖高质量人类标注；奖励模型有局限性

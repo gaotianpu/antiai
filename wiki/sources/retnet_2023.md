@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Yutao Sun et al. | **机构**: Microsoft | 相关: [[attention_mechanism]]
 - **概述**: 提出保留网络（RetNet），兼具并行训练和高效推理的优势
+- **新颖概念**: [[retention_mechanism]], [[parallel_training_sequential_inference]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

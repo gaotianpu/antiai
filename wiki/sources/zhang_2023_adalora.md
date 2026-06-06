@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2023 | **作者**: Qingru Zhang et al. | **机构**: Microsoft | 相关: [[hu_2021_lora]]
 - **概述**: 在 LoRA 基础上按重要性动态分配参数预算，通过 SVD 参数化 + 剪枝不重要奇异值实现自适应。
+- **新颖概念**: [[low_rank_adaptation]], [[adaptive_budget_allocation]]
 - **关键要点**: 1. SVD 参数化增量更新 2. 按重要性分数动态分配预算 3. 剪枝不重要奇异值
 - **方法/发现**: 替代 LoRA 的固定秩，根据权重重要性自适应分配秩
 - **局限/意义**: 低预算场景显著优于 LoRA 基线

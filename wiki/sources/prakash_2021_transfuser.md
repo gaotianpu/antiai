@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: CVPR 2021 | 2021 | **作者**: Aditya Prakash et al. | **机构**: MPI Tübingen / ETH Zurich
 - **概述**: 提出 TransFuser 使用注意力机制融合图像和 LiDAR 表示
+- **新颖概念**: [[multimodal_fusion]], [[transfuser]]
 - **关键要点**: 1. 基于几何的融合在存在高密度动态智能体时表现不佳 2. TransFuser 用注意力整合图像和 LiDAR 表示 3. 与几何融合相比减少 76% 碰撞
 - **方法/发现**: Multi-Modal Fusion Transformer 用注意力在不同阶段融合特征
 - **局限/意义**: 证明了注意力融合在端到端驾驶中优于几何融合

@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Zhengyan Zhang et al. | **机构**: Baidu | 相关: [[attention_mechanism]]
 - **概述**: 将知识图谱实体信息融入语言表示预训练
+- **新颖概念**: [[knowledge_enhanced_pretraining]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

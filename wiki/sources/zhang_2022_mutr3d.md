@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: CVPR 2022 Workshop on Autonomous Driving | 2022 | **作者**: Tianyuan Zhang et al. | **机构**: CVPR 2022 Workshop
 - **概述**: 通过 3D 轨迹查询实现端到端多相机 3D 跟踪
+- **新颖概念**: —
 - **关键要点**: 1. 引入 3D track query 建模空间和外观一致性轨迹 2. 无需显式空间和外观相似性依赖 3. 无需 NMS 等后处理
 - **方法/发现**: 3D-to-2D 查询 + 端到端集到集损失
 - **局限/意义**: 在 nuScenes 上超 SOTA 5.3 AMOTA

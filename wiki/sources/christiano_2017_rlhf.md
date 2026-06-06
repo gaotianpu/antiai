@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2017 | **作者**: Paul Christiano et al. | **机构**: UC Berkeley | 相关: [[schulman_2017_ppo]]
 - **概述**: 提出从人类偏好中训练奖励模型，再用 RL 优化策略，实现复杂任务的对齐学习。
+- **新颖概念**: [[reinforcement_learning_from_human_feedback]], [[reward_modeling]]
 - **关键要点**: 1. 人类偏好 → 奖励模型 2. PPO 优化策略 3. 减少人工标注需求
 - **方法/发现**: 用人类比较数据训练奖励模型替代手工设计奖励函数
 - **局限/意义**: RLHF 的早期奠基工作，直接影响 InstructGPT/ChatGPT 的对齐方案

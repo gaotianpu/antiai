@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Zihang Dai et al. | **机构**: Google | 相关: [[attention_mechanism]]
 - **概述**: 提出片段级循环机制和相对位置编码，突破 Transformer 固定上下文长度限制
+- **新颖概念**: [[segment_level_recurrence]], [[relative_position_encoding]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

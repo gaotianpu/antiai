@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Alexey Dosovitskiy et al. | **机构**: Google | 相关: [[attention_mechanism]]
 - **概述**: 将 Transformer 直接应用于图像分类，ViT 成为 CV 基础架构
+- **新颖概念**: [[vision_transformer]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

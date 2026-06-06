@@ -15,6 +15,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Microsoft | 相关: [[attention_mechanism]]
 - **概述**: 多模态大语言模型，融合文本/图像/语音
+- **新颖概念**: [[multimodal_language_model]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

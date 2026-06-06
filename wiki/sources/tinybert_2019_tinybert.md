@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Conference | **作者**: Xiaoqi Jiao et al. | 相关: [[attention_mechanism]], [[devlin_2018_bert]]
 - **概述**: 提出两阶段 Transformer 蒸馏方法，将 BERT 压缩为小模型
+- **新颖概念**: [[knowledge_distillation]]
 - **关键要点**: BERT 变体，改进预训练策略/模型结构/效率
 - **方法/发现**: 见原始笔记
 - **局限/意义**: 推动 BERT 在各场景下的实用化

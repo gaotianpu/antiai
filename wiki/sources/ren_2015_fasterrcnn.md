@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2015 | **作者**: Shaoqing Ren et al. | **机构**: Microsoft Research | 相关: [[girshick_2013_rcnn]]
 - **概述**: 提出区域候选网络（RPN），将候选框生成融入检测网络实现端到端训练，近乎实时检测。
+- **新颖概念**: [[region_proposal_network]], [[anchor_box]]
 - **关键要点**: 1. RPN 与 Fast R-CNN 共享卷积特征 2. 锚框机制 3. 端到端训练
 - **方法/发现**: 用 RPN 替代 Selective Search，将候选框生成成本降低到近乎零
 - **局限/意义**: 两阶段检测器标准范式，RPN 锚框思想被 YOLO/SSD 借鉴

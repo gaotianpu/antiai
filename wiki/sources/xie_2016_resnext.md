@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv:1611.05431 | CVPR 2017 | **作者**: Saining Xie et al. | **机构**: UC San Diego / Facebook
 - **概述**: 提出"基数"（cardinality）维度，通过分组卷积提升模型性能
+- **新颖概念**: [[group_convolution]]
 - **关键要点**: 1. 提出 cardinality（转换集大小）作为除深度、宽度之外的新维度 2. 采用分组卷积实现同拓扑多分支结构 3. 增加 cardinality 比加深/加宽更有效
 - **方法/发现**: 在相同计算量下，增加 cardinality 比增加深度或宽度带来更大精度提升
 - **局限/意义**: 分组卷积的组数需调参；但 cardinality 思路深刻影响后续 EfficientNet 等设计

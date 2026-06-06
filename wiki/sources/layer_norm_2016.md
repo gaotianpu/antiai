@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Jimmy Lei Ba et al. | 相关: [[attention_mechanism]]
 - **概述**: 提出 Layer Normalization 归一化方法，适用于 RNN/Transformer
+- **新颖概念**: [[layer_normalization]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

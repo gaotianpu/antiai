@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: CVPR 2021 | 2022 | **作者**: Yicheng Liu et al. | **机构**: CUHK / SenseTime
 - **概述**: 提出基于堆叠 Transformer 的多模态运动预测框架 mmTransformer
+- **新颖概念**: —
 - **关键要点**: 1. 在特征层面用固定独立提案建模多模态 2. 基于区域的训练策略诱导生成提案的多模态 3. 在 Argoverse 上达 SOTA
 - **方法/发现**: 堆叠 Transformer + 固定独立提案 + 区域训练策略
 - **局限/意义**: 有效提升了预测轨迹的多样性和准确性

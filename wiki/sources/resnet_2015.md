@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Kaiming He et al. | **机构**: Microsoft | 相关: [[attention_mechanism]]
 - **概述**: 提出残差学习（ResNet），通过跳跃连接解决深层网络退化问题，可训练 152 层
+- **新颖概念**: [[residual_connection]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

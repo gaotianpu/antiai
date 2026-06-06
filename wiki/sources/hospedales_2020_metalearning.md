@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2020 | **作者**: Timothy Hospedales et al. | **机构**: University of Edinburgh
 - **概述**: 元学习综述，系统分类：基于度量、基于模型、基于优化的三大范式。
+- **新颖概念**: —
 - **关键要点**: 1. 提出新分类法 2. 覆盖 few-shot 学习 + RL 应用 3. 讨论泛化与计算瓶颈
 - **方法/发现**: 统一分析 meta-learning 与 transfer learning / 超参数优化的关系
 - **局限/意义**: 元学习领域引用量最高的综述之一

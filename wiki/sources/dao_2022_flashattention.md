@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Tri Dao et al. | **机构**: Stanford University | 相关: [[attention_mechanism]]
 - **概述**: 通过 IO 感知的算法设计实现快速且内存高效的精确注意力
+- **新颖概念**: [[flash_attention]], [[io_aware_attention]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

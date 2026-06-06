@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Tsung-Yi Lin et al. | **机构**: Meta | 相关: [[attention_mechanism]]
 - **概述**: 提出 Focal Loss，解决一阶段检测器中正负样本极端不平衡问题
+- **新颖概念**: [[focal_loss]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

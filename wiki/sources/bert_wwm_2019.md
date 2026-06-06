@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Conference | **作者**: Yiming Cui et al. | 相关: [[attention_mechanism]], [[devlin_2018_bert]]
 - **概述**: 全词掩码（Whole Word Masking）中文 BERT 预训练，掩码粒度从子词提升到整词
+- **新颖概念**: [[whole_word_masking]]
 - **关键要点**: BERT 变体，改进预训练策略/模型结构/效率
 - **方法/发现**: 见原始笔记
 - **局限/意义**: 推动 BERT 在各场景下的实用化

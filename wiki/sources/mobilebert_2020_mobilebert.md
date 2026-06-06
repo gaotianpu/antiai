@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Conference | **作者**: Zhiqing Sun et al. | **机构**: Google | 相关: [[attention_mechanism]], [[devlin_2018_bert]]
 - **概述**: 为移动端设计的紧凑 BERT，使用瓶颈结构和知识蒸馏
+- **新颖概念**: [[bottleneck_architecture]], [[knowledge_distillation]]
 - **关键要点**: BERT 变体，改进预训练策略/模型结构/效率
 - **方法/发现**: 见原始笔记
 - **局限/意义**: 推动 BERT 在各场景下的实用化

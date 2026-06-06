@@ -15,6 +15,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Microsoft | 相关: [[attention_mechanism]]
 - **概述**: Transformer 大规模训练工具库
+- **新颖概念**: —
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

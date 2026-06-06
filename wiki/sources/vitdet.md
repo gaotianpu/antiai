@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Kaiming He et al. | **机构**: Meta | 相关: [[attention_mechanism]]
 - **概述**: ViT 作为目标检测骨架的探索
+- **新颖概念**: —
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

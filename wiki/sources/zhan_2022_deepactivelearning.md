@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2022 | **作者**: Xueying Zhan et al. | **机构**: University of Amsterdam | 相关: [[ren_2020_deepactivelearning]]
 - **概述**: 对 19 种 DAL 方法进行公平比较实验，构建 DeepAL+ 工具包，评估 batch size / epoch 等影响因素。
+- **新颖概念**: —
 - **关键要点**: 1. 19 种 DAL 方法统一复现 2. 公平比较设置 3. 超参数影响分析
 - **方法/发现**: 填补 DAL 方法缺乏公平对比的空白
 - **局限/意义**: 为 DAL 实验设计提供实用参考

@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv:1905.02244 | ICCV 2019 | **作者**: Andrew Howard et al. | **机构**: Google
 - **概述**: 结合 NAS（MnasNet）和 NetAdapt 自动搜索优化 MobileNet 架构
+- **新颖概念**: [[neural_architecture_search_applied]]
 - **关键要点**: 1. 结合 MnasNet 平台感知 NAS 和 NetAdapt 网络适应算法 2. 引入 h-swish 激活函数和 SE 模块 3. 提出 Lite R-ASPP 分割解码器
 - **方法/发现**: 自动搜索与人工设计协同，在移动端取得精度-速度最佳权衡
 - **局限/意义**: 搜索空间限制了架构多样性；但开创了 NAS + 人工设计混合范式

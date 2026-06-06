@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2026-01 | **作者**: Xin Cheng, Wangding Zeng, Damai Dai et al. | **机构**: DeepSeek / Peking University | 相关: [[conditional_memory]], [[mixture_of_experts]], [[deepseek_ai]]
 - **概述**: 提出条件记忆（conditional memory）作为稀疏性的新轴心，实例化为 Engram 模块——将经典 N-gram 嵌入改造为 O(1) 查表，与 MoE 互补。发现 U 形 Scaling Law 指导 MoE 与静态记忆间的最优分配。
+- **新颖概念**: [[conditional_memory]], [[engram]]
 - **关键要点**:
   1. 语言建模包含两个本质不同的子任务：组合推理（需动态计算）和知识检索（可静态查表），但 Transformer 缺少原生查表原语
   2. Engram 模块：N-gram 哈希索引 → 多头哈希 → 上下文门控 → 多分支融合，确定性寻址支持运行时预取

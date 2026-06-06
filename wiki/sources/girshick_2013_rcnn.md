@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2013 | **作者**: Ross Girshick et al. | **机构**: UC Berkeley
 - **概述**: 提出 R-CNN，将 CNN 与区域候选结合，在 VOC 2012 上 mAP 提升超 30%。
+- **新颖概念**: [[region_proposal]], [[object_detection]]
 - **关键要点**: 1. 区域候选（Selective Search）+ CNN 分类 2. 迁移学习（ImageNet 预训练 + 微调） 3. VOC 2012 mAP 53.3%
 - **方法/发现**: CNN 特征提取 + SVM 分类 + Bounding Box 回归三阶段
 - **局限/意义**: 开创深度学习的目标准检测范式，后续 Faster R-CNN/Mask R-CNN 的基石

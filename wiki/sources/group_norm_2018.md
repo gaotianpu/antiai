@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Yuxin Wu et al. | **机构**: Meta | 相关: [[attention_mechanism]]
 - **概述**: 提出 Group Normalization，在 batch 维度较小时比 Batch Norm 更稳定
+- **新颖概念**: [[group_normalization]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

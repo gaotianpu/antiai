@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Kaiming He et al. | **机构**: Microsoft | 相关: [[attention_mechanism]]
 - **概述**: 空间金字塔池化，让 CNN 支持任意尺寸输入
+- **新颖概念**: [[spatial_pyramid_pooling]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Tomas Mikolov et al. | **机构**: Google | 相关: [[attention_mechanism]]
 - **概述**: 提出 Word2Vec（CBOW + Skip-gram），高效学习词向量
+- **新颖概念**: [[word_embedding]], [[skip_gram]], [[cbow]]
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

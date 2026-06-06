@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: William Peebles et al. | 相关: [[attention_mechanism]]
 - **概述**: Transformer 作为扩散模型骨干
+- **新颖概念**: [[diffusion_transformer]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

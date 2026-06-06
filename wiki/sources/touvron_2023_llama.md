@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv | 2023 | **作者**: Hugo Touvron et al. | **机构**: Meta | 相关: [[meta]], [[openai]]
 - **概述**: 提出 LLaMA 系列基础语言模型（7B–65B），仅使用公开数据训练，LLaMA-13B 以 1/10 参数量超越 GPT-3（175B）。
+- **新颖概念**: —
 - **关键要点**: 1. 7B–65B 参数范围，突破 Chinchilla Scaling Law 在更多 token 上训练 2. LLaMA-13B 超越 GPT-3（175B） 3. 完全公开数据，可开源
 - **方法/发现**: 在数万亿 token 上训练，LLaMA-65B 与 Chinchilla-70B、PaLM-540B 竞争力相当
 - **局限/意义**: 成为后续开源 LLM 生态的基础模型，Llama 2/3/4 均在此基础上演进

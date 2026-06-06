@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Conference | 2020 | **作者**: Tom Brown et al. | **机构**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 将 GPT 扩展到 1750 亿参数，通过上下文学习（In-Context Learning）在少量示例下完成各种任务，无需梯度微调。
+- **新颖概念**: [[in_context_learning]], [[few_shot_learning]]
 - **关键要点**: 1. 175B 参数 2. 上下文学习（Few-shot / One-shot / Zero-shot） 3. 涌现出推理、翻译、代码生成等能力
 - **方法/发现**: 在多个 NLP 基准上，few-shot 设置匹配或超越微调模型
 - **局限/意义**: 计算成本极高；推理速度慢；可能包含偏见与有害内容

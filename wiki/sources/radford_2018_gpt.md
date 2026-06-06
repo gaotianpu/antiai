@@ -11,6 +11,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Tech Report | 2018 | **作者**: Alec Radford et al. | **机构**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 提出生成式预训练方法（GPT），在无标注文本上预训练 Transformer 解码器后微调，验证了预训练-微调范式在 NLP 任务的通用性。
+- **新颖概念**: [[generative_pretraining]]
 - **关键要点**: 1. 单向（从左到右）Transformer 解码器 2. 无监督预训练 + 有监督微调 3. 12 层 Transformer，1.17 亿参数
 - **方法/发现**: 在多个 NLP 基准（自然语言推理、问答、分类等）上取得当时最佳
 - **局限/意义**: 单向性限制了表示能力（后被 BERT 超越）；但开创了 GPT 系列路线

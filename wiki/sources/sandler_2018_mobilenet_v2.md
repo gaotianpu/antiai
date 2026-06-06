@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: arXiv:1801.04381 | CVPR 2018 | **作者**: Mark Sandler et al. | **机构**: Google
 - **概述**: 提出倒残差结构（Inverted Residual）和线性瓶颈（Linear Bottleneck）
+- **新颖概念**: [[inverted_residual]], [[linear_bottleneck]]
 - **关键要点**: 1. 倒残差：在瓶颈层间跳跃连接，中间扩展高维 2. 线性瓶颈：窄层去除非线性保持表征能力 3. 提出 SSDLite 轻量检测框架
 - **方法/发现**: 倒残差提升移动端模型精度，线性瓶颈避免信息丢失
 - **局限/意义**: 架构设计精巧但复杂度增加；但倒残差成为 MobileNet 系列的核心设计

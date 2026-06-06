@@ -12,6 +12,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Mark Chen et al. | **机构**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 像素级生成式预训练（Image GPT）
+- **新颖概念**: [[pixel_level_pretraining]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

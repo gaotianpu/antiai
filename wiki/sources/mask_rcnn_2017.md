@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Kaiming He et al. | **机构**: Meta | 相关: [[attention_mechanism]]
 - **概述**: 在 Faster R-CNN 基础上添加分割分支，同时做目标检测和实例分割
+- **新颖概念**: [[instance_segmentation]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

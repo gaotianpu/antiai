@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Letitia Parcalabescu et al. | 相关: [[attention_mechanism]]
 - **概述**: 探索自注意力在情感分析中的应用
+- **新颖概念**: —
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
 

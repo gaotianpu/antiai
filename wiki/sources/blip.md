@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: Junnan Li et al. | **机构**: Salesforce Research | 相关: [[attention_mechanism]]
 - **概述**: 引导式语言-图像预训练，统一理解和生成
+- **新颖概念**: [[multimodal_mixture_of_encoders_decoders]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

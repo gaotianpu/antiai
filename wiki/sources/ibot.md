@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: ByteDance | 相关: [[attention_mechanism]]
 - **概述**: 在线标记器的图像 BERT 预训练
+- **新颖概念**: [[online_tokenizer]], [[masked_image_modeling]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用

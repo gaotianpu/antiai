@@ -13,6 +13,7 @@ last_verified: 2026-06-06
 
 - **元数据**: **作者**: 微软 | 相关: [[attention_mechanism]]
 - **概述**: BERT 风格图像预训练
+- **新颖概念**: [[masked_image_modeling]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用
