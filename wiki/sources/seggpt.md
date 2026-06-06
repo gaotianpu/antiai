@@ -3,7 +3,7 @@ id: seggpt
 type: source
 tags: [computer-vision, machine-learning, NLP]
 aliases: [SegGPT, 2304.03284]
-related_nodes: [attention_mechanism]
+related_nodes: [meta, attention_mechanism]
 arxiv_id: 2304.03284
 authors_institution: Meta
 authors: Meta

@@ -17,11 +17,8 @@ AI 论文知识库，持续收集和学习 AI 领域的重要论文。
 ```
 root/
 ├── raw/             原始论文（Markdown + PDF）
-│   ├── nlp/         NLP 论文
-│   ├── Multimodal/  多模态论文
-│   ├── vit/         视觉 Transformer 论文
-│   ├── cnn/         CNN 论文
-│   └── pdf/         PDF 原文
+│   ├── pdf/         PDF 原文
+│   └── index.md     总入口
 ├── wiki/            知识库
 │   ├── sources/     论文摘要卡片
 │   ├── concepts/    核心概念定义

@@ -3,7 +3,7 @@ id: simsiam_2020
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Exploring Simple Siamese Representation Learning, 2011.10566]
-related_nodes: [attention_mechanism]
+related_nodes: [meta, attention_mechanism]
 arxiv_id: 2011.10566
 authors: Xinlei Chen et al.
 authors_institution: Meta

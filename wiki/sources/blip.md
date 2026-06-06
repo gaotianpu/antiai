@@ -3,7 +3,7 @@ id: blip
 type: source
 tags: [computer-vision, machine-learning, NLP]
 aliases: [BLIP, 2201.12086]
-related_nodes: [attention_mechanism]
+related_nodes: [salesforce_research, attention_mechanism]
 arxiv_id: 2201.12086
 authors: Junnan Li et al.
 authors_institution: Salesforce Research

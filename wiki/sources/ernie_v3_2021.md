@@ -3,7 +3,7 @@ id: ernie_v3_2021
 type: source
 tags: [NLP, machine-learning]
 aliases: [ERNIE 3.0 Titan, 2112.12731]
-related_nodes: [attention_mechanism]
+related_nodes: [baidu, attention_mechanism]
 arxiv_id: 2112.12731
 authors_institution: Baidu
 authors: Baidu

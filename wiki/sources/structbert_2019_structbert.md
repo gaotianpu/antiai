@@ -3,7 +3,7 @@ id: structbert_2019_structbert
 type: source
 tags: [NLP, machine-learning, empirical-study]
 aliases: [StructBERT, 1908.04577]
-related_nodes: [devlin_2018_bert, attention_mechanism]
+related_nodes: [alibaba_group, devlin_2018_bert, attention_mechanism]
 arxiv_id: 1908.04577
 authors: Wei Wang et al.
 authors_institution: Alibaba Group

@@ -3,7 +3,7 @@ id: segment_anything
 type: source
 tags: [computer-vision, machine-learning, NLP]
 aliases: [Segment Anything, 2304.02643]
-related_nodes: [attention_mechanism]
+related_nodes: [meta, attention_mechanism]
 arxiv_id: 2304.02643
 authors_institution: Meta
 authors: Meta

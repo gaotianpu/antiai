@@ -3,7 +3,7 @@ id: alibi_2021
 type: source
 tags: [NLP, machine-learning]
 aliases: [Train Short, Test Long, 2108.12409]
-related_nodes: [attention_mechanism]
+related_nodes: [meta, attention_mechanism]
 arxiv_id: 2108.12409
 authors: Ofir Press et al.
 authors_institution: Meta

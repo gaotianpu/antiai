@@ -3,7 +3,7 @@ id: group_norm_2018
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Group Normalization, 1803.08494]
-related_nodes: [attention_mechanism]
+related_nodes: [meta, attention_mechanism]
 arxiv_id: 1803.08494
 authors: Yuxin Wu et al.
 authors_institution: Meta

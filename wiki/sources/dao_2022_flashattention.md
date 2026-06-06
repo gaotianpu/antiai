@@ -3,7 +3,7 @@ id: dao_2022_flashattention
 type: source
 tags: [NLP, machine-learning]
 aliases: [FlashAttention, 2205.14135]
-related_nodes: [attention_mechanism]
+related_nodes: [stanford_university, attention_mechanism]
 arxiv_id: 2205.14135
 authors: Tri Dao et al.
 authors_institution: Stanford University

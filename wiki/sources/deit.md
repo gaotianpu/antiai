@@ -3,7 +3,7 @@ id: deit
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Training data-efficient image transformers & distillation through attention, 2012.12877]
-related_nodes: [attention_mechanism]
+related_nodes: [meta, attention_mechanism]
 arxiv_id: 2012.12877
 authors_institution: Meta
 authors: Meta

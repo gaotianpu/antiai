@@ -3,7 +3,7 @@ id: mask_rcnn_2017
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Mask R-CNN, 1703.06870]
-related_nodes: [attention_mechanism, kaiming_he]
+related_nodes: [meta, attention_mechanism, kaiming_he]
 arxiv_id: 1703.06870
 authors: Kaiming He et al.
 authors_institution: Meta

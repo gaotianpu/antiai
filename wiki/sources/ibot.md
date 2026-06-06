@@ -3,7 +3,7 @@ id: ibot
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [iBOT, 2111.07832]
-related_nodes: [attention_mechanism]
+related_nodes: [bytedance, attention_mechanism]
 arxiv_id: 2111.07832
 authors_institution: ByteDance
 

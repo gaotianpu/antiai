@@ -3,7 +3,7 @@ id: vitdet
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Exploring Plain Vision Transformer Backbones for Object Detection, 2203.16527]
-related_nodes: [attention_mechanism, kaiming_he]
+related_nodes: [meta, attention_mechanism, kaiming_he]
 arxiv_id: 2203.16527
 authors: Kaiming He et al.
 authors_institution: Meta

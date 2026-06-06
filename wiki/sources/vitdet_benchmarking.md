@@ -3,7 +3,7 @@ id: vitdet_benchmarking
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Benchmarking Detection Transfer Learning with Vision Transformers, 2111.11429]
-related_nodes: [attention_mechanism]
+related_nodes: [meta, attention_mechanism]
 arxiv_id: 2111.11429
 authors_institution: Meta
 authors: Meta

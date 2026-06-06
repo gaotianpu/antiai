@@ -3,7 +3,7 @@ id: ernie_v2_2019
 type: source
 tags: [NLP, machine-learning]
 aliases: [ERNIE 2.0, 1907.12412]
-related_nodes: [attention_mechanism]
+related_nodes: [baidu, attention_mechanism]
 arxiv_id: 1907.12412
 authors: Yu Sun et al.
 authors_institution: Baidu

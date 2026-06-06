@@ -3,7 +3,7 @@ id: ernie_2019
 type: source
 tags: [NLP, machine-learning]
 aliases: [ERNIE, 1905.07129]
-related_nodes: [attention_mechanism]
+related_nodes: [baidu, attention_mechanism]
 arxiv_id: 1905.07129
 authors: Zhengyan Zhang et al.
 authors_institution: Baidu

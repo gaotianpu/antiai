@@ -3,7 +3,7 @@ id: zero_shot_cot_2022
 type: source
 tags: [NLP, machine-learning, empirical-study]
 aliases: [Large Language Models are Zero-Shot Reasoners, 2205.11916]
-related_nodes: [attention_mechanism, in_context_learning]
+related_nodes: [the_university_of_tokyo, attention_mechanism, in_context_learning]
 arxiv_id: 2205.11916
 authors: Takeshi Kojima et al.
 authors_institution: The University of Tokyo
