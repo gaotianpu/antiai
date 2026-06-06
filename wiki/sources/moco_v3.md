@@ -3,7 +3,7 @@ id: moco_v3
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [MoCo v3, 2104.02057]
-related_nodes: [attention_mechanism]
+related_nodes: [attention_mechanism, kaiming_he]
 arxiv_id: 2104.02057
 last_verified: 2026-06-06
 ---

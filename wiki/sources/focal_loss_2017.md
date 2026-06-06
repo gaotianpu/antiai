@@ -3,7 +3,7 @@ id: focal_loss_2017
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Focal Loss for Dense Object Detection, 1708.02002]
-related_nodes: [attention_mechanism]
+related_nodes: [attention_mechanism, kaiming_he]
 arxiv_id: 1708.02002
 last_verified: 2026-06-06
 ---

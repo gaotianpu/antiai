@@ -3,7 +3,7 @@ id: mae
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Masked Autoencoders Are Scalable Vision Learners, 2111.06377]
-related_nodes: [attention_mechanism]
+related_nodes: [attention_mechanism, kaiming_he]
 arxiv_id: 2111.06377
 last_verified: 2026-06-06
 ---

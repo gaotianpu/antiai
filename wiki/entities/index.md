@@ -3,7 +3,7 @@
 ## 按类型
 
 ### 人物
-待补充
+- [[kaiming_he]] — 何恺明（ResNet / MAE / Mask R-CNN）
 
 ### 组织
 - [[deepseek_ai]] — AI 研究实验室
