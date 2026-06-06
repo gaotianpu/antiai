@@ -7,7 +7,14 @@
 - [[jeff_dean]] — Jeff Dean（Google AI 系统架构）
 
 ### 组织
-- [[deepseek_ai]] — AI 研究实验室
-- [[microsoft]] — 微软（ResNet / DeepNet / Kosmos-1 等）
-- [[google]] — 科技公司（Transformer / BERT / T5）
-- [[openai]] — AI 研究机构（GPT 系列 / RLHF）
+- [[alibaba_group]] — 阿里巴巴（StructBERT）
+- [[baidu]] — 百度（ERNIE 系列）
+- [[bytedance]] — 字节跳动（iBOT）
+- [[deepseek_ai]] — DeepSeek（Engram）
+- [[google]] — Google（Transformer / BERT / T5）
+- [[meta]] — Meta / FAIR（ResNet / MAE / SAM）
+- [[microsoft]] — 微软（DeepNet / Kosmos-1 等）
+- [[openai]] — OpenAI（GPT 系列 / RLHF）
+- [[salesforce_research]] — Salesforce 研究院（BLIP）
+- [[stanford_university]] — 斯坦福大学（FlashAttention）
+- [[the_university_of_tokyo]] — 东京大学（零样本 CoT）
