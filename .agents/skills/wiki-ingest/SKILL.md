@@ -6,7 +6,7 @@ metadata:
     - RAW_DIR: 原始资料目录（默认 $PROJECT_ROOT/raw）
     - WIKI_DIR: Wiki 页面目录（默认 $PROJECT_ROOT/wiki）
     - SCHEMA_DIR: 规范文件目录（默认 $PROJECT_ROOT/schema）
-    - LOG_DIR: 操作日志目录（默认 $WIKI_DIR/log）
+    - CHANGELOG_DIR: 操作日志目录（默认 $WIKI_DIR/changelog）
     - PROJECT_ROOT: 项目根目录（默认当前工作目录）
 ---
 
@@ -26,14 +26,14 @@ metadata:
 | `RAW_DIR` | `$PROJECT_ROOT/raw` | 原始资料目录 |
 | `WIKI_DIR` | `$PROJECT_ROOT/wiki` | wiki 页面目录 |
 | `SCHEMA_DIR` | `$PROJECT_ROOT/schema` | 规范文件目录 |
-| `LOG_DIR` | `$WIKI_DIR/log` | 操作日志目录 |
+| `CHANGELOG_DIR` | `$WIKI_DIR/changelog` | 操作日志目录 |
 
 ```bash
 PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
 RAW_DIR="${RAW_DIR:-$PROJECT_ROOT/raw}"
 WIKI_DIR="${WIKI_DIR:-$PROJECT_ROOT/wiki}"
 SCHEMA_DIR="${SCHEMA_DIR:-$PROJECT_ROOT/schema}"
-LOG_DIR="${LOG_DIR:-$WIKI_DIR/log}"
+CHANGELOG_DIR="${CHANGELOG_DIR:-$WIKI_DIR/changelog}"
 ```
 
 ---
@@ -116,7 +116,7 @@ LOG_DIR="${LOG_DIR:-$WIKI_DIR/log}"
 
 ## 阶段 4：操作存证 (Log)
 
-在 `$LOG_DIR/log.$(date +%Y-%-m-%-d).md` 追加，每条包含 YAML frontmatter（`type: log`）便于 Graph 追踪：
+在 `$CHANGELOG_DIR/log.$(date +%Y-%-m-%-d).md` 追加，每条包含 YAML frontmatter（`type: changelog`）便于 Graph 追踪：
 
 ```markdown
 ---

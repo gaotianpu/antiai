@@ -19,7 +19,7 @@
 | Concept | `concepts/` | 知识定义——可展开论述 | 增量追加 |
 | Entity | `entities/` | 人物/组织名片 | 补充新贡献 |
 | Synthesis | `synthesis/` | 跨领域分析、实践指南 | 可重构 |
-| ChangeLog | `changelog/` | 操作审计 | 持续追加 |
+| Changelog | `changelog/` | 操作审计 | 持续追加 |
 
 [!NOTE] Source 页 ≠ 论文全文。Source 页 = 摘要卡片（出处 / 核心发现 / 关键参数 / 与既有概念的关联）。Concept 页 = 定义页（多 Source 交叉引用、分类、解读）。不要把全部细节写入 Source 页。
 

@@ -76,7 +76,7 @@ cat wiki/backlog.md
 grep -n "关键词" wiki/backlog.md
 
 # 2. 查看当时对话日志（如果有 log 页面记录）
-ls wiki/log/ | tail -5
+ls wiki/changelog/ | tail -5
 ```
 
 - 如果用户问"之前说的那个 XX 的事" → 先去 backlog.md 找，不要凭空回忆
@@ -98,7 +98,7 @@ ls wiki/log/ | tail -5
 - **只追加不重写**：backlog.md 的主表格区只追加行，不重新生成。只有新增分类时可以用 write 全量重写
 - **日期格式**：`YYYY-MM-DD`
 - **表格对齐**：追加时保持 `| :--- | :---: | :---: | :--- |` 格式对齐
-- **与 log 联动**：搁置操作本身也记录在 `wiki/log/` 的操作日志中
+- **与 changelog 联动**：搁置操作本身也记录在 `wiki/changelog/` 的操作日志中
 
 ---
 
@@ -108,4 +108,4 @@ ls wiki/log/ | tail -5
 |:---|:---|
 | `wiki/backlog.md` | 目标文件 — 搁置清单本体 |
 | `schema/user_habits.md` | 第 14 条定义了搁置行为的用户习惯 |
-| `wiki/log/` | 操作日志目录，搁置追加时同步记录 |
+| `wiki/changelog/` | 操作日志目录，搁置追加时同步记录 |

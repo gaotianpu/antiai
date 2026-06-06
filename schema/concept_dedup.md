@@ -107,7 +107,7 @@ C_new lookup_keys: [prompt tuning, prefix tuning, 前缀调优, continuous promp
 - `wiki/concepts/index.md`（追加条目）
 - `wiki/index.md`（追加条目）
 - 相关已有概念页的 `related_nodes`（添加双向链接）
-- `wiki/log/log.{date}.md`（记录操作）
+- `wiki/changelog/log.{date}.md`（记录操作）
 
 ---
 
