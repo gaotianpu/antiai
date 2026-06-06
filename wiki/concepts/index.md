@@ -11,6 +11,7 @@
 - [[sparsity_allocation]] — 稀疏分配：MoE 与记忆之间的最优容量配比
 
 ## 神经网络基础
+- [[activation_function]] — 激活函数：引入非线性的关键组件
 - [[batch_normalization]] — 批归一化：标准化层输入以加速训练
 - [[convolutional_neural_network]] — 卷积神经网络：权值共享的视觉特征提取
 - [[residual_connection]] — 残差连接：恒等捷径缓解深层网络退化
