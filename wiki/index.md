@@ -6,3 +6,4 @@
 - [[sources/index|Source 索引]] — 全部论文摘要卡片
 - [[concepts/index|概念索引]] — 核心概念定义
 - [[entities/index|实体索引]] — 人物与组织
+- [[synthesis/post_training|综合页面]] — 跨领域分析
