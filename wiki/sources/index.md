@@ -15,6 +15,8 @@
 - [[zhang_2023_adalora]] — AdaLoRA: Adaptive Budget Allocation for PEFT（自适应 LoRA）
 - [[zhang_2023_multimodal_cot]] — Multimodal Chain-of-Thought Reasoning（多模态 CoT）
 - [[ren_2023_onlineactivelearning]] — A Survey on Online Active Learning（在线 AL 综述）
+- [[hsieh_2023_distilling]] — Distilling Step-by-Step（一步一步蒸馏）
+- [[yu_2023_megabyte]] — MegaByte: Predicting Million-byte Sequences（百万字节序列）
 
 ## 2022
 - [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）
@@ -46,6 +48,7 @@
 - [[wang_2022_yolov7]] — YOLOv7: Trainable Bag-of-Freebies（YOLOv7）
 - [[radford_2022_whisper]] — Robust Speech Recognition via Weak Supervision（Whisper 语音识别）
 - [[zhan_2022_deepactivelearning]] — A Comparative Survey of Deep Active Learning（DAL 比较综述）
+- [[chi_2022_xmoe]] — On the Representation Collapse of Sparse Mixture of Experts（MoE 表示坍塌）
 
 ## 2021
 - [[alibi_2021]] — Train Short, Test Long: Attention with Linear Biases（ALiBi 位置编码）
@@ -67,6 +70,7 @@
 - [[rombach_2021_latentdiffusion]] — High-Resolution Image Synthesis with Latent Diffusion Models（LDM）
 - [[wang_2021_yolor]] — You Only Learn One Representation（YOLOR）
 - [[ge_2021_yolox]] — YOLOX: Exceeding YOLO Series in 2021（YOLOX）
+- [[fedus_2021_switch]] — Switch Transformers: Scaling to Trillion Parameter Models（Switch Transformer）
 
 ## 2020
 - [[brown_2020_gpt3]] — Language Models are Few-Shot Learners（GPT-3 上下文学习）
@@ -83,7 +87,7 @@
 - [[hospedales_2020_metalearning]] — Meta-Learning in Neural Networks: A Survey（元学习综述）
 - [[ren_2020_deepactivelearning]] — A Survey of Deep Active Learning（深度 AL 综述）
 
-## 2019
+## 2017
 - [[beit]] — BEiT: BERT Pre-Training of Image Transformers（BERT 风格图像预训练）
 - [[bert_wwm_2019]] — Pre-Training with Whole Word Masking for Chinese BERT（全词掩码 BERT）
 - [[dai_2019_transformer_xl]] — Transformer-XL（片段级循环 + 相对位置编码）
@@ -112,6 +116,7 @@
 - [[vit_jpeg]] — ViT JPEG: Visual Token Assistant（视觉令牌助手）
 - [[schulman_2017_ppo]] — Proximal Policy Optimization Algorithms（PPO 近端策略优化）
 - [[christiano_2017_rlhf]] — Deep Reinforcement Learning from Human Preferences（RLHF 早期奠基）
+- [[cheng_2017_modelcompression]] — A Survey of Model Compression and Acceleration（模型压缩综述）
 
 ## 2016
 - [[fpn_2016]] — Feature Pyramid Networks for Object Detection（特征金字塔网络）
@@ -127,6 +132,7 @@
 - [[ren_2015_fasterrcnn]] — Faster R-CNN: Towards Real-Time Object Detection（Faster R-CNN）
 - [[lillicrap_2015_ddpg]] — Continuous Control with Deep Reinforcement Learning（DDPG）
 - [[schulman_2015_trpo]] — Trust Region Policy Optimization（TRPO）
+- [[han_2015_deepcompression]] — Deep Compression（深度压缩）
 
 ## 2014
 - [[bahdanau_2014_attention]] — Neural Machine Translation by Jointly Learning to Align and Translate（注意力机制）

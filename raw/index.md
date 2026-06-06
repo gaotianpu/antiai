@@ -74,8 +74,8 @@
 | [[RL/TRPO.md]] | 提出信任区域策略优化，通过 KL 散度约束保证策略更新的单调改进。（`machine-learning, theoretical, RL`）|
 
 ### 效率/压缩
-| [[Deep_Compression.md]] | Deep Compression |
-| [[Distilling_ss.md]] | 知识蒸馏 |
+| [[Deep_Compression.md]] | 提出三阶段模型压缩流程：剪枝 + 量化 + Huffman 编码，在不损失精度前提下压缩 35–49 倍。（`machine-learning, empirical-study`）|
+| [[Distilling_ss.md]] | 提出 LLM rationale 作为多任务训练信号的蒸馏方法，770M T5 超越 540B PaLM。（`NLP, machine-learning, empirical-study`）|
 
 ## 2016
 
@@ -276,8 +276,8 @@
 
 ### 效率/压缩
 | [[LoRA.md]] | 提出低秩适配方法，冻结预训练权重，插入可训练的低秩矩阵，大幅降低微调参数量和显存需求。（`NLP, machine-learning, empirical-study`）|
-| [[Switch_Transformers.md]] | Switch Transformers |
-| [[model_compression.md]] | 模型压缩综述 |
+| [[Switch_Transformers.md]] | 提出简化稀疏路由的 Switch Transformer，将 MoE 扩展到 1.6T 参数，训练速度提升 7 倍。（`NLP, machine-learning, empirical-study`）|
+| [[model_compression.md]] | 模型压缩与加速综述，覆盖剪枝、量化、低秩分解、紧凑卷积滤波器和知识蒸馏四大类。（`machine-learning, survey`）|
 
 ### 其他
 | [[diffusion.md]] | Diffusion 综述 |
@@ -345,7 +345,7 @@
 ### 效率/压缩
 | [[FlashAttention.md]] | FlashAttention |
 | [[Sparse_Expert_review.md]] | 稀疏专家模型综述，覆盖 MoE 架构的设计、训练和推理（`computer-vision, machine-learning`）|
-| [[X-MoE.md]] | X-MoE |
+| [[X-MoE.md]] | 分析 MoE 的表示坍塌问题（token 向专家质心聚类），提出低维超球路由缓解坍塌。（`NLP, machine-learning, empirical-study`）|
 
 ### 其他
 | [[DeepAL_survery_2203.13450.md]] | 对 19 种 DAL 方法进行公平比较实验，构建 DeepAL+ 工具包，评估 batch size / epoch 等影响因素。（`machine-learning, survey, empirical-study`）|
@@ -374,7 +374,7 @@
 
 ### 效率/压缩
 | [[AdaLoRA.md]] | 在 LoRA 基础上按重要性动态分配参数预算，通过 SVD 参数化 + 剪枝不重要奇异值实现自适应。（`NLP, machine-learning, empirical-study`）|
-| [[MegaByte.md]] | MegaByte |
+| [[MegaByte.md]] | 提出多尺度 Transformer 架构，通过分块预测实现百万字节级别的序列建模，突破 tokenization 限制。（`NLP, machine-learning, empirical-study`）|
 | [[QLoRA.md]] | 在 LoRA 基础上引入 4-bit NormalFloat + 双重量化 + 分页优化器，65B 模型单 48GB GPU 微调。（`NLP, machine-learning, empirical-study`）|
 
 ### 其他
