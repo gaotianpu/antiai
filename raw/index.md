@@ -110,6 +110,7 @@
 | [[nlp/transformer.md]] | 提出完全基于注意力机制的 Transformer 架构，摒弃了循环和卷积，成为后续 LLM 的基础范式。（`NLP, machine-learning, theoretical`）|
 
 ### CNN
+| [[cnn/senet.md]] | 提出 SE 块，通过通道注意力自适应重校准特征，极小开销提升 CNN 性能（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/DeepLab_v3.md]] | 系统地重新审视空洞卷积（Atrous Convolution）在语义分割中的应用，改进空洞空间金字塔池化（ASPP）模块，集成图像级特征编码全局上下文，在 PASCAL VOC 2012 上达到 SOTA 性能。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/Focal_Loss.md]] | 提出 Focal Loss，解决一阶段检测器中正负样本极端不平衡问题（`computer-vision, machine-learning`）|
 | [[cnn/Instance_Segmentation.md]] | 实例分割综述 |
