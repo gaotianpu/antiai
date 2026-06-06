@@ -68,9 +68,13 @@ CHANGELOG_DIR="${CHANGELOG_DIR:-$WIKI_DIR/changelog}"
 
 `$WIKI_DIR/sources/[ID].md`，正文限 500 字内。结构和字段说明见 `schema/source.md`。
 
+**必填字段**：`新颖概念` 必须填写。Agent 据此识别哪些概念需要新建概念页。
+
 **去重**：创建前先以 `arxiv_id` 精确碰撞检测是否已入库（见 `schema/source.md` §防重复流程）。
 
 ### 2.2 按需创建 Concept / Entity 页面
+
+**从"新颖概念"字段触发**：source 页填写 `新颖概念` 后，对其中的每个 `[[concept_id]]` 检查概念页是否存在。不存在则创建，已存在则在原页追加新视角。
 
 **判定准则**：实体在文中出现 **≥3 次** 且具有独立定义价值时方可建立单页。
 

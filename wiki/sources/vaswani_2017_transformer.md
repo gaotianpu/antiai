@@ -14,6 +14,7 @@ last_verified: 2026-06-06
 
 - **元数据**: Conference | 2017 | **作者**: Ashish Vaswani et al. | **机构**: Google | 相关: [[attention_mechanism]]
 - **概述**: 提出完全基于注意力机制的 Transformer 架构，摒弃了循环和卷积，成为后续 LLM 的基础范式。
+- **新颖概念**: [[transformer_architecture]], [[attention_mechanism]], [[multi_head_attention]], [[positional_encoding]]
 - **关键要点**: 1. 纯注意力架构（编码器-解码器） 2. 多头注意力 + 位置编码 3. 并行化训练，显著减少训练时间
 - **方法/发现**: WMT 2014 英德翻译 28.4 BLEU（+2 BLEU 超此前最佳），训练 3.5 天/8 GPU
 - **局限/意义**: O(n²) 复杂度限制长序列；奠定了现代 LLM 的架构基础
