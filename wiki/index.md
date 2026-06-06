@@ -4,6 +4,7 @@
 
 ## 快速导航
 
-- [[sources/index|Source 索引]] — 论文摘要卡片
+- [[../最新前沿|最新前沿]] — 按年份浏览前沿论文
+- [[sources/index|Source 索引]] — 全部论文摘要卡片
 - [[concepts/index|概念索引]] — 核心概念定义
 - [[entities/index|实体索引]] — 人物与组织
