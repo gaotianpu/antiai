@@ -5,12 +5,13 @@ tags: [computer-vision, machine-learning]
 aliases: [BEiT, 2106.08254]
 related_nodes: [attention_mechanism]
 arxiv_id: 2106.08254
+authors: 微软
 last_verified: 2026-06-06
 ---
 
 # BEiT: BERT Pre-Training of Image Transformers
 
-- **元数据**: 微软 | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: 微软 | 相关: [[attention_mechanism]]
 - **概述**: BERT 风格图像预训练
 - **关键要点**: 见原始阅读笔记
 

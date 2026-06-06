@@ -5,12 +5,13 @@ tags: [NLP, machine-learning, empirical-study]
 aliases: [Self-critiquing models for assisting human evaluators, 2206.05802]
 related_nodes: [attention_mechanism, openai]
 arxiv_id: 2206.05802
+authors: OpenAI
 last_verified: 2026-06-06
 ---
 
 # Self-critiquing models for assisting human evaluators
 
-- **元数据**: Conference | OpenAI | 相关: [[attention_mechanism]]
+- **元数据**: Conference | **作者**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 训练模型对自己的输出进行批评和改进，辅助人类评估
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

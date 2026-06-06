@@ -5,12 +5,14 @@ tags: [NLP, machine-learning, empirical-study]
 aliases: [Large Language Models are Zero-Shot Reasoners, 2205.11916]
 related_nodes: [attention_mechanism, in_context_learning]
 arxiv_id: 2205.11916
+authors: Takeshi Kojima et al.
+authors_institution: Tokyo
 last_verified: 2026-06-06
 ---
 
 # Large Language Models are Zero-Shot Reasoners
 
-- **元数据**: Conference | Takeshi Kojima et al. (Tokyo) | 相关: [[attention_mechanism]]
+- **元数据**: Conference | **作者**: Takeshi Kojima et al. | **机构**: Tokyo | 相关: [[attention_mechanism]]
 - **概述**: 零样本思维链：仅用 Let's think step by step 即可激发推理
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

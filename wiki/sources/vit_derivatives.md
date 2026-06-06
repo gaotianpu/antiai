@@ -5,6 +5,7 @@ tags: [computer-vision, machine-learning]
 aliases: [A Survey of Vision Transformer Derivatives, 2205.11239]
 related_nodes: [attention_mechanism]
 arxiv_id: 2205.11239
+authors: 见元数据
 last_verified: 2026-06-06
 ---
 

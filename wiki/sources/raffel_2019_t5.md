@@ -9,7 +9,7 @@ last_verified: 2026-06-06
 
 # Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer
 
-- **元数据**: Conference | Colin Raffel et al. (Google) | 2019 | 相关: [[attention_mechanism]]
+- **元数据**: Conference | 2019 | **作者**: Colin Raffel et al. | **机构**: Google | 相关: [[attention_mechanism]]
 - **概述**: 提出 T5 模型，将所有 NLP 任务统一为 Text-to-Text 格式，系统研究了预训练方法的影响。
 - **关键要点**: 1. 统一文本到文本框架（输入/输出均为文本） 2. Encoder-Decoder Transformer 3. C4 数据集系统消融实验
 - **方法/发现**: 在 GLUE、SuperGLUE、SQuAD 等基准上取得当时最佳

@@ -5,12 +5,13 @@ tags: [NLP, machine-learning]
 aliases: [Layer Normalization, 1607.06450]
 related_nodes: [attention_mechanism]
 arxiv_id: 1607.06450
+authors: Jimmy Lei Ba et al.
 last_verified: 2026-06-06
 ---
 
 # Layer Normalization
 
-- **元数据**: Jimmy Lei Ba et al. | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Jimmy Lei Ba et al. | 相关: [[attention_mechanism]]
 - **概述**: 提出 Layer Normalization 归一化方法，适用于 RNN/Transformer
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

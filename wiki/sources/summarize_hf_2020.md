@@ -5,12 +5,13 @@ tags: [NLP, machine-learning]
 aliases: [Learning to summarize from human feedback, 2009.01325]
 related_nodes: [attention_mechanism]
 arxiv_id: 2009.01325
+authors: OpenAI
 last_verified: 2026-06-06
 ---
 
 # Learning to summarize from human feedback
 
-- **元数据**: OpenAI | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 使用人类反馈训练总结模型，结合 RLHF 技术
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

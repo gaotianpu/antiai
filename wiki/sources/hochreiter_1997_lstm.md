@@ -10,7 +10,7 @@ last_verified: 2026-06-06
 
 # Long Short-Term Memory
 
-- **元数据**: Sepp Hochreiter & Jürgen Schmidhuber | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Sepp Hochreiter & Jürgen Schmidhuber | 相关: [[attention_mechanism]]
 - **概述**: 提出 LSTM，通过门控机制解决长序列梯度消失问题
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

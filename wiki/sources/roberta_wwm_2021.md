@@ -5,12 +5,13 @@ tags: [NLP, machine-learning, empirical-study]
 aliases: [RoBERTa-wwm-ext Fine-Tuning for Chinese Text Classification, 2103.00492]
 related_nodes: [devlin_2018_bert, attention_mechanism]
 arxiv_id: 2103.00492
+authors: Chinese BERT Team
 last_verified: 2026-06-06
 ---
 
 # RoBERTa-wwm-ext Fine-Tuning for Chinese Text Classification
 
-- **元数据**: Conference | Chinese BERT Team | 相关: [[attention_mechanism]], [[devlin_2018_bert]]
+- **元数据**: Conference | **作者**: Chinese BERT Team | 相关: [[attention_mechanism]], [[devlin_2018_bert]]
 - **概述**: 在 RoBERTa 基础上使用全词掩码（WWM）的中文预训练模型
 - **关键要点**: BERT 变体，改进预训练策略/模型结构/效率
 - **方法/发现**: 见原始笔记

@@ -5,12 +5,13 @@ tags: [computer-vision, machine-learning]
 aliases: [BEiT v2, 2208.06366]
 related_nodes: [attention_mechanism]
 arxiv_id: 2208.06366
+authors: 微软
 last_verified: 2026-06-06
 ---
 
 # BEiT v2: Masked Image Modeling with Vector-Quantized Visual Tokenizers
 
-- **元数据**: 微软 | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: 微软 | 相关: [[attention_mechanism]]
 - **概述**: 向量量化视觉标记器的掩码图像建模
 - **关键要点**: 见原始阅读笔记
 

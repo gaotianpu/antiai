@@ -5,12 +5,14 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [CLIP, 2103.00020]
 related_nodes: [attention_mechanism]
 arxiv_id: 2103.00020
+authors: Alec Radford et al.
+authors_institution: OpenAI
 last_verified: 2026-06-06
 ---
 
 # CLIP: Learning Transferable Visual Models From Natural Language Supervision
 
-- **元数据**: Alec Radford et al. (OpenAI) | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Alec Radford et al. | **机构**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 对比语言-图像预训练，零样本迁移到下游视觉任务
 - **关键要点**: 见原始阅读笔记
 

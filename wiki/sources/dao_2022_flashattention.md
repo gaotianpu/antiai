@@ -5,12 +5,14 @@ tags: [NLP, machine-learning]
 aliases: [FlashAttention, 2205.14135]
 related_nodes: [attention_mechanism]
 arxiv_id: 2205.14135
+authors: Tri Dao et al.
+authors_institution: Stanford
 last_verified: 2026-06-06
 ---
 
 # FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness
 
-- **元数据**: Tri Dao et al. (Stanford) | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Tri Dao et al. | **机构**: Stanford | 相关: [[attention_mechanism]]
 - **概述**: 通过 IO 感知的算法设计实现快速且内存高效的精确注意力
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

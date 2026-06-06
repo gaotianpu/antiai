@@ -5,12 +5,13 @@ tags: [NLP, machine-learning, empirical-study]
 aliases: [GPT-4 Technical Report, 2303.08774]
 related_nodes: [attention_mechanism, openai]
 arxiv_id: 2303.08774
+authors: OpenAI
 last_verified: 2026-06-06
 ---
 
 # GPT-4 Technical Report
 
-- **元数据**: Conference | OpenAI | 相关: [[attention_mechanism]]
+- **元数据**: Conference | **作者**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 多模态大语言模型，在多种专业和学术基准上达到人类水平
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

@@ -5,12 +5,13 @@ tags: [NLP, machine-learning]
 aliases: [Exploring Dual Encoder Architectures for Question Answering, 2204.07120]
 related_nodes: [attention_mechanism]
 arxiv_id: 2204.07120
+authors: Google
 last_verified: 2026-06-06
 ---
 
 # Exploring Dual Encoder Architectures for Question Answering
 
-- **元数据**: Google | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Google | 相关: [[attention_mechanism]]
 - **概述**: 探索双编码器架构在问答任务中的应用
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

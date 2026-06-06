@@ -5,12 +5,13 @@ tags: [computer-vision, machine-learning]
 aliases: [Scalable Diffusion Models with Transformers, 2212.09748]
 related_nodes: [attention_mechanism]
 arxiv_id: 2212.09748
+authors: William Peebles et al.
 last_verified: 2026-06-06
 ---
 
 # Scalable Diffusion Models with Transformers
 
-- **元数据**: William Peebles et al. | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: William Peebles et al. | 相关: [[attention_mechanism]]
 - **概述**: Transformer 作为扩散模型骨干
 - **关键要点**: 见原始阅读笔记
 

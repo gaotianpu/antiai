@@ -5,12 +5,13 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [Segment Anything, 2304.02643]
 related_nodes: [attention_mechanism]
 arxiv_id: 2304.02643
+authors: Meta AI
 last_verified: 2026-06-06
 ---
 
 # Segment Anything
 
-- **元数据**: Meta AI | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Meta AI | 相关: [[attention_mechanism]]
 - **概述**: 可提示分割一切的目标分割基础模型（SAM）
 - **关键要点**: 见原始阅读笔记
 

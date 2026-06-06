@@ -5,12 +5,14 @@ tags: [NLP, machine-learning]
 aliases: [Train Short, Test Long, 2108.12409]
 related_nodes: [attention_mechanism]
 arxiv_id: 2108.12409
+authors: Ofir Press et al.
+authors_institution: Meta
 last_verified: 2026-06-06
 ---
 
 # Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation
 
-- **元数据**: Ofir Press et al. (Meta) | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Ofir Press et al. | **机构**: Meta | 相关: [[attention_mechanism]]
 - **概述**: 提出 ALiBi 位置编码方案，通过线性偏置实现长度外推
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

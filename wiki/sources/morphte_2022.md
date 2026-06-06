@@ -5,12 +5,13 @@ tags: [NLP, machine-learning]
 aliases: [MorphTE, 2210.15379]
 related_nodes: [attention_mechanism]
 arxiv_id: 2210.15379
+authors: Xin Liu et al.
 last_verified: 2026-06-06
 ---
 
 # MorphTE: Injecting Morphology in Tensorized Embeddings
 
-- **元数据**: Xin Liu et al. | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Xin Liu et al. | 相关: [[attention_mechanism]]
 - **概述**: 将形态信息注入张量化嵌入
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

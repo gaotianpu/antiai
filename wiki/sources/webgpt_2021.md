@@ -5,12 +5,13 @@ tags: [NLP, machine-learning, empirical-study]
 aliases: [WebGPT, 2112.09332]
 related_nodes: [attention_mechanism, openai]
 arxiv_id: 2112.09332
+authors: OpenAI
 last_verified: 2026-06-06
 ---
 
 # WebGPT: Browser-assisted question-answering with human feedback
 
-- **元数据**: Conference | OpenAI | 相关: [[attention_mechanism]]
+- **元数据**: Conference | **作者**: OpenAI | 相关: [[attention_mechanism]]
 - **概述**: 让语言模型使用浏览器搜索并回答问题，结合人类反馈训练
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记
