@@ -3,7 +3,7 @@ id: conditional_memory
 type: concept
 tags: [machine-learning, NLP, empirical-study]
 aliases: [条件记忆, static lookup, 静态查表]
-related_nodes: [cheng_2026_engram, sparsity_allocation]
+related_nodes: [cheng_2026_engram, sparsity_allocation, mixture_of_experts]
 last_verified: 2026-06-06
 ---
 

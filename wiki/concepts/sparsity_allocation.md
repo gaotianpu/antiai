@@ -3,7 +3,7 @@ id: sparsity_allocation
 type: concept
 tags: [machine-learning, theoretical, empirical-study]
 aliases: [稀疏分配, 稀疏性分配, U-shaped scaling law]
-related_nodes: [cheng_2026_engram, conditional_memory]
+related_nodes: [cheng_2026_engram, conditional_memory, mixture_of_experts]
 last_verified: 2026-06-06
 ---
 

@@ -3,7 +3,7 @@ id: cheng_2026_engram
 type: source
 tags: [NLP, machine-learning, empirical-study]
 aliases: [Engram, 条件记忆, Conditional Memory via Scalable Lookup, 2601.07372]
-related_nodes: [conditional_memory, sparsity_allocation, deepseek_ai]
+related_nodes: [conditional_memory, sparsity_allocation, deepseek_ai, mixture_of_experts]
 arxiv_id: 2601.07372
 last_verified: 2026-06-06
 ---

@@ -3,7 +3,7 @@ id: sparse_expert_review_2022
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [A Review of Sparse Expert Models in Deep Learning, 2209.01667]
-related_nodes: [attention_mechanism]
+related_nodes: [mixture_of_experts, attention_mechanism]
 arxiv_id: 2209.01667
 last_verified: 2026-06-06
 ---
