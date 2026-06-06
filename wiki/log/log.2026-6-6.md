@@ -23,3 +23,11 @@ type: log
 ## [04:55] Ingest: GPT 系列 + 推理（6 篇）
 - 新建 Source: gpt4 / webgpt / cot / auto_cot / zero_shot_cot / self_critiquing
 - 更新 Index: sources/index.md
+
+## [05:10] Ingest: NLP 其余 28 篇
+- 新建 Source: Transformer-XL / XLNet / FlashAttention / LaMDA / LongNet / RetNet
+  BPE / word2vec / RNN / LSTM / GRU / LayerNorm / XPOS / RoFormer / ALiBi
+  UCD / MorphTE / 3 篇综述 / dual_encoder_qa / summarize_HF / self_attn_sentiment
+  ERNIE × 3 / cpt-txt
+- BART.md / Marian.md 为空文件，跳过
+- 索引重写为完整版（按年份排序，去重）
