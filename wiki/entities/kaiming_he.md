@@ -13,11 +13,11 @@ last_verified: 2026-06-06
 计算机视觉领域最具影响力的学者之一，以残差网络（ResNet）等系列工作推动了深度学习在视觉领域的突破。
 
 ## 关键贡献
-- [[resnet_2015]]（2015）：残差学习 ResNet，152 层可训练网络
 - [[sppnet_2014]]（2014）：空间金字塔池化
-- [[mask_rcnn_2017]]（2017）：Mask R-CNN 实例分割
+- [[resnet_2015]]（2015）：残差学习 ResNet，152 层可训练网络
 - [[fpn_2016]]（2016）：特征金字塔网络 FPN
+- [[mask_rcnn_2017]]（2017）：Mask R-CNN 实例分割
 - [[focal_loss_2017]]（2017）：Focal Loss（合作者）
+- [[moco_v3]]（2020）：MoCo v3 自监督 ViT
 - [[mae]]（2021）：掩码自编码器 MAE
 - [[vitdet]]（2022）：ViTDet 检测骨架
-- [[moco_v3]]（2020）：MoCo v3 自监督 ViT

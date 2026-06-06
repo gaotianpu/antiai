@@ -101,7 +101,9 @@ related_nodes: [相关的概念/源/实体 page id]
 **深度学习** → **强化学习** → **NLP** → **计算机视觉** → ...
 
 ### 组织
-- [[google_deepmind]] — AI 研究实验室
+- [[deepseek_ai]] — AI 研究实验室
+- [[google]] — 科技公司
+- [[microsoft]] — 科技公司
 - [[openai]] — AI 研究机构
 ```
 
@@ -111,5 +113,6 @@ related_nodes: [相关的概念/源/实体 page id]
 
 - **准确性**: 忠实于原始资料
 - **精简**: 实体页是"名片页"，不展开长篇论述。详细内容留给 source 或 concept 页
+- **贡献排序**: 「关键贡献」按年份升序排列（而非重要性或添加顺序）
 - **互连性**: 通过 `related_nodes` + `[[双向链接]]` 建立到 source/concept 的引用
 - **中英双语**: `aliases` 至少包含中文名和英文名
