@@ -12,8 +12,8 @@ y = w * x + b
 ```
 
 - **代码**: `my_notes/basic/data/linear.py` — 用梯度下降学出一条直线
-- **概念**: [[word2vec_2013]] 词向量？不是，先理解标量、向量 | `my_notes/basic/vector.md`
-- **论文**: [[elman_1990_rnn]]？太早了，先跑通线性回归
+- **概念**: [word2vec_2013](wiki/sources/word2vec_2013.md) 词向量？不是，先理解标量、向量 | `my_notes/basic/vector.md`
+- **论文**: [elman_1990_rnn](wiki/sources/elman_1990_rnn.md)？太早了，先跑通线性回归
 
 ---
 
@@ -42,7 +42,7 @@ y = W2 @ h + b2
 - **代码**: `my_notes/basic/data/xor.py` — 经典异或问题，单层线性无解，加一层就解了
 - **新概念**: 隐藏层、反向传播、梯度消失
 - **文档**: `my_notes/basic/mlp.md`
-- **论文**: 可以先读 [[hochreiter_1997_lstm]] 的梯度问题部分
+- **论文**: 可以先读 [hochreiter_1997_lstm](wiki/sources/hochreiter_1997_lstm.md) 的梯度问题部分
 
 ---
 
@@ -55,7 +55,7 @@ y = W2 @ dropout(h) + b2  # AdamW 优化
 ```
 
 - **文档**: `my_notes/basic/Normalization.md` | `my_notes/basic/regularization.md` | `my_notes/basic/Optimizer.md`
-- **论文**: [[layer_norm_2016]] | [[liu_2019_roberta]]（RoBERTa 展示了优化细节的影响）
+- **论文**: [layer_norm_2016](wiki/sources/layer_norm_2016.md) | [liu_2019_roberta](wiki/sources/liu_2019_roberta.md)（RoBERTa 展示了优化细节的影响）
 
 ---
 
@@ -70,7 +70,7 @@ y = flatten(p) @ W + b     # 分类头
 
 - **文档**: `my_notes/basic/Object_Detection.md`
 - **论文**: 从 LeNet 读到 ResNet
-- **关键突破**: 残差连接让深层网络可训练 → [[vaswani_2017_transformer]] 借用了这个思想
+- **关键突破**: 残差连接让深层网络可训练 → [vaswani_2017_transformer](wiki/sources/vaswani_2017_transformer.md) 借用了这个思想
 
 ---
 
@@ -82,7 +82,7 @@ h_t = tanh(W_h @ h_{t-1} + W_x @ x_t)
 y_t = W_y @ h_t
 ```
 
-- **论文**: [[elman_1990_rnn]] → [[hochreiter_1997_lstm]] → [[gru_2014]]
+- **论文**: [elman_1990_rnn](wiki/sources/elman_1990_rnn.md) → [hochreiter_1997_lstm](wiki/sources/hochreiter_1997_lstm.md) → [gru_2014](wiki/sources/gru_2014.md)
 - **问题**: 长序列梯度消失 → LSTM 的门控机制
 
 ---
@@ -97,8 +97,8 @@ weights = softmax(scores)
 output = weights @ V
 ```
 
-- **概念**: [[attention_mechanism]]
-- **论文**: [[bahdanau_2014_attention]] → [[vaswani_2017_transformer]]
+- **概念**: [attention_mechanism](wiki/concepts/attention_mechanism.md)
+- **论文**: [bahdanau_2014_attention](wiki/sources/bahdanau_2014_attention.md) → [vaswani_2017_transformer](wiki/sources/vaswani_2017_transformer.md)
 - **代码**: 先用手写 np 实现单头注意力，再看多头
 - **关键**: 去掉 RNN，全部用注意力 → Transformer 诞生
 
@@ -115,10 +115,10 @@ def transformer_block(x):
 ```
 
 - **文档**: `my_notes/basic/intro_transformer.md`
-- **位置编码**: [[roformer_2021]]（RoPE）| [[alibi_2021]] | [[xpos_2022]]
-- **高效注意力**: [[dao_2022_flashattention]]
-- **超长序列**: [[dai_2019_transformer_xl]] | [[longnet_2023]]
-- **视觉版**: [[vit]] — 图像切成 patch，当成序列
+- **位置编码**: [roformer_2021](wiki/sources/roformer_2021.md)（RoPE）| [alibi_2021](wiki/sources/alibi_2021.md) | [xpos_2022](wiki/sources/xpos_2022.md)
+- **高效注意力**: [dao_2022_flashattention](wiki/sources/dao_2022_flashattention.md)
+- **超长序列**: [dai_2019_transformer_xl](wiki/sources/dai_2019_transformer_xl.md) | [longnet_2023](wiki/sources/longnet_2023.md)
+- **视觉版**: [vit](wiki/sources/vit.md) — 图像切成 patch，当成序列
 
 ---
 
@@ -130,36 +130,36 @@ def transformer_block(x):
 掩码（BERT）→ 自回归（GPT）→ 对比学习（CLIP）
 ```
 
-- **BERT**: [[devlin_2018_bert]] → [[liu_2019_roberta]]
-- **GPT**: [[radford_2018_gpt]] → [[radford_2019_gpt2]] → [[brown_2020_gpt3]]
-- **对比学习**: [[clip]] | [[cpt_txt_2022]]
-- **综述**: [[survey_prompting_2021]] | [[survey_transformers_2021]]
+- **BERT**: [devlin_2018_bert](wiki/sources/devlin_2018_bert.md) → [liu_2019_roberta](wiki/sources/liu_2019_roberta.md)
+- **GPT**: [radford_2018_gpt](wiki/sources/radford_2018_gpt.md) → [radford_2019_gpt2](wiki/sources/radford_2019_gpt2.md) → [brown_2020_gpt3](wiki/sources/brown_2020_gpt3.md)
+- **对比学习**: [clip](wiki/sources/clip.md) | [cpt_txt_2022](wiki/sources/cpt_txt_2022.md)
+- **综述**: [survey_prompting_2021](wiki/sources/survey_prompting_2021.md) | [survey_transformers_2021](wiki/sources/survey_transformers_2021.md)
 
 ---
 
 ## Step 9：大模型的关键能力
 
 ### 上下文学习
-- [[brown_2020_gpt3]] — 给几个示例就能做新任务，不更新参数
-- [[in_context_learning]] — 概念详解
+- [brown_2020_gpt3](wiki/sources/brown_2020_gpt3.md) — 给几个示例就能做新任务，不更新参数
+- [in_context_learning](wiki/concepts/in_context_learning.md) — 概念详解
 
 ### 思维链推理
-- [[wei_2022_cot]] — 让模型输出中间步骤
-- [[auto_cot_2022]] — 自动生成 CoT 示例
-- [[zero_shot_cot_2022]] — "Let's think step by step"
+- [wei_2022_cot](wiki/sources/wei_2022_cot.md) — 让模型输出中间步骤
+- [auto_cot_2022](wiki/sources/auto_cot_2022.md) — 自动生成 CoT 示例
+- [zero_shot_cot_2022](wiki/sources/zero_shot_cot_2022.md) — "Let's think step by step"
 
 ### 人类对齐
-- [[ouyang_2022_instructgpt]] — RLHF 三阶段
-- [[reinforcement_learning_from_human_feedback]] — 概念详解
+- [ouyang_2022_instructgpt](wiki/sources/ouyang_2022_instructgpt.md) — RLHF 三阶段
+- [reinforcement_learning_from_human_feedback](wiki/concepts/reinforcement_learning_from_human_feedback.md) — 概念详解
 
 ---
 
 ## Step 10：多模态
 
-- [[clip]] — 文本 + 图像对比学习
-- [[segment_anything]] — 分割一切
-- [[dall_e_v2]] — 文本 → 图像
-- [[cheng_2026_engram]] — 条件记忆（最新前沿）
+- [clip](wiki/sources/clip.md) — 文本 + 图像对比学习
+- [segment_anything](wiki/sources/segment_anything.md) — 分割一切
+- [dall_e_v2](wiki/sources/dall_e_v2.md) — 文本 → 图像
+- [cheng_2026_engram](wiki/sources/cheng_2026_engram.md) — 条件记忆（最新前沿）
 
 ---
 

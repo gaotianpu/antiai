@@ -4,11 +4,11 @@ AI 论文知识库，持续收集和学习 AI 领域的重要论文。
 
 ## 快速导航
 
-- [[frontier|最新前沿]] — 最近一年的前沿论文
-- [[getting_started|新手入门]] — 新手入门
-- [[wiki/sources/index|全部论文索引]] — 按年份浏览
-- [[wiki/concepts/index|概念索引]] — 核心 AI 概念
-- [[wiki/entities/index|实体索引]] — 机构与人物
+- [最新前沿](frontier.md) — 最近一年的前沿论文
+- [新手入门](getting_started.md) — 新手入门
+- [全部论文索引](wiki/sources/index.md) — 按年份浏览
+- [概念索引](wiki/concepts/index.md) — 核心 AI 概念
+- [实体索引](wiki/entities/index.md) — 机构与人物
 
 
 
