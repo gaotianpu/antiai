@@ -37,6 +37,19 @@ arxiv_id: [arXiv 论文 ID]   # 可选，用于精确去重
 | **引用** | 内部链接用 `[[page_id]]`，外部文件用 `[文本](路径)` |
 | **related_nodes** | 仅列已有的 wiki 页面 id，不列未创建页面 |
 
+## 与 raw/ 的关联
+
+Source 页通过 `arxiv_id` 字段与 `raw/` 下的原始资料建立对应关系：
+
+```
+wiki/sources/[id].md        ← 摘要卡片（本文）
+       ↕ arxiv_id 字段
+raw/{arxiv_id}.md           ← 转换清理后的 Markdown
+raw/pdf/{arxiv_id}.pdf      ← 原始 PDF
+```
+
+示例：`wiki/sources/cheng_2026_engram.md` 的 `arxiv_id: 2601.07372` 指向 `raw/2601.07372.md` 和 `raw/pdf/2601.07372.pdf`。
+
 ## 文件命名
 
 `wiki/sources/[姓_年份_关键词].md`，蛇形命名，全小写。
