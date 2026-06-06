@@ -3,31 +3,31 @@
 创新常常在边缘，请给探索以空间。
 
 ## * 最近进展
-* [chatGPT](./thinking/chatGPT.md)
+* chatGPT)
     * Google 的 《我们没有护城河，OpenAI也没有》, 总结了时下大语言模型的开源进展~
 * 视觉领域
-    * Meta的 [Segment Anything](./paper/Multimodal/Segment_Anything.md)，分割一切，GUI形式的人机对齐，chat形式之外的另一种GUI对齐形式，应用场景应该也会比chat形式更广泛？
+    * Meta的 [Segment Anything](../raw/Multimodal/Segment_Anything.md)，分割一切，GUI形式的人机对齐，chat形式之外的另一种GUI对齐形式，应用场景应该也会比chat形式更广泛？
 * 图像生成
-    * OpenAI的 [Consistency Models](./paper/Consistency_models.md) 一致性模型，比迭代式的扩散模型更快的生成模型；
+    * OpenAI的 [Consistency Models](../raw/Generative/Consistency_models.md) 一致性模型，比迭代式的扩散模型更快的生成模型；
 
 
 ## 一、整体概览
 分层 | 说明 
 --- | --- 
-5 - 具体任务 | 微调 -> 人机对齐([Chat形式](./paper/nlp/gpt_InstructGPT.md) -> [GUI形式](./paper/Multimodal/Segment_Anything.md)) -> [提示学习](./basic/Prompt_Learning.md) 
-4 - 各类模态 | [自然语言](./paper/nlp/README.md)、[图像](./paper/cnn/README.md) 、音频、[视频](./paper/video/README.md)、雷达、传感器等 -> [多模态融合](./paper/Multimodal/README.md)
+5 - 具体任务 | 微调 -> 人机对齐([Chat形式](../raw/nlp/gpt_InstructGPT.md) -> [GUI形式](../raw/Multimodal/Segment_Anything.md)) -> [提示学习](./basic/Prompt_Learning.md) 
+4 - 各类模态 | [自然语言](../raw/nlp/README.md)、[图像](../raw/cnn/README.md) 、音频、[视频](../raw/video/README.md)、雷达、传感器等 -> [多模态融合](../raw/Multimodal/README.md)
 3 - 训练范式 | 特定任务全监督 -> 自监督预训练(掩码自动编码，生成式自回归、[对比学习](./basic/contrastive_learning.md)) 
-2 - 模型架构 | SVM/GBDT/[MLP](./basic/mlp.md) -> [RNN](./paper/nlp/rnn.md)([LSTM](./paper/nlp/lstm.md)/[GRU](./paper/nlp/gru.md)), [CNN](./paper/cnn/README.md) -> [Transformers](./paper/nlp/transformer.md) -> ? ([MLP-mixer](./paper/mlp-mixer.md))
-1 - 基础组件 | [全连接](./basic/linear_regression.md)、[激活函数](./basic/Activation.md)、[归一化](./basic/Normalization.md) 、[初始化策略](./paper/Xavier_init.md)、[损失函数](./basic/Loss_metric.md)、[优化算法](./basic/Optimizer.md)、[残差连接](./paper/cnn/resnet.md)、[正则化策略](./basic/regularization.md)、嵌入
+2 - 模型架构 | SVM/GBDT/[MLP](./basic/mlp.md) -> [RNN](../raw/nlp/rnn.md)([LSTM](../raw/nlp/lstm.md)/[GRU](../raw/nlp/gru.md)), [CNN](../raw/cnn/README.md) -> [Transformers](../raw/nlp/transformer.md) -> ? ([MLP-mixer](../raw/mlp-mixer.md))
+1 - 基础组件 | [全连接](./basic/linear_regression.md)、[激活函数](./basic/Activation.md)、[归一化](./basic/Normalization.md) 、[初始化策略](../raw/Xavier_init.md)、[损失函数](./basic/Loss_metric.md)、[优化算法](./basic/Optimizer.md)、[残差连接](../raw/cnn/resnet.md)、[正则化策略](./basic/regularization.md)、嵌入
 
 ### 重要的时间节点
-1. 2009年前，受限于数据规模和算力，尽管[RNN](./paper/nlp/rnn.md)/[CNN](./paper/cnn/LeNet.md)等深度学习架构模型已经发明出来，但与SVM/GBDT等非深度学习算法相比，深度神经网络的优势并不明显。
+1. 2009年前，受限于数据规模和算力，尽管[RNN](../raw/nlp/rnn.md)/[CNN](../raw/cnn/LeNet.md)等深度学习架构模型已经发明出来，但与SVM/GBDT等非深度学习算法相比，深度神经网络的优势并不明显。
 2. 2009年，[ImageNet](https://www.image-net.org/)图像标注数据集提供了深度学习的数据基础，随后，其他各类开源的标注数据集也陆续提供。互联网(特别是移动互联UGC)的快速发展，使得大规模的数据收集标注工作成为可能。
-3. 2012年，[Alexnet](./paper/cnn/alexnet.md)采用GPU加速深度学习的训练过程，为算力需求的解决指明了方向(留意英伟达股票这些年的表现)。随着深度学习越来越成功，影响力越来越大。为深度学习的训练和推理阶段设计专门优化的芯片成为很有潜力的产业，Google的TPU，其他公司也提供了各种替代方案。可以预见，未来的算力需求将依然强劲。
-4. 2012 ~ 2017，计算机视觉的[CNN](./paper/cnn/README.md)得到长足发展，图像分类、[目标识别](./paper/cnn/Object_Detection.md)、[语义分割](./paper/cnn/Semantic_Segmentation.md)、[实例分割](./paper/cnn/Instance_Segmentation.md)、姿态估计等任务效果不断提高，同时，也促进了深度神经网络基础组件的发展和完善。但视觉领域的发展无不依赖大量的数据标注工作，人工标注数据成本相当高昂。NLP方向架构上没太大进展，探索了[词嵌入的训练](./paper/nlp/word2vec.md)、句子整体表征能力。
-5. 2017年，[Transformers](./paper/nlp/transformer.md)架构提出，随后不久[GPT](./paper/nlp/gpt.md),[BERT](./paper/nlp/bert.md)相继提出，使得自然语言领域大规模自监督预训练成为可能。自监督预训练不再需要人工标注数据，而下游任务只需少量数据微调就可以了。随着预训练数据获取成本的大幅降低，训练超大模型成为可能。与此同时，采用对比学习范式实现图像领域的自监督预训练也开展中。
-6. 2020年，[视觉Transformer(ViT)](./paper/vit/ViT.md)提出，[MAE](./paper/vit/MAE.md)/[BEit](./paper/vit/BEiT.md)/[ViTDet](./paper/vit/ViTDet.md)等开启ViT时代的探索，而采用[对比学习](./basic/contrastive_learning.md)模式的[CLIP](./paper/Multimodal/CLIP.md)实现了T时代图像-文本多模融合。[各种模态(NLP,CV等)模型架构的统一](./paper/Multimodal/README.md)将为迈向通用人工智能打下坚实的基础。
-7. 2022年底，[chatGPT](./paper/thinking_chatGPT.md)出现。超大模型能够涌现出之前不具备的各种能力，而自然语言的各种任务都能够用对话形式表示(一轮不行就多轮)，因此，针对特定领域的微调就变成了针对所有领域的人机意图对齐。同样，视觉领域图像分类、目标识别、语义\实体分割等，也可以统一到一种形式上--[分割anything](./paper/Multimodal/Segment_Anything.md)，也可以实现人机意图对齐，多模领域也有这个趋势。最终，更像人类的通用智能将会出现。
+3. 2012年，[Alexnet](../raw/cnn/alexnet.md)采用GPU加速深度学习的训练过程，为算力需求的解决指明了方向(留意英伟达股票这些年的表现)。随着深度学习越来越成功，影响力越来越大。为深度学习的训练和推理阶段设计专门优化的芯片成为很有潜力的产业，Google的TPU，其他公司也提供了各种替代方案。可以预见，未来的算力需求将依然强劲。
+4. 2012 ~ 2017，计算机视觉的[CNN](../raw/cnn/README.md)得到长足发展，图像分类、[目标识别](../my_notes/basic/Object_Detection.md)、[语义分割](../raw/cnn/Semantic_Segmentation.md)、[实例分割](../raw/cnn/Instance_Segmentation.md)、姿态估计等任务效果不断提高，同时，也促进了深度神经网络基础组件的发展和完善。但视觉领域的发展无不依赖大量的数据标注工作，人工标注数据成本相当高昂。NLP方向架构上没太大进展，探索了[词嵌入的训练](../raw/nlp/word2vec.md)、句子整体表征能力。
+5. 2017年，[Transformers](../raw/nlp/transformer.md)架构提出，随后不久[GPT](../raw/nlp/gpt.md),[BERT](../raw/nlp/bert.md)相继提出，使得自然语言领域大规模自监督预训练成为可能。自监督预训练不再需要人工标注数据，而下游任务只需少量数据微调就可以了。随着预训练数据获取成本的大幅降低，训练超大模型成为可能。与此同时，采用对比学习范式实现图像领域的自监督预训练也开展中。
+6. 2020年，[视觉Transformer(ViT)](../raw/vit/ViT.md)提出，[MAE](../raw/vit/MAE.md)/[BEit](../raw/vit/BEiT.md)/[ViTDet](../raw/vit/ViTDet.md)等开启ViT时代的探索，而采用[对比学习](./basic/contrastive_learning.md)模式的[CLIP](../raw/Multimodal/CLIP.md)实现了T时代图像-文本多模融合。[各种模态(NLP,CV等)模型架构的统一](../raw/Multimodal/README.md)将为迈向通用人工智能打下坚实的基础。
+7. 2022年底，chatGPT)出现。超大模型能够涌现出之前不具备的各种能力，而自然语言的各种任务都能够用对话形式表示(一轮不行就多轮)，因此，针对特定领域的微调就变成了针对所有领域的人机意图对齐。同样，视觉领域图像分类、目标识别、语义\实体分割等，也可以统一到一种形式上--[分割anything](../raw/Multimodal/Segment_Anything.md)，也可以实现人机意图对齐，多模领域也有这个趋势。最终，更像人类的通用智能将会出现。
 
 
 ## 二、基础组件
@@ -63,41 +63,41 @@
 
 ## 三、架构演化
 1. SVM/GBDT/[MLP](./basic/mlp.md)
-2. 用于序列处理的 [RNN](./paper/nlp/rnn.md): [LSTM](./paper/nlp/lstm.md),[GRU](./paper/nlp/gru.md)
-3. 用于图像处理的 [CNN](./paper/cnn/README.md): [LeNet](./paper/cnn/LeNet.md),[AlexNet](./paper/cnn/alexnet.md),[VGG](./paper/cnn/vgg.md),[ResNet](./paper/cnn/resnet.md),[CSPnet](./paper/cnn/cspnet.md),[ConvNeXt](./paper/cnn/ConvNeXt.md)
-4. 统一架构：[Transformers](./paper/nlp/transformer.md) 
-5. 极简架构的尝试：[MLP-mixer](./paper/mlp-mixer.md), 未来是否还有更好的，能够替代Transformers的架构？
+2. 用于序列处理的 [RNN](../raw/nlp/rnn.md): [LSTM](../raw/nlp/lstm.md),[GRU](../raw/nlp/gru.md)
+3. 用于图像处理的 [CNN](../raw/cnn/README.md): [LeNet](../raw/cnn/LeNet.md),[AlexNet](../raw/cnn/alexnet.md),[VGG](../raw/cnn/vgg.md),[ResNet](../raw/cnn/resnet.md),[CSPnet](../raw/cnn/cspnet.md),[ConvNeXt](../raw/cnn/ConvNeXt.md)
+4. 统一架构：[Transformers](../raw/nlp/transformer.md) 
+5. 极简架构的尝试：[MLP-mixer](../raw/mlp-mixer.md), 未来是否还有更好的，能够替代Transformers的架构？
 
 
 ## 四、[Transformers](./basic/intro_transformer.md)
-1. 自然语言 [Attention Is All You Need](./paper/nlp/transformer.md) 
-2. 视觉 ViT [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](./paper/vit/ViT.md)
-3. 多模态的改进：[MAGNETO:post/pre/sub-LN](./paper/Multimodal/MAGNETO.md), [BEiT-3,不同模态，不同的FFN](./paper/Multimodal/BEiT_v3.md)
+1. 自然语言 [Attention Is All You Need](../raw/nlp/transformer.md) 
+2. 视觉 ViT [An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](../raw/vit/ViT.md)
+3. 多模态的改进：[MAGNETO:post/pre/sub-LN](../raw/Multimodal/MAGNETO.md), [BEiT-3,不同模态，不同的FFN](../raw/Multimodal/BEiT_v3.md)
     * https://zhuanlan.zhihu.com/p/157490738 softmax是必须的吗？
-4. 训练时的稳定性: [DeepNet:初始化+梯度裁剪](./paper/Multimodal/DeepNet.md), [深度神经网络初始化 Xavier_init](./paper/Xavier_init.md)
+4. 训练时的稳定性: [DeepNet:初始化+梯度裁剪](../raw/Multimodal/DeepNet.md), [深度神经网络初始化 Xavier_init](../raw/Xavier_init.md)
 5. 输入长度: 
-    * [XPos](./paper/nlp/XPOS.md)
-    * [ALibi](./paper/nlp/Alibi.md) 
-    * [RoPE](./paper/nlp/RoFormer.md)
-    * [LongNet](./paper/nlp/LongNet.md)
-6. [MegaByte](./paper/MegaByte.md)
+    * [XPos](../raw/nlp/XPOS.md)
+    * [ALibi](../raw/nlp/Alibi.md) 
+    * [RoPE](../raw/nlp/RoFormer.md)
+    * [LongNet](../raw/nlp/LongNet.md)
+6. [MegaByte](../raw/MegaByte.md)
     * 多模输入更统一：文本、图像、视频，都当成一串连续字节输入；
     * 可以处理超长字节串；
     * 并行生成，多快好省。 并行分块(多token)生成，是不是意味着RLHF就没用了？
     * [Bytes Are All You Need: Transformers Operating Directly On File Bytes](https://arxiv.org/abs/2306.00238)
 6. 稀疏专家模型：
-    * [调研](./paper/Sparse_Expert_review.md)
-    * [X-MoE](./paper/X-MoE.md)
-    * [SwitchT](./paper/Switch_Transformers.md)
-7. 开源的基础架构：[TorchScale](./paper/Multimodal/TorchScale.md) 
+    * [调研](../raw/Sparse_Expert_review.md)
+    * [X-MoE](../raw/X-MoE.md)
+    * [SwitchT](../raw/Switch_Transformers.md)
+7. 开源的基础架构：[TorchScale](../raw/Multimodal/TorchScale.md) 
 
 
 ## 五、 预训练范式
-| | 掩码自动编码 | 生成式自回归 | 编码-解码 | [对比学习](./paper/contrastive_learning.md) | 掩码+对比
+| | 掩码自动编码 | 生成式自回归 | 编码-解码 | [对比学习](../my_notes/basic/contrastive_learning.md) | 掩码+对比
 | --- | --- | --- | --- | --- | ---
-| 自然语言 | [BERT](./paper/nlp/bert.md) | [GPT-1](./paper/nlp/gpt.md),[2](./paper/nlp/gpt_2.md),[3](./paper/nlp/gpt_3.md) | [BART](./paper/nlp/BART.md), [T5](./paper/nlp/T5.md), [Marian](./paper/nlp/Marian.md) | [cpt-txt/code](./paper/nlp/cpt-txt.md) | ---
-| 视觉 | [BEiT_2](./paper/vit/BEiT_2.md) | [iGPT](./paper/vit/iGPT.md) | [MAE](./paper/vit/MAE.md) | [Moco-1](./paper/cnn/MoCo.md),[2](./paper/cnn/MoCo_v2.md),[3](./paper/vit/MoCo_v3.md) [SimCLR](./cnn/SimCLR.md)  | ---
-| 多模 | [BEiT_3](./paper/Multimodal/BEiT_v3.md) < [MetaLM](./paper/Multimodal/MetaLM.md) | [Kosmos-1](./paper/Multimodal/Kosmos-1.md)> | --- | [CLIP](./paper/Multimodal/CLIP.md)   | [FLIP = MAE+CLIP](./paper/Multimodal/FLIP.md)
+| 自然语言 | [BERT](../raw/nlp/bert.md) | [GPT-1](../raw/nlp/gpt.md),[2](../raw/nlp/gpt_2.md),[3](../raw/nlp/gpt_3.md) | [BART](../raw/nlp/BART.md), [T5](../raw/nlp/T5.md), [Marian](../raw/nlp/Marian.md) | [cpt-txt/code](../raw/nlp/cpt-txt.md) | ---
+| 视觉 | [BEiT_2](../raw/vit/BEiT_2.md) | [iGPT](../raw/vit/iGPT.md) | [MAE](../raw/vit/MAE.md) | [Moco-1](../raw/cnn/MoCo.md),[2](../raw/cnn/MoCo_v2.md),[3](../raw/vit/MoCo_v3.md) [SimCLR](../raw/cnn/SimCLR.md)  | ---
+| 多模 | [BEiT_3](../raw/Multimodal/BEiT_v3.md) < [MetaLM](../raw/Multimodal/MetaLM.md) | [Kosmos-1](../raw/Multimodal/Kosmos-1.md)> | --- | [CLIP](../raw/Multimodal/CLIP.md)   | [FLIP = MAE+CLIP](../raw/Multimodal/FLIP.md)
 
 ### 说明
 * 三种范式的直观理解：
@@ -105,7 +105,7 @@
     * 生成式自回归，预测下一个token
     * 对比学习
 * 三种范式与模型架构的发展是正交的，既，可以使用RNN/CNN/Transfomers实现这三种范式的训练, 只不过Transformers的优点太多了，近几年这三种范式都基于Transformers实现了。
-* 词嵌入是早期的预训练尝试，取得很好的成果，代表论文[word2vec](./paper/nlp/word2vec.md)，训练方式：
+* 词嵌入是早期的预训练尝试，取得很好的成果，代表论文[word2vec](../raw/nlp/word2vec.md)，训练方式：
     * n-gram，根据前几个tokens预测下一个token，有点生成式的意思，和后来的GPT思路相似；
     * skip-gram，给定中间的token，预测它周边的tokens； 
     * CBOW则是给定上下文tokens，预测中间的token，有点像后来的BERT，双向掩码预测的思路； 
@@ -118,20 +118,20 @@
 1. 微调 fine-tune
     * [Parameter-Efficient Fine-Tuning (PEFT)](https://github.com/huggingface/peft) 各种微调技术集成
     * [LoRA, Low-Rank Adaptation of LLM](https://github.com/microsoft/LoRA)，插件式的微调
-    * [AdaLoRA:Adaptive Budget Allocation for Parameter-Efficient Fine-Tuning](./paper/AdaLoRA.md)
-    * [QLoRA: Efficient Finetuning of Quantized LLMs](./paper/QLoRA.md)
+    * [AdaLoRA:Adaptive Budget Allocation for Parameter-Efficient Fine-Tuning](../raw/AdaLoRA.md)
+    * [QLoRA: Efficient Finetuning of Quantized LLMs](../raw/QLoRA.md)
 2. RLHF 基于人类反馈的强化学习
-    * [InstructGPT](./paper/nlp/gpt_InstructGPT.md) 2022.3.4
-    * [Learning to summarize from human feedback](./paper/nlp/summarize_HF.md) 2020.9.2
-    * [PPO](./paper/RL/PPO.md) 2017.7.20
-    * [SELF-INSTRUCT](./paper/self-Instruct.md)  基于LLM自动生成各种提示任务
-    * [Principle-Driven Self-Alignment](./paper/Dromedary.md)
+    * [InstructGPT](../raw/nlp/gpt_InstructGPT.md) 2022.3.4
+    * [Learning to summarize from human feedback](../raw/nlp/summarize_HF.md) 2020.9.2
+    * [PPO](../raw/RL/PPO.md) 2017.7.20
+    * [SELF-INSTRUCT](../raw/self-Instruct.md)  基于LLM自动生成各种提示任务
+    * [Principle-Driven Self-Alignment](../raw/Dromedary.md)
 3. [提示学习 Prompt Learning](./basic/Prompt_Learning.md) 
-    * [Chain-of-Thought](./paper/nlp/CoT.md)，思维链，让ai将思维过程展示出来
+    * [Chain-of-Thought](../raw/nlp/CoT.md)，思维链，让ai将思维过程展示出来
     * Self-Consistency，自洽性，
     * system/user/assistant, 在同一个大模型基础上做到对话时千人千面？面对不同人，呈现不同的性格？ 看OpenAI的prompt教程，可以给对话指定个背景。
 4. 图形界面交互对齐
-    * [Segment Anything](./paper/Multimodal/Segment_Anything.md)
+    * [Segment Anything](../raw/Multimodal/Segment_Anything.md)
     * 基于AI的对话形式很了不起，但判断可能还是像PC早期的DOS等命令行形式那样(命令行+管道的形式，自动化脚本任务)，最终会出现基于AI的GUI交互形式，普通人似乎更能接受。 
     * 目标检测、语义分割、目标追踪  
 
@@ -141,7 +141,7 @@
     * [ColossalAI:分布式深度学习模型](https://github.com/hpcaitech/ColossalAI) 
 2. 模型轻量化：剪枝、量化、蒸馏
     * MLC LLM https://github.com/mlc-ai/mlc-llm
-    * [Distilling Step-by-Step](./paper/Distilling_ss.md) 
+    * [Distilling Step-by-Step](../raw/Distilling_ss.md) 
     * [Quant-Noise:Training with Quantization Noise for Extreme Model Compression](https://arxiv.org/abs/2004.07320)
     * [MiniViT: Compressing Vision Transformers with Weight Multiplexing](https://arxiv.org/abs/2204.07154)
     * 剪枝：是把连接直接干掉，还是权重为0？
@@ -175,7 +175,7 @@
         * 搜索query
         * 问答中的问题-答案？
         * 论坛主贴-回帖？
-4. [SELF-INSTRUCT](./paper/self-Instruct.md) 自动生成指令
+4. [SELF-INSTRUCT](../raw/self-Instruct.md) 自动生成指令
     * [shareGPT](https://sharegpt.com/) 用户分享的chatGPT聊天记录 
 
 ## Others

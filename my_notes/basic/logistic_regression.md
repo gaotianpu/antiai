@@ -3,7 +3,7 @@
 上一节我们讲了[线性回归 Linear regression](./linear_regression.md), 使用模型预测连续值。这一节我们介绍分类问题，例如：商品评论内容是正面的，还是负面的，二分类问题；新闻内容属于什么分类，多分类问题；图片是哪种动物等等。分类问题中预测的分类标签是一个离散值，我们先从最简单的二分类问题入手。
 
 ## 1. 二分类问题
-![二分类问题](../paper/images/bin_class.png)<br/>
+![二分类问题](../../raw/images/bin_class.png)<br/>
 图 1：二分类问题示例。 平面中分布着两类点集，一类是绿色点集，分类Label=1，一类是蓝色的点集，分类Label=0。我们需要找到一条分割线，将2个不同点集区分开。
 <!-- 点本身(x0,x1)是个二维向量，再加上label(=0,1),看作一个3D的空间？ -->
 
@@ -79,7 +79,7 @@ plt.show()
 
 ```
 
-![sigmoid](../paper/images/sigmoid.png) <br/>
+![sigmoid](../../raw/images/sigmoid.png) <br/>
 图 2：sigmod函数。能将任意一个x转换成(0,1)之间的值，当输入值越大，都无限接近1，当输入值很小时，都无限趋近与0。满足了将任意数值转换为(0,1)区间的要求。而中间数值输出0.5左右的值，区分度很大。就可以解决样本距离分隔面远近问题。很好满足了上面提到的从普通数值映射到概率值的需求。
 
 
@@ -135,7 +135,7 @@ $BCE_{loss} =  \begin{cases}  - log(p)  ， if \ Label = 1, \\ - log(1-p) ， \ 
 
 图4中绿色曲线表示交叉熵损失函数(BCE).
 
-![MSE and BinCrossEntroy](../paper/images/mse_bce.png)<br/>
+![MSE and BinCrossEntroy](../../raw/images/mse_bce.png)<br/>
 图4：方差和交叉熵函数的对比。 (制作工具：https://www.geogebra.org/graphing?lang=zh_CN)。输入值x轴 (对应模型输出的概率值p) 在(0,1)之间，这个是由模型中sigmod函数输出决定的；y轴则是损失函数输出的误差值。
 
 #### 1.3.3 均方差 vs. 交叉熵
@@ -374,7 +374,7 @@ print("Done!")
 $H(x) = - \sum_{i=1}^n p(x_i)log(p(x_i)) $
 
 假设是只有2种情况的随机变量：
-![entropy](../paper/images/entropy.png)<br/>
+![entropy](../../raw/images/entropy.png)<br/>
 图 4：信息熵。 https://www.geogebra.org/graphing  公式： entropy: y=If(x>0 ∧ x≤1, -x log(2,x))
 
 ### 4.2 最大熵原理

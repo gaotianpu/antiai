@@ -16,13 +16,13 @@
 
 ## 2. 生成式预训练模型的胜出
 以下是Transformer和基于它之上的预训练模型发展历程:
-* [Transformer](../paper/nlp/transformer.md) 2017.6.12
-* [GPT-1](../paper/nlp/gpt.md) 2018.6.11
-* [BERT](../paper/nlp/bert.md) 2018-10-11
-* [GPT-2](../paper/nlp/gpt_2.md) 2019.2.14
-* [GPT-3](../paper/nlp/gpt_3.md) 2020.5.28
-* [Learning to summarize from human feedback](../paper/nlp/summarize_HF.md) 2020.9.2
-* [InstructGPT](../paper/nlp/gpt_InstructGPT.md) 2022.3.4
+* [Transformer](../../raw/nlp/transformer.md) 2017.6.12
+* [GPT-1](../../raw/nlp/gpt.md) 2018.6.11
+* [BERT](../../raw/nlp/bert.md) 2018-10-11
+* [GPT-2](../../raw/nlp/gpt_2.md) 2019.2.14
+* [GPT-3](../../raw/nlp/gpt_3.md) 2020.5.28
+* [Learning to summarize from human feedback](../../raw/nlp/summarize_HF.md) 2020.9.2
+* [InstructGPT](../../raw/nlp/gpt_InstructGPT.md) 2022.3.4
 
 起初，GPT-1和BERT两条技术路线的差距不大，都还是预训练模型+下游任务微调的思路。而到了GPT-2,论文提出：自然语言提供了一种灵活的方式来将任务、输入和输出指定为单一的序列符号。可以将所有的NLP任务都看成是对单一序列的处理，这样预训练出来的模型将会更通用，下游任务甚至不需要微调就能很好的适配。到了后续的GPT-3更是在预训练大模型的加持下，下游任务无需微调，直接基于提示就能完成。可以说这两篇论文直接拉开了以BERT为代表的完型填空和以GPT为代表的生成式模型的差距。
 
@@ -103,9 +103,9 @@ GPT在实际的推理阶段，token是一个个生成，直到达到指定的长
 
 一种思路，收集大量高质量的 提示+响应内容 文本对，进行有监督的微调方式。这种方式难点在于这类高质量的数据收集工作的成本很高昂。
 
-另一种思路，给定提示，让模型生成不同的响应内容，人工判断这些响应内容哪个好，哪个不好。模型再根据这些反馈做调整，逐步优化生成效果以实现和人类对齐的意图。 [Learning to summarize from human feedback](../paper/nlp/summarize_HF.md) 和 [InstructGPT](../paper/nlp/gpt_InstructGPT.md)论文中的解决方案如下：
+另一种思路，给定提示，让模型生成不同的响应内容，人工判断这些响应内容哪个好，哪个不好。模型再根据这些反馈做调整，逐步优化生成效果以实现和人类对齐的意图。 [Learning to summarize from human feedback](../../raw/nlp/summarize_HF.md) 和 [InstructGPT](../../raw/nlp/gpt_InstructGPT.md)论文中的解决方案如下：
 
-![InstructGPT](../paper/images/InstructGPT/fig_2.png)<br/>
+![InstructGPT](../../raw/images/InstructGPT/fig_2.png)<br/>
 图1：InstructGPT的三个步骤：(1)监督微调(SFT)，(2)奖励模型(RM)训练，(3)通过该奖励模型上的近端策略优化(PPO)进行强化学习。蓝色箭头表示该数据用于训练我们的一个模型。在步骤2中，框A-D是我们的模型中的样本，由标注人员进行排名。
 
 ### 3.1 第一步，监督微调
@@ -209,7 +209,7 @@ class LogExpLoss(nn.Module):
 ### 3.3 第三步，强化学习
 为什么要引入强化学习呢？ 强化学习的使用场景，通常是一个agent连续做多个action后，期望总得分最大。我们可以将GPT每次生成的单个token作为一个action(动作)，所有的token全部生成完后意味着一串连续的actions的结束，评估一个整体的得分。
 
-![RHLF](../paper/images/InstructGPT/fig_note_1.png)<br/>
+![RHLF](../../raw/images/InstructGPT/fig_note_1.png)<br/>
 图2：RHLF 流程示意图
 
 #### 3.3.1 整体流程

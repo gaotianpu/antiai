@@ -4,14 +4,14 @@
 1. 回顾历史：平台(闭源|开源)(pc:windows/mac/linux,mobile:ios/android) -> app开发者 -> 应用者 。 一层层的扩散，3年平台繁荣，5年app繁荣期，后续就是应用者们发挥想象力的时候。对AI开发者来说，珍惜这3~5年的机会 ~ (纠结：这波AI是像pc/mobile这样级别的机会呢，还是像搜索引擎、电商、短视频这种app级的机会？)
 
 ## 二、技术原理
-1. [Transfomers](./nlp/transformer.md), 基于自注意力机制
-2. [GPT-1](./nlp/gpt.md)  自回归生成式模型，多任务统一的微调
-    * [GPT-2](./nlp/gpt_2.md) 全网规模的大数据集,BPE输入表示,pre-LN,初始化策略， 零样本
-    * [GPT-3](./nlp/gpt_3.md) 2020.5.28 使用交替的密集和局部带状稀疏注意模式， 提示学习
-3. [InstructGPT](./nlp/gpt_InstructGPT.md)  2022.3.4
-    * [Learning to summarize from human feedback](./nlp/summarize_HF.md) 2020.9.2 (引入了基于人类反馈的强化学习)
-    * [WebGPT](./nlp/gpt_WebGPT.md) 2021.12
-    * [Proximal policy optimization algorithms](./RL/PPO.md) 2017.7 RHLF的强化学习算法
+1. [Transfomers](../raw/nlp/transformer.md), 基于自注意力机制
+2. [GPT-1](../raw/nlp/gpt.md)  自回归生成式模型，多任务统一的微调
+    * [GPT-2](../raw/nlp/gpt_2.md) 全网规模的大数据集,BPE输入表示,pre-LN,初始化策略， 零样本
+    * [GPT-3](../raw/nlp/gpt_3.md) 2020.5.28 使用交替的密集和局部带状稀疏注意模式， 提示学习
+3. [InstructGPT](../raw/nlp/gpt_InstructGPT.md)  2022.3.4
+    * [Learning to summarize from human feedback](../raw/nlp/summarize_HF.md) 2020.9.2 (引入了基于人类反馈的强化学习)
+    * [WebGPT](../raw/nlp/gpt_WebGPT.md) 2021.12
+    * [Proximal policy optimization algorithms](../raw/RL/PPO.md) 2017.7 RHLF的强化学习算法
 
 ## 三、开源项目
 * [Google研究员整理的开源进展](https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9807727802367385070%22%7D&n_type=-1&p_from=-1)， 里面提到的几个重要开源项目

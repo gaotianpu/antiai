@@ -6,11 +6,11 @@ https://github.com/lucidrains/vit-pytorch/
 
 ## 1. ViT
 结合以下3篇论文看
-* ViT:[An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](../paper/vit/ViT.md)
-* SimpleViT: [Better plain ViT baselines for ImageNet-1k](../paper/vit/simpleViT.md)
+* ViT:[An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale](../../raw/vit/ViT.md)
+* SimpleViT: [Better plain ViT baselines for ImageNet-1k](../../raw/vit/simpleViT.md)
 * [Early Convolutions Help Transformers See Better](https://arxiv.org/abs/2106.14881) 
 
-![Vit](../paper/images/vit/fig_1.png)<br/>
+![Vit](../../raw/images/vit/fig_1.png)<br/>
 图1：ViT架构示意图。
 
 综合上面的3篇论文，主要流程：
@@ -98,10 +98,10 @@ def _process_input(self, x: torch.Tensor) -> torch.Tensor:
 
 ## 2. MAE 
 相关论文：
-* [Masked Autoencoders Are Scalable Vision Learners](../paper/vit/MAE.md)
+* [Masked Autoencoders Are Scalable Vision Learners](../../raw/vit/MAE.md)
 * [Position Prediction as an Effective Pretraining Strategy](https://arxiv.org/abs/2207.07611)
 
-![MAE](../paper/images/mae/fig_1.png)<br/>
+![MAE](../../raw/images/mae/fig_1.png)<br/>
 图2：MAE架构示意图。在预训练期间，随机掩码大部分(例如，75%)的分块子集。编码器应用于可见分块的小子集。掩码令牌在编码器之后引入，全套编码分块和掩码令牌由一个小解码器处理，该解码器以像素重建原始图像。在预训练之后，解码器被丢弃，编码器被应用于未损坏的图像(完整的分块集)以进行识别任务。
 
 重点：
@@ -183,11 +183,11 @@ class MAE(nn.Module):
 
 ## 3. FLIP: 图文理解
 相关论文：
-* CLIP [Learning Transferable Visual Models From Natural Language Supervision](../paper/Multimodal/CLIP.md)
-* OpenCLIP [Reproducible scaling laws for contrastive language-image learning](../paper/Multimodal/OpenCLIP.md)
-* FLIP [Scaling Language-Image Pre-training via Masking](../paper/Multimodal/FLIP.md)
+* CLIP [Learning Transferable Visual Models From Natural Language Supervision](../../raw/Multimodal/CLIP.md)
+* OpenCLIP [Reproducible scaling laws for contrastive language-image learning](../../raw/Multimodal/OpenCLIP.md)
+* FLIP [Scaling Language-Image Pre-training via Masking](../../raw/Multimodal/FLIP.md)
 
-![FLIP](../paper/images/FLIP/fig_2.png)</br>
+![FLIP](../../raw/images/FLIP/fig_2.png)</br>
 图3：FLIP架构。在CLIP之后，我们对成对的图像和文本样本进行对比学习。我们随机掩码掉具有高掩码率的图像分块，并仅对可见分块进行编码。我们不执行掩码图像内容的重建。
 
 重点：
@@ -199,13 +199,13 @@ class MAE(nn.Module):
 
 ## 4. ViTDet 
 基于ViT的目标检测、语义分割、实例分割
-* [Benchmarking Detection Transfer Learning with Vision Transformers](../paper/vit/ViTDet_Benchmarking.md)
-* [Exploring Plain Vision Transformer Backbones for Object Detection](../paper/vit/ViTDet.md)
+* [Benchmarking Detection Transfer Learning with Vision Transformers](../../raw/vit/ViTDet_Benchmarking.md)
+* [Exploring Plain Vision Transformer Backbones for Object Detection](../../raw/vit/ViTDet.md)
 
-![ViTDet](../paper/images/ViTDet/fig_1.png)<br/>
+![ViTDet](../../raw/images/ViTDet/fig_1.png)<br/>
 图4：典型的分层主干检测器(左)与普通主干检测器(右)。传统的分层主干网可以自然地适用于多尺度检测，例如，使用FPN。相反，我们探索从一个普通主干的最后一个大跨度(16)特征图构建一个简单的金字塔。
 
 
-## 5. [Segment Anything](../paper/Multimodal/Segment_Anything.md)
-![Segment Anything](../paper/images/SAM/fig_1.png)<br/>
+## 5. [Segment Anything](../../raw/Multimodal/Segment_Anything.md)
+![Segment Anything](../../raw/images/SAM/fig_1.png)<br/>
 图5：我们旨在通过引入三个相互关联的组件来构建分割的基础模型：提示分割任务、支持数据标注并通过提示工程将零样本迁移到一系列任务的分割模型（SAM），以及用于收集SA-1B的数据引擎，SA-1B是我们拥有超过10亿个掩码的数据集。

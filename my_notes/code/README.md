@@ -30,8 +30,8 @@ padding_idx 指定某个词向量不更新梯度.
 * sin/cos
 * learnable 可学习的词嵌入
 * [RoPE](#)
-* [ALibi](../paper/nlp/Alibi.md)
-* [XPos](../paper/nlp/XPOS.md)
+* [ALibi](../../raw/nlp/Alibi.md)
+* [XPos](../../raw/nlp/XPOS.md)
 
 ## 3. self-Attention
 https://pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html
@@ -62,13 +62,13 @@ https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html
 https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoder.html
 https://pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html
 
-[BERT: Bidirectional Encoder Representations from Transformers](../paper/nlp/bert.md)
+[BERT: Bidirectional Encoder Representations from Transformers](../../raw/nlp/bert.md)
 
 ## 3. TransformerDecoder
 * https://pytorch.org/docs/stable/generated/torch.nn.TransformerDecoder.html
 * https://pytorch.org/docs/stable/generated/torch.nn.TransformerDecoderLayer.html
 
 
-[GPT](../paper/nlp/gpt.md)
-norm_first， 微软 [MAGNETO](../paper/Multimodal/MAGNETO.md) sub-LN还没没实现
+[GPT](../../raw/nlp/gpt.md)
+norm_first， 微软 [MAGNETO](../../raw/Multimodal/MAGNETO.md) sub-LN还没没实现
 

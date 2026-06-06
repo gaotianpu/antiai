@@ -90,7 +90,7 @@ class LogExpLoss(nn.Module):
 ### 类别不平衡
 除采样/下采样外，
 * 平衡交叉熵函数(balanced cross entropy),样本分布角度对损失函数添加权重因子
-* [Focal Loss](./Focal_Loss.md) 焦点损失, 解决正负样本或难易样本之间的类不平衡问题.
+* [Focal Loss](../../raw/cnn/Focal_Loss.md) 焦点损失, 解决正负样本或难易样本之间的类不平衡问题.
 * [Quality Focal Loss (QFL):Learning Qualified and Distributed Bounding Boxes for Dense Object Detection](https://arxiv.org/abs/2006.04388) 质量焦点损失, 将分类分数和局部化质量联合表示，用于分类监督.
 * VariFocal Loss(VFL) [VarifocalNet: An IoU-aware Dense Object Detector](https://arxiv.org/abs/2008.13367), 考虑不同重要性的正负样本，它平衡了来自两个样本的学习信号
 * Distribution Focal Loss (DFL),分布焦点损失, 将边框子位置的基本连续分布简化为离散概率分布

@@ -119,7 +119,7 @@ BPE的思路：
 
 Tokenizer: https://pytorch.org/text/stable/transforms.html
 
-[MegaByte](../paper/MegaByte.md)
+[MegaByte](../../raw/MegaByte.md)
 
 ### 3.2 构造词典
 举例来说，假设一个完整的语料由3个句子构成：
@@ -232,5 +232,5 @@ print(image.shape)
 
 ## 6. 延伸阅读：多模统一输入
 新近发布的若干paper表明，未来的趋势是用字节编码统一表示文本、图像、音频的向量化。
-* JPEG格式：[vit_jpeg](../paper/vit/vit_jpeg.md)
-* 文本、图像、音频最底层都是字节编码，在这个级别上多模输入的统一。[megabyte](../paper/MegaByte.md)
+* JPEG格式：[vit_jpeg](../../raw/vit/vit_jpeg.md)
+* 文本、图像、音频最底层都是字节编码，在这个级别上多模输入的统一。[megabyte](../../raw/MegaByte.md)

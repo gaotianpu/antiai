@@ -1,6 +1,6 @@
 # 目标检测 Object detector
 
-![Yolo V4 Figure 2: Object detector](../paper/images/yolo_v4/fig_2.png)
+![Yolo V4 Figure 2: Object detector](../../raw/images/yolo_v4/fig_2.png)
 
 ## 一、整体架构
 1. 主干
@@ -15,16 +15,16 @@
     * 有/无锚框
 
 ## 二、颈部: 感受野增强，多尺度特征集成
-1. SPP 2014-6-18 [Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition](../paper/cnn/sppnet.md) 空间金字塔池化，允许输入图像的大小不固定. 
+1. SPP 2014-6-18 [Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition](../../raw/cnn/sppnet.md) 空间金字塔池化，允许输入图像的大小不固定. 
 2. 路径聚合块： 
-![FPN,GFM,EFM](../paper/images/cspnet/fig_6.png)
+![FPN,GFM,EFM](../../raw/images/cspnet/fig_6.png)
 
-![ViTDet-Figure 2: Building a feature pyramid on a plain backbone](../paper/images/ViTDet/fig_2.png)
+![ViTDet-Figure 2: Building a feature pyramid on a plain backbone](../../raw/images/ViTDet/fig_2.png)
 
-* FPN 2016-12-9 [Feature Pyramid Networks for Object Detection](../paper/cnn/fpn.md)  横向连接的自顶向下架构，用于构建所有尺度的高级语义特征图  全连接FPN？
+* FPN 2016-12-9 [Feature Pyramid Networks for Object Detection](../../raw/cnn/fpn.md)  横向连接的自顶向下架构，用于构建所有尺度的高级语义特征图  全连接FPN？
     * NAS-FPN 2019.4.16 [NAS-FPN: Learning scalable feature pyramid architecture for object detection](https://arxiv.org/abs/1904.07392)
     * BiFPN 2019.11.20 [EfficientDet: Scalable and efficient object detection](https://arxiv.org/abs/1911.09070) 
-* PAN, 2018.3.5 [Path aggregation network for instance segmentation](../paper/cnn/panet.md) 路径聚合网络
+* PAN, 2018.3.5 [Path aggregation network for instance segmentation](../../raw/cnn/panet.md) 路径聚合网络
 * ASFF [Learning spatial fusion for single-shot object detection](https://arxiv.org/abs/1911.09516)
 * SFAM [M2det: A single-shot object detector based on multi-level feature pyramid network](https://arxiv.org/abs/1811.04533)
 * GFM Global Fusion Model 全局融合模型; EFM, Exact Fusion Model 精确融合模型
@@ -76,26 +76,26 @@ DIoU NMS, [Distance-IoU Loss: Faster and better learning for bounding box regres
 
 ## 八、其他
 ### YOLO 系列
-* v1 2015.6.8, [You Only Look Once: Unified, Real-Time Object Detection](../paper/cnn/yolo_v1.md)
-* v2 2016.12.25, [YOLO9000: Better, Faster, Stronger](../paper/cnn/yolo_v2.md)
-* v3 2018.4.8, [An Incremental Improvement](../paper/cnn/yolo_v3.md)
-* v4 2020.4.23, [Optimal Speed and Accuracy of Object Detection]( ../paper/cnn/yolo_v4.md) 对目标检测器做了系统的梳理总结
+* v1 2015.6.8, [You Only Look Once: Unified, Real-Time Object Detection](../../raw/cnn/yolo_v1.md)
+* v2 2016.12.25, [YOLO9000: Better, Faster, Stronger](../../raw/cnn/yolo_v2.md)
+* v3 2018.4.8, [An Incremental Improvement](../../raw/cnn/yolo_v3.md)
+* v4 2020.4.23, Optimal Speed and Accuracy of Object Detection 对目标检测器做了系统的梳理总结
     * 2020.11.16 [Scaled-YOLOv4: Scaling cross stage partial network](https://arxiv.org/abs/2011.08036) 梯度路径分析方法 
 * v5, https://github.com/ultralytics/yolov5  
 * yolo_f 2021.3.17 [You only look one-level feature](https://arxiv.org/abs/2103.09460)
-* yolo_r 2021.5.10, [You Only Learn One Representation: Unified Network for Multiple Tasks](../paper/cnn/yolor.md) 一个主干+n个head，应对不同任务？ 隐知识？
-* yolo_x 2021.7.18, [Exceeding YOLO Series in 2021](../paper/cnn/yolox.md)
+* yolo_r 2021.5.10, [You Only Learn One Representation: Unified Network for Multiple Tasks](../../raw/cnn/yolor.md) 一个主干+n个head，应对不同任务？ 隐知识？
+* yolo_x 2021.7.18, [Exceeding YOLO Series in 2021](../../raw/cnn/yolox.md)
 * PPYOLOE 2022.3.30 [Pp-yoloe: An evolved version of yolo](https://arxiv.org/abs/2203.16250)
-* v6 2022.9.7, [A Single-Stage Object Detection Framework for Industrial Applications](../paper/cnn/yolo_v6.md)
-* v7 2022.7.6, [Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors](../paper/cnn/yolo_v7.md)
+* v6 2022.9.7, [A Single-Stage Object Detection Framework for Industrial Applications](../../raw/cnn/yolo_v6.md)
+* v7 2022.7.6, [Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors](../../raw/cnn/yolo_v7.md)
 * v8 https://ultralytics.com/yolov8 https://juejin.cn/post/7187726947252699192
 
 
 ### A. 两阶段检测
 * DPM
-* 2013.11.11 [R-CNN](../paper/cnn/R-CNN.md)
-    * 2014.6.18 Fast R-CNN, SPP [Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition](../paper/cnn/sppnet.md)
-    * 2015.6 [Faster R-CNN, Region Proposal Network](../paper/cnn/Faster_R-CNN.md)
+* 2013.11.11 [R-CNN](../../raw/cnn/R-CNN.md)
+    * 2014.6.18 Fast R-CNN, SPP [Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition](../../raw/cnn/sppnet.md)
+    * 2015.6 [Faster R-CNN, Region Proposal Network](../../raw/cnn/Faster_R-CNN.md)
     * Libra R-CNN 2019.4.4 [Libra R-CNN: Towards balanced learning for object detection](https://arxiv.org/abs/1904.02701)
     * ConvNeXt-XL 
     * Cascade R-CNN 2019.6.24 [Cascade R-CNN: High Quality Object Detection and Instance Segmentation](https://arxiv.org/abs/1906.09756)
@@ -106,9 +106,9 @@ DIoU NMS, [Distance-IoU Loss: Faster and better learning for bounding box regres
 ### B. 单阶段检测
 #### 其他
 1. SSD 2015.12.8 [SSD: Single shot multibox detector](https://arxiv.org/abs/1512.02325), 从单个特征图构建多尺度特征图
-2. RetinaNet 2017.8.7 [Focal Loss for Dense Object Detection](../paper/cnn/Focal_Loss.md)  focal loss
+2. RetinaNet 2017.8.7 [Focal Loss for Dense Object Detection](../../raw/cnn/Focal_Loss.md)  focal loss
 3. PeleeNet 2018-4-18 [A Real-Time Object Detection System on Mobile Devices](https://arxiv.org/abs/1804.06882)
-* RPN [Faster R-CNN: Towards real-time object detection with region proposal networks](../paper/cnn/Faster_R-CNN.md)
+* RPN [Faster R-CNN: Towards real-time object detection with region proposal networks](../../raw/cnn/Faster_R-CNN.md)
 * DETR, 
 * Deformable DETR, 
 * DINO-5scale-R50, 
@@ -126,11 +126,11 @@ from YOLOv4: DetNet [43]、DetNAS [7] 新的整体模型SpineNet [12]、HitDetec
 #### 1. 感受野增强，多尺度特征集成
 ##### 附加块：
 1. 
-3. RFB 2017-11-21 [Receptive Field Block Net for Accurate and Fast Object Detection](../paper/cnn/rfb.md)
+3. RFB 2017-11-21 [Receptive Field Block Net for Accurate and Fast Object Detection](../../raw/cnn/rfb.md)
 4. SAM [CBAM: Convolutional block attention module](https://arxiv.org/abs/1807.06521)
 
 
 
 * 两阶段与一阶段， 基于锚的与无锚的，基于区域的与基于查询的(DETR)
 
-ASPP 2017-6-17 [Rethinking Atrous Convolution for Semantic Image Segmentation](../paper/cnn/DeepLab_v3.md) 空洞卷积
+ASPP 2017-6-17 [Rethinking Atrous Convolution for Semantic Image Segmentation](../../raw/cnn/DeepLab_v3.md) 空洞卷积

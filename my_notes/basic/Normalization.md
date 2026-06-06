@@ -43,15 +43,15 @@ Norm(x)的输出范围[0,1]。
 ## 三、具体应用
 上面讲到的是归一化函数，根据选择的数值集合不同，又有以下几种不同的归一化策略。
 
-### 1. [Batch normalization](../paper/cnn/BatchNorm.md) 批归一化 
+### 1. [Batch normalization](../../raw/cnn/BatchNorm.md) 批归一化 
 Cross mini-Batch Normalization (CmBN) 
 
 https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html  #1D,2D,3D
 
-### 2. [Layer Normalization](../paper/LayerNorm.md) , 层归一化
+### 2. [Layer Normalization](../../raw/LayerNorm.md) , 层归一化
     * https://pytorch.org/docs/stable/generated/torch.nn.LayerNorm.html
-    * [Foundation Transformers](../paper/Multimodal/MAGNETO.md) 比较了post-LN, pre-LN
-### 3. GN [Group Normalization](../paper/cnn/GroupNorm.md)
+    * [Foundation Transformers](../../raw/Multimodal/MAGNETO.md) 比较了post-LN, pre-LN
+### 3. GN [Group Normalization](../../raw/cnn/GroupNorm.md)
     * https://pytorch.org/docs/stable/generated/torch.nn.GroupNorm.html
 ### 4. LRN(local response normalization) 局部响应归一
     * https://pytorch.org/docs/stable/generated/torch.nn.LocalResponseNorm.html

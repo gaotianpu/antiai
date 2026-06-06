@@ -80,8 +80,8 @@ criterion = nn.BCELoss() #使用bce损失函数
     2个向量的点积越大越相似
 
 
-![对比学习的实现架构](../paper/images/MoCo/fig_2.png)<br/>
-图片来源：[MoCo: Momentum Contrast for Unsupervised Visual Representation Learning](../paper/cnn/MoCo.md)
+![对比学习的实现架构](../../raw/images/MoCo/fig_2.png)<br/>
+图片来源：[MoCo: Momentum Contrast for Unsupervised Visual Representation Learning](../../raw/cnn/MoCo.md)
 
 三种对比损失机制的概念比较。这三种机制的不同之处在于keys的维护方式和keys编码器的更新方式。 
 * (a)：用于计算查询和keys表示的编码器通过反向传播进行端到端更新(两个编码器可以不同)。 
@@ -94,7 +94,7 @@ $L_q = − log \frac{exp(q·k_+/τ ) }{\sum^K_{i=0} exp(q·k_i/τ )}$
 
 温度参数 τ ，可学习？
 
-![增加MLP投影头部](../paper/images/SimCLR/fig_2.png)<br/>
+![增加MLP投影头部](../../raw/images/SimCLR/fig_2.png)<br/>
 视觉表征对比学习的简单框架。 两个独立的数据增广运算符从同一系列扩充（t∼T 和 t'∼T）中采样，并应用于每个数据样本以获得两个相关视图。 基础编码器网络f(·) 和投影头g(·) 被训练以使用对比损失最大化协议。 训练完成后，我们扔掉投影头 g(·) 并使用编码器 f(·) 和表示 h 用于下游任务。
 
 
@@ -114,14 +114,14 @@ $L_q = − log \frac{exp(q·k_+/τ ) }{\sum^K_{i=0} exp(q·k_i/τ )}$
 
 ## 对比学习
 * 2022.4.14 [Exploring Dual Encoder Architectures for Question Answering](https://arxiv.org/abs/2204.07120)
-* 2022.1.24 cpt-txt/code [Text and Code Embeddings by Contrastive Pre-Training](../paper/nlp/cpt-txt.md)
-* 2021.4.5 MoCo_v3 [An Empirical Study of Training Self-Supervised Vision Transformers](../paper/vit/MoCo_v3.md)
-* 2021.3.26 CLIP [Learning Transferable Visual Models From Natural Language Supervision](../paper/Multimodal/CLIP.md)
-* 2021.4.9 [DetCo: Unsupervised Contrastive Learning for Object Detection](../paper/cnn/DetCo.md)
-* 2020.11.20 [Exploring Simple Siamese Representation Learning](../paper/cnn/SimSiam.md)
-* 2020.3.9 MoCo_v2 [Improved Baselines with Momentum Contrastive Learning](../paper/cnn/MoCo_v2.md)
-* 2020.2.13 SimCLR [A Simple Framework for Contrastive Learning of Visual Representations](../paper/cnn/SimCLR.md)
-* 2019.11.13 MoCo [Momentum Contrast for Unsupervised Visual Representation Learning](../paper/cnn/MoCo.md)
+* 2022.1.24 cpt-txt/code [Text and Code Embeddings by Contrastive Pre-Training](../../raw/nlp/cpt-txt.md)
+* 2021.4.5 MoCo_v3 [An Empirical Study of Training Self-Supervised Vision Transformers](../../raw/vit/MoCo_v3.md)
+* 2021.3.26 CLIP [Learning Transferable Visual Models From Natural Language Supervision](../../raw/Multimodal/CLIP.md)
+* 2021.4.9 [DetCo: Unsupervised Contrastive Learning for Object Detection](../../raw/cnn/DetCo.md)
+* 2020.11.20 [Exploring Simple Siamese Representation Learning](../../raw/cnn/SimSiam.md)
+* 2020.3.9 MoCo_v2 [Improved Baselines with Momentum Contrastive Learning](../../raw/cnn/MoCo_v2.md)
+* 2020.2.13 SimCLR [A Simple Framework for Contrastive Learning of Visual Representations](../../raw/cnn/SimCLR.md)
+* 2019.11.13 MoCo [Momentum Contrast for Unsupervised Visual Representation Learning](../../raw/cnn/MoCo.md)
 
 
 * Unsupervised feature learning via non-parametric instance discrimination. 温度系数？
