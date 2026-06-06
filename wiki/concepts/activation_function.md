@@ -3,7 +3,7 @@ id: activation_function
 type: concept
 tags: ["machine-learning", "theoretical"]
 aliases: ["激活函数", "activation", "非线性激活"]
-related_nodes: ["convolutional_neural_network", "hendrycks_2016_gelu"]
+related_nodes: ["convolutional_neural_network", "hendrycks_2016_gelu", "krizhevsky_2012_alexnet"]
 last_verified: 2026-06-06
 ---
 
@@ -16,14 +16,16 @@ last_verified: 2026-06-06
 
 | 函数 | 公式 | 特点 | 出现时间 |
 |:---|:---|:---|:---|
-| **Sigmoid** | σ(x) = 1/(1+e⁻ˣ) | 输出 (0,1)，易饱和梯度消失 | 1986 |
-| **Tanh** | tanh(x) | 输出 (-1,1)，零中心，仍易饱和 | 1991 |
-| **ReLU** | max(0, x) | 计算简单，缓解梯度消失，但 Dead ReLU | 2010 |
-| **Leaky ReLU** | max(αx, x) | 解决 Dead ReLU | 2013 |
-| **ELU** | x≥0: x, x<0: α(eˣ-1) | 平滑负值部分 | 2015 |
+| 函数 | 公式 | 特点 | 出处 |
+|:---|:---|:---|:---|
+| **Sigmoid** | σ(x) = 1/(1+e⁻ˣ) | 输出 (0,1)，易饱和梯度消失 | Rumelhart et al., 1986 |
+| **Tanh** | tanh(x) | 输出 (-1,1)，零中心，仍易饱和 | LeCun et al., 1991 |
+| **ReLU** | max(0, x) | 计算简单，缓解梯度消失，但 Dead ReLU | [[krizhevsky_2012_alexnet\|AlexNet 2012]] |
+| **Leaky ReLU** | max(αx, x) | 解决 Dead ReLU | Maas et al., 2013 |
+| **ELU** | x≥0: x, x<0: α(eˣ-1) | 平滑负值部分 | Clevert et al., 2015 |
 | **GELU** | x·Φ(x) | 高斯误差线性单元，BERT/Transformer 标配 | [[hendrycks_2016_gelu]] |
-| **Swish / SiLU** | x·σ(x) | 无上界有下界，平滑 | 2017 |
-| **Mish** | x·tanh(ln(1+eˣ)) | 比 Swish 更平滑 | 2019 |
+| **Swish / SiLU** | x·σ(x) | 无上界有下界，平滑 | Ramachandran et al., 2017 |
+| **Mish** | x·tanh(ln(1+eˣ)) | 比 Swish 更平滑 | Misra, 2019 |
 
 ## 演进趋势
 - **Sigmoid/Tanh** → 梯度消失严重，主要用于输出门
