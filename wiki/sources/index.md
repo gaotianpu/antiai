@@ -3,8 +3,19 @@
 ## 2026
 - [[cheng_2026_engram]] — Conditional Memory via Scalable Lookup（条件记忆轴 + Engram 模块，U 形 Sparsity Allocation 定律）
 
+## 2023
+- [[openai_2023_gpt4]] — GPT-4 Technical Report（GPT-4 技术报告）
+
 ## 2022
+- [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）
 - [[ouyang_2022_instructgpt]] — Training language models to follow instructions with human feedback（RLHF 对齐技术）
+- [[self_critiquing_2022]] — Self-critiquing models for assisting human evaluators（自我批评模型）
+- [[wei_2022_cot]] — Chain-of-Thought Prompting Elicits Reasoning（思维链 CoT）
+- [[zero_shot_cot_2022]] — Large Language Models are Zero-Shot Reasoners（零样本 CoT）
+
+## 2021
+- [[roberta_wwm_2021]] — RoBERTa-wwm-ext Fine-Tuning for Chinese Text Classification（RoBERTa 全词掩码中文版）
+- [[webgpt_2021]] — WebGPT: Browser-assisted question-answering with human feedback（浏览器辅助问答）
 
 ## 2020
 - [[brown_2020_gpt3]] — Language Models are Few-Shot Learners（GPT-3 上下文学习）

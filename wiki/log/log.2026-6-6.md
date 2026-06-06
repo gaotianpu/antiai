@@ -19,3 +19,7 @@ type: log
 - 新建 Source: electra / macbert / roberta / roberta_wwm / spanbert / structbert / tinybert / mobilebert / bert_wwm
 - ALBERT.md 为空文件，跳过
 - 更新 Index: sources/index.md
+
+## [04:55] Ingest: GPT 系列 + 推理（6 篇）
+- 新建 Source: gpt4 / webgpt / cot / auto_cot / zero_shot_cot / self_critiquing
+- 更新 Index: sources/index.md
