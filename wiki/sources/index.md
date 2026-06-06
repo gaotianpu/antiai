@@ -11,6 +11,7 @@
 
 ## 2022
 - [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）
+- [[sparse_expert_review_2022]] — A Review of Sparse Expert Models in Deep Learning（稀疏专家模型综述）
 - [[beit_v3]] — BEiT v3: Image as a Foreign Language（图像作为外语的统一预训练）
 - [[dall_e_v2]] — DALL-E 2: Hierarchical Text-Conditional Image Generation（文本条件图像生成）
 - [[deepnet]] — DeepNet: Scaling Transformers to 1,000 Layers（DeepNorm 千层 Transformer）
@@ -53,6 +54,7 @@
 - [[clip]] — CLIP: Learning Transferable Visual Models From Natural Language Supervision（对比语言-图像预训练）
 - [[deit]] — Training data-efficient image transformers（数据高效 ViT 训练）
 - [[moco_v3]] — MoCo v3: An Empirical Study of Training Self-Supervised Vision Transformers（自监督 ViT）
+- [[simsiam_2020]] — Exploring Simple Siamese Representation Learning（孪生网络自监督）
 - [[electra_2020_electra]] — ELECTRA（RTD 鉴别器预训练）
 - [[macbert_2020_macbert]] — Revisiting Pre-Trained Models for Chinese Natural Language Processing（MacBERT）
 - [[mobilebert_2020_mobilebert]] — MobileBERT（移动端 BERT）
@@ -75,22 +77,28 @@
 ## 2018
 - [[beit_2]] — BEiT v2: Masked Image Modeling with Vector-Quantized Visual Tokenizers（向量量化视觉标记器）
 - [[devlin_2018_bert]] — BERT（双向预训练）
+- [[group_norm_2018]] — Group Normalization（组归一化）
 - [[radford_2018_gpt]] — Improving Language Understanding by Generative Pre-Training（GPT-1）
 - [[self_attn_sentiment_2018]] — Self-Attention: A Better Building Block for Sentiment Analysis（自注意力情感分析）
 
 ## 2017
+- [[focal_loss_2017]] — Focal Loss for Dense Object Detection（焦点损失）
+- [[mask_rcnn_2017]] — Mask R-CNN（实例分割）
 - [[vaswani_2017_transformer]] — Attention Is All You Need（Transformer 架构）
 - [[vit_jpeg]] — ViT JPEG: Visual Token Assistant（视觉令牌助手）
 
 ## 2016
+- [[fpn_2016]] — Feature Pyramid Networks for Object Detection（特征金字塔网络）
 - [[layer_norm_2016]] — Layer Normalization（层归一化）
 
 ## 2015
 - [[bpe_2015]] — Neural Machine Translation of Rare Words with Subword Units（BPE 子词分词）
+- [[resnet_2015]] — Deep Residual Learning for Image Recognition（残差网络 ResNet）
 
 ## 2014
 - [[bahdanau_2014_attention]] — Neural Machine Translation by Jointly Learning to Align and Translate（注意力机制）
 - [[gru_2014]] — Empirical evaluation of gated recurrent neural networks on sequence modeling（GRU）
+- [[sppnet_2014]] — Spatial Pyramid Pooling in Deep Convolutional Networks（空间金字塔池化）
 
 ## 2013
 - [[word2vec_2013]] — Efficient Estimation of Word Representations in Vector Space（Word2Vec）

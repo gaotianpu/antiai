@@ -39,3 +39,7 @@ type: log
   ViTDet_Benchmarking / ViT_derivatives / iBOT / simpleViT / vit_jpeg
 - 规整: NewBeer.md 内链路径（./nlp/ → ../raw/nlp/ 等）
 - 索引: 已去重
+
+## [06:10] Ingest: CNN 经典论文 7 篇 + 稀疏专家综述
+- 新建 Source: ResNet / FPN / Mask R-CNN / Focal Loss / GroupNorm / SimSiam / SPPNet / Sparse Expert Review
+- 索引已更新
