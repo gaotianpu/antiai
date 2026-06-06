@@ -3,7 +3,7 @@ id: openai
 type: entity
 tags: [organization, machine-learning, NLP]
 aliases: [OpenAI, OpenAI公司]
-related_nodes: [radford_2018_gpt, radford_2019_gpt2, brown_2020_gpt3, ouyang_2022_instructgpt]
+related_nodes: [radford_2018_gpt, radford_2019_gpt2, brown_2020_gpt3, ouyang_2022_instructgpt, touvron_2023_llama, radford_2022_whisper]
 last_verified: 2026-06-06
 ---
 

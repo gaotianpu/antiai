@@ -8,6 +8,11 @@
 - [[longnet_2023]] — LongNet: Scaling Transformers to 1,000,000,000 Tokens（扩张注意力）
 - [[openai_2023_gpt4]] — GPT-4 Technical Report（GPT-4 技术报告）
 - [[retnet_2023]] — Retentive Network: A Successor to Transformer（RetNet 保留网络）
+- [[touvron_2023_llama]] — LLaMA: Open and Efficient Foundation Language Models（LLaMA）
+- [[sun_2023_dromedary]] — Principle-Driven Self-Alignment（Dromedary 自对齐）
+- [[song_2023_consistency]] — Consistency Models（一致性模型）
+- [[dettmers_2023_qlora]] — QLoRA: Efficient Finetuning of Quantized LLMs（量化 LoRA）
+- [[zhang_2023_adalora]] — AdaLoRA: Adaptive Budget Allocation for PEFT（自适应 LoRA）
 
 ## 2022
 - [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）
@@ -33,6 +38,11 @@
 - [[xpos_2022]] — A Length-Extrapolatable Transformer（XPOS 位置编码）
 - [[zero_shot_cot_2022]] — Large Language Models are Zero-Shot Reasoners（零样本 CoT）
 - [[cpt_txt_2022]] — Text and Code Embeddings by Contrastive Pre-Training（对比预训练嵌入）
+- [[wang_2022_selfinstruct]] — Self-Instruct: Aligning LM with Self Generated Instructions（自生成指令）
+- [[gao_2022_rmoveroptimization]] — Scaling Laws for Reward Model Overoptimization（奖励模型过优化）
+- [[li_2022_yolov6]] — YOLOv6: Framework for Industrial Applications（工业级 YOLO）
+- [[wang_2022_yolov7]] — YOLOv7: Trainable Bag-of-Freebies（YOLOv7）
+- [[radford_2022_whisper]] — Robust Speech Recognition via Weak Supervision（Whisper 语音识别）
 
 ## 2021
 - [[alibi_2021]] — Train Short, Test Long: Attention with Linear Biases（ALiBi 位置编码）
@@ -48,6 +58,10 @@
 - [[trocr]] — TrOCR: Transformer-based OCR（基于 Transformer 的 OCR）
 - [[vit_derivatives]] — A Survey of Vision Transformer Derivatives（ViT 变体综述）
 - [[webgpt_2021]] — WebGPT: Browser-assisted question-answering（浏览器辅助问答）
+- [[hu_2021_lora]] — LoRA: Low-Rank Adaptation of Large Language Models（低秩适配）
+- [[rombach_2021_latentdiffusion]] — High-Resolution Image Synthesis with Latent Diffusion Models（LDM）
+- [[wang_2021_yolor]] — You Only Learn One Representation（YOLOR）
+- [[ge_2021_yolox]] — YOLOX: Exceeding YOLO Series in 2021（YOLOX）
 
 ## 2020
 - [[brown_2020_gpt3]] — Language Models are Few-Shot Learners（GPT-3 上下文学习）
@@ -59,6 +73,8 @@
 - [[macbert_2020_macbert]] — Revisiting Pre-Trained Models for Chinese Natural Language Processing（MacBERT）
 - [[mobilebert_2020_mobilebert]] — MobileBERT（移动端 BERT）
 - [[summarize_hf_2020]] — Learning to summarize from human feedback（RLHF 总结）
+- [[ho_2020_ddpm]] — Denoising Diffusion Probabilistic Models（DDPM 去噪扩散）
+- [[bochkovskiy_2020_yolov4]] — YOLOv4: Optimal Speed and Accuracy（YOLOv4）
 
 ## 2019
 - [[beit]] — BEiT: BERT Pre-Training of Image Transformers（BERT 风格图像预训练）
@@ -80,6 +96,7 @@
 - [[group_norm_2018]] — Group Normalization（组归一化）
 - [[radford_2018_gpt]] — Improving Language Understanding by Generative Pre-Training（GPT-1）
 - [[self_attn_sentiment_2018]] — Self-Attention: A Better Building Block for Sentiment Analysis（自注意力情感分析）
+- [[redmon_2018_yolov3]] — YOLOv3: An Incremental Improvement（YOLOv3）
 
 ## 2017
 - [[focal_loss_2017]] — Focal Loss for Dense Object Detection（焦点损失）
@@ -90,10 +107,13 @@
 ## 2016
 - [[fpn_2016]] — Feature Pyramid Networks for Object Detection（特征金字塔网络）
 - [[layer_norm_2016]] — Layer Normalization（层归一化）
+- [[redmon_2016_yolov2]] — YOLO9000: Better, Faster, Stronger（YOLOv2）
 
 ## 2015
 - [[bpe_2015]] — Neural Machine Translation of Rare Words with Subword Units（BPE 子词分词）
 - [[resnet_2015]] — Deep Residual Learning for Image Recognition（残差网络 ResNet）
+- [[redmon_2015_yolov1]] — You Only Look Once（YOLOv1）
+- [[ren_2015_fasterrcnn]] — Faster R-CNN: Towards Real-Time Object Detection（Faster R-CNN）
 
 ## 2014
 - [[bahdanau_2014_attention]] — Neural Machine Translation by Jointly Learning to Align and Translate（注意力机制）
@@ -102,6 +122,10 @@
 
 ## 2013
 - [[word2vec_2013]] — Efficient Estimation of Word Representations in Vector Space（Word2Vec）
+- [[girshick_2013_rcnn]] — Rich Feature Hierarchies for Accurate Object Detection（R-CNN）
+
+## 2010
+- [[glorot_2010_xavier]] — Understanding the Difficulty of Training Deep Feedforward Neural Networks（Xavier Init）
 
 ## 1997
 - [[hochreiter_1997_lstm]] — Long Short-Term Memory（LSTM）

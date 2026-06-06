@@ -3,7 +3,7 @@ id: ouyang_2022_instructgpt
 type: source
 tags: [NLP, machine-learning, empirical-study]
 aliases: [InstructGPT, 根据人类反馈的指令学习, 2203.02155]
-related_nodes: [reinforcement_learning_from_human_feedback, openai]
+related_nodes: [reinforcement_learning_from_human_feedback, openai, gao_2022_rmoveroptimization]
 arxiv_id: 2203.02155
 authors: Long Ouyang et al.
 authors_institution: OpenAI
