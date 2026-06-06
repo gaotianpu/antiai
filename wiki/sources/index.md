@@ -17,7 +17,9 @@
 - [[ren_2023_onlineactivelearning]] — A Survey on Online Active Learning（在线 AL 综述）
 - [[hsieh_2023_distilling]] — Distilling Step-by-Step（一步一步蒸馏）
 - [[yu_2023_megabyte]] — MegaByte: Predicting Million-byte Sequences（百万字节序列）
-- [[woo_2023_convnext_v2]] — ConvNeXt V2: Co-designing and Scaling ConvNets with Masked Autoencoders（ConvNeXt V2）
+- [[seggpt]] — SegGPT: Segmenting Everything In Context（上下文全部分割）
+- [[segment_anything]] — Segment Anything（SAM 分割一切）
+- [[woo_2023_convnext_v2]] — ConvNeXt v2: Co-designing and Scaling ConvNets with Masked Autoencoders（ConvNeXt v2）
 
 ## 2022
 - [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）
@@ -52,6 +54,10 @@
 - [[chi_2022_xmoe]] — On the Representation Collapse of Sparse Mixture of Experts（MoE 表示坍塌）
 - [[liu_2022_convnext]] — A ConvNet for the 2020s（ConvNeXt）
 - [[tong_2022_maest]] — Masked Autoencoders As Spatiotemporal Learners（MAE-ST 视频预训练）
+- [[blip]] — BLIP: Bootstrapping Language-Image Pre-training（引导式语言-图像预训练）
+- [[openclip]] — OpenCLIP（CLIP 开源复现）
+- [[simplevit]] — SimpleViT（简化高效 ViT）
+- [[vitdet]] — Exploring Plain Vision Transformer Backbones for Object Detection（ViT 目标检测）
 - [[ciaparrone_2022_motsurvey]] — Deep Learning in Video Multi-Object Tracking: A Survey（MOT 深度学习综述）
 - [[feng_2022_curveld]] — Rethinking Efficient Lane Detection via Curve Modeling（贝塞尔曲线车道检测）
 - [[filos_2022_adarip]] — Can Autonomous Vehicles Identify, Recover From, and Adapt to Distribution Shifts?（AdaRIP OOD 检测与适应）
@@ -65,6 +71,9 @@
 
 ## 2021
 - [[huang_2021_spatiotemporal]] — A Large-Scale Study on Unsupervised Spatiotemporal Representation Learning（无监督时空表征）
+- [[ibot]] — iBOT: Image BERT Pre-Training with Online Tokenizer（在线标记器 BERT 预训练）
+- [[mae]] — Masked Autoencoders Are Scalable Vision Learners（掩码自编码器 MAE）
+- [[vitdet_benchmarking]] — Benchmarking Detection Transfer Learning with Vision Transformers（ViT 检测迁移基准）
 - [[xie_2021_detco]] — DetCo: Unsupervised Contrastive Learning for Object Detection（DetCo）
 - [[alibi_2021]] — Train Short, Test Long: Attention with Linear Biases（ALiBi 位置编码）
 - [[ernie_v3_2021]] — ERNIE 3.0 Titan（百亿参数知识增强预训练）
@@ -97,6 +106,7 @@
 - [[zhao_2021_sam]] — SAM: Squeeze-and-Mimic Networks for Conditional Visual Driving Policy Learning（挤压-模仿驾驶策略）
 
 ## 2020
+- [[vit]] — An Image Is Worth 16x16 Words（ViT 视觉 Transformer）
 - [[brown_2020_gpt3]] — Language Models are Few-Shot Learners（GPT-3 上下文学习）
 - [[chen_2020_mocov2]] — Improved Baselines with Momentum Contrastive Learning（MoCo v2）
 - [[chen_2020_simclr]] — A Simple Framework for Contrastive Learning of Visual Representations（SimCLR v1）
