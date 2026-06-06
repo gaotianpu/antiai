@@ -38,6 +38,7 @@ authors_institution: [机构1, 机构2]   # 可选，作者所属机构
 | **概述** | 100 字内，让读者 10 秒决定是否值得深入 |
 | **引用** | 内部链接用 `[[page_id]]`，外部文件用 `[文本](路径)` |
 | **related_nodes** | 仅列已有的 wiki 页面 id，不列未创建页面 |
+| **机构名** | 统一英文名：Meta / Google / Microsoft / OpenAI / Baidu / ByteDance / DeepSeek / Alibaba Group / Salesforce Research / Stanford University / The University of Tokyo 等 |
 
 ## 与 raw/ 的关联
 
