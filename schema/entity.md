@@ -67,9 +67,20 @@ related_nodes: [相关的概念/源/实体 page id]
 
 ### 4.1 新建实体
 1. 检查 `wiki/entities/` 是否已存在
-2. 按 §3 模板创建
-3. 在 `wiki/entities/index.md` 追加条目
-4. 确保被引用的 source/concept 页的 `related_nodes` 包含此实体
+2. **别名碰撞检测**：搜索所有已有实体页的 `aliases` 字段，确认无同人/同组织重复：
+
+   ```bash
+   # 人物：搜索全名和缩写
+   grep -ril "Yoshua Bengio\|Y. Bengio\|bengio" wiki/entities/ 2>/dev/null
+   # 组织：搜索常用变体
+   grep -ril "DeepMind\|Google DeepMind\|deepmind" wiki/entities/ 2>/dev/null
+   ```
+
+3. 按 §3 模板创建
+4. 在 `wiki/entities/index.md` 追加条目
+5. 确保被引用的 source/concept 页的 `related_nodes` 包含此实体
+
+> **去重原则**：同一人物/组织只建一个实体页。发现重复时，选择信息更全的页面保留，另一个重定向或合并。
 
 ### 4.2 关联维护
 - 当创建新 source 页涉及某人物时，检查该人物实体页是否需要补充新增贡献
