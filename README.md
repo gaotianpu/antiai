@@ -10,8 +10,6 @@ AI 论文知识库，持续收集和学习 AI 领域的重要论文。 纯阅读
 - [概念索引](wiki/concepts/index.md) — 核心 AI 概念
 - [实体索引](wiki/entities/index.md) — 机构与人物
 
-
-
 ## 目录结构
 
 ```
@@ -33,11 +31,18 @@ root/
 ```
 
 
+## 项目维护？
 
-## 如何贡献？
+基于 [OpenCode](https://github.com/anomalyco/opencode) 等 智能Agent工具, 
 
-1. 将论文原文本或 PDF 放入 `raw/` 对应子目录
-2. 在 `wiki/sources/` 创建摘要卡片（模板见 `schema/source.md`）
-3. 提取新概念到 `wiki/concepts/`，新实体到 `wiki/entities/`
-4. 更新对应 `index.md` 并提交
+**添加新的文档**，AI-prompts 提示词：
+- pdf2md: 2601.07372
+- 摄入论文: 2601.07372
 
+**基于已有知识的查询**，提示词：
+- NLP发展的历史脉络？
+- 深度神经网络的最小可用模型长啥样？
+
+
+
+ 
