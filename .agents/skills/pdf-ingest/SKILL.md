@@ -135,7 +135,13 @@ grep -n '^### ' "$RAW_DIR/${ARXIV_ID}.md"  # H3：可选
 
 统一使用 `#` 层级，修复被切断的标题文字。原则上不应出现 `#####` 或更深层级，`####` 仅在论文确实有 4 级子节（如 6.1.1）时使用。
 
-通用标题修复可用 `tools/pdf2md_fix.py`：自动识别章节号并标注层级，修复 References/Abstract 标题，过滤引用条目误识别。
+通用标题修复：
+
+```bash
+python tools/pdf2md_fix.py < "$RAW_DIR/${ARXIV_ID}.md" > tmp.md && mv tmp.md "$RAW_DIR/${ARXIV_ID}.md"
+```
+
+`tools/pdf2md_fix.py` 自动识别章节号并标注层级，修复 References/Abstract 标题，过滤引用条目误识别。后续发现可复用的转换修复逻辑追加到该文件。
 
 ### 3.6 代码块修复
 
