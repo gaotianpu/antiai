@@ -3,7 +3,7 @@ id: sppnet_2014
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition, 1406.4729]
-related_nodes: [attention_mechanism, kaiming_he]
+related_nodes: [microsoft, attention_mechanism, kaiming_he]
 arxiv_id: 1406.4729
 last_verified: 2026-06-06
 ---

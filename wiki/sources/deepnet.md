@@ -3,7 +3,7 @@ id: deepnet
 type: source
 tags: [computer-vision, machine-learning, NLP]
 aliases: [DeepNet, 2203.00555]
-related_nodes: [attention_mechanism]
+related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2203.00555
 last_verified: 2026-06-06
 ---

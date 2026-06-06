@@ -3,7 +3,7 @@ id: longnet_2023
 type: source
 tags: [NLP, machine-learning]
 aliases: [LongNet, 2307.02486]
-related_nodes: [attention_mechanism]
+related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2307.02486
 last_verified: 2026-06-06
 ---

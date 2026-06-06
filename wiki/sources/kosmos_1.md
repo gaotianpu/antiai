@@ -3,7 +3,7 @@ id: kosmos_1
 type: source
 tags: [computer-vision, machine-learning, NLP]
 aliases: [Kosmos-1, 2302.14045]
-related_nodes: [attention_mechanism]
+related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2302.14045
 last_verified: 2026-06-06
 ---

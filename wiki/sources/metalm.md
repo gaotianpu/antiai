@@ -3,7 +3,7 @@ id: metalm
 type: source
 tags: [computer-vision, machine-learning, NLP]
 aliases: [MetaLM, 2206.06336]
-related_nodes: [attention_mechanism]
+related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2206.06336
 last_verified: 2026-06-06
 ---

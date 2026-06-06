@@ -3,7 +3,7 @@ id: resnet_2015
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Deep Residual Learning for Image Recognition, 1512.03385]
-related_nodes: [attention_mechanism, kaiming_he]
+related_nodes: [microsoft, attention_mechanism, kaiming_he]
 arxiv_id: 1512.03385
 last_verified: 2026-06-06
 ---

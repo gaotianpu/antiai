@@ -3,7 +3,7 @@ id: retnet_2023
 type: source
 tags: [NLP, machine-learning]
 aliases: [Retentive Network, 2307.08621]
-related_nodes: [attention_mechanism]
+related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2307.08621
 last_verified: 2026-06-06
 ---

@@ -3,7 +3,7 @@ id: magneto
 type: source
 tags: [computer-vision, machine-learning, NLP]
 aliases: [MAGNETO, 2210.06423]
-related_nodes: [attention_mechanism]
+related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2210.06423
 last_verified: 2026-06-06
 ---
