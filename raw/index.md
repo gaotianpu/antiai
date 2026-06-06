@@ -14,7 +14,7 @@
 ## 1998
 
 ### CNN
-| [[cnn/LeNet.md]] | LeNet |
+| [[cnn/LeNet.md]] | 提出 LeNet-5 卷积神经网络，开创 CNN 在手写文档识别中的应用（`computer-vision, machine-learning, empirical-study`）|
 
 ## 2010
 
@@ -27,7 +27,7 @@
 ## 2012
 
 ### CNN
-| [[cnn/alexnet.md]] | AlexNet |
+| [[cnn/alexnet.md]] | 首个在 ImageNet 上大幅超越传统方法的深度 CNN，引爆深度学习革命（`computer-vision, machine-learning, empirical-study`）|
 
 ### 其他
 | [[OCR.md]] | OCR |
@@ -50,12 +50,12 @@
 | [[nlp/gru.md]] | 提出 GRU，简化的门控循环单元，性能与 LSTM 相当但计算更高效（`NLP, machine-learning`）|
 
 ### CNN
-| [[cnn/Deeply-Supervised.md]] | Deeply-Supervised Nets |
-| [[cnn/FCN.md]] | FCN |
-| [[cnn/Pooling.md]] | 池化方法 |
-| [[cnn/googlenet.md]] | GoogLeNet / Inception v1 |
+| [[cnn/Deeply-Supervised.md]] | 提出深度监督网络（DSN），通过在隐藏层引入辅助监督信号（companion objective）来解决深层网络的梯度消失问题，使学习过程更加直接透明。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/FCN.md]] | 提出全卷积网络（FCN），将分类网络中的全连接层替换为卷积层，实现端到端、像素到像素的语义分割，接受任意尺寸输入并产生对应尺寸输出。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/Pooling.md]] | 通过系统实验推翻"池化层是 CNN 变形稳定性必要条件"的假设，发现池化既非必要也非充分，且网络在训练中会主动抵消池化的过度稳定性偏置。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/googlenet.md]] | 提出 Inception 模块，在增加深度和宽度的同时控制计算复杂度（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/sppnet.md]] | 空间金字塔池化，让 CNN 支持任意尺寸输入（`computer-vision, machine-learning`）|
-| [[cnn/vgg.md]] | VGG |
+| [[cnn/vgg.md]] | 系统研究网络深度对精度的影响，提出 16-19 层 VGG 架构（`computer-vision, machine-learning, empirical-study`）|
 
 ## 2015
 
@@ -63,9 +63,9 @@
 | [[nlp/BPE.md]] | 提出 BPE（字节对编码）子词分词方法，解决稀有词翻译问题（`NLP, machine-learning`）|
 
 ### CNN
-| [[cnn/BatchNorm.md]] | Batch Normalization |
+| [[cnn/BatchNorm.md]] | 提出 Batch Normalization (BN)，通过将每层输入归一化到统一分布来解决内部协变量偏移问题，使训练可以使用更高学习率并减少对 Dropout 的依赖。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/Faster_R-CNN.md]] | 提出区域候选网络（RPN），将候选框生成融入检测网络实现端到端训练，近乎实时检测。（`computer-vision, machine-learning, empirical-study`）|
-| [[cnn/inception_v3.md]] | Inception v3 |
+| [[cnn/inception_v3.md]] | 系统提出 Inception 架构的设计原则与因式分解卷积技巧（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/resnet.md]] | 提出残差学习（ResNet），通过跳跃连接解决深层网络退化问题，可训练 152 层（`computer-vision, machine-learning`）|
 | [[cnn/yolo_v1.md]] | 提出 YOLO 单阶段目标检测范式，将检测视为回归问题，实现实时端到端检测。（`computer-vision, machine-learning, empirical-study`）|
 
@@ -83,15 +83,15 @@
 | [[nlp/LayerNorm.md]] | 提出 Layer Normalization 归一化方法，适用于 RNN/Transformer（`NLP, machine-learning`）|
 
 ### CNN
-| [[cnn/GELUs.md]] | GELU 激活函数 |
-| [[cnn/SqueezeNet.md]] | SqueezeNet |
-| [[cnn/densenet.md]] | DenseNet |
+| [[cnn/GELUs.md]] | 提出 GELU 激活函数 $x\Phi(x)$（$\Phi$ 为标准高斯 CDF），按输入值而非符号进行加权，在 CV、NLP、语音任务上一致优于 ReLU 和 ELU。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/SqueezeNet.md]] | 在保持 AlexNet 级精度的前提下实现 50 倍参数压缩（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/densenet.md]] | 提出密集连接机制，每层与之前所有层直接连接（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/fpn.md]] | 特征金字塔网络，利用多尺度特征图提升检测精度（`computer-vision, machine-learning`）|
-| [[cnn/inception_v4.md]] | Inception v4 |
-| [[cnn/pspnet.md]] | PSPNet |
-| [[cnn/resnext.md]] | ResNeXt |
-| [[cnn/sparsenet.md]] | SparseNet |
-| [[cnn/xception.md]] | Xception |
+| [[cnn/inception_v4.md]] | 探索 Inception 与残差连接的结合，提出 Inception-v4 和 Inception-ResNet（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/pspnet.md]] | 提出金字塔场景解析网络（PSPNet），通过金字塔池化模块在不同尺度上聚合全局上下文信息，解决场景解析中上下文误匹配问题。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/resnext.md]] | 提出"基数"（cardinality）维度，通过分组卷积提升模型性能（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/sparsenet.md]] | 稀疏化 DenseNet 连接，将连接复杂度从 O(L²) 降至 O(L)（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/xception.md]] | 将 Inception 模块重新解释为常规卷积与深度可分离卷积之间的中间步骤，并提出 Xception 架构——用深度可分离卷积完全替代 Inception 模块。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/yolo_v2.md]] | YOLOv2 在 v1 基础上引入批量归一化、锚框先验、多尺度训练，YOLO9000 联合检测和分类数据集实现 9000 类检测。（`computer-vision, machine-learning, empirical-study`）|
 
 ### RL
@@ -110,14 +110,14 @@
 | [[nlp/transformer.md]] | 提出完全基于注意力机制的 Transformer 架构，摒弃了循环和卷积，成为后续 LLM 的基础范式。（`NLP, machine-learning, theoretical`）|
 
 ### CNN
-| [[cnn/DeepLab_v3.md]] | DeepLab v3 |
+| [[cnn/DeepLab_v3.md]] | 系统地重新审视空洞卷积（Atrous Convolution）在语义分割中的应用，改进空洞空间金字塔池化（ASPP）模块，集成图像级特征编码全局上下文，在 PASCAL VOC 2012 上达到 SOTA 性能。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/Focal_Loss.md]] | 提出 Focal Loss，解决一阶段检测器中正负样本极端不平衡问题（`computer-vision, machine-learning`）|
 | [[cnn/Instance_Segmentation.md]] | 实例分割综述 |
 | [[cnn/Mask_R-CNN.md]] | 在 Faster R-CNN 基础上添加分割分支，同时做目标检测和实例分割（`computer-vision, machine-learning`）|
-| [[cnn/MobileNet_v1.md]] | MobileNet v1 |
-| [[cnn/Non-local.md]] | Non-local Networks |
+| [[cnn/MobileNet_v1.md]] | 提出深度可分离卷积构建高效移动端 CNN（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/Non-local.md]] | 提出非局部（Non-local）操作作为通用构建块来捕获长距离依赖，在视频分类和图像检测/分割任务上取得显著提升。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/Semantic_Segmentation.md]] | 语义分割综述 |
-| [[cnn/ShuffleNet.md]] | ShuffleNet |
+| [[cnn/ShuffleNet.md]] | 提出逐点分组卷积 + 通道重排操作，实现极低算力下的高效 CNN（`computer-vision, machine-learning, empirical-study`）|
 
 ### RL
 | [[RL/PPO.md]] | 提出 PPO，通过裁剪的替代目标实现稳定策略更新，兼顾 TRPO 的可靠性和实现简单性。（`machine-learning, empirical-study, RL`）|
@@ -137,10 +137,10 @@
 
 ### CNN
 | [[cnn/GroupNorm.md]] | 提出 Group Normalization，在 batch 维度较小时比 Batch Norm 更稳定（`computer-vision, machine-learning`）|
-| [[cnn/MobileNet_v2.md]] | MobileNet v2 |
-| [[cnn/ShuffleNet_v2.md]] | ShuffleNet v2 |
-| [[cnn/panet.md]] | PANet |
-| [[cnn/rfb.md]] | RFB |
+| [[cnn/MobileNet_v2.md]] | 提出倒残差结构（Inverted Residual）和线性瓶颈（Linear Bottleneck）（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/ShuffleNet_v2.md]] | 指出 FLOPs 不能准确衡量实际速度，提出 4 条高效网络设计准则（`computer-vision, machine-learning, practical-guide`）|
+| [[cnn/panet.md]] | 提出路径聚合网络（PANet），通过自底向上的路径增强和自适应特征池化来改进基于提议的实例分割框架中的信息流动，获得 COCO 2017 实例分割冠军。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/rfb.md]] | 受人类视觉感受野结构启发，提出感受野块（RFB）模块，通过考虑感受野大小与离心率的关系增强轻量级特征的判别能力，构建 RFB Net 检测器。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/yolo_v3.md]] | YOLOv3 引入 Darknet-53 骨架 + FPN 多尺度预测，在不牺牲速度的前提下大幅提升小目标检测能力。（`computer-vision, machine-learning, empirical-study`）|
 
 ### 自动驾驶
@@ -173,13 +173,13 @@
 | [[nlp/gpt_2.md]] | 扩展 GPT-1 至 15 亿参数，证明语言模型在无监督下可零样本执行多种下游任务。（`NLP, machine-learning, empirical-study`）|
 
 ### CNN
-| [[cnn/EfficientNet.md]] | EfficientNet |
-| [[cnn/HarDNet.md]] | HarDNet |
-| [[cnn/MoCo.md]] | MoCo |
-| [[cnn/MoCo_v2.md]] | MoCo v2 |
-| [[cnn/MobileNet_v3.md]] | MobileNet v3 |
-| [[cnn/Res2Net.md]] | Res2Net |
-| [[cnn/cspnet.md]] | CSPNet |
+| [[cnn/EfficientNet.md]] | 提出复合缩放方法，统一平衡深度、宽度和分辨率（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/HarDNet.md]] | 提出谐波密集连接网络，降低内存流量以加速推理（`computer-vision, machine-learning, practical-guide`）|
+| [[cnn/MoCo.md]] | 提出 MoCo（动量对比），将对比学习视为字典查找，通过队列和动量编码器构建大规模一致字典，缩小无监督与监督表示学习在视觉任务上的差距。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/MoCo_v2.md]] | 在 MoCo 框架中集成 SimCLR 的两项改进（MLP 投影头 + 更强数据增广），无需大批量（仅 256）即可超越 SimCLR，称为 MoCo v2。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/MobileNet_v3.md]] | 结合 NAS（MnasNet）和 NetAdapt 自动搜索优化 MobileNet 架构（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/Res2Net.md]] | 提出 Res2Net 模块，通过在单个残差块内构建层次化残差连接来实现细粒度的多尺度特征表示。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/cspnet.md]] | 提出跨阶段局部连接，减少重复梯度计算提升学习能力（`computer-vision, machine-learning, empirical-study`）|
 
 ### RL
 | [[RL/hp_RL.md]] | 提出从人类偏好中训练奖励模型，再用 RL 优化策略，实现复杂任务的对齐学习。（`machine-learning, empirical-study, RL`）|
@@ -198,15 +198,15 @@
 | [[nlp/summarize_HF.md]] | 使用人类反馈训练总结模型，结合 RLHF 技术（`NLP, machine-learning`）|
 
 ### CNN
-| [[cnn/CNN_summary.md]] | CNN 综述汇总 |
+| [[cnn/CNN_summary.md]] | 对卷积网络核心组件（卷积层、归一化、激活函数、堆叠方式）及目标检测、实例分割、语义分割等应用领域的综合知识总结。（`computer-vision, machine-learning, survey`）|
 | [[cnn/Consensus-Driven_Propagation.md]] | Consensus-Driven Propagation |
-| [[cnn/GhostNet.md]] | GhostNet |
-| [[cnn/MCUNet.md]] | MCUNet |
-| [[cnn/SimCLR.md]] | SimCLR |
+| [[cnn/GhostNet.md]] | 利用特征图冗余，通过廉价线性变换生成 Ghost 特征图（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/MCUNet.md]] | 提出 MCUNet 系统-模型协同设计框架，联合优化 TinyNAS 神经架构搜索和 TinyEngine 轻量推理引擎，首次在商用 MCU 上实现 >70% ImageNet 精度。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/SimCLR.md]] | 提出 SimCLR，一个简洁的对比学习框架，无需专门架构或记忆库，通过数据增广组合 + MLP 投影头 + 大批量训练实现 SOTA。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/SimSiam.md]] | 提出 SimSiam，无需负样本、无需动量编码器的简单孪生网络自监督学习方法（`computer-vision, machine-learning`）|
-| [[cnn/blendmask.md]] | BlendMask |
-| [[cnn/cdp.md]] | CDP |
-| [[cnn/regnet.md]] | RegNet |
+| [[cnn/blendmask.md]] | 提出 BlendMask，通过 blender 模块结合自上而下的实例级信息与自下而上的像素级语义信息，在保持单阶段检测框架速度的同时超越 Mask R-CNN 的掩码精度。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/cdp.md]] | 提出 CDP（共识驱动传播），通过 committee 和 mediator 模块从海量未标注人脸数据中稳健选择正样本对，仅用 9% 标签即可接近全监督性能。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/regnet.md]] | 提出从设计空间发现最优网络架构的系统方法论（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/yolo_v4.md]] | 系统性梳理检测器各组件的影响，组合 CSPDarknet-53 + PANet + MISH + CIoU 等技巧实现 SOTA。（`computer-vision, machine-learning, empirical-study`）|
 
 ### ViT
@@ -244,9 +244,9 @@
 | [[nlp/gpt_WebGPT.md]] | 让语言模型使用浏览器搜索并回答问题，结合人类反馈训练（`NLP, machine-learning, empirical-study`）|
 
 ### CNN
-| [[cnn/DetCo.md]] | DetCo |
-| [[cnn/ResMLP.md]] | ResMLP |
-| [[cnn/repvgg.md]] | RepVGG |
+| [[cnn/DetCo.md]] | DetCo 在 MoCo v2 基础上引入多级监督和全局-局部对比学习，同时提升图像分类和目标检测的迁移性能。（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/ResMLP.md]] | 完全基于 MLP 的图像分类架构，无需自注意力机制（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/repvgg.md]] | 提出 RepVGG，通过结构重参数化技术在训练时使用多分支拓扑、推理时合并为纯 3×3 卷积堆叠的 VGG 风格单路径网络，实现速度与精度的最佳权衡。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/yolor.md]] | 提出统一的隐式/显式知识编码网络，在多任务上共享统一表征。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/yolox.md]] | 将 YOLO 切换为无锚框检测器，引入解耦头 + SimOTA 标签分配，刷新 COCO SOTA。（`computer-vision, machine-learning, empirical-study`）|
 
@@ -302,8 +302,8 @@
 | [[nlp/nlp_generalisation.md]] | NLP 泛化研究综述，分类体系（`NLP, machine-learning`）|
 
 ### CNN
-| [[cnn/ConvNeXt.md]] | ConvNeXt |
-| [[cnn/spach.md]] | SPACH |
+| [[cnn/ConvNeXt.md]] | 借鉴 Swin Transformer 设计策略，现代化纯 CNN 架构（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/spach.md]] | 提出 SPACH 统一框架对 CNN、Transformer、MLP 三种结构进行公平对比实验，发现混合卷积与 Transformer 的模型可达到与精心设计的 SOTA 模型相当的性能。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/yolo_v6.md]] | 美团工业级检测框架，集成量化感知训练（PTQ/QAT），COCO 35.9% AP @ 1234 FPS（Nano）。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/yolo_v7.md]] | 提出可训练的 Bag-of-Freebies（重参数化、动态标签分配、辅助头），在实时检测器上刷新 SOTA。（`computer-vision, machine-learning, empirical-study`）|
 
@@ -361,7 +361,7 @@
 | [[nlp/gpt_4.md]] | 多模态大语言模型，在多种专业和学术基准上达到人类水平（`NLP, machine-learning, empirical-study`）|
 
 ### CNN
-| [[cnn/ConvNeXt_v2.md]] | ConvNeXt v2 |
+| [[cnn/ConvNeXt_v2.md]] | 将 ConvNeXt 与掩码自编码器（MAE）协同设计，提升自监督学习性能（`computer-vision, machine-learning, empirical-study`）|
 
 ### 多模态
 | [[Multimodal/CoT-Multimodal.md]] | 将 CoT 推理扩展到多模态场景，两阶段框架（基本原理生成 → 答案推理），融合文本和图像信息。（`NLP, computer-vision, machine-learning`）|
