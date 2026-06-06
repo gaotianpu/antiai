@@ -4,7 +4,7 @@ AI 论文知识库，持续收集和学习 AI 领域的重要论文。 纯阅读
 
 ## 快速导航
 
-- [最新前沿](frontier.md) — 最近一年的前沿论文
+- [理论前沿](frontier.md) — 最近一年的前沿论文
 - [新手入门](getting_started.md) — 新手入门
 - [全部论文索引](wiki/sources/index.md) — 按年份浏览
 - [概念索引](wiki/concepts/index.md) — 核心 AI 概念
@@ -16,6 +16,9 @@ AI 论文知识库，持续收集和学习 AI 领域的重要论文。 纯阅读
 
 ```
 root/
+├── README.md        本文档
+├── frontier.md      理论前沿（最近 365 天）
+├── schema/          操作规范
 ├── raw/             原始论文（Markdown + PDF）
 │   ├── pdf/         PDF 原文
 │   └── index.md     总入口
@@ -25,9 +28,8 @@ root/
 │   ├── entities/    人物与组织名片
 │   ├── synthesis/   跨领域分析与总结
 │   └── index.md     总入口
-├── schema/          操作规范
 ├── tools/           辅助工具
-└── frontier.md      最新前沿（最近 365 天）
+└── getting_started.md  新手入门     
 ```
 
 
