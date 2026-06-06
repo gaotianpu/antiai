@@ -5,7 +5,9 @@ tags: [NLP, machine-learning]
 aliases: [Learning to summarize from human feedback, 2009.01325]
 related_nodes: [attention_mechanism]
 arxiv_id: 2009.01325
+authors_institution: OpenAI
 authors: OpenAI
+
 last_verified: 2026-06-06
 ---
 

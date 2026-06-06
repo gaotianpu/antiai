@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning]
 aliases: [Benchmarking Detection Transfer Learning with Vision Transformers, 2111.11429]
 related_nodes: [attention_mechanism]
 arxiv_id: 2111.11429
+authors_institution: Meta
 authors: Meta
+
 last_verified: 2026-06-06
 ---
 

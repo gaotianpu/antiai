@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [DALL-E 2, 2204.06125]
 related_nodes: [attention_mechanism]
 arxiv_id: 2204.06125
+authors_institution: OpenAI
 authors: OpenAI
+
 last_verified: 2026-06-06
 ---
 

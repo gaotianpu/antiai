@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [MAGNETO, 2210.06423]
 related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2210.06423
+authors_institution: Microsoft
 authors: Microsoft
+
 last_verified: 2026-06-06
 ---
 

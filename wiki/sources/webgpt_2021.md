@@ -5,7 +5,9 @@ tags: [NLP, machine-learning, empirical-study]
 aliases: [WebGPT, 2112.09332]
 related_nodes: [attention_mechanism, openai]
 arxiv_id: 2112.09332
+authors_institution: OpenAI
 authors: OpenAI
+
 last_verified: 2026-06-06
 ---
 

@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [TorchScale, 2211.13184]
 related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2211.13184
+authors_institution: Microsoft
 authors: Microsoft
+
 last_verified: 2026-06-06
 ---
 

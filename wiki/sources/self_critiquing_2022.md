@@ -5,7 +5,9 @@ tags: [NLP, machine-learning, empirical-study]
 aliases: [Self-critiquing models for assisting human evaluators, 2206.05802]
 related_nodes: [attention_mechanism, openai]
 arxiv_id: 2206.05802
+authors_institution: OpenAI
 authors: OpenAI
+
 last_verified: 2026-06-06
 ---
 

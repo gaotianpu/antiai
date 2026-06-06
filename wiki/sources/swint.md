@@ -5,7 +5,7 @@ tags: [computer-vision, machine-learning]
 aliases: [Swin Transformer, 2103.14030]
 related_nodes: [attention_mechanism]
 arxiv_id: 2103.14030
-authors: 微软
+authors: Microsoft
 last_verified: 2026-06-06
 ---
 

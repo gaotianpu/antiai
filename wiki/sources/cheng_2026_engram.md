@@ -6,13 +6,13 @@ aliases: [Engram, 条件记忆, Conditional Memory via Scalable Lookup, 2601.073
 related_nodes: [conditional_memory, sparsity_allocation, deepseek_ai, mixture_of_experts]
 arxiv_id: 2601.07372
 authors: Xin Cheng, Wangding Zeng, Damai Dai et al.
-authors_institution: DeepSeek-AI / Peking University
+authors_institution: DeepSeek, Peking University
 last_verified: 2026-06-06
 ---
 
 # Conditional Memory via Scalable Lookup: A New Axis of Sparsity for Large Language Models
 
-- **元数据**: arXiv | 2026-01 | **作者**: Xin Cheng, Wangding Zeng, Damai Dai et al. | **机构**: DeepSeek-AI / Peking University | 相关: [[conditional_memory]], [[mixture_of_experts]], [[deepseek_ai]]
+- **元数据**: arXiv | 2026-01 | **作者**: Xin Cheng, Wangding Zeng, Damai Dai et al. | **机构**: DeepSeek / Peking University | 相关: [[conditional_memory]], [[mixture_of_experts]], [[deepseek_ai]]
 - **概述**: 提出条件记忆（conditional memory）作为稀疏性的新轴心，实例化为 Engram 模块——将经典 N-gram 嵌入改造为 O(1) 查表，与 MoE 互补。发现 U 形 Scaling Law 指导 MoE 与静态记忆间的最优分配。
 - **关键要点**:
   1. 语言建模包含两个本质不同的子任务：组合推理（需动态计算）和知识检索（可静态查表），但 Transformer 缺少原生查表原语

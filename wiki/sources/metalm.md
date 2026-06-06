@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [MetaLM, 2206.06336]
 related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2206.06336
+authors_institution: Microsoft
 authors: Microsoft
+
 last_verified: 2026-06-06
 ---
 

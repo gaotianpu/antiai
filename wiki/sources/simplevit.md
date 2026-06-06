@@ -5,13 +5,15 @@ tags: [computer-vision, machine-learning]
 aliases: [SimpleViT, 2205.01580]
 related_nodes: [attention_mechanism]
 arxiv_id: 2205.01580
-authors: 社区
+authors_institution: Community
+authors: Community
+
 last_verified: 2026-06-06
 ---
 
 # SimpleViT: A Simple and Efficient Vision Transformer
 
-- **元数据**: **作者**: 社区 | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Community | 相关: [[attention_mechanism]]
 - **概述**: 简化的高效 ViT 实现
 - **关键要点**: 见原始阅读笔记
 

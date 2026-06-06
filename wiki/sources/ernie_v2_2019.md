@@ -6,13 +6,13 @@ aliases: [ERNIE 2.0, 1907.12412]
 related_nodes: [attention_mechanism]
 arxiv_id: 1907.12412
 authors: Yu Sun et al.
-authors_institution: 百度
+authors_institution: Baidu
 last_verified: 2026-06-06
 ---
 
 # ERNIE 2.0: A Continual Pre-training Framework for Language Understanding
 
-- **元数据**: **作者**: Yu Sun et al. | **机构**: 百度 | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Yu Sun et al. | **机构**: Baidu | 相关: [[attention_mechanism]]
 - **概述**: 持续预训练框架，多任务增量学习
 - **关键要点**: 见原始阅读笔记
 - **方法/发现**: 见原始笔记

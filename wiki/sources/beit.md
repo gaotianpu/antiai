@@ -5,7 +5,7 @@ tags: [computer-vision, machine-learning]
 aliases: [BEiT, 2106.08254]
 related_nodes: [attention_mechanism]
 arxiv_id: 2106.08254
-authors: 微软
+authors: Microsoft
 last_verified: 2026-06-06
 ---
 

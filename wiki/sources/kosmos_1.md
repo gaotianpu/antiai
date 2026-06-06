@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [Kosmos-1, 2302.14045]
 related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2302.14045
+authors_institution: Microsoft
 authors: Microsoft
+
 last_verified: 2026-06-06
 ---
 

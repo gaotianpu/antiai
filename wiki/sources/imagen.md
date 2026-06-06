@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [Imagen, 2205.11487]
 related_nodes: [attention_mechanism]
 arxiv_id: 2205.11487
+authors_institution: Google
 authors: Google
+
 last_verified: 2026-06-06
 ---
 

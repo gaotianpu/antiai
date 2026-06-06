@@ -5,7 +5,8 @@ tags: [computer-vision, machine-learning]
 aliases: [iBOT, 2111.07832]
 related_nodes: [attention_mechanism]
 arxiv_id: 2111.07832
-authors: ByteDance
+authors_institution: ByteDance
+
 last_verified: 2026-06-06
 ---
 

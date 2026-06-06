@@ -5,7 +5,9 @@ tags: [NLP, machine-learning]
 aliases: [Text and Code Embeddings by Contrastive Pre-Training, 2201.10005]
 related_nodes: [attention_mechanism]
 arxiv_id: 2201.10005
+authors_institution: OpenAI
 authors: OpenAI
+
 last_verified: 2026-06-06
 ---
 

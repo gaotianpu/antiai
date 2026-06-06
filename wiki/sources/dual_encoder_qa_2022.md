@@ -5,7 +5,9 @@ tags: [NLP, machine-learning]
 aliases: [Exploring Dual Encoder Architectures for Question Answering, 2204.07120]
 related_nodes: [attention_mechanism]
 arxiv_id: 2204.07120
+authors_institution: Google
 authors: Google
+
 last_verified: 2026-06-06
 ---
 

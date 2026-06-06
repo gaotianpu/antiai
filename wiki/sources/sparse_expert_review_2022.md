@@ -5,7 +5,7 @@ tags: [computer-vision, machine-learning]
 aliases: [A Review of Sparse Expert Models in Deep Learning, 2209.01667]
 related_nodes: [mixture_of_experts, attention_mechanism, jeff_dean]
 arxiv_id: 2209.01667
-authors: 见元数据
+authors: William Fedus, Jeff Dean, Barret Zoph
 last_verified: 2026-06-06
 ---
 

@@ -5,7 +5,9 @@ tags: [NLP, machine-learning]
 aliases: [LaMDA, 2201.08239]
 related_nodes: [attention_mechanism]
 arxiv_id: 2201.08239
+authors_institution: Google
 authors: Google
+
 last_verified: 2026-06-06
 ---
 

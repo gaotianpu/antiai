@@ -5,7 +5,9 @@ tags: [computer-vision, machine-learning, NLP]
 aliases: [TrOCR, 2109.10282]
 related_nodes: [microsoft, attention_mechanism]
 arxiv_id: 2109.10282
+authors_institution: Microsoft
 authors: Microsoft
+
 last_verified: 2026-06-06
 ---
 
