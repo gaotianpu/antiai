@@ -3,7 +3,7 @@ id: optimizer
 type: concept
 tags: ["machine-learning", "theoretical"]
 aliases: ["优化器", "梯度下降", "SGD", "Adam"]
-related_nodes: ["loss_function"]
+related_nodes: ["loss_function", "derivative_and_gradient"]
 last_verified: 2026-06-06
 ---
 

@@ -3,7 +3,7 @@ id: reinforcement_learning_from_human_feedback
 type: concept
 tags: [NLP, machine-learning, empirical-study]
 aliases: [RLHF, 人类反馈强化学习, 对齐]
-related_nodes: [ouyang_2022_instructgpt, post_training, sun_2023_dromedary]
+related_nodes: [ouyang_2022_instructgpt, post_training, sun_2023_dromedary, kl_divergence]
 last_verified: 2026-06-06
 ---
 

@@ -3,7 +3,7 @@ id: probability_statistics
 type: concept
 tags: [theoretical, statistical-learning, machine-learning]
 aliases: ["概率论", "统计学", "概率统计", "probability for DL"]
-related_nodes: [math_for_deep_learning, information_theory]
+related_nodes: [math_for_deep_learning, information_theory, probability_distributions, bayesian_inference]
 ---
 
 # 概率与统计

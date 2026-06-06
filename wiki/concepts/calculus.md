@@ -3,7 +3,7 @@ id: calculus
 type: concept
 tags: [theoretical, machine-learning]
 aliases: ["微积分", "微分", "链式法则", "calculus for DL"]
-related_nodes: [math_for_deep_learning, linear_algebra, optimization_fundamentals]
+related_nodes: [math_for_deep_learning, linear_algebra, optimization_fundamentals, derivative_and_gradient, chain_rule, taylor_expansion]
 ---
 
 # 微积分

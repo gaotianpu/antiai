@@ -3,7 +3,7 @@ id: optimization_fundamentals
 type: concept
 tags: [theoretical, robust-optimization, machine-learning]
 aliases: ["优化基础", "凸优化", "numerical optimization", "优化理论"]
-related_nodes: [math_for_deep_learning, calculus, optimizer]
+related_nodes: [math_for_deep_learning, calculus, optimizer, taylor_expansion]
 ---
 
 # 优化基础

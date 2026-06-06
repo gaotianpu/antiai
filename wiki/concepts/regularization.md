@@ -3,7 +3,7 @@ id: regularization
 type: concept
 tags: [machine-learning, theoretical]
 aliases: [正则化, weight decay, dropout]
-related_nodes: [batch_normalization, optimizer]
+related_nodes: [batch_normalization, optimizer, bayesian_inference]
 ---
 
 # Regularization

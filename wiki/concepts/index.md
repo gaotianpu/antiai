@@ -3,10 +3,24 @@
 ## 数学基础
 - [[math_for_deep_learning]] — 深度学习数学基础：五大子领域总览
 - [[linear_algebra]] — 线性代数：向量/矩阵/特征分解/SVD
+- [[matrix_operations]] — 矩阵运算：乘法/转置/范数/秩及 DL 应用
+- [[eigendecomposition]] — 特征分解：特征值方程/对角化/谱定理及 DL 应用
+- [[singular_value_decomposition]] — 奇异值分解：SVD 分解/低秩近似/Eckart-Young 定理及 DL 应用
 - [[calculus]] — 微积分：导数/链式法则/梯度/二阶优化
+- [[chain_rule]] — 链式法则：复合函数求导与反向传播的数学本质
+- [[derivative_and_gradient]] — 导数与梯度：变化率/偏导/梯度向量
 - [[probability_statistics]] — 概率与统计：分布/MLE/MAP/贝叶斯推断
+- [[probability_distributions]] — 概率分布：伯努利/类别/高斯/均匀分布及 DL 角色
+- [[bayesian_inference]] — 贝叶斯推断：MLE vs MAP / 后验估计与正则化
 - [[information_theory]] — 信息论：熵/交叉熵/KL散度/互信息
+- [[entropy]] — 熵：不确定性度量 / 交叉熵 / 困惑度
+- [[kl_divergence]] — KL 散度：分布差异度量 / VAE / 蒸馏 / RLHF
+- [[mutual_information]] — 互信息：依赖度量 / InfoNCE / 表示学习
 - [[optimization_fundamentals]] — 优化基础：凸与非凸/鞍点/约束优化
+- [[taylor_expansion]] — 泰勒展开：多项式逼近与一阶/二阶优化理论基础
+- [[convex_optimization]] — 凸优化：凸集/凸函数/Jensen 不等式/全局最优保证
+- [[gradient_descent]] — 梯度下降：批量/小批量/随机/动量/自适应方法
+- [[lagrange_multiplier]] — 拉格朗日乘数法：约束优化/KKT 条件/对偶形式
 
 ## 模型架构
 - [[attention_mechanism]] — 注意力机制：动态聚焦输入关键部分

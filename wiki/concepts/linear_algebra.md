@@ -3,7 +3,7 @@ id: linear_algebra
 type: concept
 tags: [theoretical, machine-learning]
 aliases: ["线性代数", "矩阵运算", "linear algebra for DL"]
-related_nodes: [math_for_deep_learning, optimization_fundamentals]
+related_nodes: [math_for_deep_learning, optimization_fundamentals, matrix_operations, eigendecomposition, singular_value_decomposition]
 ---
 
 # 线性代数

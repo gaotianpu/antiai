@@ -3,7 +3,7 @@ id: information_theory
 type: concept
 tags: [theoretical, information-theory, machine-learning]
 aliases: ["信息论", "熵", "KL散度", "互信息", "info theory for DL"]
-related_nodes: [math_for_deep_learning, probability_statistics, loss_function]
+related_nodes: [math_for_deep_learning, probability_statistics, loss_function, entropy, kl_divergence, mutual_information]
 ---
 
 # 信息论

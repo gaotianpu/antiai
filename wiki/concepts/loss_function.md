@@ -3,7 +3,7 @@ id: loss_function
 type: concept
 tags: ["machine-learning", "theoretical"]
 aliases: ["损失函数", "loss", "目标函数", "代价函数"]
-related_nodes: ["optimizer", "focal_loss_2017", "object_detection"]
+related_nodes: ["optimizer", "focal_loss_2017", "object_detection", "probability_distributions", "entropy", "kl_divergence"]
 last_verified: 2026-06-06
 ---
 
