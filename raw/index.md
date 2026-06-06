@@ -19,7 +19,7 @@
 ## 2010
 
 ### 自动驾驶
-| [[Autonomous_Robot/DAgger.md]] | DAgger |
+| [[Autonomous_Robot/DAgger.md]] | 分析 DAgger 数据聚合技术在自动驾驶中的泛化问题并提出改进方案（`autonomous-driving, imitation-learning, data-aggregation`）|
 
 ### 其他
 | [[Xavier_init.md]] | 分析深层网络训练困难的原因，提出 Xavier/Glorot 初始化，在前向和反向传播中维持激活方差恒定。（`machine-learning, theoretical`）|
@@ -99,7 +99,7 @@
 | [[RL/ACER.md]] | 将经验回放引入 Actor-Critic，结合 Retrace 和截断重要性采样，提升样本效率。（`machine-learning, empirical-study, RL`）|
 
 ### 自动驾驶
-| [[Autonomous_Robot/DAVE-2.md]] | DAVE-2 |
+| [[Autonomous_Robot/DAVE-2.md]] | 使用 CNN 从单面前向相机像素直接映射到转向命令的经典端到端学习（`autonomous-driving, end-to-end-learning, cnn`）|
 
 ### 效率/压缩
 | [[LayerNorm.md]] | LayerNorm |
@@ -123,7 +123,7 @@
 | [[RL/PPO.md]] | 提出 PPO，通过裁剪的替代目标实现稳定策略更新，兼顾 TRPO 的可靠性和实现简单性。（`machine-learning, empirical-study, RL`）|
 
 ### 自动驾驶
-| [[Autonomous_Robot/VINS-Mono.md]] | VINS-Mono |
+| [[Autonomous_Robot/VINS-Mono.md]] | 提出单目视觉惯性系统在线时间校准方法（`visual-inertial-odometry, slam, sensor-calibration`）|
 
 ### 其他
 | [[meta_learning_survey.md]] | 元学习综述，系统分类：基于度量、基于模型、基于优化的三大范式。（`machine-learning, survey`）|
@@ -144,9 +144,9 @@
 | [[cnn/yolo_v3.md]] | YOLOv3 引入 Darknet-53 骨架 + FPN 多尺度预测，在不牺牲速度的前提下大幅提升小目标检测能力。（`computer-vision, machine-learning, empirical-study`）|
 
 ### 自动驾驶
-| [[Autonomous_Robot/ChauffeurNet.md]] | ChauffeurNet |
-| [[Autonomous_Robot/H-Net.md]] | H-Net |
-| [[Autonomous_Robot/Learning_Situational_Driving.md]] | Learning Situational Driving |
+| [[Autonomous_Robot/ChauffeurNet.md]] | 通过模仿学习和合成扰动数据训练鲁棒的自动驾驶策略（`autonomous-driving, imitation-learning, behavior-cloning`）|
+| [[Autonomous_Robot/H-Net.md]] | 提出基于注意力机制的无监督立体深度估计框架 H-Net（`depth-estimation, autonomous-driving, self-supervised-learning`）|
+| [[Autonomous_Robot/Learning_Situational_Driving.md]] | 提出基于混合策略的情境驾驶框架，捕获不同场景下的多种驾驶模式（`autonomous-driving, imitation-learning, mixture-of-experts`）|
 
 ### 效率/压缩
 | [[Vector_quantized.md]] | Vector Quantized |
@@ -185,8 +185,8 @@
 | [[RL/hp_RL.md]] | 提出从人类偏好中训练奖励模型，再用 RL 优化策略，实现复杂任务的对齐学习。（`machine-learning, empirical-study, RL`）|
 
 ### 自动驾驶
-| [[Autonomous_Robot/cheating.md]] | Cheating |
-| [[Autonomous_Robot/limit_Behavior_Cloning.md]] | Limit Behavior Cloning |
+| [[Autonomous_Robot/cheating.md]] | 将驾驶任务分解为"特权智能体"（可访问真值信息）和"纯视觉智能体"两阶段训练（`autonomous-driving, imitation-learning, knowledge-distillation`）|
+| [[Autonomous_Robot/limit_Behavior_Cloning.md]] | 系统实验研究行为克隆在自动驾驶中的可扩展性和局限性（`autonomous-driving, imitation-learning, behavior-cloning`）|
 
 ## 2020
 
@@ -218,11 +218,11 @@
 | [[Generative/DDPM.md]] | 提出去噪扩散概率模型（DDPM），将扩散模型与去噪分数匹配建立联系，实现高质量图像生成。（`machine-learning, theoretical`）|
 
 ### 自动驾驶
-| [[Autonomous_Robot/CAB.md]] | CAB |
-| [[Autonomous_Robot/E2E-LD.md]] | E2E-LD |
-| [[Autonomous_Robot/Imitative_Models.md]] | Imitative Models |
-| [[Autonomous_Robot/Label_Efficient.md]] | Label Efficient |
-| [[Autonomous_Robot/RadarPerception.md]] | Radar Perception |
+| [[Autonomous_Robot/CAB.md]] | 提出 CAB 运动预测模型，通过训练过程促进语义上下文信息的利用（`autonomous-driving, motion-forecasting, context-awareness`）|
+| [[Autonomous_Robot/E2E-LD.md]] | 提出面向驾驶的车道检测评估指标 E2E-LD 和 PSLD（`lane-detection, autonomous-driving, evaluation-metric`）|
+| [[Autonomous_Robot/Imitative_Models.md]] | 提出模仿模型（Imitative Models）结合模仿学习和目标导向规划的优势（`autonomous-driving, imitation-learning, planning`）|
+| [[Autonomous_Robot/Label_Efficient.md]] | 系统量化减少语义分割标注成本对行为克隆智能体的影响（`autonomous-driving, imitation-learning, label-efficiency`）|
+| [[Autonomous_Robot/RadarPerception.md]] | 利用连续雷达帧的时间关系增强雷达目标识别能力（`radar-perception, autonomous-driving, temporal-modeling`）|
 
 ### 视频
 | [[video/Review_video_prediction.md]] | 视频预测深度学习技术综述，覆盖 ConvLSTM、3D CNN、GAN 和基于光流的方法。（`computer-vision, machine-learning, survey`）|
@@ -267,12 +267,12 @@
 | [[Generative/LatentDiffusion.md]] | 将扩散模型引入预训练自编码器的潜在空间，大幅降低计算成本，引入交叉注意力实现文本/条件控制，即 Stable Diffusion。（`machine-learning, computer-vision`）|
 
 ### 自动驾驶
-| [[Autonomous_Robot/LAV.md]] | LAV |
-| [[Autonomous_Robot/SAM.md]] | SAM |
-| [[Autonomous_Robot/TokenFusion.md]] | TokenFusion |
-| [[Autonomous_Robot/TransFuser.md]] | TransFuser |
-| [[Autonomous_Robot/UTT.md]] | UTT |
-| [[Autonomous_Robot/v2r_rl.md]] | V2R-RL |
+| [[Autonomous_Robot/LAV.md]] | 从所有观察到的车辆（不仅自车）收集经验训练驾驶策略（`autonomous-driving, imitation-learning, multi-agent`）|
+| [[Autonomous_Robot/SAM.md]] | 通过挤压网络和模仿网络进行条件视觉驾驶策略学习（`autonomous-driving, imitation-learning, knowledge-distillation`）|
+| [[Autonomous_Robot/TokenFusion.md]] | 提出针对 ViT 的多模态令牌融合方法 TokenFusion（`transformer, multimodal-fusion, computer-vision`）|
+| [[Autonomous_Robot/TransFuser.md]] | 提出 TransFuser 使用注意力机制融合图像和 LiDAR 表示（`autonomous-driving, transformer, multimodal-fusion`）|
+| [[Autonomous_Robot/UTT.md]] | 提出统一 Transformer 跟踪器 UTT，用同一框架解决 SOT 和 MOT（`object-tracking, transformer, unified-framework`）|
+| [[Autonomous_Robot/v2r_rl.md]] | 提出虚拟到现实强化学习框架，通过现实主义翻译网络实现 sim-to-real 迁移（`autonomous-driving, reinforcement-learning, domain-transfer`）|
 
 ### 效率/压缩
 | [[LoRA.md]] | 提出低秩适配方法，冻结预训练权重，插入可训练的低秩矩阵，大幅降低微调参数量和显存需求。（`NLP, machine-learning, empirical-study`）|
@@ -328,16 +328,16 @@
 | [[Multimodal/dall-e_v2.md]] | 层次化文本条件图像生成，使用 CLIP 隐空间（`computer-vision, machine-learning, NLP`）|
 
 ### 自动驾驶
-| [[Autonomous_Robot/AdaRIP.md]] | AdaRIP |
-| [[Autonomous_Robot/Choice_data.md]] | Choice Data |
-| [[Autonomous_Robot/Curve_LD.md]] | Curve LD |
-| [[Autonomous_Robot/HiMODE.md]] | HiMODE |
-| [[Autonomous_Robot/MLDA.md]] | MLDA |
-| [[Autonomous_Robot/MUTR3D.md]] | MUTR3D |
-| [[Autonomous_Robot/MoT_survey.md]] | MOT Survey |
-| [[Autonomous_Robot/ONCE-3DLanes.md]] | ONCE-3DLanes |
-| [[Autonomous_Robot/Time3D.md]] | Time3D |
-| [[Autonomous_Robot/mmTTransformer.md]] | mmTTransformer |
+| [[Autonomous_Robot/AdaRIP.md]] | 提出认知不确定性感知的鲁棒模仿规划（RIP/AdaRIP），检测并适应 OOD 驾驶场景（`autonomous-driving, uncertainty-estimation, distribution-shift`）|
+| [[Autonomous_Robot/Choice_data.md]] | 系统研究数据设计选择对端到端驾驶模型训练和验证的影响（`autonomous-driving, end-to-end-learning, data-efficiency`）|
+| [[Autonomous_Robot/Curve_LD.md]] | 提出基于参数贝塞尔曲线的车道检测方法，兼顾速度和精度（`lane-detection, autonomous-driving, parametric-curve`）|
+| [[Autonomous_Robot/HiMODE.md]] | 提出基于 CNN+Transformer 混合架构的单目全向深度估计模型（`depth-estimation, autonomous-driving, transformer`）|
+| [[Autonomous_Robot/MLDA.md]] | 在像素、实例和类别三个互补语义层级处理跨域车道检测（`lane-detection, domain-adaptation, autonomous-driving`）|
+| [[Autonomous_Robot/MUTR3D.md]] | 通过 3D 轨迹查询实现端到端多相机 3D 跟踪（`3d-tracking, multi-camera, autonomous-driving`）|
+| [[Autonomous_Robot/MoT_survey.md]] | 全面综述深度学习在多目标跟踪中的四个主要步骤（`multi-object-tracking, survey, deep-learning`）|
+| [[Autonomous_Robot/ONCE-3DLanes.md]] | 构建真实世界 3D 车道检测数据集 ONCE-3DLanes 和 SALAD 方法（`lane-detection, 3d-detection, autonomous-driving-dataset`）|
+| [[Autonomous_Robot/Time3D.md]] | 以端到端方式从单目视频联合训练 3D 检测和 3D 跟踪（`3d-detection, 3d-tracking, monocular`）|
+| [[Autonomous_Robot/mmTTransformer.md]] | 提出基于堆叠 Transformer 的多模态运动预测框架 mmTransformer（`motion-prediction, transformer, multimodal`）|
 
 ### 视频
 | [[video/MAE_st.md]] | 将 MAE 扩展到视频时空学习，提出 MAE-ST，在高掩码率下学习视频表示。（`computer-vision, machine-learning, empirical-study`）|

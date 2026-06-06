@@ -52,6 +52,16 @@
 - [[chi_2022_xmoe]] — On the Representation Collapse of Sparse Mixture of Experts（MoE 表示坍塌）
 - [[liu_2022_convnext]] — A ConvNet for the 2020s（ConvNeXt）
 - [[tong_2022_maest]] — Masked Autoencoders As Spatiotemporal Learners（MAE-ST 视频预训练）
+- [[ciaparrone_2022_motsurvey]] — Deep Learning in Video Multi-Object Tracking: A Survey（MOT 深度学习综述）
+- [[feng_2022_curveld]] — Rethinking Efficient Lane Detection via Curve Modeling（贝塞尔曲线车道检测）
+- [[filos_2022_adarip]] — Can Autonomous Vehicles Identify, Recover From, and Adapt to Distribution Shifts?（AdaRIP OOD 检测与适应）
+- [[junayed_2022_himode]] — HiMODE: A Hybrid Monocular Omnidirectional Depth Estimation Model（混合单目全向深度估计）
+- [[klingner_2022_choicedata]] — On the Choice of Data for Efficient Training and Validation of End-to-End Driving Models（端到端驾驶数据选择）
+- [[li_2022_mlda]] — Multi-level Domain Adaptation for Lane Detection（多级域自适应车道检测）
+- [[li_2022_time3d]] — Time3D: End-to-End Joint Monocular 3D Object Detection and Tracking（单目 3D 检测跟踪）
+- [[liu_2022_mmtransformer]] — Multimodal Motion Prediction with Stacked Transformers（堆叠 Transformer 多模态运动预测）
+- [[yan_2022_once3dlanes]] — ONCE-3DLanes: Building Monocular 3D Lane Detection（ONCE-3DLanes 3D 车道检测数据集）
+- [[zhang_2022_mutr3d]] — MUTR3D: A Multi-camera Tracking Framework via 3D-to-2D Queries（多相机 3D 跟踪）
 
 ## 2021
 - [[huang_2021_spatiotemporal]] — A Large-Scale Study on Unsupervised Spatiotemporal Representation Learning（无监督时空表征）
@@ -79,6 +89,12 @@
 - [[touvron_2021_resmlp]] — ResMLP: Feedforward networks for image classification with data-efficient training（ResMLP）
 - [[ding_2021_repvgg]] — RepVGG: Making VGG-style ConvNets Great Again（结构重参数化 VGG）
 - [[zhao_2021_spach]] — SPACH: A Battle of Network Structures（CNN/Transformer/MLP 对比实证）
+- [[chen_2021_lav]] — Learning from All Vehicles（向所有车辆学习）
+- [[ma_2021_utt]] — Unified Transformer Tracker for Object Tracking（统一 Transformer 跟踪器）
+- [[pan_2021_v2rrl]] — Virtual to Real Reinforcement Learning for Autonomous Driving（虚拟到现实强化学习）
+- [[prakash_2021_transfuser]] — Multi-Modal Fusion Transformer for End-to-End Autonomous Driving（TransFuser 多模态融合）
+- [[wang_2021_tokenfusion]] — Multimodal Token Fusion for Vision Transformers（ViT 多模态令牌融合）
+- [[zhao_2021_sam]] — SAM: Squeeze-and-Mimic Networks for Conditional Visual Driving Policy Learning（挤压-模仿驾驶策略）
 
 ## 2020
 - [[brown_2020_gpt3]] — Language Models are Few-Shot Learners（GPT-3 上下文学习）
@@ -102,6 +118,11 @@
 - [[lin_2020_mcunet]] — MCUNet: Tiny Deep Learning on IoT Devices（MCUNet 微型深度学习）
 - [[ouyang_2020_videoprediction]] — A Review on Deep Learning Techniques for Video Prediction（视频预测综述）
 - [[semantic_segmentation_survey]] — 语义分割综述（Semantic Segmentation 综述）
+- [[behl_2020_labelefficient]] — Label Efficient Visual Abstractions for Autonomous Driving（标签高效视觉抽象）
+- [[benyounes_2020_cab]] — Raising Context Awareness in Motion Forecasting（CAB 上下文感知运动预测）
+- [[rhinehart_2020_imitative]] — Deep Imitative Models for Flexible Inference, Planning, and Control（模仿模型）
+- [[sato_2020_e2eld]] — Towards Driving-Oriented Metric for Lane Detection Models（面向驾驶的车道检测指标）
+- [[li_2020_radar]] — Exploiting Temporal Relations on Radar Perception for Autonomous Driving（雷达时序关系感知）
 
 ## 2019
 - [[beit]] — BEiT: BERT Pre-Training of Image Transformers（BERT 风格图像预训练）
@@ -123,6 +144,8 @@
 - [[chao_2019_hardnet]] — HarDNet: A Low Memory Traffic Network（HarDNet）
 - [[wang_2019_cspnet]] — CSPNet: A New Backbone that can Enhance Learning Capability of CNN（CSPNet）
 - [[gao_2019_res2net]] — Res2Net: A New Multi-scale Backbone Architecture（Res2Net 多尺度骨干）
+- [[chen_2019_cheating]] — Learning by Cheating（通过作弊学习，两阶段蒸馏驾驶）
+- [[codevilla_2019_behaviorcloning]] — Exploring the Limitations of Behavior Cloning for Autonomous Driving（行为克隆局限性）
 
 ## 2018
 - [[beit_2]] — BEiT v2: Masked Image Modeling with Vector-Quantized Visual Tokenizers（向量量化视觉标记器）
@@ -137,6 +160,9 @@
 - [[zhu_2018_sparsenet]] — SparseNet: A Sparse DenseNet for Image Classification（SparseNet）
 - [[ruderman_2018_pooling]] — Pooling is neither necessary nor sufficient（CNN 池化变形稳定性分析）
 - [[liu_2018_panet]] — Path Aggregation Network for Instance Segmentation（PANet 路径聚合网络）
+- [[bansal_2018_chauffeur]] — ChauffeurNet: Learning to Drive by Imitating the Best and Synthesizing the Worst（ChauffeurNet 模仿+合成数据驾驶）
+- [[huang_2018_hnet]] — H-Net: Unsupervised Attention-based Stereo Depth Estimation Leveraging Epipolar Geometry（H-Net 无监督立体深度）
+- [[ohnbar_2018_situational]] — Learning Situational Driving（情境驾驶混合策略）
 
 ## 2017
 - [[focal_loss_2017]] — Focal Loss for Dense Object Detection（焦点损失）
@@ -152,6 +178,7 @@
 - [[liu_2017_rfb]] — Receptive Field Block Net for Accurate and Fast Object Detection（RFB Net 感受野块）
 - [[hu_2017_senet]] — Squeeze-and-Excitation Networks（SENet 通道注意力）
 - [[chen_2017_deeplabv3]] — Rethinking Atrous Convolution for Semantic Segmentation（DeepLab v3）
+- [[qin_2017_vinsmono]] — Online Temporal Calibration for Monocular Visual-Inertial Systems（VINS-Mono 在线时间校准）
 
 ## 2016
 - [[fpn_2016]] — Feature Pyramid Networks for Object Detection（特征金字塔网络）
@@ -166,6 +193,7 @@
 - [[hendrycks_2016_gelu]] — Gaussian Error Linear Units（GELU 激活函数）
 - [[chollet_2016_xception]] — Xception: Deep Learning with Depthwise Separable Convolutions（Xception 深度可分离卷积）
 - [[zhao_2016_pspnet]] — Pyramid Scene Parsing Network（PSPNet 金字塔场景解析）
+- [[bojarski_2016_dave2]] — End to End Learning for Self-Driving Cars（DAVE-2 端到端驾驶）
 
 ## 2015
 - [[bpe_2015]] — Neural Machine Translation of Rare Words with Subword Units（BPE 子词分词）
@@ -197,6 +225,7 @@
 
 ## 2010
 - [[glorot_2010_xavier]] — Understanding the Difficulty of Training Deep Feedforward Neural Networks（Xavier Init）
+- [[prakash_2010_dagger]] — Exploring Data Aggregation in Policy Learning for Vision-based Urban Autonomous Driving（DAgger 数据聚合驾驶）
 
 ## 1997
 - [[hochreiter_1997_lstm]] — Long Short-Term Memory（LSTM）
