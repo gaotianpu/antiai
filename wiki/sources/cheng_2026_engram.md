@@ -2,7 +2,7 @@
 id: cheng_2026_engram
 type: source
 tags: [NLP, machine-learning, empirical-study]
-aliases: [Engram, 条件记忆, Conditional Memory via Scalable Lookup]
+aliases: [Engram, 条件记忆, Conditional Memory via Scalable Lookup, 2601.07372]
 related_nodes: [conditional_memory, sparsity_allocation, deepseek_ai]
 arxiv_id: 2601.07372
 last_verified: 2026-06-06
@@ -23,6 +23,6 @@ last_verified: 2026-06-06
 - **局限/意义**: N-gram 记忆的有效性依赖于语言中大量局部静态模式的存在；确定性访问虽利于预取，但牺牲了动态检索的灵活性
 
 ## 引用
-- **论文**: [[2601.07372]]
-- **相关概念**: [[conditional_memory]] | [[sparsity_allocation]] | [[mixture_of_experts]]
+- **原始论文**: [arXiv:2601.07372](https://arxiv.org/abs/2601.07372) | [清理后 Markdown](../../raw/2601.07372.md)
+- **相关概念**: [[conditional_memory]] | [[sparsity_allocation]]
 - **相关实体**: [[deepseek_ai]]
