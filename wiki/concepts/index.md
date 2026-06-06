@@ -19,6 +19,7 @@
 - [[diffusion_model]] — 扩散模型：逐步去噪的概率生成范式
 
 ## 训练与优化
+- [[optimizer]] — 优化器：从 SGD 到 AdamW 的参数更新算法
 - [[transfer_learning]] — 迁移学习：预训练+微调的知识迁移范式
 - [[data_augmentation]] — 数据增强：变换扩展训练分布
 - [[knowledge_distillation]] — 知识蒸馏：教师指导学生模型的压缩范式
