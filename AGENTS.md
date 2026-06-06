@@ -27,6 +27,7 @@
 
 | 文件 | 内容 | 加载时机 |
 |:---|:---|:---|
+| `schema/source.md` | Source 页创建规范 | 创建 Source 页时 |
 | `schema/concept.md` | 概念页创建规范 | 创建概念页时 |
 | `schema/concept_dedup.md` | 概念去重判定规范 | 创建概念页前判重时 |
 | `schema/entity.md` | 实体页创建规范 | 创建实体页时 |
