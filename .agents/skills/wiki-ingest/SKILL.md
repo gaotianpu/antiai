@@ -50,10 +50,13 @@ CHANGELOG_DIR="${CHANGELOG_DIR:-$WIKI_DIR/changelog}"
 
 ## 引用规范
 
-- wiki 内部链接使用 `[[文件名]]`（不带扩展名）
-- 外部文件引用使用 `[显示文本](文件路径)` 格式
-- 表格中的 `[[page|alias]]` 需转义为 `[[page\|alias]]`
-- `related_nodes` 必须双向完整
+链接、转义、related_nodes 规则见 `AGENTS.md §2`。创建页面前参阅：
+
+- `schema/source.md` — Source 页模板 + 去重流程
+- `schema/concept.md` — Concept 页模板
+- `schema/concept_dedup.md` — **创建 Concept 前必查**，避免重复定义
+- `schema/entity.md` — Entity 页模板
+- `schema/tags.md` — 受控 tag 词表
 
 ---
 

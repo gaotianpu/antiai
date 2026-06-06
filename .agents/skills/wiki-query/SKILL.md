@@ -34,8 +34,9 @@ SCHEMA_DIR="${SCHEMA_DIR:-$PROJECT_ROOT/schema}"
 
 1. **路由 (Route)**：优先读取 `$WIKI_DIR/index.md` 锁定相关 Page。
 2. **深度优先读取**：如果索引信息不足，读取具体的 `$WIKI_DIR/synthesis/` 或 `$WIKI_DIR/concepts/`。
-3. **响应生成**：回答必须带引用，格式：`根据 [[资料名]]，...`。
-4. **知识沉淀**：若回答涉及跨领域综合，**自动创建** `$WIKI_DIR/synthesis/[Subject].md`。
+3. **外部回退**：wiki 内无相关内容时，通过 WebFetch 搜索外部摘要，在回答中标注 `（外部来源）`。
+4. **响应生成**：回答必须带引用，格式：`根据 [[资料名]]，...`。
+5. **知识沉淀**：若回答涉及跨领域综合，**自动创建** `$WIKI_DIR/synthesis/[Subject].md`。
 
 ## 问答驱动构建 (Q&A-driven Build)
 
@@ -48,4 +49,4 @@ SCHEMA_DIR="${SCHEMA_DIR:-$PROJECT_ROOT/schema}"
    - 创建 `$WIKI_DIR/concepts/` 页（新概念）。
    - 创建或更新 `$WIKI_DIR/synthesis/` 页（综合分析）。
    - 更新所有索引。
-4. **概念网完整性检查**：构建完成后，扫描新 page 中引用的概念 → 如果引用了不存在的概念页 → **询问用户是否需要创建**或**自动创建**。
+4. **概念网完整性检查**：构建完成后，执行 `wiki-ingest` 的"迭代推进模式"检查概念缺口。与 wiki-ingest 的"概念去重"流程联动，避免重复创建。
