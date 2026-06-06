@@ -7,3 +7,4 @@
 - [[concepts/index|概念索引]] — 核心概念定义
 - [[entities/index|实体索引]] — 人物与组织
 - [[synthesis/post_training|综合页面]] — 跨领域分析
+- [[synthesis/papers_2024_2025|2024-2025 论文清单]] — 待入库目标
