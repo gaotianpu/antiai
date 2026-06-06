@@ -3,7 +3,7 @@ id: attention_variants
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [注意力变体, multi-head attention, cross-attention, self-attention]
-related_nodes: [attention_mechanism]
+related_nodes: [attention_mechanism, transformer_architecture, encoder_decoder_architecture, feed_forward_network]
 ---
 
 # Attention Variants

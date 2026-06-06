@@ -3,7 +3,7 @@ id: residual_connection
 type: concept
 tags: [machine-learning, empirical-study, theoretical]
 aliases: [Skip Connection, 跳跃连接, 残差连接]
-related_nodes: [resnet_2015, kaiming_he]
+related_nodes: [resnet_2015, kaiming_he, transformer_architecture]
 last_verified: 2026-06-06
 ---
 

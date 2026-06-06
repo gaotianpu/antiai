@@ -3,7 +3,7 @@ id: positional_encoding
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [位置编码, position embedding, positional embedding]
-related_nodes: [attention_mechanism]
+related_nodes: [attention_mechanism, transformer_architecture]
 ---
 
 # Positional Encoding

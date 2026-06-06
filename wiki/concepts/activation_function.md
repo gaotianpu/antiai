@@ -3,7 +3,7 @@ id: activation_function
 type: concept
 tags: ["machine-learning", "theoretical"]
 aliases: ["激活函数", "activation", "非线性激活"]
-related_nodes: ["convolutional_neural_network", "hendrycks_2016_gelu", "krizhevsky_2012_alexnet"]
+related_nodes: ["convolutional_neural_network", "hendrycks_2016_gelu", "krizhevsky_2012_alexnet", "feed_forward_network"]
 last_verified: 2026-06-06
 ---
 

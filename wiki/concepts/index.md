@@ -30,6 +30,9 @@
 - [[positional_encoding]] — 位置编码：为注意力引入顺序感知
 - [[reinforcement_learning_from_human_feedback]] — RLHF：人类反馈强化学习的对齐技术
 - [[tokenization]] — 分词：NLP 文本切分策略
+- [[transformer_architecture]] — Transformer 架构：完全基于自注意力的序列模型
+- [[encoder_decoder_architecture]] — 编解码器架构：编码器-解码器结构与变体
+- [[feed_forward_network]] — 前馈网络：Transformer 中的 Position-wise FFN
 
 ## 模型设计
 - [[conditional_memory]] — 条件记忆：通过稀疏查表实现静态知识检索
