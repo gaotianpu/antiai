@@ -1,0 +1,157 @@
+---
+name: wiki-ingest
+description: 将 raw/ 中的文档（论文/报告/任意）摄入 wiki 知识库。提示词：论文入库, 概念补全, 链式页面, 知识抽取, 论文整理
+metadata:
+  variables:
+    - RAW_DIR: 原始资料目录（默认 $PROJECT_ROOT/raw）
+    - WIKI_DIR: Wiki 页面目录（默认 $PROJECT_ROOT/wiki）
+    - SCHEMA_DIR: 规范文件目录（默认 $PROJECT_ROOT/schema）
+    - LOG_DIR: 操作日志目录（默认 $WIKI_DIR/log）
+    - PROJECT_ROOT: 项目根目录（默认当前工作目录）
+---
+
+# Wiki Ingest — raw/ → wiki/
+
+将 `raw/` 中的文档（论文、报告、项目分析等）转化为 wiki 知识库中的结构化页面。遵循"扫描→原子化→索引→存证"闭环。
+
+**触发信号**：raw/ 出现新文件、用户要求"整理论文"、"入库"、"继续"。
+
+---
+
+## 配置变量
+
+| 变量 | 默认值 | 说明 |
+|:---|:---|:---|
+| `PROJECT_ROOT` | `$PWD` | 项目根目录 |
+| `RAW_DIR` | `$PROJECT_ROOT/raw` | 原始资料目录 |
+| `WIKI_DIR` | `$PROJECT_ROOT/wiki` | wiki 页面目录 |
+| `SCHEMA_DIR` | `$PROJECT_ROOT/schema` | 规范文件目录 |
+| `LOG_DIR` | `$WIKI_DIR/log` | 操作日志目录 |
+
+```bash
+PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
+RAW_DIR="${RAW_DIR:-$PROJECT_ROOT/raw}"
+WIKI_DIR="${WIKI_DIR:-$PROJECT_ROOT/wiki}"
+SCHEMA_DIR="${SCHEMA_DIR:-$PROJECT_ROOT/schema}"
+LOG_DIR="${LOG_DIR:-$WIKI_DIR/log}"
+```
+
+---
+
+## 阶段 1：扫描 (Scan)
+
+1. 读取 `raw/` 新文件，识别文档类型（论文/报告/项目分析）
+2. 提取元数据：标题、作者、日期、领域
+3. 识别核心贡献、方法论、关键指标
+4. 提取**实体**（人物/组织/指标名）和**概念**（理论/方法/模式）
+5. 提取可量化的因子/公式（如适用）
+
+---
+
+## 引用规范
+
+- wiki 内部链接使用 `[[文件名]]`（不带扩展名）
+- 外部文件引用使用 `[显示文本](文件路径)` 格式
+- 表格中的 `[[page|alias]]` 需转义为 `[[page\|alias]]`
+- `related_nodes` 必须双向完整
+
+---
+
+## 阶段 2：原子化写入 (Atomic Write)
+
+> 以下模板为默认值。若项目在 `$SCHEMA_DIR/` 下有自定义模板文件，优先使用。
+
+### 2.1 创建 Source 页
+
+`$WIKI_DIR/sources/[ID].md`，限 500 字内：
+
+```markdown
+# [标题]
+- **元数据**: [类型] | [作者] | [日期] | 相关: [[概念/实体]]
+- **概述**: [100字核心贡献]
+- **关键要点**: 1. [要点A] 2. [要点B] 3. [要点C]
+- **方法/发现**: [研究手段与结论]
+- **局限/意义**: [局限性及实操建议]
+- **引用**: ⬅ [[来源]] | ➡ [[去向]]
+```
+
+### 2.2 按需创建 Concept / Entity 页面
+
+**判定准则**：实体在文中出现 **≥3 次** 且具有独立定义价值时方可建立单页。
+
+**去重优先**：严禁创建内容重叠的页面，优先"更新"而非"新建"。若为已有概念，在原页面末尾追加新视角及 `[[Source_ID]]` 引用。
+
+```markdown
+# [名称]
+- **定义**: [准确描述]
+- **属性/特征**: [列表展示]
+- **量化应用**: [基于数据/论文的具体场景]
+- **公式/计算**: $Equation$ (如适用)
+- **来源**: [[Source_ID]]
+```
+
+### 2.3 同步 related_nodes
+
+新 page 创建后，检查所有被引用页面的 `related_nodes` 是否包含反向引用，确保双向完整。
+
+### 2.4 路线图比对 (Triage)
+
+如项目有 `$SCHEMA_DIR/paper_triage.md`，对论文运行四维评估矩阵（待补充：四维维度定义），决定是否更新 roadmap 中的交付项。
+
+### 2.5 实证基准校验 (Reality Check)
+
+如项目有 `$SCHEMA_DIR/reality_check.md`，检查论文的可操作发现是否与 Level A/B 数学约束或强实证规律冲突（待补充：Level A/B 约束定义）。冲突 → Source 页标记 `reality_check` 字段。
+
+---
+
+## 阶段 3：索引注册 (Register)
+
+**仅追加，不重建**：
+- `$WIKI_DIR/index.md`：对应分区追加 1 行链接
+- `$WIKI_DIR/sources/index.md`、`concepts/index.md`、`entities/index.md`：同上
+- 更新各索引的统计数据
+
+---
+
+## 阶段 4：操作存证 (Log)
+
+在 `$LOG_DIR/log.$(date +%Y-%-m-%-d).md` 追加，每条包含 YAML frontmatter（`type: log`）便于 Graph 追踪：
+
+```markdown
+---
+type: log
+---
+## [HH:MM] Ingest: [标题/ID]
+- 新建 Source: ...
+- 新建 Concept: ...
+- 新建 Entity: ...
+- 更新 Index: ...
+- 双向链接: ...
+```
+
+---
+
+## 阶段 5：Git 提交
+
+```bash
+git add . && git commit -m "Ingest: [简述]"
+```
+
+---
+
+## 迭代推进模式
+
+用户说"继续"时：
+
+1. **锚定上一轮产出**：回顾最近 commit 创建/修改了哪些页面
+2. **识别下一步**：
+   - 用户明确指出的（如 "XX 论文也创建 source 页"）
+   - 概念网缺口（新建 synthesis 页引用了不存在概念 → 补概念页）
+   - 逻辑延伸（如参数高原 → 其他反过拟合参数寻优方法）
+3. **按优先级执行**：Source 页 → Concept 页 → 更新既有页面 → 索引 → 日志 → commit
+
+---
+
+## 性能优化
+
+处理多文档时：先扫描、后批量写入、最后统一更新索引。
