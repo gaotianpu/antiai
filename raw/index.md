@@ -225,8 +225,8 @@
 | [[Autonomous_Robot/RadarPerception.md]] | Radar Perception |
 
 ### 视频
-| [[video/Review_video_prediction.md]] | Video Prediction 综述 |
-| [[video/Unsupervised_Spatiotemporal.md]] | Unsupervised Spatiotemporal |
+| [[video/Review_video_prediction.md]] | 视频预测深度学习技术综述，覆盖 ConvLSTM、3D CNN、GAN 和基于光流的方法。（`computer-vision, machine-learning, survey`）|
+| [[video/Unsupervised_Spatiotemporal.md]] | 大规模对比实验研究无监督时空表征学习方法，覆盖多种代理任务和架构。（`computer-vision, machine-learning, empirical-study`）|
 
 ### 其他
 | [[DeepAL_survery_2009.00236.md]] | 深度主动学习综述，系统回顾 DAL 方法在深度学习各领域的应用。（`machine-learning, survey`）|
@@ -340,7 +340,7 @@
 | [[Autonomous_Robot/mmTTransformer.md]] | mmTTransformer |
 
 ### 视频
-| [[video/MAE_st.md]] | MAE-ST |
+| [[video/MAE_st.md]] | 将 MAE 扩展到视频时空学习，提出 MAE-ST，在高掩码率下学习视频表示。（`computer-vision, machine-learning, empirical-study`）|
 
 ### 效率/压缩
 | [[FlashAttention.md]] | FlashAttention |

@@ -51,8 +51,10 @@
 - [[zhan_2022_deepactivelearning]] — A Comparative Survey of Deep Active Learning（DAL 比较综述）
 - [[chi_2022_xmoe]] — On the Representation Collapse of Sparse Mixture of Experts（MoE 表示坍塌）
 - [[liu_2022_convnext]] — A ConvNet for the 2020s（ConvNeXt）
+- [[tong_2022_maest]] — Masked Autoencoders As Spatiotemporal Learners（MAE-ST 视频预训练）
 
 ## 2021
+- [[huang_2021_spatiotemporal]] — A Large-Scale Study on Unsupervised Spatiotemporal Representation Learning（无监督时空表征）
 - [[xie_2021_detco]] — DetCo: Unsupervised Contrastive Learning for Object Detection（DetCo）
 - [[alibi_2021]] — Train Short, Test Long: Attention with Linear Biases（ALiBi 位置编码）
 - [[ernie_v3_2021]] — ERNIE 3.0 Titan（百亿参数知识增强预训练）
@@ -98,6 +100,7 @@
 - [[chen_2020_blendmask]] — BlendMask: Top-Down Meets Bottom-Up for Instance Segmentation（BlendMask 实例分割）
 - [[instance_segmentation_survey]] — 实例分割综述（Instance Segmentation 综述）
 - [[lin_2020_mcunet]] — MCUNet: Tiny Deep Learning on IoT Devices（MCUNet 微型深度学习）
+- [[ouyang_2020_videoprediction]] — A Review on Deep Learning Techniques for Video Prediction（视频预测综述）
 - [[semantic_segmentation_survey]] — 语义分割综述（Semantic Segmentation 综述）
 
 ## 2019
