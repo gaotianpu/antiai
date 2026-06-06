@@ -41,7 +41,7 @@
 | [[cnn/R-CNN.md]] | 提出 R-CNN，将 CNN 与区域候选结合，在 VOC 2012 上 mAP 提升超 30%。（`computer-vision, machine-learning, empirical-study`）|
 
 ### RL
-| [[RL/DQN.md]] | DQN |
+| [[RL/DQN.md]] | 提出 DQN，将深度神经网络与 Q-learning 结合，在 49 个 Atari 游戏中达到人类水平。（`machine-learning, empirical-study, RL`）|
 
 ## 2014
 
@@ -70,8 +70,8 @@
 | [[cnn/yolo_v1.md]] | 提出 YOLO 单阶段目标检测范式，将检测视为回归问题，实现实时端到端检测。（`computer-vision, machine-learning, empirical-study`）|
 
 ### RL
-| [[RL/DDPG.md]] | DDPG |
-| [[RL/TRPO.md]] | TRPO |
+| [[RL/DDPG.md]] | 将 DQN 思路扩展到连续动作空间，结合 Actor-Critic 和 DQN 的经验回放 + Target Network。（`machine-learning, empirical-study, RL`）|
+| [[RL/TRPO.md]] | 提出信任区域策略优化，通过 KL 散度约束保证策略更新的单调改进。（`machine-learning, theoretical, RL`）|
 
 ### 效率/压缩
 | [[Deep_Compression.md]] | Deep Compression |
@@ -95,8 +95,8 @@
 | [[cnn/yolo_v2.md]] | YOLOv2 在 v1 基础上引入批量归一化、锚框先验、多尺度训练，YOLO9000 联合检测和分类数据集实现 9000 类检测。（`computer-vision, machine-learning, empirical-study`）|
 
 ### RL
-| [[RL/A2C.md]] | A2C |
-| [[RL/ACER.md]] | ACER |
+| [[RL/A2C.md]] | 提出异步多线程训练框架（A3C/A2C），通过并行 Actor 替代经验回放，稳定训练。（`machine-learning, empirical-study, RL`）|
+| [[RL/ACER.md]] | 将经验回放引入 Actor-Critic，结合 Retrace 和截断重要性采样，提升样本效率。（`machine-learning, empirical-study, RL`）|
 
 ### 自动驾驶
 | [[Autonomous_Robot/DAVE-2.md]] | DAVE-2 |
@@ -120,13 +120,13 @@
 | [[cnn/ShuffleNet.md]] | ShuffleNet |
 
 ### RL
-| [[RL/PPO.md]] | PPO |
+| [[RL/PPO.md]] | 提出 PPO，通过裁剪的替代目标实现稳定策略更新，兼顾 TRPO 的可靠性和实现简单性。（`machine-learning, empirical-study, RL`）|
 
 ### 自动驾驶
 | [[Autonomous_Robot/VINS-Mono.md]] | VINS-Mono |
 
 ### 其他
-| [[meta_learning_survey.md]] | Meta-Learning 综述 |
+| [[meta_learning_survey.md]] | 元学习综述，系统分类：基于度量、基于模型、基于优化的三大范式。（`machine-learning, survey`）|
 
 ## 2018
 
@@ -152,7 +152,7 @@
 | [[Vector_quantized.md]] | Vector Quantized |
 
 ### 其他
-| [[online_active_learning_survey.md]] | Online Active Learning 综述 |
+| [[online_active_learning_survey.md]] | 在线主动学习综述，覆盖数据流场景下的查询策略、预算分配和概念漂移处理。（`machine-learning, survey`）|
 
 ## 2019
 
@@ -182,7 +182,7 @@
 | [[cnn/cspnet.md]] | CSPNet |
 
 ### RL
-| [[RL/hp_RL.md]] | 超参数 RL |
+| [[RL/hp_RL.md]] | 提出从人类偏好中训练奖励模型，再用 RL 优化策略，实现复杂任务的对齐学习。（`machine-learning, empirical-study, RL`）|
 
 ### 自动驾驶
 | [[Autonomous_Robot/cheating.md]] | Cheating |
@@ -229,7 +229,7 @@
 | [[video/Unsupervised_Spatiotemporal.md]] | Unsupervised Spatiotemporal |
 
 ### 其他
-| [[DeepAL_survery_2009.00236.md]] | Deep Active Learning (2009.00236) |
+| [[DeepAL_survery_2009.00236.md]] | 深度主动学习综述，系统回顾 DAL 方法在深度学习各领域的应用。（`machine-learning, survey`）|
 
 ## 2021
 
@@ -281,8 +281,8 @@
 
 ### 其他
 | [[diffusion.md]] | Diffusion 综述 |
-| [[mlp-mixer.md]] | MLP-Mixer |
-| [[repmlp.md]] | RepMLP |
+| [[mlp-mixer.md]] | 提出仅用 MLP 的视觉架构，通过通道混合 + 空间混合 MLP 替代卷积和注意力。（`computer-vision, machine-learning, empirical-study`）|
+| [[repmlp.md]] | 将卷积重参数化为全连接层，在训练时使用卷积结构，推理时等效为 MLP。（`computer-vision, machine-learning, empirical-study`）|
 
 ## 2022
 
@@ -348,7 +348,7 @@
 | [[X-MoE.md]] | X-MoE |
 
 ### 其他
-| [[DeepAL_survery_2203.13450.md]] | Deep Active Learning (2203.13450) |
+| [[DeepAL_survery_2203.13450.md]] | 对 19 种 DAL 方法进行公平比较实验，构建 DeepAL+ 工具包，评估 batch size / epoch 等影响因素。（`machine-learning, survey, empirical-study`）|
 | [[RM_Overoptimization.md]] | 研究 RLHF 中奖励模型过优化现象（Goodhart's Law），提出 scaling law 预测最佳优化强度。（`NLP, machine-learning, empirical-study`）|
 | [[self-Instruct.md]] | 提出 Self-Instruct 方法，让 LLM 自我生成指令数据指导自身微调，大幅降低人工标注成本。（`NLP, machine-learning, empirical-study`）|
 | [[whisper.md]] | 在 68 万小时多语言弱监督数据上训练语音识别系统，零样本迁移达到有监督 SOTA 水平。（`machine-learning, NLP`）|
@@ -364,7 +364,7 @@
 | [[cnn/ConvNeXt_v2.md]] | ConvNeXt v2 |
 
 ### 多模态
-| [[Multimodal/CoT-Multimodal.md]] |  |
+| [[Multimodal/CoT-Multimodal.md]] | 将 CoT 推理扩展到多模态场景，两阶段框架（基本原理生成 → 答案推理），融合文本和图像信息。（`NLP, computer-vision, machine-learning`）|
 | [[Multimodal/Kosmos-1.md]] | 多模态大语言模型，融合文本/图像/语音（`computer-vision, machine-learning, NLP`）|
 | [[Multimodal/SegGPT.md]] | 上下文中的全部分割统一模型（`computer-vision, machine-learning, NLP`）|
 | [[Multimodal/Segment_Anything.md]] | 可提示分割一切的目标分割基础模型（SAM）（`computer-vision, machine-learning, NLP`）|

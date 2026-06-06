@@ -13,6 +13,8 @@
 - [[song_2023_consistency]] — Consistency Models（一致性模型）
 - [[dettmers_2023_qlora]] — QLoRA: Efficient Finetuning of Quantized LLMs（量化 LoRA）
 - [[zhang_2023_adalora]] — AdaLoRA: Adaptive Budget Allocation for PEFT（自适应 LoRA）
+- [[zhang_2023_multimodal_cot]] — Multimodal Chain-of-Thought Reasoning（多模态 CoT）
+- [[ren_2023_onlineactivelearning]] — A Survey on Online Active Learning（在线 AL 综述）
 
 ## 2022
 - [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）
@@ -43,6 +45,7 @@
 - [[li_2022_yolov6]] — YOLOv6: Framework for Industrial Applications（工业级 YOLO）
 - [[wang_2022_yolov7]] — YOLOv7: Trainable Bag-of-Freebies（YOLOv7）
 - [[radford_2022_whisper]] — Robust Speech Recognition via Weak Supervision（Whisper 语音识别）
+- [[zhan_2022_deepactivelearning]] — A Comparative Survey of Deep Active Learning（DAL 比较综述）
 
 ## 2021
 - [[alibi_2021]] — Train Short, Test Long: Attention with Linear Biases（ALiBi 位置编码）
@@ -59,6 +62,8 @@
 - [[vit_derivatives]] — A Survey of Vision Transformer Derivatives（ViT 变体综述）
 - [[webgpt_2021]] — WebGPT: Browser-assisted question-answering（浏览器辅助问答）
 - [[hu_2021_lora]] — LoRA: Low-Rank Adaptation of Large Language Models（低秩适配）
+- [[tolstikhin_2021_mlpmixer]] — MLP-Mixer: An All-MLP Architecture for Vision（MLP-Mixer）
+- [[ding_2021_repmlp]] — RepMLP: Re-parameterizing Convolutions into FC Layers（RepMLP）
 - [[rombach_2021_latentdiffusion]] — High-Resolution Image Synthesis with Latent Diffusion Models（LDM）
 - [[wang_2021_yolor]] — You Only Learn One Representation（YOLOR）
 - [[ge_2021_yolox]] — YOLOX: Exceeding YOLO Series in 2021（YOLOX）
@@ -75,6 +80,8 @@
 - [[summarize_hf_2020]] — Learning to summarize from human feedback（RLHF 总结）
 - [[ho_2020_ddpm]] — Denoising Diffusion Probabilistic Models（DDPM 去噪扩散）
 - [[bochkovskiy_2020_yolov4]] — YOLOv4: Optimal Speed and Accuracy（YOLOv4）
+- [[hospedales_2020_metalearning]] — Meta-Learning in Neural Networks: A Survey（元学习综述）
+- [[ren_2020_deepactivelearning]] — A Survey of Deep Active Learning（深度 AL 综述）
 
 ## 2019
 - [[beit]] — BEiT: BERT Pre-Training of Image Transformers（BERT 风格图像预训练）
@@ -103,17 +110,23 @@
 - [[mask_rcnn_2017]] — Mask R-CNN（实例分割）
 - [[vaswani_2017_transformer]] — Attention Is All You Need（Transformer 架构）
 - [[vit_jpeg]] — ViT JPEG: Visual Token Assistant（视觉令牌助手）
+- [[schulman_2017_ppo]] — Proximal Policy Optimization Algorithms（PPO 近端策略优化）
+- [[christiano_2017_rlhf]] — Deep Reinforcement Learning from Human Preferences（RLHF 早期奠基）
 
 ## 2016
 - [[fpn_2016]] — Feature Pyramid Networks for Object Detection（特征金字塔网络）
 - [[layer_norm_2016]] — Layer Normalization（层归一化）
 - [[redmon_2016_yolov2]] — YOLO9000: Better, Faster, Stronger（YOLOv2）
+- [[mnih_2016_a2c]] — Asynchronous Methods for Deep Reinforcement Learning（A3C/A2C）
+- [[wang_2016_acer]] — Sample Efficient Actor-Critic with Experience Replay（ACER）
 
 ## 2015
 - [[bpe_2015]] — Neural Machine Translation of Rare Words with Subword Units（BPE 子词分词）
 - [[resnet_2015]] — Deep Residual Learning for Image Recognition（残差网络 ResNet）
 - [[redmon_2015_yolov1]] — You Only Look Once（YOLOv1）
 - [[ren_2015_fasterrcnn]] — Faster R-CNN: Towards Real-Time Object Detection（Faster R-CNN）
+- [[lillicrap_2015_ddpg]] — Continuous Control with Deep Reinforcement Learning（DDPG）
+- [[schulman_2015_trpo]] — Trust Region Policy Optimization（TRPO）
 
 ## 2014
 - [[bahdanau_2014_attention]] — Neural Machine Translation by Jointly Learning to Align and Translate（注意力机制）
@@ -123,6 +136,7 @@
 ## 2013
 - [[word2vec_2013]] — Efficient Estimation of Word Representations in Vector Space（Word2Vec）
 - [[girshick_2013_rcnn]] — Rich Feature Hierarchies for Accurate Object Detection（R-CNN）
+- [[mnih_2013_dqn]] — Human-Level Control Through Deep Reinforcement Learning（DQN）
 
 ## 2010
 - [[glorot_2010_xavier]] — Understanding the Difficulty of Training Deep Feedforward Neural Networks（Xavier Init）
