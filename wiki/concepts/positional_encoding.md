@@ -3,7 +3,7 @@ id: positional_encoding
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [位置编码, position embedding, positional embedding]
-related_nodes: [attention_mechanism, transformer_architecture]
+related_nodes: [attention_mechanism, transformer_architecture, devlin_2018_bert]
 ---
 
 # Positional Encoding
@@ -23,6 +23,7 @@ Positional Encoding（位置编码）是为序列模型注入 token 位置或相
 | 方案 | 类型 | 核心思路 | 出处 |
 |:---|:---|:---|:---|
 | Sinusoidal | 绝对 | 正弦/余弦固定频率编码 | [[vaswani_2017_transformer]] |
+| Learnable Absolute | 绝对 | 每个位置分配可学习向量 | [[devlin_2018_bert]] |
 | RoPE | 绝对-相对混合 | 旋转矩阵实现位置敏感点积 | [[roformer_2021]] |
 | ALiBi | 相对 | 注意力 logits 加上线性偏置 | [[alibi_2021]] |
 | T5 Bias | 相对 | 可学习的相对位置偏置表 | [[raffel_2019_t5]] |
