@@ -3,7 +3,7 @@ id: transformer_architecture
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [Transformer, Transformers, Transformer 架构]
-related_nodes: [attention_mechanism, attention_variants, positional_encoding, residual_connection, normalization, feed_forward_network, encoder_decoder_architecture]
+related_nodes: [attention_mechanism, attention_variants, positional_encoding, residual_connection, normalization, feed_forward_network, encoder_decoder_architecture, multi_token_prediction]
 ---
 
 # Transformer Architecture

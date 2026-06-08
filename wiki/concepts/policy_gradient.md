@@ -3,7 +3,7 @@ id: policy_gradient
 type: concept
 tags: [machine-learning, theoretical, empirical-study]
 aliases: [策略梯度, PG]
-related_nodes: [schulman_2015_trpo, schulman_2017_ppo, lillicrap_2015_ddpg, mnih_2016_a2c, reinforcement_learning]
+related_nodes: [schulman_2015_trpo, schulman_2017_ppo, lillicrap_2015_ddpg, mnih_2016_a2c, reinforcement_learning, grpo]
 last_verified: 2026-06-06
 ---
 

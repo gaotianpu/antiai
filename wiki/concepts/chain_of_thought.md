@@ -3,7 +3,7 @@ id: chain_of_thought
 type: concept
 tags: [NLP, machine-learning, empirical-study]
 aliases: [思维链, CoT, chain of thought prompting]
-related_nodes: [in_context_learning]
+related_nodes: [in_context_learning, deepseek_2025_r1]
 ---
 
 # Chain-of-Thought

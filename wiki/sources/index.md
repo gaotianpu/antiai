@@ -3,6 +3,17 @@
 ## 2026
 - [[cheng_2026_engram]] — Conditional Memory via Scalable Lookup（条件记忆轴 + Engram 模块）
 
+## 2025
+- [[deepseek_2025_r1]] — DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL（纯 RL 推理）
+- [[wei_2025_deepseek_ocr]] — DeepSeek-OCR: Contexts Optical Compression（视觉压缩）
+
+## 2024
+- [[deepseek_2024_v3]] — DeepSeek-V3 Technical Report（671B MoE 旗舰）
+- [[deepseek_2024_v2]] — DeepSeek-V2: A Strong, Economical, and Efficient MoE（236B MoE + MLA）
+- [[bi_2024_deepseek_llm]] — DeepSeek LLM: Scaling Open-Source Language Models（67B Scaling Laws）
+- [[guo_2024_deepseek_coder]] — DeepSeek-Coder: Code Intelligence（1.3B–33B 代码模型）
+
+
 ## 2023
 - [[dits]] — Scalable Diffusion Models with Transformers（DiT）
 - [[longnet_2023]] — LongNet: Scaling Transformers to 1,000,000,000 Tokens（扩张注意力）

@@ -3,7 +3,7 @@ id: deepseek_ai
 type: entity
 tags: [organization, machine-learning, NLP]
 aliases: [DeepSeek, 深度求索, DeepSeek-AI]
-related_nodes: [cheng_2026_engram]
+related_nodes: [cheng_2026_engram, deepseek_papers, deepseek_2024_v3, deepseek_2025_r1, bi_2024_deepseek_llm, deepseek_2024_v2, wei_2025_deepseek_ocr, guo_2024_deepseek_coder]
 last_verified: 2026-06-06
 ---
 
@@ -19,5 +19,11 @@ last_verified: 2026-06-06
 
 ## 关键贡献
 - [[cheng_2026_engram]]（2026）：提出条件记忆轴，实例化为 Engram 模块
+- [[bi_2024_deepseek_llm]]（2024）：67B 参数，Scaling Laws 与数据质量实证
+- [[deepseek_2024_v2]]（2024）：236B MoE + Multi-head Latent Attention
+- [[deepseek_2024_v3]]（2024）：671B MoE 旗舰模型，训练成本 $5.6M
+- [[deepseek_2025_r1]]（2025）：纯 RL 涌现推理，Nature 封面
+- [[guo_2024_deepseek_coder]]（2024）：代码智能大模型
+- [[wei_2025_deepseek_ocr]]（2025）：视觉压缩
 
 

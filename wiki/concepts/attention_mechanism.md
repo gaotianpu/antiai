@@ -3,7 +3,7 @@ id: attention_mechanism
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [注意力机制, self-attention, 自注意力]
-related_nodes: [vaswani_2017_transformer, bahdanau_2014_attention, devlin_2018_bert, transformer_architecture]
+related_nodes: [vaswani_2017_transformer, bahdanau_2014_attention, devlin_2018_bert, transformer_architecture, multi_head_latent_attention]
 last_verified: 2026-06-06
 ---
 

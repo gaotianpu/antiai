@@ -3,7 +3,7 @@ id: reinforcement_learning
 type: concept
 tags: [machine-learning, theoretical, empirical-study]
 aliases: [RL, 强化学习]
-related_nodes: [mnih_2013_dqn, lillicrap_2015_ddpg, schulman_2017_ppo, mnih_2016_a2c, policy_gradient]
+related_nodes: [mnih_2013_dqn, lillicrap_2015_ddpg, schulman_2017_ppo, mnih_2016_a2c, policy_gradient, deepseek_2025_r1, grpo]
 last_verified: 2026-06-06
 ---
 

@@ -26,6 +26,7 @@
 ## 模型架构
 - [[attention_mechanism]] — 注意力机制：动态聚焦输入关键部分
 - [[attention_variants]] — 注意力变体：多头/因果/高效注意力的分类
+- [[multi_head_latent_attention]] — MLA：将 KV cache 压缩为潜在向量的高效注意力
 - [[in_context_learning]] — 上下文学习：无需梯度更新的少样本学习
 - [[positional_encoding]] — 位置编码：为注意力引入顺序感知
 - [[reinforcement_learning_from_human_feedback]] — RLHF：人类反馈强化学习的对齐技术
@@ -58,6 +59,7 @@
 - [[low_rank_adaptation]] — LoRA：低秩分解的参数高效微调
 - [[regularization]] — 正则化：防止过拟合的技术集合
 - [[self_supervised_learning]] — 自监督学习：从无标签数据构造监督信号
+- [[multi_token_prediction]] — MTP：同时预测多个未来 token 的训练目标
 
 ## 模型压缩
 - [[model_pruning]] — 模型剪枝：移除冗余权重/通道参数量
@@ -66,6 +68,7 @@
 ## 强化学习
 - [[reinforcement_learning]] — 强化学习：交互试错学习决策策略
 - [[policy_gradient]] — 策略梯度：直接优化参数化策略的方法
+- [[grpo]] — GRPO：无 critic 的组相对策略优化
 
 ## 计算机视觉
 - [[feature_pyramid]] — 特征金字塔：多尺度特征融合的检测标配
