@@ -47,7 +47,7 @@
 - **双链接强制化**：实体/概念出现时包裹在 `[[ ]]` 中
 - **解耦引用**：概念页不写大段原始资料，通过 `[[Source_ID]]` 引用
 - **链接格式区分**：wiki 内部 → `[[文件名]]`；外部文件 → `[显示文本](路径)`；内容嵌入 → `![[page_id]]`
-- **Skill 参照**：论文/PDF 入库 → `wiki-ingest` | `pdf-ingest`；知识检索 → `wiki-query`
+- **Skill 参照**：论文/PDF 入库 → `pdf-ingest` | `wiki-ingest` ；知识检索 → `wiki-query`
 
 ### 编辑规则
 
