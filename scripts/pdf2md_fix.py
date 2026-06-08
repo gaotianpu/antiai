@@ -13,12 +13,12 @@ import sys
 
 def fix_headings(lines):
     """章节号 → Markdown 标题层级"""
-    pat = re.compile(r'^(\d+(?:\.\d+)*)\.\s+(.+)')
+    pat = re.compile(r'^#*\s*(\d+(?:\.\d+)*)\.\s+(.+)')
     for i, line in enumerate(lines):
         m = pat.match(line.strip())
         if m:
             num, title = m.group(1), m.group(2)
-            level = "#" * (min(num.count("."), 3) + 1)  # 1 → ##, 1.1 → ###, 1.1.1 → ####
+            level = "#" * (min(num.count("."), 3) + 2)  # 1 → ##, 1.1 → ###, 1.1.1 → ####
             lines[i] = f"{level} {num}. {title}"
     return lines
 
