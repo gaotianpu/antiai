@@ -50,10 +50,67 @@ def fix_spurious_headings(lines, threshold=100):
     return lines
 
 
+def fix_title(lines):
+    """将文件首行的论文标题补上 #"""
+    # 如果第一行已经是标题，跳过
+    for line in lines:
+        if line.strip():
+            if line.startswith('#'):
+                return lines
+            break
+
+    # 找到标题块的结束位置（第一个非标题行）
+    author_pat = re.compile(r'^[A-Z][A-Za-z\-\'*0-9]+ [A-Za-z\-\'*0-9]+[，,]')
+    title_end = -1
+    for i, line in enumerate(lines):
+        s = line.strip()
+        if not s:
+            continue
+        if s in ('Abstract', '## Abstract', 'DeepSeek-AI'):
+            title_end = i
+            break
+        if '@' in s:
+            title_end = i
+            break
+        if author_pat.match(s):
+            title_end = i
+            break
+
+    if title_end <= 0:
+        # 回退：把第一个非空行当标题
+        title_end = 0
+        for i, line in enumerate(lines):
+            if line.strip():
+                title_end = i
+                break
+        # 只有一行就只改那一行
+        if title_end >= 0:
+            lines[title_end] = f"# {lines[title_end].strip()}"
+        return lines
+
+    # 收集标题块（title_end 前的非空行）
+    title_parts = []
+    first_idx = -1
+    for i in range(title_end):
+        s = lines[i].strip()
+        if s:
+            if first_idx < 0:
+                first_idx = i
+            title_parts.append(s)
+
+    if title_parts:
+        title = ' '.join(title_parts)
+        lines[first_idx] = f"# {title}"
+        for i in range(first_idx + 1, title_end):
+            lines[i] = ''
+    return lines
+
+
 def main():
     content = sys.stdin.read()
     lines = content.split("\n")
 
+    lines = fix_title(lines)
     lines = fix_headings(lines)
     lines = fix_references(lines)
     lines = fix_abstract(lines)
