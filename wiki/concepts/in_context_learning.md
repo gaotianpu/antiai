@@ -2,7 +2,7 @@
 id: in_context_learning
 type: concept
 tags: [NLP, machine-learning, empirical-study]
-aliases: [上下文学习, ICL, few-shot learning, 少样本学习]
+aliases: [上下文学习, ICL, few-shot learning]
 related_nodes: [brown_2020_gpt3]
 last_verified: 2026-06-06
 ---

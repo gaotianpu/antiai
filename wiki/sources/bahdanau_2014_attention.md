@@ -20,4 +20,4 @@ last_verified: 2026-06-06
 
 ## 引用
 - **原始论文**: [arXiv:1409.0473](https://arxiv.org/abs/1409.0473) | [阅读笔记](../../raw/nlp/Attention.md)
-- **相关概念**: [[attention_mechanism]] | [[transformer]]
+- **相关概念**: [[attention_mechanism]] | [[transformer_architecture]]

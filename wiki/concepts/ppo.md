@@ -2,7 +2,7 @@
 id: ppo
 type: concept
 tags: [NLP, machine-learning, empirical-study, RL]
-aliases: [PPO, 近端策略优化]
+aliases: [PPO-RLHF, RLHF 策略优化]
 related_nodes: [ouyang_2022_instructgpt, proximal_policy_optimization, reinforcement_learning_from_human_feedback]
 last_verified: 2026-08-03
 ---

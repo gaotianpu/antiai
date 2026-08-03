@@ -2,7 +2,7 @@
 id: feature_pyramid
 type: concept
 tags: [machine-learning, theoretical]
-aliases: [特征金字塔, FPN, 多尺度特征]
+aliases: [特征金字塔, FPN]
 related_nodes: [convolutional_neural_network, object_detection]
 ---
 

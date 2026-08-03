@@ -1,6 +1,12 @@
 ---
 type: log
 ---
+## [Merge] 概念页收尾修复
+
+- 合并同义重复: [[transformer]] → [[transformer_architecture]]（定义与来源并入，删除 transformer.md，21 处 related_nodes + 2 处链接更新）
+- 别名冲突清零 ×8: ppo（PPO-RLHF 专指 RLHF 应用）、principle_driven_alignment（去 SELF-ALIGN）、goodhart_law（去重）、feature_pyramid（去多尺度特征）、in_context_learning（去少样本学习）、normalization（去层归一化）、gpt（去生成式预训练）
+- 验证: 别名冲突 0、死链 0、索引完整（concepts 204/204）
+
 ## [Ingest] 缺失概念页补齐 ×145
 
 - 新建 Concept ×145（wiki/concepts/ 60 → 205），覆盖：语言模型（BERT/GPT/MLM/分词）、Transformer 组件、序列模型、生成模型、自监督与对比学习、CNN 高效架构、目标检测/分割、强化学习/对齐、多模态等

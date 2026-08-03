@@ -116,7 +116,7 @@
 - [[segment_level_recurrence]] — 片段级循环：跨片段信息流动
 - [[self_attention]] — 自注意力：序列内部动态聚焦
 - [[shifted_window_attention]] — 移动窗口注意力：Swin 分层注意力
-- [[transformer]] — Transformer：纯注意力序列架构，LLM 基础
+- [[transformer_architecture]] — Transformer：纯注意力序列架构，LLM 基础
 - [[vision_transformer]] — ViT：图像 patch 序列化的视觉 Transformer
 
 ## 计算机视觉

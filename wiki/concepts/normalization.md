@@ -2,7 +2,7 @@
 id: normalization
 type: concept
 tags: [machine-learning, theoretical]
-aliases: [归一化, normalization layer, 层归一化]
+aliases: [归一化, normalization layer]
 related_nodes: [batch_normalization, transformer_architecture]
 ---
 

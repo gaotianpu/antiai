@@ -27,6 +27,13 @@ $$\text{output} = \text{LayerNorm}(x + \text{Sublayer}(x))$$
 
 即 Pre-LN（或 Post-LN）残差结构。所有子层（注意力、FFN）的输出维度均为 $d_{\text{model}}=512$。
 
+## 定义
+完全基于注意力机制的序列建模架构，摒弃循环与卷积，通过自注意力并行建模任意距离依赖，是现代 LLM 的基础范式。
+
+## 来源
+- [[vaswani_2017_transformer]] — 提出 Transformer 架构
+- [[bahdanau_2014_attention]] — 注意力机制先驱
+
 ## 关键创新
 
 | 创新 | 描述 | 意义 |

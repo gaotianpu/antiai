@@ -2,7 +2,7 @@
 id: principle_driven_alignment
 type: concept
 tags: [NLP, machine-learning, empirical-study]
-aliases: [原则驱动对齐, SELF-ALIGN]
+aliases: [原则驱动对齐]
 related_nodes: [sun_2023_dromedary, self_align, reinforcement_learning_from_human_feedback]
 last_verified: 2026-08-03
 ---

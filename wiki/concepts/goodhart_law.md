@@ -2,7 +2,7 @@
 id: goodhart_law
 type: concept
 tags: [machine-learning, theoretical]
-aliases: [古德哈特定律, 古德哈特定律]
+aliases: [古德哈特定律]
 related_nodes: [gao_2022_rmoveroptimization, reward_overoptimization, reward_modeling]
 last_verified: 2026-08-03
 ---
