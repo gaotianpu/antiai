@@ -1,0 +1,156 @@
+---
+type: todo
+---
+# TODO 汇总
+
+> 由 wiki-lint 自动生成。
+
+## 缺失概念页（Source 页引用但未创建）
+
+共 145 种、156 次引用。创建时参照 schema/concept.md 与 schema/concept_dedup.md。
+
+- [ ] [[actor_critic]] ×2 — 引用自 lillicrap_2015_ddpg, mnih_2016_a2c
+- [ ] [[adaptive_budget_allocation]] ×1 — 引用自 zhang_2023_adalora
+- [ ] [[alibi_position_encoding]] ×1 — 引用自 alibi_2021
+- [ ] [[anchor_free_detector]] ×1 — 引用自 ge_2021_yolox
+- [ ] [[asynchronous_learning]] ×1 — 引用自 mnih_2016_a2c
+- [ ] [[atrous_convolution]] ×1 — 引用自 chen_2017_deeplabv3
+- [ ] [[atrous_spatial_pyramid_pooling]] ×1 — 引用自 chen_2017_deeplabv3
+- [ ] [[bag_of_freebies]] ×1 — 引用自 bochkovskiy_2020_yolov4
+- [ ] [[bert]] ×1 — 引用自 devlin_2018_bert
+- [ ] [[bottleneck_architecture]] ×1 — 引用自 mobilebert_2020_mobilebert
+- [ ] [[byte_pair_encoding]] ×1 — 引用自 bpe_2015
+- [ ] [[cascaded_diffusion]] ×1 — 引用自 imagen
+- [ ] [[cbow]] ×1 — 引用自 word2vec_2013
+- [ ] [[channel_attention]] ×1 — 引用自 hu_2017_senet
+- [ ] [[channel_shuffle]] ×1 — 引用自 zhang_2017_shufflenet
+- [ ] [[cheap_operation]] ×1 — 引用自 han_2019_ghostnet
+- [ ] [[compound_scaling]] ×1 — 引用自 tan_2019_efficientnet
+- [ ] [[consistency_model]] ×1 — 引用自 song_2023_consistency
+- [ ] [[contrastive_language_image_pretraining]] ×1 — 引用自 clip
+- [ ] [[contrastive_learning]] ×1 — 引用自 chen_2020_simclr
+- [ ] [[cross_stage_partial_connection]] ×1 — 引用自 wang_2019_cspnet
+- [ ] [[dagger_algorithm]] ×1 — 引用自 prakash_2010_dagger
+- [ ] [[data_efficient_training]] ×1 — 引用自 deit
+- [ ] [[decoupled_head]] ×1 — 引用自 ge_2021_yolox
+- [ ] [[deep_q_network]] ×1 — 引用自 mnih_2013_dqn
+- [ ] [[deeply_supervised_net]] ×1 — 引用自 lee_2014_dsn
+- [ ] [[deepnorm]] ×1 — 引用自 deepnet
+- [ ] [[dense_connection]] ×1 — 引用自 huang_2016_densenet
+- [ ] [[depthwise_separable_convolution]] ×2 — 引用自 chollet_2016_xception, howard_2017_mobilenet_v1
+- [ ] [[design_space_design]] ×1 — 引用自 radosavovic_2020_regnet
+- [ ] [[deterministic_policy_gradient]] ×1 — 引用自 lillicrap_2015_ddpg
+- [ ] [[diffusion_transformer]] ×1 — 引用自 dits
+- [ ] [[dilated_attention]] ×1 — 引用自 longnet_2023
+- [ ] [[dropout]] ×1 — 引用自 krizhevsky_2012_alexnet
+- [ ] [[dual_encoder]] ×1 — 引用自 dual_encoder_qa_2022
+- [ ] [[efficient_network_design_principles]] ×1 — 引用自 ma_2018_shufflenet_v2
+- [ ] [[end_to_end_driving]] ×1 — 引用自 bojarski_2016_dave2
+- [ ] [[engram]] ×1 — 引用自 cheng_2026_engram
+- [ ] [[experience_replay]] ×1 — 引用自 mnih_2013_dqn
+- [ ] [[factorized_convolution]] ×1 — 引用自 szegedy_2015_inception_v3
+- [ ] [[few_shot_learning]] ×1 — 引用自 brown_2020_gpt3
+- [ ] [[fire_module]] ×1 — 引用自 iandola_2016_squeezenet
+- [ ] [[flash_attention]] ×1 — 引用自 dao_2022_flashattention
+- [ ] [[focal_loss]] ×1 — 引用自 focal_loss_2017
+- [ ] [[foundation_model]] ×1 — 引用自 segment_anything
+- [ ] [[fully_convolutional_network]] ×1 — 引用自 long_2014_fcn
+- [ ] [[gated_recurrent_unit]] ×1 — 引用自 gru_2014
+- [ ] [[gating_mechanism]] ×1 — 引用自 hochreiter_1997_lstm
+- [ ] [[gelu_activation]] ×1 — 引用自 hendrycks_2016_gelu
+- [ ] [[generative_pretraining]] ×1 — 引用自 radford_2018_gpt
+- [ ] [[ghost_module]] ×1 — 引用自 han_2019_ghostnet
+- [ ] [[goodhart_law]] ×1 — 引用自 gao_2022_rmoveroptimization
+- [ ] [[gpt]] ×2 — 引用自 brown_2020_gpt3, radford_2019_gpt2
+- [ ] [[gpt_2]] ×2 — 引用自 brown_2020_gpt3, radford_2018_gpt
+- [ ] [[gpt_3]] ×2 — 引用自 radford_2018_gpt, radford_2019_gpt2
+- [ ] [[group_convolution]] ×2 — 引用自 xie_2016_resnext, zhang_2017_shufflenet
+- [ ] [[group_normalization]] ×1 — 引用自 group_norm_2018
+- [ ] [[guided_diffusion]] ×1 — 引用自 glide
+- [ ] [[hierarchical_image_generation]] ×1 — 引用自 dall_e_v2
+- [ ] [[huffman_coding]] ×1 — 引用自 han_2015_deepcompression
+- [ ] [[imitation_learning]] ×1 — 引用自 prakash_2010_dagger
+- [ ] [[imitative_models]] ×1 — 引用自 rhinehart_2020_imitative
+- [ ] [[implicit_knowledge]] ×1 — 引用自 wang_2021_yolor
+- [ ] [[inception_module]] ×1 — 引用自 szegedy_2014_googlenet
+- [ ] [[instance_segmentation]] ×1 — 引用自 mask_rcnn_2017
+- [ ] [[instruction_tuning]] ×2 — 引用自 ouyang_2022_instructgpt, wang_2022_selfinstruct
+- [ ] [[inverted_residual]] ×1 — 引用自 sandler_2018_mobilenet_v2
+- [ ] [[io_aware_attention]] ×1 — 引用自 dao_2022_flashattention
+- [ ] [[knowledge_enhanced_pretraining]] ×1 — 引用自 ernie_2019
+- [ ] [[label_smoothing]] ×1 — 引用自 szegedy_2015_inception_v3
+- [ ] [[latent_diffusion]] ×1 — 引用自 rombach_2021_latentdiffusion
+- [ ] [[layer_normalization]] ×1 — 引用自 layer_norm_2016
+- [ ] [[linear_bottleneck]] ×1 — 引用自 sandler_2018_mobilenet_v2
+- [ ] [[long_short_term_memory]] ×1 — 引用自 hochreiter_1997_lstm
+- [ ] [[masked_image_modeling]] ×3 — 引用自 beit, ibot, mae
+- [ ] [[masked_language_modeling]] ×1 — 引用自 devlin_2018_bert
+- [ ] [[masked_video_modeling]] ×1 — 引用自 tong_2022_maest
+- [ ] [[mlp_only_architecture]] ×2 — 引用自 tolstikhin_2021_mlpmixer, touvron_2021_resmlp
+- [ ] [[momentum_contrast]] ×1 — 引用自 he_2019_moco
+- [ ] [[multi_head_attention]] ×1 — 引用自 vaswani_2017_transformer
+- [ ] [[multi_scale_representation]] ×1 — 引用自 gao_2019_res2net
+- [ ] [[multi_scale_training]] ×1 — 引用自 redmon_2016_yolov2
+- [ ] [[multimodal_chain_of_thought]] ×1 — 引用自 zhang_2023_multimodal_cot
+- [ ] [[multimodal_fusion]] ×1 — 引用自 prakash_2021_transfuser
+- [ ] [[multimodal_language_model]] ×1 — 引用自 kosmos_1
+- [ ] [[multimodal_mixture_of_encoders_decoders]] ×1 — 引用自 blip
+- [ ] [[neural_architecture_search]] ×1 — 引用自 lin_2020_mcunet
+- [ ] [[neural_architecture_search_applied]] ×1 — 引用自 howard_2019_mobilenet_v3
+- [ ] [[non_local_operation]] ×1 — 引用自 wang_2017_nonlocal
+- [ ] [[online_tokenizer]] ×1 — 引用自 ibot
+- [ ] [[parallel_training_sequential_inference]] ×1 — 引用自 retnet_2023
+- [ ] [[path_aggregation_network]] ×1 — 引用自 liu_2018_panet
+- [ ] [[permutation_language_modeling]] ×1 — 引用自 xlnet_2019
+- [ ] [[pixel_level_pretraining]] ×1 — 引用自 igpt
+- [ ] [[ppo]] ×1 — 引用自 ouyang_2022_instructgpt
+- [ ] [[principle_driven_alignment]] ×1 — 引用自 sun_2023_dromedary
+- [ ] [[promptable_segmentation]] ×1 — 引用自 segment_anything
+- [ ] [[proximal_policy_optimization]] ×1 — 引用自 schulman_2017_ppo
+- [ ] [[pyramid_pooling_module]] ×1 — 引用自 zhao_2016_pspnet
+- [ ] [[rationale_distillation]] ×1 — 引用自 hsieh_2023_distilling
+- [ ] [[receptive_field_block]] ×1 — 引用自 liu_2017_rfb
+- [ ] [[recurrent_neural_network]] ×1 — 引用自 elman_1990_rnn
+- [ ] [[region_proposal]] ×1 — 引用自 girshick_2013_rcnn
+- [ ] [[region_proposal_network]] ×1 — 引用自 ren_2015_fasterrcnn
+- [ ] [[regnet]] ×1 — 引用自 radosavovic_2020_regnet
+- [ ] [[relative_position_encoding]] ×1 — 引用自 dai_2019_transformer_xl
+- [ ] [[replaced_token_detection]] ×1 — 引用自 electra_2020_electra
+- [ ] [[retention_mechanism]] ×1 — 引用自 retnet_2023
+- [ ] [[reward_modeling]] ×1 — 引用自 christiano_2017_rlhf
+- [ ] [[reward_overoptimization]] ×1 — 引用自 gao_2022_rmoveroptimization
+- [ ] [[rotary_position_embedding]] ×1 — 引用自 roformer_2021
+- [ ] [[segment_level_recurrence]] ×1 — 引用自 dai_2019_transformer_xl
+- [ ] [[self_align]] ×1 — 引用自 sun_2023_dromedary
+- [ ] [[self_attention]] ×1 — 引用自 vaswani_2017_transformer
+- [ ] [[self_instruct]] ×1 — 引用自 wang_2022_selfinstruct
+- [ ] [[semantic_segmentation]] ×1 — 引用自 long_2014_fcn
+- [ ] [[shifted_window_attention]] ×1 — 引用自 swint
+- [ ] [[siamese_network]] ×1 — 引用自 simsiam_2020
+- [ ] [[single_stage_detector]] ×1 — 引用自 redmon_2015_yolov1
+- [ ] [[skip_gram]] ×1 — 引用自 word2vec_2013
+- [ ] [[span_boundary_objective]] ×1 — 引用自 spanbert_2019_spanbert
+- [ ] [[span_masking]] ×1 — 引用自 spanbert_2019_spanbert
+- [ ] [[sparse_connection]] ×1 — 引用自 zhu_2018_sparsenet
+- [ ] [[sparse_routing]] ×1 — 引用自 fedus_2021_switch
+- [ ] [[spatial_pyramid_pooling]] ×1 — 引用自 sppnet_2014
+- [ ] [[stop_gradient]] ×1 — 引用自 simsiam_2020
+- [ ] [[structural_reparameterization]] ×2 — 引用自 ding_2021_repmlp, ding_2021_repvgg
+- [ ] [[subword_tokenization]] ×1 — 引用自 bpe_2015
+- [ ] [[text_to_text_framework]] ×1 — 引用自 raffel_2019_t5
+- [ ] [[tiny_ml]] ×1 — 引用自 lin_2020_mcunet
+- [ ] [[trainable_bag_of_freebies]] ×1 — 引用自 wang_2022_yolov7
+- [ ] [[transformer]] ×1 — 引用自 bahdanau_2014_attention
+- [ ] [[transfuser]] ×1 — 引用自 prakash_2021_transfuser
+- [ ] [[trust_region_method]] ×1 — 引用自 schulman_2015_trpo
+- [ ] [[vector_quantized_tokenizer]] ×1 — 引用自 beit_2
+- [ ] [[vgg_network]] ×1 — 引用自 simonyan_2014_vgg
+- [ ] [[vision_transformer]] ×1 — 引用自 vit
+- [ ] [[visual_inertial_odometry]] ×1 — 引用自 qin_2017_vinsmono
+- [ ] [[weakly_supervised_speech_recognition]] ×1 — 引用自 radford_2022_whisper
+- [ ] [[web_enhanced_qa]] ×1 — 引用自 webgpt_2021
+- [ ] [[whole_word_masking]] ×1 — 引用自 bert_wwm_2019
+- [ ] [[word_embedding]] ×1 — 引用自 word2vec_2013
+- [ ] [[xavier_initialization]] ×1 — 引用自 glorot_2010_xavier
+- [ ] [[zero_shot_chain_of_thought]] ×1 — 引用自 zero_shot_cot_2022
+- [ ] [[zero_shot_learning]] ×1 — 引用自 radford_2019_gpt2

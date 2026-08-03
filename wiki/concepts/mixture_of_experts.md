@@ -3,7 +3,7 @@ id: mixture_of_experts
 type: concept
 tags: [machine-learning, theoretical]
 aliases: [MoE, 混合专家, 稀疏专家, Sparse MoE]
-related_nodes: [sparse_expert_review_2022, cheng_2026_engram, conditional_memory, sparsity_allocation, fedus_2021_switch, chi_2022_xmoe, deepseek_2024_v2, deepseek_2024_v3]
+related_nodes: [sparse_expert_review_2022, cheng_2026_engram, conditional_memory, sparsity_allocation, fedus_2021_switch, chi_2022_xmoe, deepseek_2024_v2, deepseek_2024_v3, bi_2024_deepseek_llm, deepseek_papers]
 last_verified: 2026-06-06
 ---
 

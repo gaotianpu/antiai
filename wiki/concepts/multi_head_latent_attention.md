@@ -3,7 +3,7 @@ id: multi_head_latent_attention
 type: concept
 tags: [empirical-study, NLP]
 aliases: ["MLA", "Multi-head Latent Attention", "多头潜在注意力"]
-related_nodes: [attention_mechanism, attention_variants, deepseek_2024_v2, deepseek_2024_v3]
+related_nodes: [attention_mechanism, attention_variants, deepseek_2024_v2, deepseek_2024_v3, wei_2025_deepseek_ocr]
 ---
 
 # Multi-Head Latent Attention (MLA)

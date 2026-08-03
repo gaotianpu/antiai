@@ -37,12 +37,19 @@ for dir_path, index_path in checks.items():
 # 检查 raw/index.md
 raw_index = os.path.join(PROJECT, 'raw/index.md')
 raw_dir = os.path.join(PROJECT, 'raw')
+# 非论文文件（目录说明 README / 收藏导航笔记）不要求进入索引
+raw_exclude = {
+    'Autonomous_Robot/README.md', 'Generative/README.md', 'Multimodal/README.md',
+    'RL/README.md', 'cnn/README.md', 'nlp/README.md', 'video/README.md',
+    'NewBeer.md', 'openai.md', 'deepseek_index.md',
+}
 raw_files = set()
 for root, dirs, files in os.walk(raw_dir):
     for f in files:
         if f.endswith('.md') and f != 'index.md':
             rel = os.path.relpath(os.path.join(root, f), raw_dir)
-            raw_files.add(rel)
+            if rel not in raw_exclude:
+                raw_files.add(rel)
 
 with open(raw_index) as f:
     indexed_raw = set(re.findall(r'\[\[([^\]]+)\]\]', f.read()))

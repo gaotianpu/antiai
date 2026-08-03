@@ -17,10 +17,10 @@ related_nodes: [deepseek_ai, mixture_of_experts, conditional_memory]
 | 模型 | 核心贡献 | 引用 |
 |:---|:---|:---|
 | DeepSeek LLM (67B) | Scaling Laws、超参数选择、数据质量影响 | *arXiv:2401.02954* |
-| DeepSeek-V2 | 236B [[mixture_of_experts|MoE]] + Multi-head Latent Attention，KV cache 压缩 93.3% | *arXiv:2405.04434* |
+| DeepSeek-V2 | 236B [[mixture_of_experts\|MoE]] + Multi-head Latent Attention，KV cache 压缩 93.3% | *arXiv:2405.04434* |
 | DeepSeek-V3 | 671B MoE (37B 活跃)，无辅助损失负载均衡 + 多 Token 预测训练 | *arXiv:2412.19437* |
 | DeepSeek-V3.1 | Think/非 Think 混合推理模型 + Agent | — |
-| DeepSeek-V3.2 | 稀疏注意力 DSA + [[reinforcement_learning|RL]] 提升效率与推理 | DeepSeek-AI (2025) |
+| DeepSeek-V3.2 | 稀疏注意力 DSA + [[reinforcement_learning\|RL]] 提升效率与推理 | DeepSeek-AI (2025) |
 | DeepSeek-R1 | 纯 RL 涌现推理能力，Nature 封面报道 | *arXiv:2501.12948* |
 | DeepSeek-Prover-V2 | RL 推进形式化数学推理 | DeepSeek-AI (2025) |
 
@@ -34,7 +34,7 @@ related_nodes: [deepseek_ai, mixture_of_experts, conditional_memory]
 | 模型 | 领域 | 引用 |
 |:---|:---|:---|
 | DeepSeek-OCR | 视觉压缩：长文本光学二维映射 | *arXiv:2510.18234* |
-| Thinking with Visual Primitives | 多模态推理：坐标等视觉原语融入 [[chain_of_thought|CoT]] | — |
+| Thinking with Visual Primitives | 多模态推理：坐标等视觉原语融入 [[chain_of_thought\|CoT]] | — |
 | DeepSeekMath-V2 | 数学推理：自验证能力，竞赛级 | — |
 | DeepSeek-Coder | 代码智能 | *arXiv:2401.14196* |
 | DeepSeek-VL | 多模态 | — |

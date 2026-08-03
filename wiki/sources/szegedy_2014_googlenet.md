@@ -20,4 +20,4 @@ last_verified: 2026-06-06
 - **局限/意义**: 架构设计较为复杂，超参数多；但开创了"网络中的网络"思路，后续 Inception 系列不断演进
 
 ## 引用
-- **原始论文**: [arXiv](https://arxiv.org/abs/1409.4842) | [阅读笔记](../../raw/cnn/googlenet.md)
+- **原始论文**: [arXiv](https://arxiv.org/abs/1409.4842) | [阅读笔记](../../raw/cnn/inception_v1.md)

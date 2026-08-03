@@ -53,7 +53,7 @@
 | [[cnn/Deeply-Supervised.md]] | 提出深度监督网络（DSN），通过在隐藏层引入辅助监督信号（companion objective）来解决深层网络的梯度消失问题，使学习过程更加直接透明。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/FCN.md]] | 提出全卷积网络（FCN），将分类网络中的全连接层替换为卷积层，实现端到端、像素到像素的语义分割，接受任意尺寸输入并产生对应尺寸输出。（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/Pooling.md]] | 通过系统实验推翻"池化层是 CNN 变形稳定性必要条件"的假设，发现池化既非必要也非充分，且网络在训练中会主动抵消池化的过度稳定性偏置。（`computer-vision, machine-learning, empirical-study`）|
-| [[cnn/googlenet.md]] | 提出 Inception 模块，在增加深度和宽度的同时控制计算复杂度（`computer-vision, machine-learning, empirical-study`）|
+| [[cnn/inception_v1.md]] | 提出 Inception 模块，在增加深度和宽度的同时控制计算复杂度（`computer-vision, machine-learning, empirical-study`）|
 | [[cnn/sppnet.md]] | 空间金字塔池化，让 CNN 支持任意尺寸输入（`computer-vision, machine-learning`）|
 | [[cnn/vgg.md]] | 系统研究网络深度对精度的影响，提出 16-19 层 VGG 架构（`computer-vision, machine-learning, empirical-study`）|
 
@@ -382,8 +382,23 @@
 | [[Dromedary.md]] | 提出 SELF-ALIGN 方法，通过 16 条原则 + 上下文学习实现 LLM 自对齐，仅需 <300 行人工标注。（`NLP, machine-learning, empirical-study`）|
 | [[LLaMA.md]] | 提出 LLaMA 系列基础语言模型（7B–65B），仅使用公开数据训练，LLaMA-13B 以 1/10 参数量超越 GPT-3（175B）。（`NLP, machine-learning, empirical-study`）|
 
+## 2024
+
+### LLM
+| [[2401.02954.md]] | 67B 参数语言模型，详细分享 Scaling Laws、超参数选择、数据质量影响等工程经验（`NLP, machine-learning, empirical-study`）|
+| [[2401.14196.md]] | 1.3B–33B 开源代码模型系列，在 2T token 项目级代码上训练，采用填空训练任务（`NLP, machine-learning, empirical-study`）|
+| [[2405.04434.md]] | 236B MoE（21B 激活）语言模型，KV cache 压缩 93.3%，训练成本降低 42.5%（`NLP, machine-learning, empirical-study`）|
+| [[2412.19437.md]] | 671B MoE（37B 激活）语言模型，以 $5.6M 低成本训练达到匹敌 GPT-4o 的性能（`NLP, machine-learning, empirical-study`）|
+
+## 2025
+
+### LLM
+| [[2501.12948.md]] | 纯 RL 激发 LLM 推理能力，涌现自我反思、验证等高级推理模式，被 Nature 封面报道（`NLP, reinforcement-learning, empirical-study`）|
+| [[2510.18234.md]] | 视觉压缩管线：通过光学二维映射压缩长上下文，单 A100-40G 日产 200k+ 页（`NLP, computer-vision, empirical-study`）|
+
 ## 2026
 
 ### 其他
 | [[2601.07372.md]] | 提出条件记忆（Engram），将 N-gram 嵌入改造为 O(1) 查表，与 MoE 互补（`NLP, machine-learning`） |
+
 
