@@ -1,6 +1,12 @@
 ---
 type: log
 ---
+## [Query] RL 演进路线综述
+
+- 用户查询: 强化学习演进路线是否有综述页 → wiki 无现成页，按 wiki-query 沉淀
+- 新建 Synthesis: [[rl_evolution]] — RL 演进五阶段（DQN→TRPO/DDPG/A3C→PPO→RLHF→GRPO）+ 模仿学习旁支
+- 更新 Index: synthesis/index.md、wiki/index.md 快速导航
+
 ## [Skill] skill 与规范完善（基于本轮 lint 实战发现）
 
 - **wiki-lint/SKILL.md** ×4：①检查2 死链扫描改用 Python（GNU grep BRE 的 `[^\\]\\[]` 字符类静默失效，实测 grep 返回 0 而实际 228 个链接），并处理 `\\|` 转义/锚点/aliases；②死链二分类指引（笔误 vs 缺失概念页）；③检查4 修复非法 grep 语法（`! --include` / `! --path` → `--exclude` / `--exclude-dir`）；④检查5 表格转义正则改 -E 消除贪婪误报；⑤检查6 补充方向性豁免说明

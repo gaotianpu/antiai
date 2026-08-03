@@ -6,3 +6,4 @@
 
 ## 2026
 - [[post_training]] — 后训练阶段综合指南
+- [[rl_evolution]] — RL 演进路线（DQN→PPO→RLHF→GRPO）
