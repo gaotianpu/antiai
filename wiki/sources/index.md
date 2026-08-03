@@ -4,11 +4,17 @@
 - [[cheng_2026_engram]] — Conditional Memory via Scalable Lookup（条件记忆轴 + Engram 模块）
 
 ## 2025
+- [[fu_2025_moba]] — MoBA: Mixture of Block Attention（块路由稀疏注意力）
+- [[deepseek_2025_v32]] — DeepSeek-V3.2: DSA 稀疏注意力（Lightning Indexer）
 - [[kimi_2025_k2]] — Kimi K2: Technical Report（1T MoE 多轮 RL 推理）
 - [[deepseek_2025_r1]] — DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL（纯 RL 推理）
 - [[wei_2025_deepseek_ocr]] — DeepSeek-OCR: Contexts Optical Compression（视觉压缩）
 
 ## 2024
+- [[gemini_2024_15]] — Gemini 1.5: 百万 token 上下文（多模态长上下文）
+- [[dao_2024_mamba2]] — Transformers are SSMs: SSD 状态空间对偶性
+- [[wang_2024_bitnet]] — BitNet b1.58: 1-bit LLM 时代
+- [[behrouz_2024_titans]] — Titans: 测试时学习的神经长期记忆
 - [[openai_2024_o1]] — OpenAI o1 System Card（RL 驱动的推理模型）
 - [[shao_2024_deepseekmath]] — DeepSeekMath: Pushing the Limits of Mathematical Reasoning（GRPO 提出）
 - [[deepseek_2024_v3]] — DeepSeek-V3 Technical Report（671B MoE 旗舰）
@@ -18,6 +24,13 @@
 
 
 ## 2023
+- [[dao_2023_flashattention2]] — FlashAttention-2（2 倍加速）
+- [[ainslie_2023_gqa]] — GQA: 分组查询注意力
+- [[gu_2023_mamba]] — Mamba: 选择性状态空间模型
+- [[peng_2023_yarn]] — YaRN: RoPE 上下文外推
+- [[kwon_2023_pagedattention]] — PagedAttention / vLLM
+- [[xiao_2023_streamingllm]] — StreamingLLM: 注意力汇点
+- [[liu_2023_ringattention]] — Ring Attention: 序列并行
 - [[rafailov_2023_dpo]] — Direct Preference Optimization（无 RL 的偏好优化）
 - [[hafner_2023_dreamerv3]] — DreamerV3: Mastering Diverse Domains through World Models（世界模型）
 - [[dits]] — Scalable Diffusion Models with Transformers（DiT）
@@ -38,6 +51,7 @@
 - [[woo_2023_convnext_v2]] — ConvNeXt v2: Co-designing and Scaling ConvNets with Masked Autoencoders（ConvNeXt v2）
 
 ## 2022
+- [[leviathan_2023_speculative]] — Speculative Decoding（投机解码，2022-11）
 - [[bai_2022_constitutional_ai]] — Constitutional AI: Harmlessness from AI Feedback（宪法 AI 对齐）
 - [[reed_2022_gato]] — A Generalist Agent（Gato 通用智能体）
 - [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）

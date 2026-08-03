@@ -7,3 +7,4 @@
 ## 2026
 - [[post_training]] — 后训练阶段综合指南
 - [[rl_evolution]] — RL 演进路线（DQN→PPO→RLHF→GRPO）
+- [[transformer_evolution]] — Transformer 演进路线（效率/推理/长度/替代四主线）

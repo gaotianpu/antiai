@@ -24,6 +24,14 @@
 - [[lagrange_multiplier]] — 拉格朗日乘数法：约束优化/KKT 条件/对偶形式
 
 ## 模型架构
+- [[grouped_query_attention]] — GQA：分组查询注意力 KV 缩减
+- [[state_space_model]] — SSM：状态空间模型（Mamba 路线）
+- [[sparse_attention]] — 稀疏注意力：固定模式与可学习路由
+- [[neural_long_term_memory]] — 神经长期记忆：测试时学习
+- [[kv_cache]] — KV 缓存：推理内存瓶颈与缩减策略
+- [[sequence_parallelism]] — 序列并行：Ring Attention
+- [[speculative_decoding]] — 投机解码：草稿-验证加速
+- [[length_extrapolation]] — 长度外推：上下文扩展技术
 - [[attention_mechanism]] — 注意力机制：动态聚焦输入关键部分
 - [[attention_variants]] — 注意力变体：多头/因果/高效注意力的分类
 - [[multi_head_latent_attention]] — MLA：将 KV cache 压缩为潜在向量的高效注意力

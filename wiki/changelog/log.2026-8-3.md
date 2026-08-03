@@ -1,6 +1,14 @@
 ---
 type: log
 ---
+## [Ingest] Transformer 演进论文摄入 ×14（2022+ 全网补齐）
+
+- 新建 Source ×14: [[dao_2023_flashattention2]]、[[ainslie_2023_gqa]]、[[gu_2023_mamba]]、[[dao_2024_mamba2]]、[[peng_2023_yarn]]、[[kwon_2023_pagedattention]]、[[xiao_2023_streamingllm]]、[[liu_2023_ringattention]]、[[leviathan_2023_speculative]]、[[wang_2024_bitnet]]、[[behrouz_2024_titans]]、[[gemini_2024_15]]、[[fu_2025_moba]]、[[deepseek_2025_v32]]
+- 新建 Concept ×8: [[grouped_query_attention]], [[state_space_model]], [[kv_cache]], [[speculative_decoding]], [[length_extrapolation]], [[sequence_parallelism]], [[sparse_attention]], [[neural_long_term_memory]]
+- 新建 Synthesis: [[transformer_evolution]] — 四条演进主线（效率/推理/长度/替代）+ 时间线 + 关键洞察
+- 更新 Index: sources/index.md +14、concepts/index.md +8、synthesis/index.md、wiki/index.md
+- 验证: 链接闭环无死链、索引完整性全通过（sources 240、concepts 218）
+
 ## [Ingest] RL 重要论文摄入 ×7（2022-2025）
 
 - 新建 Source ×7: [[bai_2022_constitutional_ai]]（宪法 AI）、[[reed_2022_gato]]（通用智能体）、[[rafailov_2023_dpo]]（DPO）、[[hafner_2023_dreamerv3]]（世界模型）、[[shao_2024_deepseekmath]]（GRPO 提出）、[[openai_2024_o1]]（推理模型）、[[kimi_2025_k2]]（多轮 RL）
