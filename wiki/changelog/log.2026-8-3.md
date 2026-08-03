@@ -1,6 +1,13 @@
 ---
 type: log
 ---
+## [Skill] skill 与规范完善（基于本轮 lint 实战发现）
+
+- **wiki-lint/SKILL.md** ×4：①检查2 死链扫描改用 Python（GNU grep BRE 的 `[^\\]\\[]` 字符类静默失效，实测 grep 返回 0 而实际 228 个链接），并处理 `\\|` 转义/锚点/aliases；②死链二分类指引（笔误 vs 缺失概念页）；③检查4 修复非法 grep 语法（`! --include` / `! --path` → `--exclude` / `--exclude-dir`）；④检查5 表格转义正则改 -E 消除贪婪误报；⑤检查6 补充方向性豁免说明
+- **wiki-ingest/SKILL.md** ×2：新增 §2.3.1 链接闭环验证（入库必做，缺失概念当场补建或登记 todo）；§2.3 明确正文链接即反向引用 + 中心页方向性豁免
+- **schema/concept.md**：补充紧凑格式（定义+要点+来源）作为实践默认格式
+- **schema/tags.md**：补录 6 个实践已广泛使用 tag（computer-vision/RL/autonomous-driving/imitation-learning/transformer/lane-detection）
+
 ## [Merge] 概念页收尾修复
 
 - 合并同义重复: [[transformer]] → [[transformer_architecture]]（定义与来源并入，删除 transformer.md，21 处 related_nodes + 2 处链接更新）

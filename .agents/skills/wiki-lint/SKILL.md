@@ -55,26 +55,68 @@ done
 
 ### 2. 死链清理
 
-检查 `[[id]]` 或 `[[path]]` 指向的文件是否存在。
+检查 `[[id]]` 或 `[[path]]` 指向的文件是否存在。**注意：GNU grep BRE 的 `[^\\]\\[]` 字符类会静默失效，不要用 grep 提取链接，一律用下方 Python 脚本。**
 
 ```bash
-# wiki 内部链接
-grep -roh '\[\[[^\]\[]*\]\]' "$WIKI_DIR" --include='*.md' | sort -u | while IFS= read -r link; do
-  target=$(echo "$link" | sed 's/\[\[//;s/\]\]//;s/|.*//')
-  # 跳过外部 URL 格式
-  echo "$target" | grep -q '://' && continue
-  # 尝试匹配 wiki 下文件
-  found=$(find "$WIKI_DIR" -name "${target}.md" 2>/dev/null | head -1)
-  if [ -z "$found" ]; then
-    echo "❌ 死链: [[$target]] (来自 $(grep -rl "\[\[$target\]\]" "$WIKI_DIR" --include='*.md' | head -1))"
-  fi
-done
+python3 -c "
+import os, re
+from collections import defaultdict
 
+WIKI = '$WIKI_DIR'
+# 1. 收集所有页面名 + frontmatter aliases（别名也是有效链接目标）
+valid = set()
+for root, dirs, files in os.walk(WIKI):
+    for f in files:
+        if f.endswith('.md'):
+            valid.add(f[:-3])
+            head = open(os.path.join(root, f)).read()[:2000]
+            m = re.search(r'aliases:\\s*\\[([^\\]]+)\\]', head)
+            if m:
+                for a in m.group(1).split(','):
+                    valid.add(a.strip().strip('\"\''))
+
+# 2. 提取链接：先剥离表格转义 \\|，再依次剥离 |alias 与 #anchor
+dead = defaultdict(list)
+pat = re.compile(r'\\[\\[([^\\]\\[]*)\\]\\]')
+for root, dirs, files in os.walk(WIKI):
+    for f in files:
+        if not f.endswith('.md') or root.endswith('changelog') or f == 'todo.md':
+            continue
+        path = os.path.join(root, f)
+        for m in pat.finditer(open(path).read()):
+            raw = m.group(1).replace('\\\\|', '\x00')
+            target = raw.split('\x00')[0].split('|')[0].strip().split('#')[0].strip()
+            if '://' in target or '/' in target:
+                continue
+            if target not in valid:
+                dead[target].append(os.path.relpath(path, WIKI))
+
+if dead:
+    for t, srcs in sorted(dead.items()):
+        print(f'❌ [[{t}]] ← {srcs}')
+else:
+    print('✅ 无死链')
+"
+```
+
+**死链二分类**：命中后先判性质再处置——
+- **概念缺失**：目标像领域概念名（如 `[[bert]]`、`[[focal_loss]]`），且无同名/别名页面 → 是 Source 页先入库、概念页未补建，登记到 `wiki/todo.md` 或直接按 wiki-ingest 补建，**不是笔误**
+- **笔误死链**：目标明显拼写错误或指向已删页面 → 修正链接指向
+
+```bash
 # raw/index.md 中的链接（指向 raw/ 文件）
-grep -roh '\[\[[^\]\[]*\]\]' "$PROJECT_ROOT/raw/index.md" | sort -u | while read link; do
-  target=$(echo "$link" | sed 's/\[\[//;s/\]\]//;s/|.*//')
-  [ -f "$PROJECT_ROOT/raw/$target" ] || echo "❌ raw 死链: [[$target]]"
-done
+python3 -c "
+import os, re
+index = open('$PROJECT_ROOT/raw/index.md').read()
+pat = re.compile(r'\\[\\[([^\\]\\[]*)\\]\\]')
+for m in pat.finditer(index):
+    raw = m.group(1).replace('\\\\|', '\x00')
+    target = raw.split('\x00')[0].split('|')[0].strip()
+    if '://' in target:
+        continue
+    if not os.path.isfile(os.path.join('$PROJECT_ROOT/raw', target)):
+        print(f'❌ raw 死链: [[{target}]]')
+"
 ```
 
 ### 3. 冲突检测
@@ -113,7 +155,7 @@ for term, pages in terms.items():
 ```bash
 echo '# TODO 汇总' > "$WIKI_DIR/todo.md"
 grep -rn 'TODO\|\[?\]' "$WIKI_DIR" --include='*.md' \
-  ! --include='todo.md' ! --path '*/changelog/*' \
+  --exclude='todo.md' --exclude-dir='changelog' \
   | sed 's/^/ - /' >> "$WIKI_DIR/todo.md"
 echo "✅ TODOs 已汇总到 wiki/todo.md（$(grep -c '^-' "$WIKI_DIR/todo.md") 条）"
 ```
@@ -123,8 +165,8 @@ echo "✅ TODOs 已汇总到 wiki/todo.md（$(grep -c '^-' "$WIKI_DIR/todo.md") 
 检查表格中的 `[[page|alias]]` 是否已正确转义为 `[[page\|alias]]`。
 
 ```bash
-# 找出表格行中未转义的竖线
-grep -rn '^|.*\[\[.*|.*\]\].*|' "$WIKI_DIR" --include='*.md' \
+# 找出表格行中未转义的竖线（-E 正则避免 [[page]] 无别名的贪婪误报）
+grep -rnE '^\|.*\[\[[^]]*\|[^]]*\]\]' "$WIKI_DIR" --include='*.md' \
   | grep -v '\\|' \
   | head -20
 ```
@@ -133,7 +175,9 @@ grep -rn '^|.*\[\[.*|.*\]\].*|' "$WIKI_DIR" --include='*.md' \
 
 ### 6. related_nodes 对称性
 
-检查新建 page 的双向引用是否完整。
+检查新建 page 的双向引用是否完整。**注意方向性豁免**：
+
+> 按 `schema/best_practices.md` §12，related_nodes 应有方向性，中心页（如 attention_mechanism 被几十页引用）**不需要**反向平铺所有引用者。只检查**最近入库/新建的页面**，历史遗留的缺失不批量修改。
 
 ```bash
 # 检查 last_verified 距今较近的页面

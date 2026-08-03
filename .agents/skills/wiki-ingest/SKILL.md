@@ -102,6 +102,43 @@ CHANGELOG_DIR="${CHANGELOG_DIR:-$WIKI_DIR/changelog}"
 
 新 page 创建后，检查所有被引用页面的 `related_nodes` 是否包含反向引用，确保双向完整。
 
+**反向引用判定**：以下任一形式都算反向引用，不必机械补 related_nodes：
+- 目标页正文含 `[[本页id]]` 链接（如 Source 页「新颖概念」字段的 `[[concept_id]]`）
+- 目标页 `related_nodes` 含本页 id
+
+**方向性豁免**：中心页（被大量页面引用的概念页）按 `schema/best_practices.md` §12 不平铺所有引用者，只维护精选关系。
+
+### 2.3.1 链接闭环验证（入库必做）
+
+每次入库（新建 Source/Concept 页）后必须验证链接闭环，防止死链积累：
+
+```bash
+python3 -c "
+import os, re
+WIKI = 'wiki'
+valid = set()
+for root, dirs, files in os.walk(WIKI):
+    for f in files:
+        if f.endswith('.md'):
+            valid.add(f[:-3])
+            head = open(os.path.join(root, f)).read()[:2000]
+            m = re.search(r'aliases:\\s*\\[([^\\]]+)\\]', head)
+            if m:
+                for a in m.group(1).split(','):
+                    valid.add(a.strip().strip('\"\''))
+pat = re.compile(r'\\[\\[([^\\]\\[]*)\\]\\]')
+for f in os.listdir('wiki/sources'):
+    if not f.endswith('.md') or f == 'index.md':
+        continue
+    for m in pat.finditer(open(f'wiki/sources/{f}').read()):
+        t = m.group(1).replace('\\\\|', '\x00').split('\x00')[0].split('|')[0].strip().split('#')[0].strip()
+        if '://' not in t and '/' not in t and t not in valid:
+            print(f'⚠️ {f} → [[{t}]] 目标不存在，应补建概念页或改链接')
+"
+```
+
+验证产出：缺失的 `[[concept_id]]` **当场补建概念页**；量太大时（>5 个）登记到 `wiki/todo.md` 并在 changelog 标注，禁止只写链接不建页/不登记。
+
 ### 2.4 路线图比对 (Triage)
 
 如项目有 `$SCHEMA_DIR/paper_triage.md`，对论文运行四维评估矩阵（待补充：四维维度定义），决定是否更新 roadmap 中的交付项。
