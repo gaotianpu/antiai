@@ -21,4 +21,5 @@ GRPO 是 DeepSeek-R1 使用的强化学习算法，替代 PPO 中的 critic 网�
 - 天然适配可验证任务（数学、代码等有明确正确性判断的任务）
 
 ## 来源
-- [[deepseek_2025_r1]]
+- [[shao_2024_deepseekmath]] — GRPO 提出论文（DeepSeekMath）
+- [[deepseek_2025_r1]] — GRPO 在 R1 中的大规模验证

@@ -4,10 +4,13 @@
 - [[cheng_2026_engram]] — Conditional Memory via Scalable Lookup（条件记忆轴 + Engram 模块）
 
 ## 2025
+- [[kimi_2025_k2]] — Kimi K2: Technical Report（1T MoE 多轮 RL 推理）
 - [[deepseek_2025_r1]] — DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL（纯 RL 推理）
 - [[wei_2025_deepseek_ocr]] — DeepSeek-OCR: Contexts Optical Compression（视觉压缩）
 
 ## 2024
+- [[openai_2024_o1]] — OpenAI o1 System Card（RL 驱动的推理模型）
+- [[shao_2024_deepseekmath]] — DeepSeekMath: Pushing the Limits of Mathematical Reasoning（GRPO 提出）
 - [[deepseek_2024_v3]] — DeepSeek-V3 Technical Report（671B MoE 旗舰）
 - [[deepseek_2024_v2]] — DeepSeek-V2: A Strong, Economical, and Efficient MoE（236B MoE + MLA）
 - [[bi_2024_deepseek_llm]] — DeepSeek LLM: Scaling Open-Source Language Models（67B Scaling Laws）
@@ -15,6 +18,8 @@
 
 
 ## 2023
+- [[rafailov_2023_dpo]] — Direct Preference Optimization（无 RL 的偏好优化）
+- [[hafner_2023_dreamerv3]] — DreamerV3: Mastering Diverse Domains through World Models（世界模型）
 - [[dits]] — Scalable Diffusion Models with Transformers（DiT）
 - [[longnet_2023]] — LongNet: Scaling Transformers to 1,000,000,000 Tokens（扩张注意力）
 - [[openai_2023_gpt4]] — GPT-4 Technical Report（GPT-4 技术报告）
@@ -33,6 +38,8 @@
 - [[woo_2023_convnext_v2]] — ConvNeXt v2: Co-designing and Scaling ConvNets with Masked Autoencoders（ConvNeXt v2）
 
 ## 2022
+- [[bai_2022_constitutional_ai]] — Constitutional AI: Harmlessness from AI Feedback（宪法 AI 对齐）
+- [[reed_2022_gato]] — A Generalist Agent（Gato 通用智能体）
 - [[auto_cot_2022]] — Automatic Chain of Thought Prompting（自动 CoT）
 - [[sparse_expert_review_2022]] — A Review of Sparse Expert Models in Deep Learning（稀疏专家模型综述）
 - [[beit_v3]] — BEiT v3: Image as a Foreign Language（图像作为外语的统一预训练）

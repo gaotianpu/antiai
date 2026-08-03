@@ -1,6 +1,15 @@
 ---
 type: log
 ---
+## [Ingest] RL 重要论文摄入 ×7（2022-2025）
+
+- 新建 Source ×7: [[bai_2022_constitutional_ai]]（宪法 AI）、[[reed_2022_gato]]（通用智能体）、[[rafailov_2023_dpo]]（DPO）、[[hafner_2023_dreamerv3]]（世界模型）、[[shao_2024_deepseekmath]]（GRPO 提出）、[[openai_2024_o1]]（推理模型）、[[kimi_2025_k2]]（多轮 RL）
+- 新建 Concept ×6: [[constitutional_ai]], [[generalist_agent]], [[direct_preference_optimization]], [[world_model]], [[model_based_rl]], [[test_time_compute]]
+- 更新 Concept: [[grpo]] 追加 GRPO 提出论文来源
+- 更新 Synthesis: [[rl_evolution]] — ④阶段补 CAI/DPO，⑤阶段补 DeepSeekMath/o1/K2，新增旁支二（通用智能体与世界模型），转折点表更新
+- 更新 Index: sources/index.md（2022/2023/2024/2025 段共 7 条）、concepts/index.md（6 条）
+- 验证: 链接闭环无死链、索引完整性全通过
+
 ## [Query] RL 演进路线综述
 
 - 用户查询: 强化学习演进路线是否有综述页 → wiki 无现成页，按 wiki-query 沉淀

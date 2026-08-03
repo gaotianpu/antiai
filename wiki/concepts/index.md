@@ -66,6 +66,11 @@
 - [[model_quantization]] — 模型量化：低位宽表示降低存储与推理成本
 
 ## 强化学习
+- [[generalist_agent]] — 通用智能体：单模型多任务决策
+- [[constitutional_ai]] — 宪法 AI：原则集 + AI 反馈对齐
+- [[direct_preference_optimization]] — DPO：无 RL 的偏好优化
+- [[world_model]] — 世界模型：环境动态学习
+- [[model_based_rl]] — 基于模型的 RL：想象中训练
 - [[reinforcement_learning]] — 强化学习：交互试错学习决策策略
 - [[policy_gradient]] — 策略梯度：直接优化参数化策略的方法
 - [[grpo]] — GRPO：无 critic 的组相对策略优化
@@ -76,6 +81,7 @@
 - [[anchor_box]] — 锚框：预定义参考框用于检测回归
 
 ## 推理与提示
+- [[test_time_compute]] — 推理时计算：思维链预算扩展
 - [[chain_of_thought]] — 思维链：中间推理步骤提升复杂推理
 
 ## 强化学习
