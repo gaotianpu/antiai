@@ -108,6 +108,8 @@ CHANGELOG_DIR="${CHANGELOG_DIR:-$WIKI_DIR/changelog}"
 
 **方向性豁免**：中心页（被大量页面引用的概念页）按 `schema/best_practices.md` §12 不平铺所有引用者，只维护精选关系。
 
+**批量追加**：需给多个被引用页补反向引用时，用 `python3 tools/update_related_nodes.py <文件> add <id> [<id2> ...]` 批量追加（自动排序去重 + 统一加引号，防数字 id YAML 浮点化）；`remove` 删除、`list` 查看。⚠️ 脚本边界：只处理 frontmatter 内**单行**的 `related_nodes` 字段，正文 `[[链接]]` 增删仍需手动 edit；antiai 的 index 页（`sources/index.md` 等）无该字段，脚本不适用。git 冲突时用 `python3 tools/resolve_related_nodes_conflict.py <文件>` 取并集合并。
+
 ### 2.3.1 链接闭环验证（入库必做）
 
 每次入库（新建 Source/Concept 页）后必须验证链接闭环，防止死链积累：
