@@ -102,6 +102,8 @@ CHANGELOG_DIR="${CHANGELOG_DIR:-$WIKI_DIR/changelog}"
 
 新 page 创建后，检查所有被引用页面的 `related_nodes` 是否包含反向引用，确保双向完整。
 
+**格式指引**：新页推荐内联格式 `related_nodes: ['a', 'b']`；如项目提供 `tools/update_related_nodes.py`，优先走工具（自动排序去重 + 统一加引号，支持内联与块状两种格式）。
+
 **反向引用判定**：以下任一形式都算反向引用，不必机械补 related_nodes：
 - 目标页正文含 `[[本页id]]` 链接（如 Source 页「新颖概念」字段的 `[[concept_id]]`）
 - 目标页 `related_nodes` 含本页 id
