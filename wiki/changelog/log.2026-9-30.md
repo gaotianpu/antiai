@@ -17,6 +17,10 @@ type: log
 - 更新: 概述代表作 V2/V3/R1 → V3/R1/V4；`last_verified` → 2026-09-30
 - 说明: 按方案 C 执行——仅更新实体页，不创建新 source/concept 页
 
+## [Docs] 保存 changelog 机制讨论至 best_practices
+
+- 更新 Schema: `schema/best_practices.md` 新增 §14「changelog 与 git log 的分工」——记录约束来源（AGENTS.md 表行 + wiki-ingest 阶段 4 + parking-lot）、五维分工对比、决议（维持双写）、已知 type 不一致（维持 `type: log` 现状）
+
 ## [Update] 目标检测 IoU 损失系列 source 页 + 概念页 + 综述页
 
 - 新建 Source ×8: [[everingham_2010_pascal_voc]]、[[yu_2016_unitbox]]、[[rezatofighi_2019_giou]]、[[zheng_2020_diou]]、[[zhang_2022_eiou]]、[[gevorgyan_2022_siou]]、[[tong_2023_wiou]]、[[he_2021_alpha_iou]]
