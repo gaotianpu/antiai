@@ -9,6 +9,14 @@ type: log
 - 依据: arXiv API 全量核查 `au:"Kaiming He"`（2014–2026 共 80 篇）；量子调度论文（2405.16380）经论文邮箱 kaiming@mit.edu 核实为本人
 - 说明: 按方案 C 执行——仅更新实体页，不创建新 source/concept 页
 
+## [Update] deepseek_ai 实体页补录至 2026 年
+
+- 更新 Entity: [[deepseek_ai]] — 关键贡献列表重排为时间序并扩至 29 项（2024-01 至 2026-09）：9 项已有 source 页 + 19 项 arXiv/官网直链 + 1 项无链接技术报告
+- 新增收录: DeepSeekMoE、DeepSeek-VL、Prover 系列、Coder-V2、Fire-Flyer AI-HPC、Janus 系列、VL2、NSA、Insights into DeepSeek-V3、Math-V2、Thinking with Visual Primitives、mHC、OCR 2、V4、V4.1-Flash、DSec
+- 修复: [[shao_2024_deepseekmath]]、[[deepseek_2025_v32]] 的 related_nodes 补入 deepseek_ai（双向链接对称性）；实体页反链同步补入
+- 更新: 概述代表作 V2/V3/R1 → V3/R1/V4；`last_verified` → 2026-09-30
+- 说明: 按方案 C 执行——仅更新实体页，不创建新 source/concept 页
+
 ## [Update] 目标检测 IoU 损失系列 source 页 + 概念页 + 综述页
 
 - 新建 Source ×8: [[everingham_2010_pascal_voc]]、[[yu_2016_unitbox]]、[[rezatofighi_2019_giou]]、[[zheng_2020_diou]]、[[zhang_2022_eiou]]、[[gevorgyan_2022_siou]]、[[tong_2023_wiou]]、[[he_2021_alpha_iou]]

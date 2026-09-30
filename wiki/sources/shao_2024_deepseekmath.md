@@ -3,7 +3,7 @@ id: shao_2024_deepseekmath
 type: source
 tags: ["NLP", "machine-learning", "empirical-study", "RL"]
 aliases: ["DeepSeekMath", "GRPO", "2402.03300"]
-related_nodes: [grpo, chain_of_thought]
+related_nodes: [deepseek_ai, grpo, chain_of_thought]
 authors: Zhihong Shao et al.
 authors_institution: DeepSeek
 arxiv_id: 2402.03300

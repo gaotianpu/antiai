@@ -3,7 +3,7 @@ id: deepseek_2025_v32
 type: source
 tags: ["NLP", "machine-learning", "empirical-study"]
 aliases: ["DeepSeek-V3.2", "DSA", "稀疏注意力"]
-related_nodes: [sparse_attention, multi_head_latent_attention]
+related_nodes: [deepseek_ai, sparse_attention, multi_head_latent_attention]
 authors: DeepSeek-AI
 authors_institution: DeepSeek
 last_verified: 2026-08-03
