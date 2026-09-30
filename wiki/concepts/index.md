@@ -87,6 +87,7 @@
 - [[feature_pyramid]] — 特征金字塔：多尺度特征融合的检测标配
 - [[object_detection]] — 目标检测：定位并识别图像中物体
 - [[anchor_box]] — 锚框：预定义参考框用于检测回归
+- [[iou_loss]] — 交并比损失：从 IoU 到 GIoU/DIoU/CIoU/EIoU/SIoU/WIoU/Alpha-IoU
 
 ## 推理与提示
 - [[test_time_compute]] — 推理时计算：思维链预算扩展

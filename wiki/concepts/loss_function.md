@@ -3,8 +3,8 @@ id: loss_function
 type: concept
 tags: ["machine-learning", "theoretical"]
 aliases: ["损失函数", "loss", "目标函数", "代价函数"]
-related_nodes: ["optimizer", "focal_loss_2017", "object_detection", "probability_distributions", "entropy", "kl_divergence", "cross_entropy", "multi_token_prediction"]
-last_verified: 2026-06-06
+related_nodes: ['cross_entropy', 'entropy', 'focal_loss_2017', 'iou_loss', 'iou_loss_survey', 'kl_divergence', 'multi_token_prediction', 'object_detection', 'optimizer', 'probability_distributions']
+last_verified: 2026-09-30
 ---
 
 # Loss Function（损失函数）
@@ -38,16 +38,18 @@ last_verified: 2026-06-06
 ### 检测/分割损失
 | 损失 | 核心思想 | 出处 |
 |:---|:---|:---|
-| **IoU / GIoU / CIoU** | 边界框交并比及改进变体 | YOLO 系列 |
+| **[[iou_loss]]** | 边界框交并比及改进变体（GIoU/DIoU/CIoU/EIoU/SIoU/WIoU/Alpha-IoU） | [[iou_loss_survey]] |
 | **Dice Loss** | 分割中重叠区域度量 | Milletari et al., 2016 |
 | **Smooth L1** | 检测框回归的 Huber 变体 | Faster R-CNN |
 
 ## 关键发现
 - Cross-Entropy 是分类任务默认选择，配合 Softmax 输出
 - Focal Loss 解决一阶段检测器的极端正负样本不平衡（[[focal_loss_2017]]）
-- IoU 系列损失比 L1/L2 更直接优化检测目标
+- IoU 系损失（[[iou_loss]]）比 L1/L2 更直接优化检测目标；变体选择见 [[iou_loss_survey]]
 - InfoNCE 是 CLIP/SimCLR 等对比学习方法的核心
 
 ## 相关概念
 - [[optimizer]] — 优化器：最小化损失函数的算法
 - [[object_detection]] — 目标检测中的多任务损失
+- [[iou_loss]] — 交并比损失族：从 IoU 到 GIoU/DIoU/CIoU/EIoU/SIoU/WIoU/Alpha-IoU
+- [[iou_loss_survey]] — 目标检测 IoU 回归损失演进与选型

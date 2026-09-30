@@ -3,8 +3,8 @@ id: object_detection
 type: concept
 tags: [machine-learning, empirical-study, survey]
 aliases: [目标检测, detection]
-related_nodes: [girshick_2013_rcnn, ren_2015_fasterrcnn, redmon_2015_yolov1, redmon_2018_yolov3, ge_2021_yolox, li_2022_yolov6, wang_2022_yolov7, focal_loss_2017, anchor_box]
-last_verified: 2026-06-06
+related_nodes: ['anchor_box', 'focal_loss_2017', 'ge_2021_yolox', 'girshick_2013_rcnn', 'iou_loss', 'iou_loss_survey', 'li_2022_yolov6', 'redmon_2015_yolov1', 'redmon_2018_yolov3', 'ren_2015_fasterrcnn', 'wang_2022_yolov7']
+last_verified: 2026-09-30
 ---
 
 # Object Detection
@@ -24,7 +24,7 @@ Object Detection（目标检测）是计算机视觉的核心任务之一：在�
 - **骨干网络** — 特征提取（VGG、ResNet、DarkNet）
 - **特征金字塔**（[[fpn_2016]]）— 多尺度特征融合
 - **锚框机制**（[[anchor_box]]）— 预定义参考框
-- **损失函数** — 分类损失 + 回归损失（如 [[focal_loss_2017]]）
+- **损失函数** — 分类损失 + 回归损失（如 [[focal_loss_2017]]、[[iou_loss]]）
 
 ## 来源
 - [[girshick_2013_rcnn]] — 基于候选区域的检测奠基
@@ -32,3 +32,4 @@ Object Detection（目标检测）是计算机视觉的核心任务之一：在�
 - [[redmon_2015_yolov1]] — 单阶段实时检测
 - [[redmon_2018_yolov3]] — YOLOv3 多尺度预测
 - [[ge_2021_yolox]] — 无锚框 YOLO
+- [[iou_loss_survey]] — 目标检测 IoU 回归损失演进综述

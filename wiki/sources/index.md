@@ -49,6 +49,7 @@
 - [[seggpt]] — SegGPT: Segmenting Everything In Context（上下文全部分割）
 - [[segment_anything]] — Segment Anything（SAM 分割一切）
 - [[woo_2023_convnext_v2]] — ConvNeXt v2: Co-designing and Scaling ConvNets with Masked Autoencoders（ConvNeXt v2）
+- [[tong_2023_wiou]] — Wise-IoU: Bounding Box Regression Loss with Dynamic Focusing Mechanism（动态非单调聚焦）
 
 ## 2022
 - [[leviathan_2023_speculative]] — Speculative Decoding（投机解码，2022-11）
@@ -100,6 +101,8 @@
 - [[liu_2022_mmtransformer]] — Multimodal Motion Prediction with Stacked Transformers（堆叠 Transformer 多模态运动预测）
 - [[yan_2022_once3dlanes]] — ONCE-3DLanes: Building Monocular 3D Lane Detection（ONCE-3DLanes 3D 车道检测数据集）
 - [[zhang_2022_mutr3d]] — MUTR3D: A Multi-camera Tracking Framework via 3D-to-2D Queries（多相机 3D 跟踪）
+- [[zhang_2022_eiou]] — Focal and Efficient IOU Loss for Accurate Bounding Box Regression（EIoU / Focal-EIoU）
+- [[gevorgyan_2022_siou]] — SIoU Loss: More Powerful Learning for Bounding Box Regression（角度感知损失）
 
 ## 2021
 - [[huang_2021_spatiotemporal]] — A Large-Scale Study on Unsupervised Spatiotemporal Representation Learning（无监督时空表征）
@@ -136,6 +139,7 @@
 - [[prakash_2021_transfuser]] — Multi-Modal Fusion Transformer for End-to-End Autonomous Driving（TransFuser 多模态融合）
 - [[wang_2021_tokenfusion]] — Multimodal Token Fusion for Vision Transformers（ViT 多模态令牌融合）
 - [[zhao_2021_sam]] — SAM: Squeeze-and-Mimic Networks for Conditional Visual Driving Policy Learning（挤压-模仿驾驶策略）
+- [[he_2021_alpha_iou]] — Alpha-IoU: A Family of Power Intersection over Union Losses（幂次 IoU 损失族）
 
 ## 2020
 - [[vit]] — An Image Is Worth 16x16 Words（ViT 视觉 Transformer）
@@ -165,6 +169,7 @@
 - [[rhinehart_2020_imitative]] — Deep Imitative Models for Flexible Inference, Planning, and Control（模仿模型）
 - [[sato_2020_e2eld]] — Towards Driving-Oriented Metric for Lane Detection Models（面向驾驶的车道检测指标）
 - [[li_2020_radar]] — Exploiting Temporal Relations on Radar Perception for Autonomous Driving（雷达时序关系感知）
+- [[zheng_2020_diou]] — Distance-IoU Loss: Faster and Better Learning for Bounding Box Regression（DIoU / CIoU）
 
 ## 2019
 - [[beit]] — BEiT: BERT Pre-Training of Image Transformers（BERT 风格图像预训练）
@@ -188,6 +193,7 @@
 - [[gao_2019_res2net]] — Res2Net: A New Multi-scale Backbone Architecture（Res2Net 多尺度骨干）
 - [[chen_2019_cheating]] — Learning by Cheating（通过作弊学习，两阶段蒸馏驾驶）
 - [[codevilla_2019_behaviorcloning]] — Exploring the Limitations of Behavior Cloning for Autonomous Driving（行为克隆局限性）
+- [[rezatofighi_2019_giou]] — Generalized Intersection over Union: A Metric and A Loss（GIoU）
 
 ## 2018
 - [[beit_2]] — BEiT v2: Masked Image Modeling with Vector-Quantized Visual Tokenizers（向量量化视觉标记器）
@@ -236,6 +242,7 @@
 - [[chollet_2016_xception]] — Xception: Deep Learning with Depthwise Separable Convolutions（Xception 深度可分离卷积）
 - [[zhao_2016_pspnet]] — Pyramid Scene Parsing Network（PSPNet 金字塔场景解析）
 - [[bojarski_2016_dave2]] — End to End Learning for Self-Driving Cars（DAVE-2 端到端驾驶）
+- [[yu_2016_unitbox]] — UnitBox: An Advanced Object Detection Network（首次提出 IoU loss）
 
 ## 2015
 - [[bpe_2015]] — Neural Machine Translation of Rare Words with Subword Units（BPE 子词分词）
@@ -268,6 +275,7 @@
 ## 2010
 - [[glorot_2010_xavier]] — Understanding the Difficulty of Training Deep Feedforward Neural Networks（Xavier Init）
 - [[prakash_2010_dagger]] — Exploring Data Aggregation in Policy Learning for Vision-based Urban Autonomous Driving（DAgger 数据聚合驾驶）
+- [[everingham_2010_pascal_voc]] — The PASCAL Visual Object Classes (VOC) Challenge（IoU + mAP 检测评测协议）
 
 ## 1997
 - [[hochreiter_1997_lstm]] — Long Short-Term Memory（LSTM）

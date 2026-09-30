@@ -3,8 +3,8 @@ id: focal_loss
 type: concept
 tags: [computer-vision, machine-learning, empirical-study]
 aliases: [焦点损失, 聚焦损失]
-related_nodes: [focal_loss_2017, loss_function, single_stage_detector]
-last_verified: 2026-08-03
+related_nodes: ['focal_loss_2017', 'iou_loss_survey', 'loss_function', 'single_stage_detector']
+last_verified: 2026-09-30
 ---
 
 # Focal Loss
