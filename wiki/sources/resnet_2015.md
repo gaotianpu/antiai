@@ -3,7 +3,7 @@ id: resnet_2015
 type: source
 tags: [computer-vision, machine-learning, empirical-study]
 aliases: [Deep Residual Learning for Image Recognition, 残差网络, ResNet, 1512.03385]
-related_nodes: [microsoft, kaiming_he, residual_connection, bottleneck_architecture, convolutional_neural_network, batch_normalization, ioffe_2015_batchnorm, hu_2017_senet, gao_2019_res2net, ding_2021_repvgg, wang_2017_nonlocal, chen_2017_deeplabv3, zhao_2016_pspnet]
+related_nodes: [microsoft, kaiming_he, residual_connection, bottleneck_architecture, convolutional_neural_network, batch_normalization]
 arxiv_id: 1512.03385
 authors: Kaiming He et al.
 authors_institution: Microsoft
