@@ -3,7 +3,7 @@ id: diffusion_transformer
 type: concept
 tags: [machine-learning, computer-vision, empirical-study]
 aliases: [扩散Transformer, DiT]
-related_nodes: [dits, diffusion_model, transformer_architecture, attention_mechanism]
+related_nodes: [dits, diffusion_model, transformer_architecture, attention_mechanism, dall_e_v2, glide, imagen]
 last_verified: 2026-08-03
 ---
 

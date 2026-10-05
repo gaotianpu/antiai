@@ -3,7 +3,7 @@ id: self_supervised_learning
 type: concept
 tags: [machine-learning, empirical-study, theoretical]
 aliases: [自监督学习, SSL, 无监督表示学习]
-related_nodes: [data_augmentation, generative_model, vision_transformer]
+related_nodes: [data_augmentation, generative_model, vision_transformer, igpt, moco_v3]
 ---
 
 # Self-Supervised Learning

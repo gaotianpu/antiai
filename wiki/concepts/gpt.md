@@ -3,7 +3,7 @@ id: gpt
 type: concept
 tags: [NLP, machine-learning, empirical-study]
 aliases: [GPT]
-related_nodes: [radford_2018_gpt, generative_pretraining, transformer_architecture, attention_mechanism]
+related_nodes: [radford_2018_gpt, generative_pretraining, transformer_architecture, attention_mechanism, openai_2023_gpt4]
 last_verified: 2026-08-03
 ---
 

@@ -3,7 +3,7 @@ id: word_embedding
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [词向量, 词嵌入, word vector]
-related_nodes: [word2vec_2013, cbow, skip_gram, tokenization]
+related_nodes: [word2vec_2013, cbow, skip_gram, tokenization, morphte_2022]
 last_verified: 2026-08-03
 ---
 

@@ -3,7 +3,7 @@ id: encoder_decoder_architecture
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [Encoder-Decoder, 编码器-解码器, seq2seq]
-related_nodes: [transformer_architecture, attention_variants, attention_mechanism]
+related_nodes: [transformer_architecture, attention_variants, attention_mechanism, raffel_2019_t5]
 ---
 
 # Encoder-Decoder Architecture

@@ -3,7 +3,7 @@ id: knowledge_distillation
 type: concept
 tags: [machine-learning, empirical-study, parameter-optimization]
 aliases: [蒸馏, KD, 知识蒸馏]
-related_nodes: [hsieh_2023_distilling, han_2015_deepcompression, tinybert_2019_tinybert, mobilebert_2020_mobilebert]
+related_nodes: [hsieh_2023_distilling, han_2015_deepcompression, tinybert_2019_tinybert, mobilebert_2020_mobilebert, deit]
 last_verified: 2026-06-06
 ---
 
