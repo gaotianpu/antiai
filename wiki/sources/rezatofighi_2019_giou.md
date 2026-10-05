@@ -19,5 +19,5 @@ last_verified: 2026-09-30
 - **局限/意义**: 当一个框包含另一个框时，GIoU 退化为 IoU，无法区分相对位置；且依赖闭包框计算，后续 DIoU/CIoU 继续改进。
 
 ## 引用
-- **原始论文**: [CVPR 2019 / arXiv:1902.09630](https://arxiv.org/abs/1902.09630)
+- **原始论文**: [CVPR 2019 / arXiv:1902.09630](https://arxiv.org/abs/1902.09630) | [阅读笔记](../../raw/1902.09630.md)
 - **相关页面**: [[iou_loss]], [[iou_loss_survey]]

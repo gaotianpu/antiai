@@ -30,3 +30,11 @@ type: log
 - 双向链接: [[loss_function]]、[[object_detection]] 补充 `related_nodes` 与正文链接
 - 数据来源: arXiv API/Crossref 核对标题、作者、DOI；arXiv 原文 PDF 核对 UnitBox/EIoU/SIoU/WIoU/Alpha-IoU 公式
 - 说明: DIoU/CIoU 共用 [[zheng_2020_diou]]，EIoU/Focal-EIoU 共用 [[zhang_2022_eiou]]；IoU 度量的评测出处单列为 [[everingham_2010_pascal_voc]]
+
+## [Ingest] 补齐 IoU 损失系列 7 篇 arXiv 原始论文 raw/ 入库
+
+- 新建 Raw ×7: `raw/1608.01471.md`、`raw/1902.09630.md`、`raw/1911.08287.md`、`raw/2101.08158.md`、`raw/2205.12740.md`、`raw/2301.10051.md`、`raw/2110.13675.md`
+- PDF 下载至 `raw/pdf/*.pdf`（受 `.gitignore` 忽略，不入库）；Markdown 经 `markitdown` + `scripts/pdf2md_fix.py` 转换清理
+- 更新 Index: `raw/index.md` 按年份追加 7 篇原始论文条目
+- 回填 Source: `yu_2016_unitbox`、`rezatofighi_2019_giou`、`zheng_2020_diou`、`zhang_2022_eiou`、`gevorgyan_2022_siou`、`tong_2023_wiou`、`he_2021_alpha_iou` 的「阅读笔记」链接到对应 `raw/{arxiv_id}.md`
+- 完善工具: `scripts/pdf2md_fix.py` 增加连字还原、编号标题合并、罗马数字/常见标题识别，降低正文列表误判

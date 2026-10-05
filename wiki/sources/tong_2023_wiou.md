@@ -19,5 +19,5 @@ last_verified: 2026-09-30
 - **局限/意义**: 需要维护 $\overline{L_{IoU}}$ 滑动平均并调节 $\alpha,\delta,\gamma$ 等超参数；动态机制对训练前期策略敏感。
 
 ## 引用
-- **原始论文**: [arXiv:2301.10051](https://arxiv.org/abs/2301.10051) | [代码](https://github.com/Instinct323/wiou)
+- **原始论文**: [arXiv:2301.10051](https://arxiv.org/abs/2301.10051) | [代码](https://github.com/Instinct323/wiou) | [阅读笔记](../../raw/2301.10051.md)
 - **相关页面**: [[iou_loss]], [[iou_loss_survey]]

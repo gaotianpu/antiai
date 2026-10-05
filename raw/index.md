@@ -104,6 +104,9 @@
 ### 效率/压缩
 | [[LayerNorm.md]] | LayerNorm |
 
+### 其他
+| [[1608.01471.md]] | 首次把 IoU 作为边界框回归损失，将预测框四边作为整体优化，替代把坐标当独立变量的 L2 回归；在 FDDB 人脸检测上取得当时最优结果。（`computer-vision, machine-learning, empirical-study`）|
+
 ## 2017
 
 ### NLP
@@ -188,6 +191,10 @@
 ### 自动驾驶
 | [[Autonomous_Robot/cheating.md]] | 将驾驶任务分解为"特权智能体"（可访问真值信息）和"纯视觉智能体"两阶段训练（`autonomous-driving, imitation-learning, knowledge-distillation`）|
 | [[Autonomous_Robot/limit_Behavior_Cloning.md]] | 系统实验研究行为克隆在自动驾驶中的可扩展性和局限性（`autonomous-driving, imitation-learning, behavior-cloning`）|
+
+### 其他
+| [[1902.09630.md]] | 提出 GIoU，通过最小闭包区域 $C$ 为不相交框提供梯度；GIoU 同时是度量与损失，范围 $[-1,1]$，在 Faster R-CNN、Mask R-CNN、YOLOv3 上一致提升。（`computer-vision, machine-learning, empirical-study`）|
+| [[1911.08287.md]] | 提出 DIoU 与 CIoU：DIoU 加入中心点归一化距离惩罚，收敛快于 IoU/GIoU；CIoU 在此基础上加入长宽比一致性项，同时考虑重叠、中心与形状。（`computer-vision, machine-learning, empirical-study`）|
 
 ## 2020
 
@@ -284,6 +291,8 @@
 | [[diffusion.md]] | Diffusion 综述 |
 | [[mlp-mixer.md]] | 提出仅用 MLP 的视觉架构，通过通道混合 + 空间混合 MLP 替代卷积和注意力。（`computer-vision, machine-learning, empirical-study`）|
 | [[repmlp.md]] | 将卷积重参数化为全连接层，在训练时使用卷积结构，推理时等效为 MLP。（`computer-vision, machine-learning, empirical-study`）|
+| [[2101.08158.md]] | 提出 EIoU，将 CIoU 的长宽比耦合惩罚拆成宽、高分别惩罚；进一步提出 Focal-EIoU，用 $IoU^\gamma$ 抑制大量低重叠 anchor 对回归的主导。（`computer-vision, machine-learning, empirical-study`）|
+| [[2110.13675.md]] | 用 Box-Cox 变换把现有 IoU 系损失统一为幂次族：$L_{\alpha-IoU}=(1-IoU^\alpha)/\alpha$，单参数 $\alpha$ 同时调节回归精度、梯度加权与鲁棒性。（`computer-vision, machine-learning, theoretical`）|
 
 ## 2022
 
@@ -353,6 +362,7 @@
 | [[RM_Overoptimization.md]] | 研究 RLHF 中奖励模型过优化现象（Goodhart's Law），提出 scaling law 预测最佳优化强度。（`NLP, machine-learning, empirical-study`）|
 | [[self-Instruct.md]] | 提出 Self-Instruct 方法，让 LLM 自我生成指令数据指导自身微调，大幅降低人工标注成本。（`NLP, machine-learning, empirical-study`）|
 | [[whisper.md]] | 在 68 万小时多语言弱监督数据上训练语音识别系统，零样本迁移达到有监督 SOTA 水平。（`machine-learning, NLP`）|
+| [[2205.12740.md]] | 提出 SIoU，在距离、形状、IoU 成本外加入角度成本，使预测框先朝最近的 x/y 轴对齐，再沿相关轴回归，解决预测框方向不确定、收敛慢的问题。（`computer-vision, machine-learning, empirical-study`）|
 
 ## 2023
 
@@ -381,6 +391,7 @@
 ### 其他
 | [[Dromedary.md]] | 提出 SELF-ALIGN 方法，通过 16 条原则 + 上下文学习实现 LLM 自对齐，仅需 <300 行人工标注。（`NLP, machine-learning, empirical-study`）|
 | [[LLaMA.md]] | 提出 LLaMA 系列基础语言模型（7B–65B），仅使用公开数据训练，LLaMA-13B 以 1/10 参数量超越 GPT-3（175B）。（`NLP, machine-learning, empirical-study`）|
+| [[2301.10051.md]] | 提出 WIoU 系列，用动态非单调聚焦机制按 anchor 质量分配梯度增益：减少高质量框的竞争，同时削弱低质量样本的有害梯度，使模型聚焦普通质量框。（`computer-vision, machine-learning, empirical-study`）|
 
 ## 2024
 

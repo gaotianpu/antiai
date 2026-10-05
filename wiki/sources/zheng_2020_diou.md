@@ -19,5 +19,5 @@ last_verified: 2026-09-30
 - **局限/意义**: CIoU 的长宽比项对宽高梯度强耦合，且同一比例不同尺寸的框惩罚可能不够敏感；EIoU 将宽、高拆开分别惩罚来改进。
 
 ## 引用
-- **原始论文**: [AAAI 2020](https://ojs.aaai.org/index.php/AAAI/article/view/6916) | [arXiv:1911.08287](https://arxiv.org/abs/1911.08287)
+- **原始论文**: [AAAI 2020](https://ojs.aaai.org/index.php/AAAI/article/view/6916) | [arXiv:1911.08287](https://arxiv.org/abs/1911.08287) | [阅读笔记](../../raw/1911.08287.md)
 - **相关页面**: [[iou_loss]], [[iou_loss_survey]]

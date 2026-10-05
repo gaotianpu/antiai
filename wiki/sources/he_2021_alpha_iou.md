@@ -19,5 +19,5 @@ last_verified: 2026-09-30
 - **局限/意义**: α 是新增超参数，不同数据集/检测器的最优值不同；理论与实验表明它更适合作为统一分析框架而非“万能替代”。
 
 ## 引用
-- **原始论文**: [NeurIPS 2021](https://proceedings.neurips.cc/paper/2021/hash/8f1d43620bc6bb580df6e80b0dc05c48-Abstract.html) | [arXiv:2110.13675](https://arxiv.org/abs/2110.13675)
+- **原始论文**: [NeurIPS 2021](https://proceedings.neurips.cc/paper/2021/hash/8f1d43620bc6bb580df6e80b0dc05c48-Abstract.html) | [arXiv:2110.13675](https://arxiv.org/abs/2110.13675) | [阅读笔记](../../raw/2110.13675.md)
 - **相关页面**: [[iou_loss]], [[iou_loss_survey]]

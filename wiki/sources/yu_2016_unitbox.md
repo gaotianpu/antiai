@@ -19,5 +19,5 @@ last_verified: 2026-09-30
 - **局限/意义**: 两框不重叠时 $IoU=0$、梯度消失；这成为 GIoU、DIoU 等后续改进的出发点。IoU 作为评测指标则可追溯到 [[everingham_2010_pascal_voc]] 所代表的 PASCAL VOC 协议。
 
 ## 引用
-- **原始论文**: [ACM MM 2016, DOI:10.1145/2964284.2967274](https://doi.org/10.1145/2964284.2967274) | [arXiv:1608.01471](https://arxiv.org/abs/1608.01471)
+- **原始论文**: [ACM MM 2016, DOI:10.1145/2964284.2967274](https://doi.org/10.1145/2964284.2967274) | [arXiv:1608.01471](https://arxiv.org/abs/1608.01471) | [阅读笔记](../../raw/1608.01471.md)
 - **相关页面**: [[iou_loss]], [[iou_loss_survey]], [[everingham_2010_pascal_voc]]

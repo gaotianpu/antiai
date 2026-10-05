@@ -19,5 +19,5 @@ last_verified: 2026-09-30
 - **局限/意义**: Focal-EIoU 与分类 Focal Loss 机制不同：这里用 $IoU^\gamma$ 降权低重叠框，而非直接给难例加权；γ 需调参，不同检测器上增益不稳定。
 
 ## 引用
-- **原始论文**: [Neurocomputing 2022, DOI:10.1016/j.neucom.2022.07.042](https://doi.org/10.1016/j.neucom.2022.07.042) | [arXiv:2101.08158](https://arxiv.org/abs/2101.08158)
+- **原始论文**: [Neurocomputing 2022, DOI:10.1016/j.neucom.2022.07.042](https://doi.org/10.1016/j.neucom.2022.07.042) | [arXiv:2101.08158](https://arxiv.org/abs/2101.08158) | [阅读笔记](../../raw/2101.08158.md)
 - **相关页面**: [[iou_loss]], [[iou_loss_survey]]
