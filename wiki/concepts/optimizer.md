@@ -44,7 +44,7 @@ SGD ─→ Momentum ─→ Nesterov
 ## 关键发现
 - Adam 在 Transformer/BERT 上优于 SGD，但泛化有时不及 SGD
 - AdamW 在 LLM 训练中成为事实标准（BERT、GPT、LLaMA 均使用）
-- 学习率预热（Warmup）是现代 LLM 训练的必要技巧
+- [[learning_rate_schedule|学习率调度]]：预热（Warmup）是现代 LLM 训练的必要技巧
 
 ## 相关概念
 - [[transfer_learning]] — 微调中优化器选择策略

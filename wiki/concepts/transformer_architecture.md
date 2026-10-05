@@ -77,6 +77,7 @@ Transformer 已成为现代深度学习的基石架构，衍生出三大主流�
 - [[normalization]] — LayerNorm 稳定训练过程
 - [[feed_forward_network]] — 每层中的 FFN 子层
 - [[encoder_decoder_architecture]] — Transformer 的宏观结构模式
+- [[transformer_evolution]] — 架构演进路线（2017-2025）
 
 ## 引用资料
 

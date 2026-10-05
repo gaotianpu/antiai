@@ -30,3 +30,6 @@ Reinforcement Learning（强化学习）是机器学习的三大范式之一。�
 - [[mnih_2013_dqn]] — 深度 Q 网络突破 Atari 游戏
 - [[lillicrap_2015_ddpg]] — 确定性策略梯度用于连续控制
 - [[schulman_2017_ppo]] — 稳定策略优化的实用算法
+
+## 相关页面
+- [[rl_evolution]] — RL 演进路线（2013-2025）

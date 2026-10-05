@@ -412,4 +412,7 @@
 ### 其他
 | [[2601.07372.md]] | 提出条件记忆（Engram），将 N-gram 嵌入改造为 O(1) 查表，与 MoE 互补（`NLP, machine-learning`） |
 
-
+## 其他
+| [[deep_learning/README.md]] | 深度学习笔记 |
+| [[deep_learning/xgb.md]] | xgboost |
+| [[deep_learning/paddle/README.md]] | paddle demo |

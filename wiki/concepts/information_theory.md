@@ -15,7 +15,7 @@ related_nodes: [math_for_deep_learning, probability_statistics, loss_function, e
 - **熵 (Entropy)**：$H(p) = - \sum p(x) \log p(x)$，衡量分布 $p$ 的平均信息量/不确定性
 - **交叉熵 (Cross-Entropy)**：$H(p,q) = - \sum p(x) \log q(x)$，衡量用分布 $q$ 编码来自 $p$ 的数据所需的平均比特数
 - **KL 散度 (KL Divergence)**：$D_{KL}(p\|q) = \sum p(x) \log \frac{p(x)}{q(x)} = H(p,q) - H(p)$，两个分布间距离的非对称度量
-- **互信息 (Mutual Information)**：$I(X;Y) = D_{KL}(p(x,y)\|p(x)p(y))$，衡量两个随机变量间的依赖程度
+- **[[mutual_information|互信息 (Mutual Information)]]**：$I(X;Y) = D_{KL}(p(x,y)\|p(x)p(y))$，衡量两个随机变量间的依赖程度
 - **困惑度 (Perplexity)**：$\text{PPL} = 2^{H(p)}$，语言模型评价中熵的指数变换
 
 ## 关键关系

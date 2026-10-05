@@ -18,7 +18,7 @@ related_nodes: [math_for_deep_learning, linear_algebra, optimization_fundamental
 - **梯度 (Gradient)**：$\nabla f = \left(\frac{\partial f}{\partial x_1}, \dots, \frac{\partial f}{\partial x_n}\right)^\top$，函数上升最快的方向
 - **Jacobian 矩阵**：向量值函数的一阶偏导矩阵，$J_{ij} = \frac{\partial f_i}{\partial x_j}$
 - **Hessian 矩阵**：标量函数的二阶偏导矩阵，$H_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}$，用于判断极值性质和二阶优化
-- **Taylor 展开**：$f(x) \approx f(a) + f'(a)(x-a) + \frac{1}{2}f''(a)(x-a)^2 + \dots$，函数局部近似的核心工具
+- **[[taylor_expansion|Taylor 展开]]**：$f(x) \approx f(a) + f'(a)(x-a) + \frac{1}{2}f''(a)(x-a)^2 + \dots$，函数局部近似的核心工具
 
 ## 为什么 DL 需要它
 

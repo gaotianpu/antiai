@@ -77,3 +77,4 @@ last_verified: 2026-08-03
 - [[positional_encoding]] / [[length_extrapolation]] — 位置与长度
 - [[sparse_attention]] / [[state_space_model]] — 稀疏与替代
 - [[multi_head_latent_attention]] — MLA 潜在压缩
+- [[papers_2024_2025]] — 2024–2025 待入库论文清单

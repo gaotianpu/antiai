@@ -20,6 +20,8 @@ last_verified: 2026-09-30
 ## 关键贡献
 > 按时间排序；未创建 source 页的工作直接链接 arXiv/官网。
 
+- [[deepseek_papers]] — DeepSeek 论文索引
+
 - [[bi_2024_deepseek_llm]]（2024-01）：67B 参数，Scaling Laws 与数据质量实证
 - [[guo_2024_deepseek_coder]]（2024-01）：代码智能大模型
 - [DeepSeekMoE](https://arxiv.org/abs/2401.06066)（2024-01）：细粒度专家 + 共享专家架构

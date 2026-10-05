@@ -42,3 +42,12 @@ type: log
 - 新增 Schema: `schema/best_practices.md` §15「模板占位关联的识别与清理」——沉淀本次清理的可复用判据与执行要点
 - 内容: 三点交叉判据（频次断崖 / 交叉引用异常 / 领域发散）、无效判据排除、A/B/C 分级处置、三处同步与替换而非删除、补漏收窄原则、中心页豁免、自检脚本
 
+## [Lint] wiki-lint 七项完整体检 + 三项修复
+
+- 体检结果: 死链 **0** / 概念别名冲突 **0** / TODO 标记 **0** / 表格转义 **0**；孤岛 28、`raw/index.md` 缺 10 —— 后两项有实质问题
+- 修复 ①（对称性，见 `fd1563b`）: 补齐 `attention_mechanism` 整理引入的 137 条新边中，8 个非中心页的反链缺口；5 个中心页按 §12 豁免
+- 修复 ②（索引完整性）: **根因是 7 个 IoU 系列 source 页缺「阅读笔记」链接**——`update_raw_index.py` 与 `rebuild_year_index.py` 都靠该链接关联 raw 文件，缺它即形成 source↔raw 断链。补链接 + `raw/index.md` 补 10 条（7 篇 IoU 论文 + 3 个 `deep_learning/` 笔记）→ 索引完整性 **238/238，100%**
+- 修复 ③（孤岛）: 28 个真孤岛中为 17 个在上级页正文建立双链接——数学基础 12（`convex_optimization`/`gradient_descent`/`lagrange_multiplier`/`taylor_expansion`/`matrix_operations`/`eigendecomposition`/`singular_value_decomposition`/`bayesian_inference`/`probability_distributions`/`mutual_information`/`learning_rate_schedule`/`math_for_deep_learning`）+ `tokenization`/`transformer_evolution`/`rl_evolution`/`deepseek_papers`/`papers_2024_2025` → 孤岛 **28 → 11**
+- **关键认知**: `related_nodes` 是纯 id 列表，**不产生 Obsidian 入链**；孤岛只能靠正文 `[[链接]]` 解决。此前把 `related_nodes` 当作 graph 连边是误判
+- 剩余: 11 个实体页孤岛（`academia_sinica` / `alex_krizhevsky` / `ashish_vaswani` / `deepmind` / `ian_goodfellow` / `jacob_devlin` / `robin_rombach` / `song_han` / `stanford_university` / `tsinghua_university` / `uc_berkeley`），按决定留待后续
+

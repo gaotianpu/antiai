@@ -8,15 +8,15 @@ related_nodes: [math_for_deep_learning, optimization_fundamentals, matrix_operat
 
 # 线性代数
 
-线性代数是深度学习最直接的数学工具，神经网络的每一层本质上是线性变换加非线性激活。
+线性代数是深度学习最直接的数学工具（[[math_for_deep_learning|深度学习数学基础]] 的子领域之一），神经网络的每一层本质上是线性变换加非线性激活。
 
 ## 核心概念
 
 - **向量与矩阵**：数据的基本表示形式。标量 → 向量 → 矩阵 → 张量构成 DL 的数据层级
-- **矩阵乘法**：全连接层 $y = Wx + b$、注意力 $\text{Attention}(Q,K,V) = \text{softmax}(QK^\top)V$ 的核心运算
+- **[[matrix_operations|矩阵乘法]]**：全连接层 $y = Wx + b$、注意力 $\text{Attention}(Q,K,V) = \text{softmax}(QK^\top)V$ 的核心运算
 - **转置与逆**：矩阵转置 $A^\top$ 改变维度排列；逆矩阵 $A^{-1}$ 用于求解线性系统，但在 DL 中因规模巨大很少直接计算
-- **特征值与特征向量**：满足 $Av = \lambda v$，用于理解线性变换的缩放行为，是 PCA 和谱分析的基础
-- **奇异值分解 (SVD)**：$A = U\Sigma V^\top$，将任意矩阵分解为旋转+缩放+旋转。用于低秩近似、降维、伪逆计算
+- **[[eigendecomposition|特征值与特征向量]]**：满足 $Av = \lambda v$，用于理解线性变换的缩放行为，是 PCA 和谱分析的基础
+- **[[singular_value_decomposition|奇异值分解 (SVD)]]**：$A = U\Sigma V^\top$，将任意矩阵分解为旋转+缩放+旋转。用于低秩近似、降维、伪逆计算
 - **范数 (Norm)**：
   - L1 范数：$\|x\|_1 = \sum|x_i|$，诱导稀疏性（Lasso 正则化）
   - L2 范数：$\|x\|_2 = \sqrt{\sum x_i^2}$，衡量向量长度（权重衰减）

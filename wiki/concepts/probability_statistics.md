@@ -13,12 +13,12 @@ related_nodes: [math_for_deep_learning, information_theory, probability_distribu
 ## 核心概念
 
 - **随机变量**：分为离散型（伯努利、类别分布）和连续型（高斯分布），是建模数据生成过程的基本单元
-- **常见分布**：
+- **[[probability_distributions|常见分布]]**：
   - **高斯分布** $\mathcal{N}(\mu, \sigma^2)$：中心极限定理的产物，广泛用于初始化、噪声建模
   - **伯努利分布** $\text{Bern}(p)$：二值结果建模，如 Dropout mask
   - **类别分布** $\text{Cat}(K, \boldsymbol{p})$：多分类输出的自然形式
 - **条件概率**：$P(A|B) = \frac{P(A\cap B)}{P(B)}$，构成贝叶斯推断和概率图模型的基础
-- **贝叶斯规则**：$P(\theta|D) = \frac{P(D|\theta)P(\theta)}{P(D)}$，先验 + 证据 → 后验的更新框架
+- **[[bayesian_inference|贝叶斯规则]]**：$P(\theta|D) = \frac{P(D|\theta)P(\theta)}{P(D)}$，先验 + 证据 → 后验的更新框架
 - **期望与方差**：$E[X]$ 描述中心趋势，$\text{Var}(X) = E[(X-\mu)^2]$ 描述离散程度
 - **MLE (最大似然估计)**：$\theta^* = \arg\max_\theta \log P(D|\theta)$，寻找最可能产生观测数据的参数
 - **MAP (最大后验估计)**：$\theta^* = \arg\max_\theta \log P(D|\theta) + \log P(\theta)$，MLE + 先验正则化

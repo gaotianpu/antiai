@@ -12,13 +12,13 @@ related_nodes: [math_for_deep_learning, calculus, optimizer, taylor_expansion]
 
 ## 核心概念
 
-- **凸优化 vs 非凸优化**：
+- **[[convex_optimization|凸优化]] vs 非凸优化**：
   - 凸：目标函数和约束集均为凸，任何局部最小值即全局最小值
   - 非凸：存在多个局部极小值和鞍点，DL 的训练目标几乎都是非凸的
 - **局部极小值 vs 全局极小值**：非凸问题中，梯度下降通常收敛到局部极小值，但在高维空间中局部极小值与全局极小值的差距往往不大
 - **鞍点 (Saddle Point)**：梯度为零但 Hessian 矩阵不定（兼具正负特征值），高维非凸优化的主要困难来源
-- **梯度下降法**：$w_{t+1} = w_t - \eta_t \nabla L(w_t)$，一阶迭代优化算法
-- **约束优化与 Lagrange 乘子法**：$\min f(x) \text{ s.t. } g(x)=0$，引入乘子 $\lambda$ 将约束加入目标函数 $\mathcal{L}(x,\lambda) = f(x) + \lambda g(x)$
+- **[[gradient_descent|梯度下降法]]**：$w_{t+1} = w_t - \eta_t \nabla L(w_t)$，一阶迭代优化算法
+- **约束优化与 [[lagrange_multiplier|Lagrange 乘子法]]**：$\min f(x) \text{ s.t. } g(x)=0$，引入乘子 $\lambda$ 将约束加入目标函数 $\mathcal{L}(x,\lambda) = f(x) + \lambda g(x)$
 - **收敛率 (Convergence Rate)**：描述算法随迭代次数逼近最优解的速度。凸问题可达线性/二次收敛率，非凸问题通常只有次线性
 
 ## 关键直觉
