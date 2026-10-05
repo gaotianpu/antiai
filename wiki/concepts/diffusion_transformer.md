@@ -3,7 +3,7 @@ id: diffusion_transformer
 type: concept
 tags: [machine-learning, computer-vision, empirical-study]
 aliases: [扩散Transformer, DiT]
-related_nodes: [dits, diffusion_model, transformer_architecture]
+related_nodes: [dits, diffusion_model, transformer_architecture, attention_mechanism]
 last_verified: 2026-08-03
 ---
 
@@ -19,3 +19,6 @@ last_verified: 2026-08-03
 
 ## 来源
 - [[dits]] — DiT：扩散 Transformer
+
+## 相关概念
+- [[attention_mechanism]] — 扩散骨干的核心算子（替换 U-Net 卷积）

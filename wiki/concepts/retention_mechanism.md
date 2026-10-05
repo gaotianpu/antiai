@@ -3,7 +3,7 @@ id: retention_mechanism
 type: concept
 tags: [NLP, machine-learning, theoretical]
 aliases: [保留机制, RetNet Retention]
-related_nodes: [retnet_2023, transformer_architecture, parallel_training_sequential_inference]
+related_nodes: [retnet_2023, transformer_architecture, parallel_training_sequential_inference, attention_mechanism]
 last_verified: 2026-08-03
 ---
 
@@ -19,3 +19,6 @@ RetNet 提出的序列建模机制：用线性递推形式表达注意力，支�
 
 ## 来源
 - [[retnet_2023]] — 提出保留网络 RetNet
+
+## 相关概念
+- [[attention_mechanism]] — 本机制即其线性复杂度替代方案

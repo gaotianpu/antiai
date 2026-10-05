@@ -12,7 +12,7 @@ last_verified: 2026-08-03
 
 # Efficient Memory Management for Large Language Model Serving with PagedAttention
 
-- **元数据**: arXiv 2309.06180 | 2023 | **作者**: Woosuk Kwon et al. | **机构**: UC Berkeley
+- **元数据**: arXiv 2309.06180 | 2023 | **作者**: Woosuk Kwon et al. | **机构**: UC Berkeley | 相关: [[attention_mechanism]]
 - **概述**: 提出 PagedAttention：借鉴操作系统的虚拟内存分页，将 KV cache 分块存储于非连续物理页，消除显存碎片，支撑高吞吐推理服务（vLLM）。
 - **新颖概念**: [[kv_cache]]
 - **关键要点**: 1. KV cache 按块管理，物理页非连续、按需分配 2. 同请求共享 KV 块（并行采样）3. 显存利用率接近 100%，吞吐提升 2-4 倍
@@ -21,4 +21,4 @@ last_verified: 2026-08-03
 
 ## 引用
 - **原始论文**: [arXiv:2309.06180](https://arxiv.org/abs/2309.06180)
-- **相关概念**: [[kv_cache]]
+- **相关概念**: [[kv_cache]] | [[attention_mechanism]]

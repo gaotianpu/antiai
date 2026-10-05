@@ -3,7 +3,7 @@ id: self_supervised_learning
 type: concept
 tags: [machine-learning, empirical-study, theoretical]
 aliases: [自监督学习, SSL, 无监督表示学习]
-related_nodes: [attention_mechanism, data_augmentation, generative_model]
+related_nodes: [data_augmentation, generative_model, vision_transformer]
 ---
 
 # Self-Supervised Learning
@@ -56,7 +56,6 @@ SwAV（Swapping Assignments between Views）等，通过在线聚类分配与对
 ## 相关概念网络
 
 - [[data_augmentation]] — SSL 中增强是正对构建的关键
-- [[attention_mechanism]] — 自注意力是 SSL 模型的常用骨干
 - [[generative_model]] — 掩码建模类 SSL 与生成模型交叉
 - [[transfer_learning]] — SSL 预训练的目标是迁移到下游任务
 

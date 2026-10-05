@@ -3,7 +3,7 @@ id: tokenization
 type: concept
 tags: [NLP, machine-learning]
 aliases: [分词, tokenizer, subword]
-related_nodes: [attention_mechanism]
+related_nodes: [byte_pair_encoding, subword_tokenization, bpe_2015]
 ---
 
 # Tokenization
@@ -53,7 +53,7 @@ Google 开源的端到端分词库 [[raffel_2019_t5]]。将原始文本视为 Un
 
 ## 相关概念网络
 
-- [[attention_mechanism]] — 自注意力的输入依赖分词结果
+- [[byte_pair_encoding]] — BPE 子词分词，现代 LLM 的输入前置环节
 
 ## 引用资料
 

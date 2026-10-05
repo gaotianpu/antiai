@@ -23,3 +23,6 @@ MLA 是 DeepSeek 提出的高效注意力变体，通过将 Key-Value (KV) cache
 ## 来源
 - [[deepseek_2024_v2]]
 - [[deepseek_2024_v3]]
+
+## 相关概念
+- [[attention_mechanism]] — MLA 是其潜空间压缩变体

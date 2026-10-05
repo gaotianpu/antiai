@@ -3,7 +3,7 @@ id: openai_2023_gpt4
 type: source
 tags: [NLP, machine-learning, empirical-study]
 aliases: [GPT-4 Technical Report, 2303.08774]
-related_nodes: [attention_mechanism, openai, post_training]
+related_nodes: [openai, post_training, transformer_architecture, gpt]
 arxiv_id: 2303.08774
 authors_institution: OpenAI
 authors: OpenAI
@@ -13,7 +13,7 @@ last_verified: 2026-06-06
 
 # GPT-4 Technical Report
 
-- **元数据**: Conference | **作者**: OpenAI | 相关: [[attention_mechanism]]
+- **元数据**: Conference | **作者**: OpenAI | 相关: [[openai]] | [[post_training]] | [[transformer_architecture]] | [[gpt]]
 - **概述**: 多模态大语言模型，在多种专业和学术基准上达到人类水平
 - **新颖概念**: —
 - **关键要点**: 见原始阅读笔记
@@ -22,4 +22,4 @@ last_verified: 2026-06-06
 
 ## 引用
 - **原始论文**: [arXiv:2303.08774](https://arxiv.org/abs/2303.08774) | [阅读笔记](../../raw/nlp/gpt_4.md)
-- **相关概念**: [[attention_mechanism]]
+- **相关概念**: [[openai]] | [[post_training]] | [[transformer_architecture]] | [[gpt]]

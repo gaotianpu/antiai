@@ -3,7 +3,7 @@ id: ibot
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [iBOT, 2111.07832]
-related_nodes: [bytedance, attention_mechanism]
+related_nodes: [bytedance, transformer_architecture, vision_transformer, online_tokenizer, masked_image_modeling]
 arxiv_id: 2111.07832
 authors_institution: ByteDance
 
@@ -12,11 +12,11 @@ last_verified: 2026-06-06
 
 # iBOT: Image BERT Pre-Training with Online Tokenizer
 
-- **元数据**: **作者**: ByteDance | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: ByteDance | 相关: [[bytedance]] | [[transformer_architecture]] | [[vision_transformer]] | [[online_tokenizer]] | [[masked_image_modeling]]
 - **概述**: 在线标记器的图像 BERT 预训练
 - **新颖概念**: [[online_tokenizer]], [[masked_image_modeling]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用
 - **原始论文**: [arXiv:2111.07832](https://arxiv.org/abs/2111.07832) | [阅读笔记](../../raw/vit/iBOT.md)
-- **相关概念**: [[attention_mechanism]]
+- **相关概念**: [[bytedance]] | [[transformer_architecture]] | [[vision_transformer]] | [[online_tokenizer]] | [[masked_image_modeling]]

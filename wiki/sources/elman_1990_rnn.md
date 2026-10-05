@@ -3,14 +3,14 @@ id: elman_1990_rnn
 type: source
 tags: [NLP, machine-learning]
 aliases: [Finding Structure in Time]
-related_nodes: [attention_mechanism]
+related_nodes: [recurrent_neural_network]
 
 last_verified: 2026-06-06
 ---
 
 # Finding Structure in Time
 
-- **元数据**: **作者**: Jeffrey L. Elman | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Jeffrey L. Elman | 相关: [[recurrent_neural_network]]
 - **概述**: 提出简单循环神经网络（Elman RNN）用于处理时序结构
 - **新颖概念**: [[recurrent_neural_network]]
 - **关键要点**: 见原始阅读笔记
@@ -18,4 +18,4 @@ last_verified: 2026-06-06
 
 ## 引用
 - **原始论文**: 见原始笔记 | [阅读笔记](../../raw/nlp/rnn.md)
-- **相关概念**: [[attention_mechanism]]
+- **相关概念**: [[recurrent_neural_network]]

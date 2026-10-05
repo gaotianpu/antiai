@@ -19,3 +19,6 @@ last_verified: 2026-08-03
 
 ## 来源
 - [[hu_2017_senet]] — SENet：ILSVRC 2017 冠军
+
+## 相关概念
+- [[attention_mechanism]] — 通道注意力属注意力机制的变体家族

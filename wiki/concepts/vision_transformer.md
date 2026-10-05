@@ -3,7 +3,7 @@ id: vision_transformer
 type: concept
 tags: [computer-vision, machine-learning, empirical-study]
 aliases: [ViT, 视觉Transformer]
-related_nodes: [vit, transformer_architecture, shifted_window_attention]
+related_nodes: [vit, transformer_architecture, shifted_window_attention, attention_mechanism]
 last_verified: 2026-08-03
 ---
 
@@ -19,3 +19,6 @@ last_verified: 2026-08-03
 
 ## 来源
 - [[vit]] — ViT 原始论文
+
+## 相关概念
+- [[attention_mechanism]] — patch 序列上的多头自注意力

@@ -12,7 +12,7 @@ last_verified: 2026-08-03
 
 # Efficient Streaming Language Models with Attention Sinks
 
-- **元数据**: arXiv 2309.17453 | 2023 | **作者**: Guangxuan Xiao et al. | **机构**: MIT
+- **元数据**: arXiv 2309.17453 | 2023 | **作者**: Guangxuan Xiao et al. | **机构**: MIT | 相关: [[attention_mechanism]]
 - **概述**: 发现注意力"汇点"现象：初始 token 吸收大量注意力分数；保留初始 token + 滑动窗口 KV 即可实现无限流式生成，无需重训练。
 - **新颖概念**: [[kv_cache]]
 - **关键要点**: 1. 注意力汇点（attention sink）：首 token 是关键锚点 2. 滑动窗口 + sink 组合的 KV 丢弃策略 3. 流式生成稳定，困惑度与全缓存相当
@@ -21,4 +21,4 @@ last_verified: 2026-08-03
 
 ## 引用
 - **原始论文**: [arXiv:2309.17453](https://arxiv.org/abs/2309.17453)
-- **相关概念**: [[kv_cache]]
+- **相关概念**: [[kv_cache]] | [[attention_mechanism]]

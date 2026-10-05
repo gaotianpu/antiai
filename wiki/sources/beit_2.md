@@ -3,7 +3,7 @@ id: beit_2
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [BEiT v2, 2208.06366]
-related_nodes: [attention_mechanism]
+related_nodes: [transformer_architecture, vision_transformer, vector_quantized_tokenizer]
 arxiv_id: 2208.06366
 authors: Microsoft
 last_verified: 2026-06-06
@@ -11,11 +11,11 @@ last_verified: 2026-06-06
 
 # BEiT v2: Masked Image Modeling with Vector-Quantized Visual Tokenizers
 
-- **元数据**: **作者**: 微软 | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: 微软 | 相关: [[transformer_architecture]] | [[vision_transformer]] | [[vector_quantized_tokenizer]]
 - **概述**: 向量量化视觉标记器的掩码图像建模
 - **新颖概念**: [[vector_quantized_tokenizer]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用
 - **原始论文**: [arXiv:2208.06366](https://arxiv.org/abs/2208.06366) | [阅读笔记](../../raw/vit/BEiT_2.md)
-- **相关概念**: [[attention_mechanism]]
+- **相关概念**: [[transformer_architecture]] | [[vision_transformer]] | [[vector_quantized_tokenizer]]

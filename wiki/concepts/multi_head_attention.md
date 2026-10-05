@@ -19,3 +19,6 @@ last_verified: 2026-08-03
 
 ## 来源
 - [[vaswani_2017_transformer]] — 提出多头注意力
+
+## 相关概念
+- [[attention_mechanism]] — 多头注意力是其标准实现

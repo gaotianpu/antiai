@@ -3,7 +3,7 @@ id: morphte_2022
 type: source
 tags: [NLP, machine-learning]
 aliases: [MorphTE, 2210.15379]
-related_nodes: [attention_mechanism]
+related_nodes: [word_embedding]
 arxiv_id: 2210.15379
 authors: Xin Liu et al.
 last_verified: 2026-06-06
@@ -11,7 +11,7 @@ last_verified: 2026-06-06
 
 # MorphTE: Injecting Morphology in Tensorized Embeddings
 
-- **元数据**: **作者**: Xin Liu et al. | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Xin Liu et al. | 相关: [[word_embedding]]
 - **概述**: 将形态信息注入张量化嵌入
 - **新颖概念**: —
 - **关键要点**: 见原始阅读笔记
@@ -19,4 +19,4 @@ last_verified: 2026-06-06
 
 ## 引用
 - **原始论文**: [arXiv:2210.15379](https://arxiv.org/abs/2210.15379) | [阅读笔记](../../raw/nlp/MorphTE.md)
-- **相关概念**: [[attention_mechanism]]
+- **相关概念**: [[word_embedding]]

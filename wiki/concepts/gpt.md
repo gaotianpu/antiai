@@ -3,7 +3,7 @@ id: gpt
 type: concept
 tags: [NLP, machine-learning, empirical-study]
 aliases: [GPT]
-related_nodes: [radford_2018_gpt, generative_pretraining, transformer_architecture]
+related_nodes: [radford_2018_gpt, generative_pretraining, transformer_architecture, attention_mechanism]
 last_verified: 2026-08-03
 ---
 
@@ -21,3 +21,6 @@ Generative Pre-trained Transformer：基于 Transformer 解码器的单向自回
 - [[radford_2018_gpt]] — 提出生成式预训练
 - [[radford_2019_gpt2]] — 规模扩展与零样本能力
 - [[brown_2020_gpt3]] — 175B 参数与上下文学习
+
+## 相关概念
+- [[attention_mechanism]] — 因果自注意力，Decoder 的核心计算原语

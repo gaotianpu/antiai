@@ -19,3 +19,6 @@ last_verified: 2026-08-03
 
 ## 来源
 - [[vaswani_2017_transformer]] — 自注意力核心机制
+
+## 相关概念
+- [[attention_mechanism]] — 自注意力是其基本实例

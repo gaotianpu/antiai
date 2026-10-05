@@ -19,3 +19,6 @@ last_verified: 2026-08-03
 
 ## 来源
 - [[wang_2017_nonlocal]] — Non-local Neural Networks
+
+## 相关概念
+- [[attention_mechanism]] — 非局部操作是自注意力的广义形式

@@ -18,3 +18,15 @@ type: log
 - 保留项依据: 6 项均在本页元数据/正文中显式引用（机构、作者、新颖概念、方法段、引用段）；回退后 A→X 方向的反向引用仍完整（6 个目标页的 `related_nodes` 均含 resnet_2015）
 - 教训: 「双向性」的规范方向是「**本页引用的页面须反链本页**」，不是「引用本页的页面须被本页列出」——后者会随中心页热度线性膨胀
 
+## [Refactor] attention_mechanism 模板占位清理（100 → 38 页）
+
+- 问题判定: `attention_mechanism` 被 100 页引用，为第二名 `transformer_architecture`(21) 的 **5 倍**；87/100 页 `last_verified` 同为 2026-06-06（同批模板建页）；100 页中**仅 3 页**同时引用 `transformer_architecture`——三点交叉指向「模板默认占位」而非真实 hub 聚集
+- 逐页分级: A 强关联 32 / B 以 Transformer 为骨干但研究别处 54 / C 无关 14；subagent 逐页读正文判定，抽查后修正 2 处边界（`deepnet`、`raffel_2019_t5` 由 A/C 归入 B）
+- C 类 14 页（与注意力无关）: 摘除并替换为真实关联——`elman_1990_rnn`→[[recurrent_neural_network]]、`bpe_2015`→[[byte_pair_encoding]]/[[subword_tokenization]]、`word2vec_2013`→[[word_embedding]]/[[skip_gram]]/[[cbow]]、`hochreiter_1997_lstm`→[[long_short_term_memory]]、`sppnet_2014`→[[spatial_pyramid_pooling]] 等
+- B 类 54 页（预训练策略/蒸馏/多模态系统/对齐推理/评测）: 摘除，改挂 [[transformer_architecture]] + 主题相关概念——视觉自监督系→[[vision_transformer]]、生成模型系→[[diffusion_transformer]]、BERT 变体系→[[devlin_2018_bert]]、思维链系→[[chain_of_thought]]、蒸馏系→[[knowledge_distillation]]
+- 补漏收窄: 「引 `transformer_architecture` 却未引 `attention_mechanism`」的候选共 17 页，**仅 6 页应补**（bert / gpt / vision_transformer / diffusion_transformer / retention_mechanism / encoder_decoder_architecture）；其余为 [[normalization]]、[[feed_forward_network]]、[[residual_connection]]、[[speculative_decoding]] 等**并列或无关组件**，补挂会制造同类错误关联，故不补
+- 正文一致性: 7 个 A 类页面（[[channel_attention]]、[[multi_head_attention]]、[[multi_head_latent_attention]]、[[non_local_operation]]、[[self_attention]]、[[kwon_2023_pagedattention]]、[[xiao_2023_streamingllm]]）此前「frontmatter 已挂但正文无链接」，补齐正文链接
+- 执行与校验: 脚本批量改写 **81** 个文件；三项校验通过——68 页零残留、全库零死链、frontmatter 格式统一
+- 结果: `attention_mechanism` **100 → 38**；`transformer_architecture` **21 → 73**，两 hub 职责分离（研究注意力 vs 使用 Transformer），纠正 5 倍倒挂
+- 依据: [[best_practices]] §12「related_nodes 应有方向性，而非平铺所有相关链接」；`wiki-lint` 检查 6 中心页豁免
+

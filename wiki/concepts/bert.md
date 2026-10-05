@@ -3,7 +3,7 @@ id: bert
 type: concept
 tags: [NLP, machine-learning, empirical-study]
 aliases: [BERT, 双向编码器表示]
-related_nodes: [devlin_2018_bert, masked_language_modeling, transformer_architecture]
+related_nodes: [devlin_2018_bert, masked_language_modeling, transformer_architecture, attention_mechanism]
 last_verified: 2026-08-03
 ---
 
@@ -19,3 +19,6 @@ Bidirectional Encoder Representations from Transformers：深度双向 Transform
 
 ## 来源
 - [[devlin_2018_bert]] — BERT 原始论文
+
+## 相关概念
+- [[attention_mechanism]] — 双向自注意力，Encoder 的核心计算原语

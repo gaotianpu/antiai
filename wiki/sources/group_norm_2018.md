@@ -3,7 +3,7 @@ id: group_norm_2018
 type: source
 tags: [computer-vision, machine-learning]
 aliases: [Group Normalization, 1803.08494]
-related_nodes: [meta, attention_mechanism]
+related_nodes: [meta, group_normalization]
 arxiv_id: 1803.08494
 authors: Yuxin Wu et al.
 authors_institution: Meta
@@ -12,11 +12,11 @@ last_verified: 2026-06-06
 
 # Group Normalization
 
-- **元数据**: **作者**: Yuxin Wu et al. | **机构**: Meta | 相关: [[attention_mechanism]]
+- **元数据**: **作者**: Yuxin Wu et al. | **机构**: Meta | 相关: [[meta]] | [[group_normalization]]
 - **概述**: 提出 Group Normalization，在 batch 维度较小时比 Batch Norm 更稳定
 - **新颖概念**: [[group_normalization]]
 - **关键要点**: 见原始阅读笔记
 
 ## 引用
 - **原始论文**: [arXiv:1803.08494](https://arxiv.org/abs/1803.08494) | [阅读笔记](../../raw/cnn/GroupNorm.md)
-- **相关概念**: [[attention_mechanism]]
+- **相关概念**: [[meta]] | [[group_normalization]]
