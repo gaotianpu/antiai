@@ -68,8 +68,12 @@ def fix_roman_headings(lines):
     pat = re.compile(r'^(I|II|III|IV|V|VI|VII|VIII|IX|X)\.\s+(.+)$', re.IGNORECASE)
     for i, line in enumerate(lines):
         m = pat.match(line.strip())
-        if m:
-            lines[i] = f"## {m.group(1).upper()}. {m.group(2)}"
+        if not m:
+            continue
+        title = m.group(2)
+        if len(title) > 50 or ',' in title or '. ' in title or '(cid:' in title:
+            continue
+        lines[i] = f"## {m.group(1).upper()}. {title}"
     return lines
 
 
