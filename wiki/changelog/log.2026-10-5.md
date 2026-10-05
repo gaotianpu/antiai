@@ -30,3 +30,15 @@ type: log
 - 结果: `attention_mechanism` **100 → 38**；`transformer_architecture` **21 → 73**，两 hub 职责分离（研究注意力 vs 使用 Transformer），纠正 5 倍倒挂
 - 依据: [[best_practices]] §12「related_nodes 应有方向性，而非平铺所有相关链接」；`wiki-lint` 检查 6 中心页豁免
 
+## [Lint] 第二梯队 hub 体检：无第二个模板占位
+
+- 方法: 对引用数 ≥6 的全部 hub 统计「引用者领域分布」，检验是否存在与 `attention_mechanism` 同类的模板占位
+- 结果（均健康，引用者领域高度集中）: [[iou_loss]] 11 页全为目标检测、[[sppnet_2014]] 7 页全为 CV 分割检测、[[optimization_fundamentals]] 7 页全为数学基础、[[multi_head_latent_attention]] 9 页为 DeepSeek 系 + 注意力变体、[[mixture_of_experts]] 11 页为 MoE 专门工作、[[conditional_memory]] 7 页为记忆机制聚集
+- 判据修正: 「引用者 `last_verified` 集中在同一天」**无效**——整库多建于同日，且本次整理自身制造了集中（`transformer_architecture` 74%、`vision_transformer` 85%）；有效判据是**频次断崖 + 领域发散度**
+- 结论: `attention_mechanism` 为孤例，`related_nodes` 体系整体健康，无需全库普查
+
+## [Docs] 沉淀「模板占位关联」识别与清理方法至 best_practices
+
+- 新增 Schema: `schema/best_practices.md` §15「模板占位关联的识别与清理」——沉淀本次清理的可复用判据与执行要点
+- 内容: 三点交叉判据（频次断崖 / 交叉引用异常 / 领域发散）、无效判据排除、A/B/C 分级处置、三处同步与替换而非删除、补漏收窄原则、中心页豁免、自检脚本
+
